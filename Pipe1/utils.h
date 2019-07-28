@@ -79,6 +79,8 @@ extern const __flash char keylabel_left []  ;
 extern const __flash char keylabel_onoff [] ;
 extern const __flash char keylabel_exit [] ;
 extern const __flash char keylabel_text [] ;
+extern const __flash char keylabel_0 [] ;
+extern const __flash char keylabel_1 [] ;
 
 extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();

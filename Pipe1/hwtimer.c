@@ -487,7 +487,7 @@ static inline void timerPipeProcess(){
 		uint8_t pipeIn = curPipe->pipeIn;
 
 		#ifdef PIPE_CHECKERROR
-		uint8_t outPipeError = (~(curPipe->pipeOut | curPipe->pipeOutM4 | pipeIn)) & pipe_ModuleUsable; // 1 if output should be high, but ist read as low
+		uint8_t outPipeError = (~(curPipe->pipeOut | curPipe->pipeOutM4 | pipeIn)) & pipe_ModuleTested; // 1 if output should be high, but ist read as low
 		if (outPipeError != 0) {
 			// Error Pipe has bit set
 			curPipe->pipeOut |= outPipeError; // reset error pipe by writing 1 to pipeOutBit -> output low in next cycle
@@ -499,9 +499,27 @@ static inline void timerPipeProcess(){
 		#endif
 
 		// Check new pipe status
-		uint8_t newPipeStat = (pipeIn) | (curPipe->pipeInM4) | (curPipe->pipeInM8)
-			| (curPipe->pipeInM12) | (curPipe->pipeInM16) ; // 1 if key pressed at least onece in last 16m, 0 if key was never pressed
-		uint8_t oldPipeStat = curPipe->pipeInStat;
+//		uint8_t oldPipeStat = curPipe->pipeInStat;
+// 		uint8_t newPipeStat = (pipeIn) | (curPipe->pipeInM4) | (curPipe->pipeInM8)
+// 			| (curPipe->pipeInM12) | (curPipe->pipeInM16) ; // 1 if key pressed at least onece in last 16m, 0 if key was never pressed
+		// new V 0.56
+		uint8_t newOnState = 0xFF;
+		uint8_t newOffState = 0;
+		uint8_t* pInByte = &(curPipe->pipeInM16);
+		newOnState &= *pInByte; //pipeInM16
+		newOffState |= *pInByte++;
+		newOnState &= *pInByte; //pipeInM12
+		newOffState |= *pInByte++;
+		newOnState &= *pInByte; //pipeInM8
+		newOffState |= *pInByte++;
+		newOnState &= *pInByte; //pipeInM4
+		newOffState |= *pInByte++;
+		newOnState &= *pInByte; //pipeIn
+		newOffState |= *pInByte++; // now pointer to pipeInStat
+		uint8_t oldPipeStat = *pInByte;
+		uint8_t newPipeStat = (oldPipeStat & newOffState) | newOnState; // ->0 only if recent reads are all 0, -> 1 if reads are all 1
+		*pInByte = newPipeStat;
+		// end new V 0.56
 		uint8_t statChange = (newPipeStat & ~oldPipeStat) & local_pipe_ModuleAssnRead; // new = 1, old = 0
 		if ((statChange)!= 0) {
 			// 0->1, pipe on
@@ -516,7 +534,7 @@ static inline void timerPipeProcess(){
 			myMessage.message8[MSG_BYTE_CMD_SHIFTBIT] = MESSAGE_PIPE_OFF_HI | shiftBitNr;
 			pipeMsgPush(myMessage);
 		}
-		curPipe->pipeInStat = newPipeStat;
+		//curPipe->pipeInStat = newPipeStat;
 		curPipe++;
 		pipeProcessing |= PIPE_IO_PROC_DONE; // to show that pipe[].pipeInStat is updated
 	}

@@ -32,6 +32,7 @@ uint8_t midiCoupler_Pfrom3;
 uint8_t midiCoupler_Pfrom2;
 uint8_t midiCoupler_Pfrom1;
 ManualMap_t manualMap[MANUAL_COUNT][RANGE_COUNT];
+ManualNoteRange_t ManualNoteRange[MANUAL_COUNT];
 MidiInMap_t midiInMap[MIDI_CHANNEL_COUNT][MIDI_SPLIT_COUNT];
 MidiOutMap_t midiOutMap[MANUAL_COUNT];
 uint8_t midiRxActivceSensing = 0;
@@ -90,10 +91,22 @@ void midiAllNotesOff(uint8_t channel){
 	}
 }
 
-void midiAllManualsOff(){
-	// TODO if not only notes but stops are set by HW, don't turn off stops?
-	pipeProcessing = PIPE_IO_DISABLE; // do not process pipe[] now
-	init_Pipe(); // defines IO, resets pipe[], here pipeProcessing will be activated again
+void midi_ManualOff(uint8_t manual){
+	// turn all notes off of this manual
+	if ((manual < MANUAL_COUNT) && (ManualNoteRange[manual].startNote != MIDI_NOTE_NONE) && (ManualNoteRange[manual].endNote != MIDI_NOTE_NONE)){
+		for (uint8_t note = ManualNoteRange[manual].startNote; note <= ManualNoteRange[manual].endNote; note++){
+			manual_NoteOnOff(manual,note,NOTE_OFF);
+		}
+	}
+}
+
+void midi_AllManualsOff(){
+	for (uint8_t manual = 0; manual < MANUAL_COUNT; manual++){
+		midi_ManualOff(manual);
+	}
+
+// 	pipeProcessing = PIPE_IO_DISABLE; // do not process pipe[] now
+// 	init_Pipe(); // defines IO, resets pipe[], here pipeProcessing will be activated again
 }
 
 void midi_CheckRxActiveSense(){
@@ -101,7 +114,7 @@ void midi_CheckRxActiveSense(){
 		// only when activated
 		if (TIMER_ELAPSED(TIMER_ACTIVESENSE)) {
 			// watchdog for active sense is elapsed: shut down outputs!
-			midiAllManualsOff();
+			midi_AllManualsOff();
 			midiRxActivceSensing = 0; // turn off active Sense
 		}
 	}
@@ -374,17 +387,41 @@ void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff){
 }
 
 ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note){
-	ChannelNote_t result;
+	ChannelNote_t result = {MIDI_CHANNEL_NONE,MIDI_NOTE_NONE};
 	if (manual < MANUAL_COUNT) {
 		if (midiOutMap[manual].channel != MIDI_CHANNEL_NONE) {
 			result.channel = midiOutMap[manual].channel;
-			result.note = note; // currently no transpose, might be addede later
+			result.note = note; // currently no transpose, might be added later
 		}
 	}
 	return(result);
 }
 
 //------------------------------------- M A N U A L   T O   P I P E - I O ---------------------------------
+
+void Midi_updateManualRange(){
+	for (uint8_t i = 0; i < MANUAL_COUNT; i++){
+		uint8_t rangeEnd = 0;
+		uint8_t rangeStart = 0xFF;
+		for (uint8_t range = 0; range < RANGE_COUNT; range++){
+			if ((manualMap[i][range].startNote != MIDI_NOTE_NONE) && (manualMap[i][range].endNote != MIDI_NOTE_NONE)){
+				if (manualMap[i][range].startNote < rangeStart) {
+					rangeStart = manualMap[i][range].startNote;
+				}
+				if (manualMap[i][range].endNote > rangeEnd) {
+					rangeEnd = manualMap[i][range].endNote;
+				}
+			}
+			if ((rangeEnd == 0) || (rangeStart == 0xFF)){
+				ManualNoteRange[i].startNote = MIDI_NOTE_NONE;
+				ManualNoteRange[i].endNote = MIDI_NOTE_NONE;			
+			} else {
+				ManualNoteRange[i].startNote = rangeStart;
+				ManualNoteRange[i].endNote = rangeEnd;			
+			}
+		}
+	}
+}
 
 void init_Manual2Module(){
 	for (int8_t i = MANUAL_COUNT-1; i >= 0; i--){
@@ -401,8 +438,8 @@ void init_Manual2Module(){
 		midiEEPromLoadError = EE_LOAD_ERROR;
 		log_putError(LOG_CAT_EE,LOG_CATEE_MAN2MOD,0);
 	}
+	Midi_updateManualRange();
 	// turn off couplers
-
 }
 
 ModulBitError_t manualNote_to_moduleBit(uint8_t manual, uint8_t note){
@@ -488,11 +525,6 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 				// manual and note for that module/bit
 				if (manualNote.manual != MANUAL_NONE){
 					// manual is assigned
-					if (command == MESSAGE_PIPE_ON_HI) {
-						// note on -> save this info for status display
-						midiLastOutManual = manualNote.manual;
-						midiLastOutNote = manualNote.note;
-					}
 					// check midi assigneemnt for this manual/note
 					chanNote = Manual_to_MidiNote(manualNote.manual, manualNote.note);
 					if (chanNote.channel != MIDI_CHANNEL_NONE){
@@ -500,6 +532,12 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 						serial1MIDISend((command == MESSAGE_PIPE_ON_HI ? MIDI_NOTEON : MIDI_NOTEOFF) | chanNote.channel);
 						serial1MIDISend(chanNote.note);
 						serial1MIDISend(MIDI_DEFAULT_VELOCITY);
+						// V0.56 Show MidiOut on Display only if Channel assigned
+						if (command == MESSAGE_PIPE_ON_HI) {
+							// note on -> save this info for status display
+							midiLastOutManual = manualNote.manual;
+							midiLastOutNote = manualNote.note;
+						}
 					}
 					// check couplers
 					uint8_t noteOnOff = (command == MESSAGE_PIPE_ON_HI ? NOTE_ON : NOTE_OFF);

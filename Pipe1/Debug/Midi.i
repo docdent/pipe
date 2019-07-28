@@ -754,18 +754,20 @@ extern const __flash char keylabel_left [] ;
 extern const __flash char keylabel_onoff [] ;
 extern const __flash char keylabel_exit [] ;
 extern const __flash char keylabel_text [] ;
+extern const __flash char keylabel_0 [] ;
+extern const __flash char keylabel_1 [] ;
 
 extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 96 ".././utils.h"
+# 98 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 98 ".././utils.h" 3
+# 100 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 98 ".././utils.h"
+# 100 ".././utils.h"
                                  ;
 # 12 ".././message.h" 2
 
@@ -984,7 +986,13 @@ typedef struct{
  uint8_t bitStart;
 } ManualMap_t;
 extern ManualMap_t manualMap[4][4];
-# 107 ".././Midi.h"
+
+typedef struct{
+ uint8_t startNote;
+ uint8_t endNote;
+} ManualNoteRange_t;
+extern ManualNoteRange_t ManualNoteRange[4];
+# 113 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -1011,6 +1019,7 @@ extern void init_Registers();
 
 extern void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff);
 extern ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note);
+extern void Midi_updateManualRange();
 
 extern void midiSendAllNotesOff();
 
@@ -1035,6 +1044,8 @@ extern void midi_CheckTxActiveSense();
 
 
 extern void init_Midi();
+extern void midi_ManualOff(uint8_t manual);
+extern void midi_AllManualsOff();
 
 extern uint8_t midiCoupler_2from3;
 extern uint8_t midiCoupler_1from3;
@@ -1656,6 +1667,7 @@ uint8_t midiCoupler_Pfrom3;
 uint8_t midiCoupler_Pfrom2;
 uint8_t midiCoupler_Pfrom1;
 ManualMap_t manualMap[4][4];
+ManualNoteRange_t ManualNoteRange[4];
 MidiInMap_t midiInMap[16][4];
 MidiOutMap_t midiOutMap[4];
 uint8_t midiRxActivceSensing = 0;
@@ -1714,10 +1726,22 @@ void midiAllNotesOff(uint8_t channel){
  }
 }
 
-void midiAllManualsOff(){
+void midi_ManualOff(uint8_t manual){
 
- pipeProcessing = 0x80;
- init_Pipe();
+ if ((manual < 4) && (ManualNoteRange[manual].startNote != 0xFF) && (ManualNoteRange[manual].endNote != 0xFF)){
+  for (uint8_t note = ManualNoteRange[manual].startNote; note <= ManualNoteRange[manual].endNote; note++){
+   manual_NoteOnOff(manual,note,0x00);
+  }
+ }
+}
+
+void midi_AllManualsOff(){
+ for (uint8_t manual = 0; manual < 4; manual++){
+  midi_ManualOff(manual);
+ }
+
+
+
 }
 
 void midi_CheckRxActiveSense(){
@@ -1725,7 +1749,7 @@ void midi_CheckRxActiveSense(){
 
   if ((swTimer[3].counter == 0x00)) {
 
-   midiAllManualsOff();
+   midi_AllManualsOff();
    midiRxActivceSensing = 0;
   }
  }
@@ -1736,9 +1760,9 @@ void midi_CheckTxActiveSense(){
   if (!(((swTimer[8].counter != 0x00) && (swTimer[8].counter != 0xFF)))){
 
    
-# 114 ".././Midi.c" 3
+# 127 ".././Midi.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 114 ".././Midi.c"
+# 127 ".././Midi.c"
   {swTimer[8].counter = 200 / 20; swTimer[8].prescaler = (200 % 20) / 4;};
    midi_SendActiveSense();
   }
@@ -1770,9 +1794,9 @@ void midiIn_Process(uint8_t midiByte){
    if (midiByte == 0xFE) {
     midiRxActivceSensing = 1;
     
-# 144 ".././Midi.c" 3
+# 157 ".././Midi.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 144 ".././Midi.c"
+# 157 ".././Midi.c"
    {swTimer[3].counter = 500 / 20; swTimer[3].prescaler = (500 % 20) / 4;};
    } else if (midiByte == 0xFF){
     midiAllReset();
@@ -2006,7 +2030,7 @@ void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff){
 }
 
 ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note){
- ChannelNote_t result;
+ ChannelNote_t result = {0xFF,0xFF};
  if (manual < 4) {
   if (midiOutMap[manual].channel != 0xFF) {
    result.channel = midiOutMap[manual].channel;
@@ -2017,6 +2041,30 @@ ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note){
 }
 
 
+
+void Midi_updateManualRange(){
+ for (uint8_t i = 0; i < 4; i++){
+  uint8_t rangeEnd = 0;
+  uint8_t rangeStart = 0xFF;
+  for (uint8_t range = 0; range < 4; range++){
+   if ((manualMap[i][range].startNote != 0xFF) && (manualMap[i][range].endNote != 0xFF)){
+    if (manualMap[i][range].startNote < rangeStart) {
+     rangeStart = manualMap[i][range].startNote;
+    }
+    if (manualMap[i][range].endNote > rangeEnd) {
+     rangeEnd = manualMap[i][range].endNote;
+    }
+   }
+   if ((rangeEnd == 0) || (rangeStart == 0xFF)){
+    ManualNoteRange[i].startNote = 0xFF;
+    ManualNoteRange[i].endNote = 0xFF;
+   } else {
+    ManualNoteRange[i].startNote = rangeStart;
+    ManualNoteRange[i].endNote = rangeEnd;
+   }
+  }
+ }
+}
 
 void init_Manual2Module(){
  for (int8_t i = 4 -1; i >= 0; i--){
@@ -2033,7 +2081,7 @@ void init_Manual2Module(){
   midiEEPromLoadError = 0xFF;
   log_putError(1,3,0);
  }
-
+ Midi_updateManualRange();
 
 }
 
@@ -2120,11 +2168,6 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 
     if (manualNote.manual != 0xFF){
 
-     if (command == 0x20) {
-
-      midiLastOutManual = manualNote.manual;
-      midiLastOutNote = manualNote.note;
-     }
 
      chanNote = Manual_to_MidiNote(manualNote.manual, manualNote.note);
      if (chanNote.channel != 0xFF){
@@ -2132,6 +2175,12 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
       serial1MIDISend((command == 0x20 ? 0x90 : 0x80) | chanNote.channel);
       serial1MIDISend(chanNote.note);
       serial1MIDISend(64);
+
+      if (command == 0x20) {
+
+       midiLastOutManual = manualNote.manual;
+       midiLastOutNote = manualNote.note;
+      }
      }
 
      uint8_t noteOnOff = (command == 0x20 ? 0x01 : 0x00);

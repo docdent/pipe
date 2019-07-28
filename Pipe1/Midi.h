@@ -69,6 +69,12 @@ typedef  struct{
 } ManualMap_t;
 extern ManualMap_t manualMap[MANUAL_COUNT][RANGE_COUNT];
 
+typedef struct{
+	uint8_t startNote;
+	uint8_t endNote;
+} ManualNoteRange_t;
+extern ManualNoteRange_t ManualNoteRange[MANUAL_COUNT];
+
 // --------------- Conversion MIDI Channel to Manual ------------
 #define MIDI_CHANNEL_COUNT 16
 #define MIDI_CHANNEL_MASK 0x0F
@@ -130,6 +136,7 @@ extern void init_Registers();
 
 extern void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff);
 extern ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note);
+extern void Midi_updateManualRange();
 
 extern void midiSendAllNotesOff();
 
@@ -154,6 +161,8 @@ extern void midi_CheckTxActiveSense();
 //------------------------------- Couplers --------------------------
 
 extern void init_Midi();
+extern void midi_ManualOff(uint8_t manual);
+extern void midi_AllManualsOff();
 
 extern  uint8_t midiCoupler_2from3; // set to zero in init_Manual2Module()
 extern  uint8_t midiCoupler_1from3;

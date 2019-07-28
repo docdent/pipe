@@ -62,7 +62,7 @@ uint8_t menuOnEnterUSBprotokoll(uint8_t arg);
 uint8_t menuOnExitUSBactive(uint8_t arg);
 uint8_t menuOnEnterUSBsendHW(uint8_t arg);
 const __flash Menu_t menu_USBser[] =
-	{{MENU_T_VARONOFF | MENU_T_LEFTBOUND,0,"Active",NULL,{&(serusb_Active)},NULL,menuOnExitUSBactive},
+	{{MENU_T_VARONOFF | MENU_T_LEFTBOUND,0,"Active",NULL,{(uint8_t *) &(serusb_Active)},NULL,menuOnExitUSBactive},
 	{MENU_T_MENU,0,"SendLog",NULL,{NULL},menuOnEnterUSBprotokoll,NULL},
 	{MENU_T_MENU | MENU_T_RIGHTBOUND,0,"SndHWCfg",NULL,{NULL},menuOnEnterUSBsendHW,NULL}};
 
@@ -95,7 +95,7 @@ uint8_t menuOnExitModules(uint8_t arg);
 uint8_t menuOnExitManual(uint8_t arg);
 const __flash Menu_t menu_module[] =
 	{{MENU_T_VARBIN | MENU_T_LEFTBOUND,0,"ModRead",NULL,{&(pipe_ModuleAssnRead)},NULL,menuOnExitModules},
-	{MENU_T_VARBIN,0,"ModWrite",NULL,{&(pipe_ModuleAssnWrite)},NULL,menuOnExitModules},
+	{MENU_T_VARBIN,0,"ModWrite",NULL,{&(pipe_ModuleAssnWrite)},NULL,NULL},
 	{MENU_T_VARBIN,MENU_FLAG_READONLY,"ModOK",NULL,{&(pipe_ModuleTested)},NULL,NULL},
 	{MENU_T_MENU,0,"ModTest",menu_ModeSel,{NULL},NULL,NULL},
 	{MENU_T_MENU_R,0,"ModAssign",menu_modAssign,{NULL},NULL,menuOnExitManual}};
@@ -135,7 +135,7 @@ const __flash Menu_t menu_midiOut[] =
 uint8_t menuOnEnterTestManual(uint8_t arg);
 uint8_t menuOnExitTestManualMan(uint8_t arg);
 
-// --- MAIN --- STIMMEN ---
+// --- MAIN --- NANUAL --- STIMMEN ---
 uint8_t menuOnEnterTune(uint8_t arg);
 const __flash Menu_t menu_tune[] =
 	{{MENU_T_MENU_L,MENU_FLAG_FNHANDLEMESSAGE,MENUTEXT_MAN3,NULL,{.tag=MANUAL_III},menuOnEnterTune,NULL},
@@ -199,14 +199,32 @@ const __flash Menu_t menu_midi[] =
 	{MENU_T_MENU,0,"MIDIin",menu_midiIn,{NULL},NULL,menuOnExitMidiIn},
 	{MENU_T_MENU_R,0,"MIDIout",menu_midiOut,{NULL},NULL,menuOnExitMidiOut}};
 
+// --- MAIN --- MANUAL --- KOPPLER ---
+uint8_t menuOnExitCoupler(uint8_t arg);
+const __flash Menu_t menu_coupler[] = {
+	{MENU_T_VARONOFF | MENU_T_LEFTBOUND,0,"2<3",NULL,{&midiCoupler_2from3},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"1<3",NULL,{&midiCoupler_1from3},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"1<2",NULL,{&midiCoupler_1from2},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"P<3",NULL,{&midiCoupler_Pfrom3},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"P<2",NULL,{&midiCoupler_Pfrom2},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"P<1",NULL,{&midiCoupler_Pfrom1},NULL,menuOnExitCoupler}
+};
+
+// --- MAIN --- MANUAL ----
+const __flash Menu_t menu_manual[] = {
+	{MENU_T_MENU_L,0,"Koppler",menu_coupler,{NULL},NULL,NULL},
+	{MENU_T_MENU_R,0,"Stimmen",menu_tune,{NULL},NULL,NULL}
+};
+
 // --- MAIN ---
 uint8_t menuOnExitKeys(uint8_t arg);
-const __flash Menu_t menu_main[] =
-	{{MENU_T_MENU_L,0,"MIDI",menu_midi,{NULL},NULL,NULL},
+const __flash Menu_t menu_main[] = 	{
+	{MENU_T_MENU_L,0,"MIDI",menu_midi,{NULL},NULL,NULL},
+	{MENU_T_MENU,0,"Manual",menu_manual,{NULL},NULL,NULL},
 	{MENU_T_MENU,0,"Tasten",menu_key,{NULL},NULL,menuOnExitKeys},
-	{MENU_T_MENU,0,"Stimmen",menu_tune,{NULL},NULL,NULL},
 	{MENU_T_MENU,0,"Status",menu_status,{NULL},NULL,NULL},
-	{MENU_T_MENU_R,0,"Setup",menu_setup,{NULL},NULL,NULL}};
+	{MENU_T_MENU_R,0,"Setup",menu_setup,{NULL},NULL,NULL}
+};
 
 //-------------------------------- SOFTKEY MENU --------------------------------
 
@@ -302,6 +320,12 @@ SoftKey_List_t soft_Key[MENU_SOFTKEY_COUNT];
 
 //*************************** I N D I V I D U A L   S O F T K E Y   F U N C T I O N S ******************************
 
+uint8_t menuOnExitCoupler(uint8_t arg) {
+	(void) arg;
+	// TODO Check coupler cycle
+	return 0;
+}
+
 uint8_t softkeyCoupler(uint8_t arg, uint8_t* pCoupler){
 	// to be called as softkey function; arg==0 -> give status only
 	if (arg != 0){
@@ -311,27 +335,58 @@ uint8_t softkeyCoupler(uint8_t arg, uint8_t* pCoupler){
 }
 
 uint8_t softKeyCoupler2from3(uint8_t arg){
-	return softkeyCoupler(arg, &midiCoupler_2from3);
+	// currently softcoupler off stopps midi notes also!
+	uint8_t result = softkeyCoupler(arg, &midiCoupler_2from3);
+	if (result == MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF){
+		// turn off outputs on manual 2
+		midi_ManualOff(MANUAL_II);
+	}
+	return result;
 }
 
 uint8_t softKeyCoupler1from3(uint8_t arg){
-	return softkeyCoupler(arg, &midiCoupler_1from3);
+	uint8_t result = softkeyCoupler(arg, &midiCoupler_1from3);
+	if (result == MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF){
+		// turn off outputs on manual 2
+		midi_ManualOff(MANUAL_I);
+	}
+	return result;
 }
 
 uint8_t softKeyCouplerPfrom3(uint8_t arg){
-	return softkeyCoupler(arg, &midiCoupler_Pfrom3);
+	uint8_t result = softkeyCoupler(arg, &midiCoupler_Pfrom3);
+	if (result == MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF){
+		// turn off outputs on manual P
+		midi_ManualOff(MANUAL_P);
+	}
+	return result;
 }
 
 uint8_t softKeyCoupler1from2(uint8_t arg){
-	return softkeyCoupler(arg, &midiCoupler_1from2);
+	uint8_t result = softkeyCoupler(arg, &midiCoupler_1from2);
+	if (result == MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF){
+		// turn off outputs on manual 1
+		midi_ManualOff(MANUAL_I);
+	}
+	return result;
 }
 
 uint8_t softKeyCouplerPfrom2(uint8_t arg){
-	return softkeyCoupler(arg, &midiCoupler_Pfrom2);
+	uint8_t result = softkeyCoupler(arg, &midiCoupler_Pfrom2);
+	if (result == MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF){
+		// turn off outputs on manual P
+		midi_ManualOff(MANUAL_P);
+	}
+	return result;
 }
 
 uint8_t softKeyCouplerPfrom1(uint8_t arg){
-	return softkeyCoupler(arg, &midiCoupler_Pfrom1);
+	uint8_t result = softkeyCoupler(arg, &midiCoupler_Pfrom1);
+	if (result == MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF){
+		// turn off outputs on manual P
+		midi_ManualOff(MANUAL_P);
+	}
+	return result;
 }
 
 //*************************** I N D I V I D U A L   M E N U   F U N C T I O N S ******************************
@@ -682,7 +737,7 @@ uint8_t menuOnEnterStatusMidiIn(uint8_t arg){
 	// 3 bytes out of in buffer
 	if (midiRxBytesCount < 4) {
 		byteCount = midiRxBytesCount;
-		} else {
+	} else {
 		byteCount = 4;
 	}
 	pByte = & (midiRxBuffer[midiRxInIndex]);
@@ -726,41 +781,6 @@ uint8_t menuOnEnterStatusMidiOut(uint8_t arg){
 	return 0;
 }
 
-// uint8_t menuOnExitMidiChannelSection(uint8_t arg){
-// 	(void) arg;
-// 	menuCursorSetExtra();
-// 	lcd_putc('C');
-// 	lcd_putc('h');
-// 	uint8_t myChannel = (menuMidiChan & 0x0F) + 1;
-// 	if (myChannel > 9 ) {
-// 		lcd_putc('1');
-// 		lcd_putc(myChannel-10+'0');
-// 	} else {
-// 		lcd_putc('0');
-// 		lcd_putc(myChannel+'0');
-// 	}
-// 	lcd_putc('s');
-// 	lcd_putc('0' + (menuSection & 0x03));
-// 	DataAdressOffset = (&(midiInMap[menuMidiChan & 0x0F][menuSection & 0x03]) - &(midiInMap[0][0])) * sizeof(MidiInMap_t);
-// 	// pointer offset in memory bytes (!) for midiInMap[MIDI_CHANNEL_COUNT][MIDI_SPLIT_COUNT], so adress in (currentMenu->pVar) is index only!
-// 	// sizeof() neccessary because adress calculation in menu function assumes uint8_t !
-// 	return 0; // here no meaning
-// }
-
-// uint8_t menuOnExitManualSection(uint8_t arg){
-// 	(void) arg;
-// 	menuCursorSetExtra();
-// 	lcd_putc('M');
-// 	lcd_putc(':');
-// 	lcd_ManualOut(menuManual);
-// 	lcd_putc('s');
-// 	lcd_putc('0' + (menuSection & 0x03));
-// 	DataAdressOffset = (&(manualMap[menuMidiChan & 0x0F][menuSection & 0x03]) - &(manualMap[0][0])) * sizeof(ManualMap_t);
-// 	// pointer offset in memory bytes (!) for manualMap[MANUAL_COUNT][RANGE_COUNT], so address in (currentMenu->pVar) is index only!
-// 	// sizeof() neccessary because adress calculation in menu function assumes uint8_t !
-// 	return 0; // here no meaning
-// }
-
 uint8_t menuOnExitMidiIn(uint8_t arg){
 	(void) arg;
 	eeprom_UpdateMidiInMap();
@@ -776,6 +796,7 @@ uint8_t menuOnExitMidiOut(uint8_t arg){
 uint8_t menuOnExitManual(uint8_t arg){
 	(void) arg;
 	eeprom_UpdateManualMap();
+	Midi_updateManualRange();
 	return 0;
 }
 
@@ -784,48 +805,6 @@ uint8_t menuOnExitModules(uint8_t arg){
 	eeprom_UpdateModules();
 	return 0;
 }
-
-// uint8_t menuOnExitTestModBit(uint8_t arg){
-// 	(void) arg;
-// 	menuCursorSetExtra();
-// 	lcd_putc('M');
-// 	lcd_putc('0'+(MODULE_BIT_TO_MODULE(menuTestModuleBit)));
-// 	lcd_putc('B');
-// 	uint8_t bitNr = MODULE_BIT_TO_BIT(menuTestModuleBit);
-// 	uint8_t tens = 0;
-// 	while (bitNr > 9){
-// 		bitNr -= 10;
-// 		tens++;
-// 	}
-// 	lcd_putc('0' + tens);
-// 	lcd_putc('0' + bitNr);
-// 	menuCursorSetMenu();
-// 	return (0);
-// }
-//
-// uint8_t menuOnEnterReadModBit(uint8_t arg){
-// 	(void) arg;
-// 	uint8_t input;
-// 	lcd_goto(MENU_LCD_CURSOR_DATA);
-// 	input = pipe[MODULE_BIT_TO_BIT(menuTestModuleBit)].pipeIn & (1 << MODULE_BIT_TO_MODULE(menuTestModuleBit));
-// 	if (input == 0) {
-// 		lcd_putc('L');
-// 	} else {
-// 		lcd_putc('H');
-// 	}
-// 	menuCursorSetMenu();
-// 	return (0);
-// }
-//
-// uint8_t menuOnEnterWriteModBit(uint8_t arg){
-// 	(void) arg;
-// 	if (menuTestData == 0){
-// 		pipe[MODULE_BIT_TO_BIT(menuTestModuleBit)].pipeOut |= (1 << MODULE_BIT_TO_MODULE(menuTestModuleBit));
-// 	} else {
-// 		pipe[MODULE_BIT_TO_BIT(menuTestModuleBit)].pipeOut &= ~(1 << MODULE_BIT_TO_MODULE(menuTestModuleBit));
-// 	}
-// 	return 0;
-// }
 
 const char logNone [] PROGMEM = "<none>";
 
@@ -850,18 +829,7 @@ uint8_t menuOnEnterLogDisp(uint8_t arg) {
 			logEntryNr++;
 		}
 	} else if ((arg == MESSAGE_KEY_DOWN) || (arg == MESSAGE_KEY_SEL)) {
-		// old beavior: up down move +/- 10 entries
-		// 		if (logEntryNr > 9) {
-		// 			logEntryNr = logEntryNr - 10;
-		// 		}
-		// new: down: chanmge text/nr
 		showText = ~showText;
-	// 	} else if (arg == MESSAGE_KEY_UP) {
-	// 		logEntryNr = logEntryNr+10;
-	// 		if ((logEntryNr > log_count()-1) && (log_count() != 0)) {
-	// 			logEntryNr = log_count()-1;
-	// new up=esc
-	//	}
 	} else {
 		result = FALSE;
 	}
@@ -889,104 +857,6 @@ uint8_t menuOnEnterLogDisp(uint8_t arg) {
 	return result;
 }
 
-// uint8_t menuOnExitTestManualMan(uint8_t arg){
-// 	(void) arg;
-// 	menuCursorSetExtra();
-// 	lcd_putc('M');
-// 	lcd_putc(':');
-// 	lcd_ManualOut(menuManual);
-// 	menuCursorSetMenu();
-// 	return (0);
-// }
-//
-// uint8_t menuOnEnterTestManual(uint8_t arg) {
-// 	(void) arg;
-// 	static uint8_t minManNote;
-// 	static uint8_t maxManNote;
-// 	static uint8_t notOnOff;
-// 	uint8_t result = TRUE;
-// 	// arg is message
-// 	if (arg == MESSAGE_KEY_NONE){
-// 		// start: edit manual, set key to 0 to indicate that
-// 		minManNote = MIDI_NOTE_NONE; // set to 0xFF as start to find lowest note of manual
-// 		maxManNote = 0;
-// 		if (menuManual > MANUAL_P) {
-// 			menuManual = MANUAL_III;
-// 		}
-// 		for (uint8_t i = 0; i < RANGE_COUNT; i++){
-// 			if (manualMap[menuManual][i].startNote < minManNote){
-// 				minManNote = manualMap[menuManual][i].startNote;
-// 			}
-// 			if (manualMap[menuManual][i].endNote > maxManNote){
-// 				maxManNote = manualMap[menuManual][i].endNote;
-// 			}
-// 		}
-// 		if (minManNote > MIDI_NOTE_MAX){
-// 			// manual not assigned
-// 			lcd_goto(MENU_LCD_CURSOR_DATA);
-// 			lcd_puts_P(stringNotAssigen);
-// 			menuNote = MIDI_NOTE_NONE; // wait till next message to exit
-// 		} else {
-// 			menuNote = minManNote;
-// 			notOnOff = NOTE_OFF;
-// 		}
-// 		keylabel_set(0,keylabel_exit);
-// 		keylabel_set(1,keylabel_onoff);
-// 		keylabel_set(2,keylabel_minus);
-// 		keylabel_set(3,keylabel_plus);
-// 		keylabel_toLCD();
-// 	} else if (menuNote == MIDI_NOTE_NONE) {
-// 		result = FALSE;	// next message after manual not assigend, now exit
-// 	} else if (arg == MESSAGE_KEY_RIGHT) {
-// 		if (menuNote < maxManNote){
-// 			manual_NoteOnOff(menuManual,menuNote,NOTE_OFF);
-// 			menuNote++;
-// 			if (notOnOff == NOTE_ON){
-// 				manual_NoteOnOff(menuManual,menuNote,NOTE_ON);
-// 			}
-// 		}
-// 	} else if (arg == MESSAGE_KEY_LEFT) {
-// 		if (menuNote > minManNote){
-// 			manual_NoteOnOff(menuManual,menuNote,NOTE_OFF);
-// 			menuNote--;
-// 			if (notOnOff == NOTE_ON){
-// 				manual_NoteOnOff(menuManual,menuNote,NOTE_ON);
-// 			}
-// 		}
-// 	} else if (arg == MESSAGE_KEY_DOWN) {
-// 		if (notOnOff == NOTE_OFF){
-// 			notOnOff = NOTE_ON;
-// 		} else {
-// 			notOnOff = NOTE_OFF;
-// 		}
-// 		manual_NoteOnOff(menuManual,menuNote,notOnOff);
-// 	} else if ((arg == MESSAGE_KEY_UP) || (arg == MESSAGE_KEY_ESC)) {
-// 		manual_NoteOnOff(menuManual,menuNote,NOTE_OFF);
-// 		result = FALSE;
-// 	} else if (arg == MESSAGE_KEY_SEL) {
-// 		manual_NoteOnOff(menuManual,menuNote,NOTE_OFF);
-// 		result = FALSE;
-// 	}
-// 	if (result == TRUE){
-// 		// show status
-// 		if (menuNote != MIDI_NOTE_NONE) {
-// 			// not if "unassigend" is printed before
-// 			lcd_goto(MENU_LCD_CURSOR_DATA);
-// 			lcd_noteOut(menuNote);
-// 			lcd_putc(' ');
-// 			lcd_putc('o');
-// 			if (notOnOff == NOTE_OFF){
-// 				lcd_putc('f');
-// 				lcd_putc('f');
-// 			} else {
-// 				lcd_putc('n');
-// 				lcd_putc(' ');
-// 			}
-// 		}
-// 		lcd_goto(MENU_LCD_CURSOR_DATA);
-// 	}
-// 	return result;
-// }
 
 const char msg_programming1[] PROGMEM = "save...";
 const char msg_programming2[] PROGMEM = "ok     ";
@@ -1166,11 +1036,19 @@ void softkeyUp(){
 }
 
 void softkeyPlus(){
-	keylabel_set(0,keylabel_plus);
+	if (dataType == MENU_T_VARBIN) {
+		keylabel_set(0,keylabel_1);
+	} else {
+		keylabel_set(0,keylabel_plus);
+	}
 }
 
 void softkeyMinus(){
-	keylabel_set(1,keylabel_minus);
+	if (dataType == MENU_T_VARBIN) {
+		keylabel_set(1,keylabel_0);
+	} else {
+		keylabel_set(1,keylabel_minus);
+	}
 }
 
 // ---------------------- Data Handling
@@ -1279,7 +1157,7 @@ void nibbleToLCDstring(){
 		lcdData[0] = 'C';
 		lcdData[1] = 'h';
 		if (nibble[0] == MIDI_CHANNEL_NONE) {
-			lcdData[2] = '-';
+			lcdData[2] = ' ';
 			lcdData[3] = '-';
 		} else {
 			if (nibble[0] > 9) {
@@ -1375,11 +1253,9 @@ void nibbleToLCDstring(){
 				lcdData[0] = 'P';
 				lcdData[1] = '\0';
 			} else {
-				lcdData[0] = 'n';
-				lcdData[1] = 'o';
-				lcdData[2] = 'n';
-				lcdData[3] = 'e';
-				lcdData[4] = '\0';
+				// V 0.56 "-" instead of "none"
+				lcdData[0] = '-';
+				lcdData[1] = '\0';
 			}
 		#endif
 		break;
@@ -1388,15 +1264,16 @@ void nibbleToLCDstring(){
 		lcdData[1] = '\0';
 		break;
 	case MENU_T_VARONOFF:
-		lcdData[0] = 'o';
 		if (nibble[0] == FALSE) {
-			lcdData[1] = 'f';
-			lcdData[2] = 'f';
-			lcdData[3] = '\0';
+			lcdData[0] = 'a';
+			lcdData[1] = 'u';
+			lcdData[2] = 's';
 		} else {
-			lcdData[1] = 'n';
-			lcdData[2] = '\0';
+			lcdData[0] = 'e';
+			lcdData[1] = 'i';
+			lcdData[2] = 'n';
 		}
+		lcdData[3] = '\0';
 		break;
 	case MENU_T_VARBIN:
 	case MENU_T_VARLONG:
@@ -1572,7 +1449,7 @@ void nibbleChange(uint8_t nibbleNr , int8_t addValue){
 			nibble[0] = ~nibble[0];
 			break;
 		case MENU_T_VARBIN:
-			nibble[nibbleNr] = (nibble[nibbleNr] + addValue) & 0x01;
+			nibble[nibbleNr] = ((addValue >> 1) & 0x01) ^ 0x01; // V 0.56 instead of adding make +/-1 to 1 or 0
 			break;
 	}
 }
@@ -1995,6 +1872,12 @@ uint8_t menu_ProcessMessage(uint8_t message){
 			nibbleChange(nibbleIndex,1);
 			nibbleToData();
 			menuDisplayValue();
+			if (dataType == MENU_T_VARBIN) {
+				// V 0.56 on bit-entry move to next bit
+				if (nibbleIndex < pNibbleInfo->nibbleCount - 1){
+					nibbleIndex++;
+				}
+			}
 			menuCursorSetDataNibble();
 			break;
 		case MESSAGE_KEY_DOWN:
@@ -2002,6 +1885,11 @@ uint8_t menu_ProcessMessage(uint8_t message){
 			nibbleChange(nibbleIndex,-1);
 			nibbleToData();
 			menuDisplayValue();
+			if (dataType == MENU_T_VARBIN) {
+				if (nibbleIndex < pNibbleInfo->nibbleCount - 1){
+					nibbleIndex++;
+				}
+			}
 			menuCursorSetDataNibble();
 			break;
 		case MESSAGE_KEY_SEL:

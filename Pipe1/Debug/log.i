@@ -602,18 +602,20 @@ extern const __flash char keylabel_left [] ;
 extern const __flash char keylabel_onoff [] ;
 extern const __flash char keylabel_exit [] ;
 extern const __flash char keylabel_text [] ;
+extern const __flash char keylabel_0 [] ;
+extern const __flash char keylabel_1 [] ;
 
 extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 96 ".././utils.h"
+# 98 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 98 ".././utils.h" 3
+# 100 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 98 ".././utils.h"
+# 100 ".././utils.h"
                                  ;
 # 12 ".././message.h" 2
 

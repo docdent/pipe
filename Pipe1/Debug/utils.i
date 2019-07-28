@@ -727,18 +727,20 @@ extern const __flash char keylabel_left [] ;
 extern const __flash char keylabel_onoff [] ;
 extern const __flash char keylabel_exit [] ;
 extern const __flash char keylabel_text [] ;
+extern const __flash char keylabel_0 [] ;
+extern const __flash char keylabel_1 [] ;
 
 extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 96 ".././utils.h"
+# 98 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 98 ".././utils.h" 3
+# 100 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 98 ".././utils.h"
+# 100 ".././utils.h"
                                  ;
 # 13 ".././utils.c" 2
 # 1 ".././lcd_u.h" 1
@@ -920,7 +922,13 @@ typedef struct{
  uint8_t bitStart;
 } ManualMap_t;
 extern ManualMap_t manualMap[4][4];
-# 107 ".././Midi.h"
+
+typedef struct{
+ uint8_t startNote;
+ uint8_t endNote;
+} ManualNoteRange_t;
+extern ManualNoteRange_t ManualNoteRange[4];
+# 113 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -947,6 +955,7 @@ extern void init_Registers();
 
 extern void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff);
 extern ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note);
+extern void Midi_updateManualRange();
 
 extern void midiSendAllNotesOff();
 
@@ -971,6 +980,8 @@ extern void midi_CheckTxActiveSense();
 
 
 extern void init_Midi();
+extern void midi_ManualOff(uint8_t manual);
+extern void midi_AllManualsOff();
 
 extern uint8_t midiCoupler_2from3;
 extern uint8_t midiCoupler_1from3;
@@ -1367,7 +1378,7 @@ void lcd_cursoroff(){
  lcd_write_command((1 << 3) | (1 << 2));
  lcd_cursorIsOn = 0x00;
 }
-# 589 ".././utils.c"
+
 void lcd_waitSymbolOn(){
  uint8_t saveCursor = lcd_cursorPos;
  lcd_goto(0 +12);
@@ -1390,30 +1401,9 @@ uint8_t chekcDecNibbles(uint8_t myNibbles[3]){
   return(0);
  }
 }
-# 705 ".././utils.c"
-void lcd_midiChout(uint8_t *midiChannel){
- if (*midiChannel > 0x0F) {
 
-  *midiChannel = 0xFF;
-  lcd_putc(' ');
-  lcd_putc('-');
- } else if (*midiChannel > 0x08) {
 
-  lcd_putc('1');
-  lcd_putc('0'+*midiChannel-9);
- } else {
-  lcd_putc(' ');
-  lcd_putc('1'+*midiChannel);
- }
-}
-# 769 ".././utils.c"
-uint8_t mod12(uint8_t num){
- while (num >= 12){
-  num = num - 12;
- }
- return(num);
-}
-# 943 ".././utils.c"
+
 const char __flash keylabel_up [] = "\x08";
 const char __flash keylabel_down [] = "\x09";
 const char __flash keylabel_right [] = "\x7E";
@@ -1423,6 +1413,8 @@ const char __flash keylabel_minus [] = "-";
 const char __flash keylabel_onoff [] = "Ein" "\x80";
 const char __flash keylabel_exit [] = "Exit";
 const char __flash keylabel_text [] = "Text" "\x80";
+const char __flash keylabel_0 [] = "0";
+const char __flash keylabel_1 [] = "1";
 
 static char labelBuffer [4 * 5];
 

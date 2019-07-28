@@ -85,6 +85,7 @@ int main(void)
 			uint8_t keyMessage = message_get();
 			if (keyMessage == (MESSAGE_KEY_LONGPRESSED | MESSAGE_KEY_ESC)){
 				menu_OnEnterMidiPanic(0);
+				midi_AllManualsOff();
 			}
 			if (menuNotActive == TRUE) {
 				// --- MESSAGE 

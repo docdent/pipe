@@ -749,18 +749,20 @@ extern const __flash char keylabel_left [] ;
 extern const __flash char keylabel_onoff [] ;
 extern const __flash char keylabel_exit [] ;
 extern const __flash char keylabel_text [] ;
+extern const __flash char keylabel_0 [] ;
+extern const __flash char keylabel_1 [] ;
 
 extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 96 ".././utils.h"
+# 98 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 98 ".././utils.h" 3
+# 100 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 98 ".././utils.h"
+# 100 ".././utils.h"
                                  ;
 # 12 ".././message.h" 2
 
@@ -979,7 +981,13 @@ typedef struct{
  uint8_t bitStart;
 } ManualMap_t;
 extern ManualMap_t manualMap[4][4];
-# 107 ".././Midi.h"
+
+typedef struct{
+ uint8_t startNote;
+ uint8_t endNote;
+} ManualNoteRange_t;
+extern ManualNoteRange_t ManualNoteRange[4];
+# 113 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -1006,6 +1014,7 @@ extern void init_Registers();
 
 extern void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff);
 extern ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note);
+extern void Midi_updateManualRange();
 
 extern void midiSendAllNotesOff();
 
@@ -1030,6 +1039,8 @@ extern void midi_CheckTxActiveSense();
 
 
 extern void init_Midi();
+extern void midi_ManualOff(uint8_t manual);
+extern void midi_AllManualsOff();
 
 extern uint8_t midiCoupler_2from3;
 extern uint8_t midiCoupler_1from3;
@@ -1716,6 +1727,7 @@ __asm__ __volatile__ ("sei" ::: "memory")
    uint8_t keyMessage = message_get();
    if (keyMessage == (0x80 | 6)){
     menu_OnEnterMidiPanic(0);
+    midi_AllManualsOff();
    }
    if (menuNotActive == 0xFF) {
 
@@ -1725,13 +1737,13 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
 
      menu_Init(
-# 96 ".././main.c" 3 4
+# 97 ".././main.c" 3 4
               ((void *)0)
-# 96 ".././main.c"
+# 97 ".././main.c"
                   , 
-# 96 ".././main.c" 3 4
+# 97 ".././main.c" 3 4
                     ((void *)0)
-# 96 ".././main.c"
+# 97 ".././main.c"
                         );
      menu_InitLCD();
      menuNotActive = 0x00;
@@ -1831,9 +1843,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
    lcd_goto(oldcursor);
    midiLastInNote = 0xFF;
    
-# 194 ".././main.c" 3
+# 195 ".././main.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 194 ".././main.c"
+# 195 ".././main.c"
   {swTimer[4].counter = 1000 / 20; swTimer[4].prescaler = (1000 % 20) / 4;};
   } else if (swTimer[4].counter == 0x00) {
 
@@ -1852,9 +1864,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
    lcd_goto(oldcursor);
    midiLastOutNote = 0xFF;
    
-# 211 ".././main.c" 3
+# 212 ".././main.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 211 ".././main.c"
+# 212 ".././main.c"
   {swTimer[5].counter = 1000 / 20; swTimer[5].prescaler = (1000 % 20) / 4;};
   } else if (swTimer[5].counter == 0x00) {
 

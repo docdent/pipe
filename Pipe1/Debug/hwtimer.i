@@ -452,18 +452,20 @@ extern const __flash char keylabel_left [] ;
 extern const __flash char keylabel_onoff [] ;
 extern const __flash char keylabel_exit [] ;
 extern const __flash char keylabel_text [] ;
+extern const __flash char keylabel_0 [] ;
+extern const __flash char keylabel_1 [] ;
 
 extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 96 ".././utils.h"
+# 98 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 98 ".././utils.h" 3
+# 100 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 98 ".././utils.h"
+# 100 ".././utils.h"
                                  ;
 # 12 ".././message.h" 2
 
@@ -839,7 +841,13 @@ typedef struct{
  uint8_t bitStart;
 } ManualMap_t;
 extern ManualMap_t manualMap[4][4];
-# 107 ".././Midi.h"
+
+typedef struct{
+ uint8_t startNote;
+ uint8_t endNote;
+} ManualNoteRange_t;
+extern ManualNoteRange_t ManualNoteRange[4];
+# 113 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -866,6 +874,7 @@ extern void init_Registers();
 
 extern void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff);
 extern ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note);
+extern void Midi_updateManualRange();
 
 extern void midiSendAllNotesOff();
 
@@ -890,6 +899,8 @@ extern void midi_CheckTxActiveSense();
 
 
 extern void init_Midi();
+extern void midi_ManualOff(uint8_t manual);
+extern void midi_AllManualsOff();
 
 extern uint8_t midiCoupler_2from3;
 extern uint8_t midiCoupler_1from3;
@@ -2351,10 +2362,24 @@ static inline void timerPipeProcess(){
 
   PipeMessage_t myMessage;
   uint8_t pipeIn = curPipe->pipeIn;
-# 502 ".././hwtimer.c"
-  uint8_t newPipeStat = (pipeIn) | (curPipe->pipeInM4) | (curPipe->pipeInM8)
-   | (curPipe->pipeInM12) | (curPipe->pipeInM16) ;
-  uint8_t oldPipeStat = curPipe->pipeInStat;
+# 506 ".././hwtimer.c"
+  uint8_t newOnState = 0xFF;
+  uint8_t newOffState = 0;
+  uint8_t* pInByte = &(curPipe->pipeInM16);
+  newOnState &= *pInByte;
+  newOffState |= *pInByte++;
+  newOnState &= *pInByte;
+  newOffState |= *pInByte++;
+  newOnState &= *pInByte;
+  newOffState |= *pInByte++;
+  newOnState &= *pInByte;
+  newOffState |= *pInByte++;
+  newOnState &= *pInByte;
+  newOffState |= *pInByte++;
+  uint8_t oldPipeStat = *pInByte;
+  uint8_t newPipeStat = (oldPipeStat & newOffState) | newOnState;
+  *pInByte = newPipeStat;
+
   uint8_t statChange = (newPipeStat & ~oldPipeStat) & local_pipe_ModuleAssnRead;
   if ((statChange)!= 0) {
 
@@ -2369,7 +2394,7 @@ static inline void timerPipeProcess(){
    myMessage.message8[1] = 0x00 | shiftBitNr;
    pipeMsgPush(myMessage);
   }
-  curPipe->pipeInStat = newPipeStat;
+
   curPipe++;
   pipeProcessing |= 0x01;
  }
@@ -2378,94 +2403,94 @@ static inline void timerPipeProcess(){
 static inline void timerPipeIO(){
  Pipe_t *curPipe;
  
-# 527 ".././hwtimer.c" 3
+# 545 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 527 ".././hwtimer.c"
+# 545 ".././hwtimer.c"
               |= ((1 << 0) | (1 << 1) | (1 << 2));
  
-# 528 ".././hwtimer.c" 3
+# 546 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 528 ".././hwtimer.c"
+# 546 ".././hwtimer.c"
 &= ~(1 << 2);
  curPipe = &pipe[32 -1];
  uint8_t local_pipe_ModuleAssnWrite = ~pipe_ModuleAssnWrite;
  uint8_t i = 32;
  _delay_us(0.5);
  
-# 533 ".././hwtimer.c" 3
+# 551 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 533 ".././hwtimer.c"
+# 551 ".././hwtimer.c"
 |= (1 << 2);
  do {
   curPipe->pipeInM16 = curPipe->pipeInM12;
   curPipe->pipeInM12 = curPipe->pipeInM8;
   
-# 537 ".././hwtimer.c" 3
+# 555 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 537 ".././hwtimer.c"
+# 555 ".././hwtimer.c"
  |= (1 << 0);
   
-# 538 ".././hwtimer.c" 3
+# 556 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 538 ".././hwtimer.c"
+# 556 ".././hwtimer.c"
               = curPipe->pipeOut | local_pipe_ModuleAssnWrite;
   curPipe->pipeInM8 = curPipe->pipeInM4;
   curPipe->pipeInM4 = curPipe->pipeIn;
   curPipe->pipeIn = 
-# 541 ".././hwtimer.c" 3
+# 559 ".././hwtimer.c" 3
                    (*(volatile uint8_t *)((0X00) + 0x20))
-# 541 ".././hwtimer.c"
+# 559 ".././hwtimer.c"
                              ;
   
-# 542 ".././hwtimer.c" 3
+# 560 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 542 ".././hwtimer.c"
+# 560 ".././hwtimer.c"
  &= ~(1 << 0);
   curPipe--;
  } while (--i > 0);
  asm("nop");
  asm("nop");
  
-# 547 ".././hwtimer.c" 3
+# 565 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 547 ".././hwtimer.c"
+# 565 ".././hwtimer.c"
 |= (1 << 0);
  
-# 548 ".././hwtimer.c" 3
+# 566 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 548 ".././hwtimer.c"
+# 566 ".././hwtimer.c"
 &= ~(1 << 1);
  pipeProcessing |= 0x02;
  
-# 550 ".././hwtimer.c" 3
+# 568 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 550 ".././hwtimer.c"
+# 568 ".././hwtimer.c"
              = 0;
  
-# 551 ".././hwtimer.c" 3
+# 569 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x0B) + 0x20)) 
-# 551 ".././hwtimer.c"
+# 569 ".././hwtimer.c"
 |= (1 << 7);
  
-# 552 ".././hwtimer.c" 3
+# 570 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 552 ".././hwtimer.c"
+# 570 ".././hwtimer.c"
 |= (1 << 1);
 }
 
 
 
 
-# 557 ".././hwtimer.c" 3
+# 575 ".././hwtimer.c" 3
 void __vector_21 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_21 (void)
 
-# 558 ".././hwtimer.c"
+# 576 ".././hwtimer.c"
 {
 
  
-# 560 ".././hwtimer.c" 3
+# 578 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 560 ".././hwtimer.c"
+# 578 ".././hwtimer.c"
          |= (1 << 7);
 
  switch (++msecCtr & 0x03) {
@@ -2482,9 +2507,9 @@ void __vector_21 (void) __attribute__ ((signal,used, externally_visible)) ; void
    break;
  }
  
-# 575 ".././hwtimer.c" 3
+# 593 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 575 ".././hwtimer.c"
+# 593 ".././hwtimer.c"
          &= ~(1 << 7);
 
 }

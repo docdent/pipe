@@ -163,7 +163,7 @@ extern uint8_t keyWants[MESSAGE_KEY_COUNT]; // attention: index is key...- MESSA
 typedef struct {
 	uint8_t pipeOutM4; // out value 4ms ago
 	uint8_t pipeOut; // pipe output, 0=on 1=off LSB=Module 0, MSB=Module 7
-	uint8_t pipeInM16; // in value 16ms ago
+	uint8_t pipeInM16; // in value 16ms ago CAUTION: timperPipeProcess in hwtimer.c directly adresses this structure from ..InM16...InSTat!
 	uint8_t pipeInM12; // in value 12ms ago
 	uint8_t pipeInM8; // in value 8ms ago
 	uint8_t pipeInM4; // in value 4ms ago

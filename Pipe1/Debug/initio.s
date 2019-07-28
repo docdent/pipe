@@ -44,13 +44,21 @@ init_iopins:
 	.loc 1 20 0
 	sts 267,r24
 	.loc 1 21 0
-	sbi 0xa,7
+	in r24,0xa
+	ori r24,lo8(-128)
+	out 0xa,r24
 	.loc 1 22 0
-	cbi 0xb,7
+	in r24,0xb
+	andi r24,lo8(127)
+	out 0xb,r24
 	.loc 1 23 0
-	sbi 0x4,6
+	in r24,0x4
+	ori r24,lo8(64)
+	out 0x4,r24
 	.loc 1 24 0
-	cbi 0x5,6
+	in r24,0x5
+	andi r24,lo8(-65)
+	out 0x5,r24
 	ret
 	.cfi_endproc
 .LFE0:
@@ -233,8 +241,8 @@ init_iopins:
 	.string	"uint8_t"
 .LASF4:
 	.string	"long unsigned int"
-.LASF8:
-	.string	".././initio.c"
+.LASF7:
+	.string	"GNU C99 5.4.0 -mn-flash=4 -mno-skip-bug -mrelax -mmcu=avr6 -g2 -Og -std=gnu99 -funsigned-char -funsigned-bitfields -ffunction-sections -fdata-sections -fpack-struct -fshort-enums"
 .LASF0:
 	.string	"signed char"
 .LASF6:
@@ -245,10 +253,10 @@ init_iopins:
 	.string	"long int"
 .LASF11:
 	.string	"init_iopins"
+.LASF8:
+	.string	".././initio.c"
 .LASF9:
 	.string	"E:\\\\Users\\\\Anwender\\\\Sync\\\\Atmel Studio\\\\Pipe1\\\\Pipe1\\\\Debug"
-.LASF7:
-	.string	"GNU C99 5.4.0 -mn-flash=4 -mno-skip-bug -mrelax -mmcu=avr6 -g2 -O3 -std=gnu99 -funsigned-char -funsigned-bitfields -ffunction-sections -fdata-sections -fpack-struct -fshort-enums"
 .LASF5:
 	.string	"long long int"
 	.ident	"GCC: (AVR_8_bit_GNU_Toolchain_3.6.2_1759) 5.4.0"

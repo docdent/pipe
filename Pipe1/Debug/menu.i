@@ -448,18 +448,20 @@ extern const __flash char keylabel_left [] ;
 extern const __flash char keylabel_onoff [] ;
 extern const __flash char keylabel_exit [] ;
 extern const __flash char keylabel_text [] ;
+extern const __flash char keylabel_0 [] ;
+extern const __flash char keylabel_1 [] ;
 
 extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 96 ".././utils.h"
+# 98 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 98 ".././utils.h" 3
+# 100 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 98 ".././utils.h"
+# 100 ".././utils.h"
                                  ;
 # 12 ".././message.h" 2
 
@@ -788,7 +790,13 @@ typedef struct{
  uint8_t bitStart;
 } ManualMap_t;
 extern ManualMap_t manualMap[4][4];
-# 107 ".././Midi.h"
+
+typedef struct{
+ uint8_t startNote;
+ uint8_t endNote;
+} ManualNoteRange_t;
+extern ManualNoteRange_t ManualNoteRange[4];
+# 113 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -815,6 +823,7 @@ extern void init_Registers();
 
 extern void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff);
 extern ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note);
+extern void Midi_updateManualRange();
 
 extern void midiSendAllNotesOff();
 
@@ -839,6 +848,8 @@ extern void midi_CheckTxActiveSense();
 
 
 extern void init_Midi();
+extern void midi_ManualOff(uint8_t manual);
+extern void midi_AllManualsOff();
 
 extern uint8_t midiCoupler_2from3;
 extern uint8_t midiCoupler_1from3;
@@ -1475,11 +1486,11 @@ const __flash Menu_t menu_USBser[] =
 # 65 ".././menu.c" 3 4
                                                 ((void *)0)
 # 65 ".././menu.c"
-                                                    ,{&(serusb_Active)},
+                                                    ,{(uint8_t *) &(serusb_Active)},
 # 65 ".././menu.c" 3 4
-                                                                        ((void *)0)
+                                                                                    ((void *)0)
 # 65 ".././menu.c"
-                                                                            ,menuOnExitUSBactive},
+                                                                                        ,menuOnExitUSBactive},
  {1,0,"SendLog",
 # 66 ".././menu.c" 3 4
                          ((void *)0)
@@ -1624,7 +1635,11 @@ const __flash Menu_t menu_module[] =
 # 98 ".././menu.c" 3 4
                                                            ((void *)0)
 # 98 ".././menu.c"
-                                                               ,menuOnExitModules},
+                                                               ,
+# 98 ".././menu.c" 3 4
+                                                                ((void *)0)
+# 98 ".././menu.c"
+                                                                    },
  {10,0x08,"ModOK",
 # 99 ".././menu.c" 3 4
                                           ((void *)0)
@@ -2125,69 +2140,159 @@ const __flash Menu_t menu_midi[] =
                                                    ,menuOnExitMidiOut}};
 
 
+uint8_t menuOnExitCoupler(uint8_t arg);
+const __flash Menu_t menu_coupler[] = {
+ {9 | 0x80,0,"2<3",
+# 205 ".././menu.c" 3 4
+                                            ((void *)0)
+# 205 ".././menu.c"
+                                                ,{&midiCoupler_2from3},
+# 205 ".././menu.c" 3 4
+                                                                       ((void *)0)
+# 205 ".././menu.c"
+                                                                           ,menuOnExitCoupler},
+ {9,0,"1<3",
+# 206 ".././menu.c" 3 4
+                         ((void *)0)
+# 206 ".././menu.c"
+                             ,{&midiCoupler_1from3},
+# 206 ".././menu.c" 3 4
+                                                    ((void *)0)
+# 206 ".././menu.c"
+                                                        ,menuOnExitCoupler},
+ {9,0,"1<2",
+# 207 ".././menu.c" 3 4
+                         ((void *)0)
+# 207 ".././menu.c"
+                             ,{&midiCoupler_1from2},
+# 207 ".././menu.c" 3 4
+                                                    ((void *)0)
+# 207 ".././menu.c"
+                                                        ,menuOnExitCoupler},
+ {9,0,"P<3",
+# 208 ".././menu.c" 3 4
+                         ((void *)0)
+# 208 ".././menu.c"
+                             ,{&midiCoupler_Pfrom3},
+# 208 ".././menu.c" 3 4
+                                                    ((void *)0)
+# 208 ".././menu.c"
+                                                        ,menuOnExitCoupler},
+ {9,0,"P<2",
+# 209 ".././menu.c" 3 4
+                         ((void *)0)
+# 209 ".././menu.c"
+                             ,{&midiCoupler_Pfrom2},
+# 209 ".././menu.c" 3 4
+                                                    ((void *)0)
+# 209 ".././menu.c"
+                                                        ,menuOnExitCoupler},
+ {9,0,"P<1",
+# 210 ".././menu.c" 3 4
+                         ((void *)0)
+# 210 ".././menu.c"
+                             ,{&midiCoupler_Pfrom1},
+# 210 ".././menu.c" 3 4
+                                                    ((void *)0)
+# 210 ".././menu.c"
+                                                        ,menuOnExitCoupler}
+};
+
+
+const __flash Menu_t menu_manual[] = {
+ {(1 | 0x80),0,"Koppler",menu_coupler,{
+# 215 ".././menu.c" 3 4
+                                         ((void *)0)
+# 215 ".././menu.c"
+                                             },
+# 215 ".././menu.c" 3 4
+                                               ((void *)0)
+# 215 ".././menu.c"
+                                                   ,
+# 215 ".././menu.c" 3 4
+                                                    ((void *)0)
+# 215 ".././menu.c"
+                                                        },
+ {(1 | 0xC0),0,"Stimmen",menu_tune,{
+# 216 ".././menu.c" 3 4
+                                      ((void *)0)
+# 216 ".././menu.c"
+                                          },
+# 216 ".././menu.c" 3 4
+                                            ((void *)0)
+# 216 ".././menu.c"
+                                                ,
+# 216 ".././menu.c" 3 4
+                                                 ((void *)0)
+# 216 ".././menu.c"
+                                                     }
+};
+
+
 uint8_t menuOnExitKeys(uint8_t arg);
-const __flash Menu_t menu_main[] =
- {{(1 | 0x80),0,"MIDI",menu_midi,{
-# 205 ".././menu.c" 3 4
-                                    ((void *)0)
-# 205 ".././menu.c"
-                                        },
-# 205 ".././menu.c" 3 4
-                                          ((void *)0)
-# 205 ".././menu.c"
-                                              ,
-# 205 ".././menu.c" 3 4
-                                               ((void *)0)
-# 205 ".././menu.c"
-                                                   },
- {1,0,"Tasten",menu_key,{
-# 206 ".././menu.c" 3 4
-                                  ((void *)0)
-# 206 ".././menu.c"
-                                      },
-# 206 ".././menu.c" 3 4
-                                        ((void *)0)
-# 206 ".././menu.c"
-                                            ,menuOnExitKeys},
- {1,0,"Stimmen",menu_tune,{
-# 207 ".././menu.c" 3 4
-                                    ((void *)0)
-# 207 ".././menu.c"
-                                        },
-# 207 ".././menu.c" 3 4
-                                          ((void *)0)
-# 207 ".././menu.c"
-                                              ,
-# 207 ".././menu.c" 3 4
-                                               ((void *)0)
-# 207 ".././menu.c"
-                                                   },
- {1,0,"Status",menu_status,{
-# 208 ".././menu.c" 3 4
+const __flash Menu_t menu_main[] = {
+ {(1 | 0x80),0,"MIDI",menu_midi,{
+# 222 ".././menu.c" 3 4
+                                   ((void *)0)
+# 222 ".././menu.c"
+                                       },
+# 222 ".././menu.c" 3 4
+                                         ((void *)0)
+# 222 ".././menu.c"
+                                             ,
+# 222 ".././menu.c" 3 4
+                                              ((void *)0)
+# 222 ".././menu.c"
+                                                  },
+ {1,0,"Manual",menu_manual,{
+# 223 ".././menu.c" 3 4
                                      ((void *)0)
-# 208 ".././menu.c"
+# 223 ".././menu.c"
                                          },
-# 208 ".././menu.c" 3 4
+# 223 ".././menu.c" 3 4
                                            ((void *)0)
-# 208 ".././menu.c"
+# 223 ".././menu.c"
                                                ,
-# 208 ".././menu.c" 3 4
+# 223 ".././menu.c" 3 4
                                                 ((void *)0)
-# 208 ".././menu.c"
+# 223 ".././menu.c"
+                                                    },
+ {1,0,"Tasten",menu_key,{
+# 224 ".././menu.c" 3 4
+                                  ((void *)0)
+# 224 ".././menu.c"
+                                      },
+# 224 ".././menu.c" 3 4
+                                        ((void *)0)
+# 224 ".././menu.c"
+                                            ,menuOnExitKeys},
+ {1,0,"Status",menu_status,{
+# 225 ".././menu.c" 3 4
+                                     ((void *)0)
+# 225 ".././menu.c"
+                                         },
+# 225 ".././menu.c" 3 4
+                                           ((void *)0)
+# 225 ".././menu.c"
+                                               ,
+# 225 ".././menu.c" 3 4
+                                                ((void *)0)
+# 225 ".././menu.c"
                                                     },
  {(1 | 0xC0),0,"Setup",menu_setup,{
-# 209 ".././menu.c" 3 4
+# 226 ".././menu.c" 3 4
                                      ((void *)0)
-# 209 ".././menu.c"
+# 226 ".././menu.c"
                                          },
-# 209 ".././menu.c" 3 4
+# 226 ".././menu.c" 3 4
                                            ((void *)0)
-# 209 ".././menu.c"
+# 226 ".././menu.c"
                                                ,
-# 209 ".././menu.c" 3 4
+# 226 ".././menu.c" 3 4
                                                 ((void *)0)
-# 209 ".././menu.c"
-                                                    }};
+# 226 ".././menu.c"
+                                                    }
+};
 
 
 
@@ -2211,94 +2316,94 @@ const __flash char shortKeyTextCplP1[10] = "P<1\x80";
 
 const __flash Menu_t menu_selFunc[] =
  {{(1 | 0x80),0x10,"Menu",menu_main,{.pString=shortKeyTextMenu},
-# 232 ".././menu.c" 3 4
+# 250 ".././menu.c" 3 4
                                                                                     ((void *)0)
-# 232 ".././menu.c"
+# 250 ".././menu.c"
                                                                                         ,
-# 232 ".././menu.c" 3 4
+# 250 ".././menu.c" 3 4
                                                                                          ((void *)0)
-# 232 ".././menu.c"
+# 250 ".././menu.c"
                                                                                              },
  {1,0x10,"Stimmen",menu_tune,{.pString=shortKeyTextStim},
-# 233 ".././menu.c" 3 4
+# 251 ".././menu.c" 3 4
                                                                                     ((void *)0)
-# 233 ".././menu.c"
+# 251 ".././menu.c"
                                                                                         ,
-# 233 ".././menu.c" 3 4
+# 251 ".././menu.c" 3 4
                                                                                          ((void *)0)
-# 233 ".././menu.c"
+# 251 ".././menu.c"
                                                                                              },
  {1,0x10,"Koppel2<3",
-# 234 ".././menu.c" 3 4
+# 252 ".././menu.c" 3 4
                                                 ((void *)0)
-# 234 ".././menu.c"
+# 252 ".././menu.c"
                                                     ,{.pString=shortKeyTextCpl23},softKeyCoupler2from3,
-# 234 ".././menu.c" 3 4
+# 252 ".././menu.c" 3 4
                                                                                                        ((void *)0)
-# 234 ".././menu.c"
+# 252 ".././menu.c"
                                                                                                            },
  {1,0x10,"Koppel1<3",
-# 235 ".././menu.c" 3 4
+# 253 ".././menu.c" 3 4
                                                 ((void *)0)
-# 235 ".././menu.c"
+# 253 ".././menu.c"
                                                     ,{.pString=shortKeyTextCpl13},softKeyCoupler1from3,
-# 235 ".././menu.c" 3 4
+# 253 ".././menu.c" 3 4
                                                                                                        ((void *)0)
-# 235 ".././menu.c"
+# 253 ".././menu.c"
                                                                                                            },
  {1,0x10,"KoppelP<3",
-# 236 ".././menu.c" 3 4
+# 254 ".././menu.c" 3 4
                                                 ((void *)0)
-# 236 ".././menu.c"
+# 254 ".././menu.c"
                                                     ,{.pString=shortKeyTextCplP3},softKeyCouplerPfrom3,
-# 236 ".././menu.c" 3 4
+# 254 ".././menu.c" 3 4
                                                                                                        ((void *)0)
-# 236 ".././menu.c"
+# 254 ".././menu.c"
                                                                                                            },
  {1,0x10,"Koppel1<2",
-# 237 ".././menu.c" 3 4
+# 255 ".././menu.c" 3 4
                                                 ((void *)0)
-# 237 ".././menu.c"
+# 255 ".././menu.c"
                                                     ,{.pString=shortKeyTextCpl12},softKeyCoupler1from2,
-# 237 ".././menu.c" 3 4
+# 255 ".././menu.c" 3 4
                                                                                                        ((void *)0)
-# 237 ".././menu.c"
+# 255 ".././menu.c"
                                                                                                            },
  {1,0x10,"KoppelP<2",
-# 238 ".././menu.c" 3 4
+# 256 ".././menu.c" 3 4
                                                 ((void *)0)
-# 238 ".././menu.c"
+# 256 ".././menu.c"
                                                     ,{.pString=shortKeyTextCplP2},softKeyCouplerPfrom2,
-# 238 ".././menu.c" 3 4
+# 256 ".././menu.c" 3 4
                                                                                                        ((void *)0)
-# 238 ".././menu.c"
+# 256 ".././menu.c"
                                                                                                            },
  {1,0x10,"KoppelP<1",
-# 239 ".././menu.c" 3 4
+# 257 ".././menu.c" 3 4
                                                 ((void *)0)
-# 239 ".././menu.c"
+# 257 ".././menu.c"
                                                     ,{.pString=shortKeyTextCplP1},softKeyCouplerPfrom1,
-# 239 ".././menu.c" 3 4
+# 257 ".././menu.c" 3 4
                                                                                                        ((void *)0)
-# 239 ".././menu.c"
+# 257 ".././menu.c"
                                                                                                            },
  {1,0x10,"MIDI Off",
-# 240 ".././menu.c" 3 4
+# 258 ".././menu.c" 3 4
                                                ((void *)0)
-# 240 ".././menu.c"
+# 258 ".././menu.c"
                                                    ,{.pString=shortKeyTextMIDIoff},menu_OnEnterMidiPanic,
-# 240 ".././menu.c" 3 4
+# 258 ".././menu.c" 3 4
                                                                                                          ((void *)0)
-# 240 ".././menu.c"
+# 258 ".././menu.c"
                                                                                                              },
  {(1 | 0xC0),0x10,"Setup",menu_setup,{.pString=shortKeyTextSetup},
-# 241 ".././menu.c" 3 4
+# 259 ".././menu.c" 3 4
                                                                                       ((void *)0)
-# 241 ".././menu.c"
+# 259 ".././menu.c"
                                                                                           ,
-# 241 ".././menu.c" 3 4
+# 259 ".././menu.c" 3 4
                                                                                            ((void *)0)
-# 241 ".././menu.c"
+# 259 ".././menu.c"
                                                                                                }};
 
 
@@ -2363,6 +2468,12 @@ SoftKey_List_t soft_Key[4];
 
 
 
+uint8_t menuOnExitCoupler(uint8_t arg) {
+ (void) arg;
+
+ return 0;
+}
+
 uint8_t softkeyCoupler(uint8_t arg, uint8_t* pCoupler){
 
  if (arg != 0){
@@ -2372,27 +2483,58 @@ uint8_t softkeyCoupler(uint8_t arg, uint8_t* pCoupler){
 }
 
 uint8_t softKeyCoupler2from3(uint8_t arg){
- return softkeyCoupler(arg, &midiCoupler_2from3);
+
+ uint8_t result = softkeyCoupler(arg, &midiCoupler_2from3);
+ if (result == 0x82){
+
+  midi_ManualOff(1);
+ }
+ return result;
 }
 
 uint8_t softKeyCoupler1from3(uint8_t arg){
- return softkeyCoupler(arg, &midiCoupler_1from3);
+ uint8_t result = softkeyCoupler(arg, &midiCoupler_1from3);
+ if (result == 0x82){
+
+  midi_ManualOff(2);
+ }
+ return result;
 }
 
 uint8_t softKeyCouplerPfrom3(uint8_t arg){
- return softkeyCoupler(arg, &midiCoupler_Pfrom3);
+ uint8_t result = softkeyCoupler(arg, &midiCoupler_Pfrom3);
+ if (result == 0x82){
+
+  midi_ManualOff(3);
+ }
+ return result;
 }
 
 uint8_t softKeyCoupler1from2(uint8_t arg){
- return softkeyCoupler(arg, &midiCoupler_1from2);
+ uint8_t result = softkeyCoupler(arg, &midiCoupler_1from2);
+ if (result == 0x82){
+
+  midi_ManualOff(2);
+ }
+ return result;
 }
 
 uint8_t softKeyCouplerPfrom2(uint8_t arg){
- return softkeyCoupler(arg, &midiCoupler_Pfrom2);
+ uint8_t result = softkeyCoupler(arg, &midiCoupler_Pfrom2);
+ if (result == 0x82){
+
+  midi_ManualOff(3);
+ }
+ return result;
 }
 
 uint8_t softKeyCouplerPfrom1(uint8_t arg){
- return softkeyCoupler(arg, &midiCoupler_Pfrom1);
+ uint8_t result = softkeyCoupler(arg, &midiCoupler_Pfrom1);
+ if (result == 0x82){
+
+  midi_ManualOff(3);
+ }
+ return result;
 }
 
 
@@ -2400,9 +2542,9 @@ uint8_t softKeyCouplerPfrom1(uint8_t arg){
 uint8_t menuOnEnterPwrOn(uint8_t arg) {
  (void) arg;
  
-# 341 ".././menu.c" 3
+# 396 ".././menu.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 341 ".././menu.c"
+# 396 ".././menu.c"
 |= 1 << 6;
  pipe_PowerStatus = 0x13;
  menu_showPowerState();
@@ -2412,9 +2554,9 @@ uint8_t menuOnEnterPwrOn(uint8_t arg) {
 uint8_t menuOnEnterPwrOff(uint8_t arg){
  (void) arg;
  
-# 349 ".././menu.c" 3
+# 404 ".././menu.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 349 ".././menu.c"
+# 404 ".././menu.c"
 &= ~(1 << 6);
  pipe_PowerStatus = 0x00;
  menu_showPowerState();
@@ -2423,17 +2565,17 @@ uint8_t menuOnEnterPwrOff(uint8_t arg){
 
 uint8_t menuOnEnterPwrRest(uint8_t arg){
  
-# 356 ".././menu.c" 3
+# 411 ".././menu.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 356 ".././menu.c"
+# 411 ".././menu.c"
 &= ~(1 << 6);
  (void) arg;
  pipe_PowerStatus = 0x01;
  menu_showPowerState();
  
-# 360 ".././menu.c" 3
+# 415 ".././menu.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 360 ".././menu.c"
+# 415 ".././menu.c"
 {swTimer[1].counter = 1000 / 20; swTimer[1].prescaler = (1000 % 20) / 4;};
  return 0;
 }
@@ -2451,9 +2593,9 @@ uint8_t menu_OnEnterMidiPanic(uint8_t arg){
  lcd_goto((0+20 + 10));
  lcd_puts_P(menuMessageMIDIpanic);
  
-# 376 ".././menu.c" 3
+# 431 ".././menu.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 376 ".././menu.c"
+# 431 ".././menu.c"
 {swTimer[7].counter = 2000 / 20; swTimer[7].prescaler = (2000 % 20) / 4;};;
  midiSendAllNotesOff();
  menuCursorSetMenu();
@@ -2494,14 +2636,14 @@ void menu_ModuleTestExecute(){
    lcd_putc('t');
    menu_TestModuleBitCounter = 0xFE;
    
-# 415 ".././menu.c" 3
+# 470 ".././menu.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 415 ".././menu.c"
+# 470 ".././menu.c"
   {swTimer[6].counter = 50 / 20; swTimer[6].prescaler = (50 % 20) / 4;};
    
-# 416 ".././menu.c" 3
+# 471 ".././menu.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 416 ".././menu.c"
+# 471 ".././menu.c"
   {swTimer[7].counter = 2000 / 20; swTimer[7].prescaler = (2000 % 20) / 4;};;
    menuCursorSetMenu();
   }
@@ -2530,9 +2672,9 @@ void menu_ModuleTestExecute(){
   lcd_dec2out(menu_TestModuleBitCounter);
 
   
-# 443 ".././menu.c" 3
+# 498 ".././menu.c" 3
  for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 443 ".././menu.c"
+# 498 ".././menu.c"
  {swTimer[6].counter = 160 / 20; swTimer[6].prescaler = (160 % 20) / 4;};
  } else if (menu_TestModuleBitCounter == 32) {
 
@@ -2548,14 +2690,14 @@ void menu_ModuleTestExecute(){
   }
   menu_TestModuleBitCounter = 0xFE;
   
-# 457 ".././menu.c" 3
+# 512 ".././menu.c" 3
  for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 457 ".././menu.c"
+# 512 ".././menu.c"
  {swTimer[6].counter = 50 / 20; swTimer[6].prescaler = (50 % 20) / 4;};
   
-# 458 ".././menu.c" 3
+# 513 ".././menu.c" 3
  for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 458 ".././menu.c"
+# 513 ".././menu.c"
  {swTimer[7].counter = 2000 / 20; swTimer[7].prescaler = (2000 % 20) / 4;};;
   menuCursorSetMenu();
  }
@@ -2672,9 +2814,9 @@ uint8_t menuOnExitKey(uint8_t arg){
 }
 
 const char stringNotAssigen [] 
-# 573 ".././menu.c" 3
+# 628 ".././menu.c" 3
                               __attribute__((__progmem__)) 
-# 573 ".././menu.c"
+# 628 ".././menu.c"
                                       = "unassigned";
 uint8_t menuOnEnterTune(uint8_t arg){
  (void) arg;
@@ -2787,7 +2929,7 @@ uint8_t menuOnEnterStatusMidiIn(uint8_t arg){
 
  if (midiRxBytesCount < 4) {
   byteCount = midiRxBytesCount;
-  } else {
+ } else {
   byteCount = 4;
  }
  pByte = & (midiRxBuffer[midiRxInIndex]);
@@ -2830,7 +2972,7 @@ uint8_t menuOnEnterStatusMidiOut(uint8_t arg){
  }
  return 0;
 }
-# 764 ".././menu.c"
+
 uint8_t menuOnExitMidiIn(uint8_t arg){
  (void) arg;
  eeprom_UpdateMidiInMap();
@@ -2846,6 +2988,7 @@ uint8_t menuOnExitMidiOut(uint8_t arg){
 uint8_t menuOnExitManual(uint8_t arg){
  (void) arg;
  eeprom_UpdateManualMap();
+ Midi_updateManualRange();
  return 0;
 }
 
@@ -2854,11 +2997,11 @@ uint8_t menuOnExitModules(uint8_t arg){
  eeprom_UpdateModules();
  return 0;
 }
-# 830 ".././menu.c"
+
 const char logNone [] 
-# 830 ".././menu.c" 3
+# 809 ".././menu.c" 3
                      __attribute__((__progmem__)) 
-# 830 ".././menu.c"
+# 809 ".././menu.c"
                              = "<none>";
 
 uint8_t menuOnEnterLogDisp(uint8_t arg) {
@@ -2882,18 +3025,7 @@ uint8_t menuOnEnterLogDisp(uint8_t arg) {
    logEntryNr++;
   }
  } else if ((arg == 3) || (arg == 5)) {
-
-
-
-
-
   showText = ~showText;
-
-
-
-
-
-
  } else {
   result = 0x00;
  }
@@ -2920,25 +3052,26 @@ uint8_t menuOnEnterLogDisp(uint8_t arg) {
  }
  return result;
 }
-# 991 ".././menu.c"
+
+
 const char msg_programming1[] 
-# 991 ".././menu.c" 3
+# 861 ".././menu.c" 3
                              __attribute__((__progmem__)) 
-# 991 ".././menu.c"
+# 861 ".././menu.c"
                                      = "save...";
 const char msg_programming2[] 
-# 992 ".././menu.c" 3
+# 862 ".././menu.c" 3
                              __attribute__((__progmem__)) 
-# 992 ".././menu.c"
+# 862 ".././menu.c"
                                      = "ok     ";
 
 void menuLCDwriteOK(){
  lcd_goto((0+20 + 10));
  lcd_puts_P(msg_programming2);
  
-# 997 ".././menu.c" 3
+# 867 ".././menu.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 997 ".././menu.c"
+# 867 ".././menu.c"
 {swTimer[7].counter = 2000 / 20; swTimer[7].prescaler = (2000 % 20) / 4;};;
 }
 
@@ -2970,14 +3103,14 @@ uint8_t menuOnEnterEEUpdate(uint8_t arg){
 }
 
 const char usbEmpty [] 
-# 1027 ".././menu.c" 3
+# 897 ".././menu.c" 3
                       __attribute__((__progmem__)) 
-# 1027 ".././menu.c"
+# 897 ".././menu.c"
                               = "empty\r\n";
 const char usbLog [] 
-# 1028 ".././menu.c" 3
+# 898 ".././menu.c" 3
                     __attribute__((__progmem__)) 
-# 1028 ".././menu.c"
+# 898 ".././menu.c"
                             = "Log\r\n";
 
 uint8_t menuOnEnterUSBprotokoll(uint8_t arg){
@@ -2996,9 +3129,9 @@ uint8_t menuOnEnterUSBprotokoll(uint8_t arg){
 }
 
 const char HelloMsg [] 
-# 1045 ".././menu.c" 3
+# 915 ".././menu.c" 3
                       __attribute__((__progmem__)) 
-# 1045 ".././menu.c"
+# 915 ".././menu.c"
                               = "\r\nMIDI-Organ-Interface\r\n";
 
 uint8_t menuOnExitUSBactive(uint8_t arg){
@@ -3013,44 +3146,44 @@ uint8_t menuOnExitUSBactive(uint8_t arg){
 }
 
 const char usbHWtitel [] 
-# 1058 ".././menu.c" 3
+# 928 ".././menu.c" 3
                         __attribute__((__progmem__)) 
-# 1058 ".././menu.c"
+# 928 ".././menu.c"
                                 = "Hardware Configuration\r\n";
 const char usbHWmodulInst [] 
-# 1059 ".././menu.c" 3
+# 929 ".././menu.c" 3
                             __attribute__((__progmem__)) 
-# 1059 ".././menu.c"
+# 929 ".././menu.c"
                                     = "Modules assigned: ";
 const char usbHWmodulCheck [] 
-# 1060 ".././menu.c" 3
+# 930 ".././menu.c" 3
                              __attribute__((__progmem__)) 
-# 1060 ".././menu.c"
+# 930 ".././menu.c"
                                      = "Modules checked: ";
 const char usbHWManual [] 
-# 1061 ".././menu.c" 3
+# 931 ".././menu.c" 3
                          __attribute__((__progmem__)) 
-# 1061 ".././menu.c"
+# 931 ".././menu.c"
                                  = "Manual: ";
 const char usbHWRange [] 
-# 1062 ".././menu.c" 3
+# 932 ".././menu.c" 3
                         __attribute__((__progmem__)) 
-# 1062 ".././menu.c"
+# 932 ".././menu.c"
                                 = "Range: ";
 const char usbHWempty [] 
-# 1063 ".././menu.c" 3
+# 933 ".././menu.c" 3
                         __attribute__((__progmem__)) 
-# 1063 ".././menu.c"
+# 933 ".././menu.c"
                                 = "empty";
 const char usbHWmodule [] 
-# 1064 ".././menu.c" 3
+# 934 ".././menu.c" 3
                          __attribute__((__progmem__)) 
-# 1064 ".././menu.c"
+# 934 ".././menu.c"
                                  = "Module:";
 const char usbHWBits [] 
-# 1065 ".././menu.c" 3
+# 935 ".././menu.c" 3
                        __attribute__((__progmem__)) 
-# 1065 ".././menu.c"
+# 935 ".././menu.c"
                                = ",Bits:";
 
 uint8_t menuOnEnterUSBsendHW(uint8_t arg){
@@ -3116,9 +3249,9 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 void menu_Init(const __flash Menu_t* newMenu, const __flash char* pTitle){
  menuStackIndex = 0;
  if (newMenu == 
-# 1129 ".././menu.c" 3 4
+# 999 ".././menu.c" 3 4
                ((void *)0)
-# 1129 ".././menu.c"
+# 999 ".././menu.c"
                    ){
   currentMenu = menu_main;
   pMenuTopTitle = initMenuText;
@@ -3159,11 +3292,19 @@ void softkeyUp(){
 }
 
 void softkeyPlus(){
- keylabel_set(0,keylabel_plus);
+ if (dataType == 10) {
+  keylabel_set(0,keylabel_1);
+ } else {
+  keylabel_set(0,keylabel_plus);
+ }
 }
 
 void softkeyMinus(){
- keylabel_set(1,keylabel_minus);
+ if (dataType == 10) {
+  keylabel_set(1,keylabel_0);
+ } else {
+  keylabel_set(1,keylabel_minus);
+ }
 }
 
 
@@ -3272,7 +3413,7 @@ void nibbleToLCDstring(){
   lcdData[0] = 'C';
   lcdData[1] = 'h';
   if (nibble[0] == 0xFF) {
-   lcdData[2] = '-';
+   lcdData[2] = ' ';
    lcdData[3] = '-';
   } else {
    if (nibble[0] > 9) {
@@ -3337,7 +3478,7 @@ void nibbleToLCDstring(){
   lcdData[3] = 0;
   break;
  case 7:
-# 1371 ".././menu.c"
+# 1249 ".././menu.c"
    if (nibble[0] <= 2){
     lcdData[0] = '3'-nibble[0];
     lcdData[1] = '\0';
@@ -3345,11 +3486,9 @@ void nibbleToLCDstring(){
     lcdData[0] = 'P';
     lcdData[1] = '\0';
    } else {
-    lcdData[0] = 'n';
-    lcdData[1] = 'o';
-    lcdData[2] = 'n';
-    lcdData[3] = 'e';
-    lcdData[4] = '\0';
+
+    lcdData[0] = '-';
+    lcdData[1] = '\0';
    }
 
   break;
@@ -3542,7 +3681,7 @@ void nibbleChange(uint8_t nibbleNr , int8_t addValue){
    nibble[0] = ~nibble[0];
    break;
   case 10:
-   nibble[nibbleNr] = (nibble[nibbleNr] + addValue) & 0x01;
+   nibble[nibbleNr] = ((addValue >> 1) & 0x01) ^ 0x01;
    break;
  }
 }
@@ -3764,9 +3903,9 @@ void menuItemChanged(){
 
  swTimer[7].counter = 0xFF;
  if (((currentMenu->menuType & 0x3F) > 1) && (currentMenu->pVar != 
-# 1796 ".././menu.c" 3 4
+# 1672 ".././menu.c" 3 4
                                                                                                ((void *)0)
-# 1796 ".././menu.c"
+# 1672 ".././menu.c"
                                                                                                    )) {
 
   pNibbleInfo = &(nibbleInfo[(currentMenu->menuType & 0x3F) - 1]);
@@ -3807,9 +3946,9 @@ uint8_t menu_ProcessMessage(uint8_t message){
    menuCursorSetMenu();
   }
   if (((currentMenu->menuFlags & 0x20) != 0) && (currentMenu->pFunc != 
-# 1835 ".././menu.c" 3 4
+# 1711 ".././menu.c" 3 4
                                                                                            ((void *)0)
-# 1835 ".././menu.c"
+# 1711 ".././menu.c"
                                                                                                ) && (nibbleIndex != 0xFF)) {
 
 
@@ -3851,18 +3990,18 @@ uint8_t menu_ProcessMessage(uint8_t message){
     if ((currentMenu->menuFlags & 0x10) != 0) {
 
      menuVMenuSoftKey = 
-# 1875 ".././menu.c" 3 4
+# 1751 ".././menu.c" 3 4
                        ((void *)0)
-# 1875 ".././menu.c"
+# 1751 ".././menu.c"
                            ;
     }
     if (menuStackIndex > 0){
 
      currentMenu = menuStack[--menuStackIndex];
      if (currentMenu->pOnExitFunc != 
-# 1880 ".././menu.c" 3 4
+# 1756 ".././menu.c" 3 4
                                     ((void *)0)
-# 1880 ".././menu.c"
+# 1756 ".././menu.c"
                                         ){
 
       currentMenu->pOnExitFunc (0);
@@ -3888,17 +4027,17 @@ uint8_t menu_ProcessMessage(uint8_t message){
     if ((currentMenu->menuType & 0x3F) > 1) {
 
      if (currentMenu->pFunc != 
-# 1904 ".././menu.c" 3 4
+# 1780 ".././menu.c" 3 4
                               ((void *)0)
-# 1904 ".././menu.c"
+# 1780 ".././menu.c"
                                   ){
       currentMenu->pFunc(message);
       menuItemChanged();
      }
      if (((currentMenu->menuFlags & 0x08) == 0) && (currentMenu->pVar) != 
-# 1908 ".././menu.c" 3 4
+# 1784 ".././menu.c" 3 4
                                                                                        ((void *)0)
-# 1908 ".././menu.c"
+# 1784 ".././menu.c"
                                                                                            ){
 
       nibbleIndex = 0;
@@ -3914,9 +4053,9 @@ uint8_t menu_ProcessMessage(uint8_t message){
 
        currentMenu = menuStack[--menuStackIndex];
        if (currentMenu->pOnExitFunc != 
-# 1922 ".././menu.c" 3 4
+# 1798 ".././menu.c" 3 4
                                       ((void *)0)
-# 1922 ".././menu.c"
+# 1798 ".././menu.c"
                                           ){
 
         currentMenu->pOnExitFunc (0);
@@ -3930,9 +4069,9 @@ uint8_t menu_ProcessMessage(uint8_t message){
      } else {
 
       if (currentMenu->pFunc != 
-# 1934 ".././menu.c" 3 4
+# 1810 ".././menu.c" 3 4
                                ((void *)0)
-# 1934 ".././menu.c"
+# 1810 ".././menu.c"
                                    ) {
 
        if ((currentMenu->menuFlags & 0x20) != 0) {
@@ -3955,17 +4094,17 @@ uint8_t menu_ProcessMessage(uint8_t message){
        }
       }
       if (currentMenu->pMenu != 
-# 1955 ".././menu.c" 3 4
+# 1831 ".././menu.c" 3 4
                                ((void *)0)
-# 1955 ".././menu.c"
+# 1831 ".././menu.c"
                                    ){
 
        if (menuStackIndex < 16) {
         menuStack[menuStackIndex++] = currentMenu;
         if (((currentMenu->menuFlags & 0x08) != 0) && (menuVMenuSoftKey != 
-# 1959 ".././menu.c" 3 4
+# 1835 ".././menu.c" 3 4
                                                                                                  ((void *)0)
-# 1959 ".././menu.c"
+# 1835 ".././menu.c"
                                                                                                      )) {
          currentMenu = menuVMenuSoftKey;
         } else {
@@ -4005,6 +4144,12 @@ uint8_t menu_ProcessMessage(uint8_t message){
    nibbleChange(nibbleIndex,1);
    nibbleToData();
    menuDisplayValue();
+   if (dataType == 10) {
+
+    if (nibbleIndex < pNibbleInfo->nibbleCount - 1){
+     nibbleIndex++;
+    }
+   }
    menuCursorSetDataNibble();
    break;
   case 3:
@@ -4012,15 +4157,20 @@ uint8_t menu_ProcessMessage(uint8_t message){
    nibbleChange(nibbleIndex,-1);
    nibbleToData();
    menuDisplayValue();
+   if (dataType == 10) {
+    if (nibbleIndex < pNibbleInfo->nibbleCount - 1){
+     nibbleIndex++;
+    }
+   }
    menuCursorSetDataNibble();
    break;
   case 5:
 
    nibbleToData();
    if (currentMenu->pVar != 
-# 2010 ".././menu.c" 3 4
+# 1897 ".././menu.c" 3 4
                            ((void *)0)
-# 2010 ".././menu.c"
+# 1897 ".././menu.c"
                                ){
     uint8_t* pData = (currentMenu->pVar) + (((currentMenu->menuFlags & 0x80) != 0) ? DataAdressOffset : 0);
     if ((currentMenu->menuType & 0x3F) == 11) {
@@ -4031,9 +4181,9 @@ uint8_t menu_ProcessMessage(uint8_t message){
    }
   case 6:
    if (currentMenu->pOnExitFunc != 
-# 2019 ".././menu.c" 3 4
+# 1906 ".././menu.c" 3 4
                                   ((void *)0)
-# 2019 ".././menu.c"
+# 1906 ".././menu.c"
                                       ){
     currentMenu->pOnExitFunc (message);
    }
@@ -4053,9 +4203,9 @@ void init_SoftKeys(){
 
   for (uint8_t i = 0; i<4; i++){
    soft_Key[i].pSelMenu = 
-# 2037 ".././menu.c" 3 4
+# 1924 ".././menu.c" 3 4
                          ((void *)0)
-# 2037 ".././menu.c"
+# 1924 ".././menu.c"
                              ;
   }
 
@@ -4063,16 +4213,16 @@ void init_SoftKeys(){
  } else {
   for (uint8_t i = 0; i<4; i++){
    if ((soft_Key[i].pSelMenu != 
-# 2043 ".././menu.c" 3 4
+# 1930 ".././menu.c" 3 4
                                ((void *)0)
-# 2043 ".././menu.c"
+# 1930 ".././menu.c"
                                    ) && (((soft_Key[i].pSelMenu->menuType & 0x3F) != 1) || ((soft_Key[i].pSelMenu->menuFlags & 0x10) == 0))) {
 
     log_putError(1,7,1+i);
     soft_Key[i].pSelMenu = 
-# 2046 ".././menu.c" 3 4
+# 1933 ".././menu.c" 3 4
                           ((void *)0)
-# 2046 ".././menu.c"
+# 1933 ".././menu.c"
                               ;
    }
   }
@@ -4082,16 +4232,16 @@ void init_SoftKeys(){
 void softKey_Set(const __flash Menu_t* pSelMenuSoftKey, uint8_t nrSoftKey){
  if (nrSoftKey < 4) {
   if ((pSelMenuSoftKey != 
-# 2054 ".././menu.c" 3 4
+# 1941 ".././menu.c" 3 4
                          ((void *)0)
-# 2054 ".././menu.c"
+# 1941 ".././menu.c"
                              ) && ((pSelMenuSoftKey->menuType & 0x3F) == 1) && ((pSelMenuSoftKey->menuFlags & 0x10) != 0)){
    soft_Key[nrSoftKey].pSelMenu = pSelMenuSoftKey;
   } else {
    soft_Key[nrSoftKey].pSelMenu = 
-# 2057 ".././menu.c" 3 4
+# 1944 ".././menu.c" 3 4
                                  ((void *)0)
-# 2057 ".././menu.c"
+# 1944 ".././menu.c"
                                      ;
   }
  }
@@ -4100,17 +4250,17 @@ void softKey_Set(const __flash Menu_t* pSelMenuSoftKey, uint8_t nrSoftKey){
 void softKeys_toLCD(){
  for (uint8_t i = 0; i<4; i++){
   if (soft_Key[i].pSelMenu->pVar == 
-# 2064 ".././menu.c" 3 4
+# 1951 ".././menu.c" 3 4
                                    ((void *)0)
-# 2064 ".././menu.c"
+# 1951 ".././menu.c"
                                        ){
    keylabel_clr(i);
   } else {
    keylabel_set(i,(soft_Key[i].pSelMenu->pString));
    if (soft_Key[i].pSelMenu->pFunc != 
-# 2068 ".././menu.c" 3 4
+# 1955 ".././menu.c" 3 4
                                      ((void *)0)
-# 2068 ".././menu.c"
+# 1955 ".././menu.c"
                                          ){
 
     keylabel_statcheck(i,soft_Key[i].pSelMenu->pFunc(0)== 0x81 ? 0xFF : 0x00);
@@ -4140,16 +4290,16 @@ uint8_t softKey_Execute(uint8_t nrSoftKey, uint8_t myMessage){
 
   const __flash Menu_t* pSoftKeySelMenu = soft_Key[nrSoftKey].pSelMenu;
   if (pSoftKeySelMenu != 
-# 2096 ".././menu.c" 3 4
+# 1983 ".././menu.c" 3 4
                         ((void *)0)
-# 2096 ".././menu.c"
+# 1983 ".././menu.c"
                             ){
 
    if (((pSoftKeySelMenu->menuType & 0x3F) == 1) && ((pSoftKeySelMenu->menuFlags & 0x10) != 0)){
     if (pSoftKeySelMenu->pFunc != 
-# 2099 ".././menu.c" 3 4
+# 1986 ".././menu.c" 3 4
                                  ((void *)0)
-# 2099 ".././menu.c"
+# 1986 ".././menu.c"
                                      ) {
 
      uint8_t softKeyFuncResult;
@@ -4165,9 +4315,9 @@ uint8_t softKey_Execute(uint8_t nrSoftKey, uint8_t myMessage){
 
     const __flash Menu_t* pSoftKeyExeMenu = pSoftKeySelMenu->pMenu;
     if (pSoftKeyExeMenu != 
-# 2113 ".././menu.c" 3 4
+# 2000 ".././menu.c" 3 4
                           ((void *)0)
-# 2113 ".././menu.c"
+# 2000 ".././menu.c"
                               ) {
 
      menu_Init(pSoftKeyExeMenu, pSoftKeySelMenu->text);
