@@ -1,5 +1,4 @@
-/*
- * Midi.c
+/* Midi.c
  *
  * Created: 31.01.2019 13:32:04
  *  Author: Anwender
@@ -25,35 +24,66 @@
 
 //-------------------------------------------------- V A R S ---------------------------------------
 
-uint8_t midiCoupler_2from3; // set to zero in init_Manual2Module()
-uint8_t midiCoupler_1from3;
-uint8_t midiCoupler_1from2;
-uint8_t midiCoupler_Pfrom3;
-uint8_t midiCoupler_Pfrom2;
-uint8_t midiCoupler_Pfrom1;
+
+uint8_t midi_Couplers[COUPLER_COUNT];
+const __flash CplInfo_t cplInfo[COUPLER_COUNT] = {
+	{MANUAL_II, MANUAL_III},
+	{MANUAL_I, MANUAL_III},
+	{MANUAL_I, MANUAL_II},
+	{MANUAL_P, MANUAL_III},
+	{MANUAL_P, MANUAL_II},
+	{MANUAL_P, MANUAL_I},
+	{MANUAL_III, MANUAL_II},
+	{MANUAL_III, MANUAL_I},
+	{MANUAL_II, MANUAL_I},
+	{MANUAL_III, MANUAL_P},
+	{MANUAL_II, MANUAL_P},
+	{MANUAL_I, MANUAL_P}
+};
+
 ManualMap_t manualMap[MANUAL_COUNT][RANGE_COUNT];
 ManualNoteRange_t ManualNoteRange[MANUAL_COUNT];
 MidiInMap_t midiInMap[MIDI_CHANNEL_COUNT][MIDI_SPLIT_COUNT];
 MidiOutMap_t midiOutMap[MANUAL_COUNT];
 uint8_t midiRxActivceSensing = 0;
-uint8_t midi_TxActivceSense; // 0 if no active sense, 0xFF if active sensing on output
+MidiSetting_t midi_Setting; // active sense, sendVelocity=0 instead of NoteOff
 uint8_t midiEEPromLoadError = EE_LOAD_OK;
-uint8_t registerMap[REGISTER_COUNT]; // for each Register 0..63, contains modulBit
+RegisterMap_t registerMap[REGISTER_SEC_COUNT]; // for each Register section contains regStart, regEnd, modulBit
 uint8_t registerCount; // nr of valid registers
 uint8_t programMap[PROGRAM_COUNT] [REGISTER_COUNT / 8]; // for each register one bit
 
 // ------------------------------------ M I D I   G E N E R A L --------------------------------------
 
 void init_Midi(){
-	midiCoupler_2from3 = 0;
-	midiCoupler_1from3 = 0;
-	midiCoupler_1from2 = 0;
-	midiCoupler_Pfrom3 = 0;
-	midiCoupler_Pfrom2 = 0;
-	midiCoupler_Pfrom1 = 0;
+	// turn off all 12 couplers
+	uint8_t* pCoupler = midi_Couplers;
+	for (uint8_t i = 0; i < COUPLER_COUNT; i++){
+		*pCoupler++ = 0;
+	}
 }
 
+// ------------------------------------ C O U P L E R   S E T T I N  G ---------------------------------
 
+uint8_t set_Coupler(uint8_t cplNr){
+	// returns MANUAL (!) if corrsponding inverse coupler had to be turned off, or FALSE if no manual should be turned off
+	if (cplNr < COUPLER_COUNT){
+		midi_Couplers[cplNr] = COUPLER_ON;
+		// calculate inverse Coupler
+		if (cplNr >= COUPLER_COUNT/2){
+			// 6...11 -> 0...5
+			cplNr = cplNr - COUPLER_COUNT/2;
+		} else {
+			// 0...5 -> 6...11
+			cplNr = cplNr + COUPLER_COUNT/2;
+		}
+		if (midi_Couplers[cplNr] != 0){
+			// reset inverse coupler and notify caller
+			midi_Couplers[cplNr] = COUPLER_OFF;
+			return cplInfo[cplNr].dest; // note to caller that this destination manual should be turned off
+		}
+	}
+	return FALSE;
+}
 //------------------------------------- M I D I    P R O C E S S I N G ---------------------------------
 
 uint8_t midiLastCommand;
@@ -121,7 +151,7 @@ void midi_CheckRxActiveSense(){
 }
 
 void midi_CheckTxActiveSense(){
-	if (midi_TxActivceSense) {
+	if (midi_Setting.TxActivceSense) {
 		if (!(TIMER_RUNNING(TIMER_TX_ACTIVESENSE))){
 			// timer ended or not yet running
 			TIMER_SET(TIMER_TX_ACTIVESENSE,TIMER_TX_ACTIVESENSE_MS)
@@ -135,30 +165,43 @@ void midi_CheckTxActiveSense(){
 void midiIn_Process(uint8_t midiByte){
 	if (midiByte > 0x7f) {
 		// command
-		midiLastCommand = midiByte;
-		midiDataByteCount = 0; // reset received data
 		// define data bytes that are awaited (max. - less is possible)
-		if ((midiByte >= MIDI_NOTEOFF) && (midiByte  <= (MIDI_CTRLCHG | 0x0F))) {
-			midiDataByteExpected = 2;
-		} else if ((midiByte >= MIDI_PITCHBEND) && (midiByte  <= (MIDI_PITCHBEND | 0x0F))) {
-			midiDataByteExpected = 2;
-		} else if (midiByte == MIDI_SONGPOS) {
-			midiDataByteExpected = 2;
-		} else if (midiByte == MIDI_SYSEX) {
-			midiDataByteExpected = MIDI_IGNORE_DATA; // wait for next cmd
-		} else if ((midiByte >= MIDI_PRGCHG) && (midiByte  <= (MIDI_CHANAFFT | 0x0F))) {
-			midiDataByteExpected = 1;
-		} else if ((midiByte == MIDI_TIMECODE) || (midiByte == MIDI_SONGSEL)){
-			midiDataByteExpected = 1;
-		} else {
-			midiDataByteExpected = 0;
+		if ((midiByte <= MIDI_REALTIME_LAST) && (midiByte >= MIDI_REALTIME_FIRST)){
+			 // this is a real time message F8-FF: don't interrupt current stream processing
 			if (midiByte == MIDI_ACTIVESENSING) {
 				midiRxActivceSensing = 1; // start active sense
 				TIMER_SET(TIMER_ACTIVESENSE,TIMER_ACTIVESENSE_MS) // and start timer. main must check if it has elapsed
 			} else if (midiByte == MIDI_RESET){
 				midiAllReset();
 			}
-			// TODO process these 1 byte commands here if interesting
+			// if not active sense or reset: ignore completely!
+		} else {
+			// only store if non real time message
+			midiLastCommand = midiByte;
+			midiDataByteCount = 0; // reset received data
+			if ((midiByte >= MIDI_NOTEOFF) && (midiByte  <= (MIDI_CTRLCHG | 0x0F))) {
+				// 80 - BF
+				midiDataByteExpected = 2;
+			} else if ((midiByte >= MIDI_PITCHBEND) && (midiByte  <= (MIDI_PITCHBEND | 0x0F))) {
+				// E0 - EF
+				midiDataByteExpected = 2;
+			} else if (midiByte == MIDI_SONGPOS) {
+				// F2
+				midiDataByteExpected = 2;
+			} else if (midiByte == MIDI_SYSEX) {
+				// F0
+				midiDataByteExpected = MIDI_IGNORE_DATA; // wait for next cmd
+			} else if ((midiByte >= MIDI_PRGCHG) && (midiByte  <= (MIDI_CHANAFFT | 0x0F))) {
+				// C0 - DF
+				midiDataByteExpected = 1;
+			} else if ((midiByte == MIDI_TIMECODE) || (midiByte == MIDI_SONGSEL)){
+				// F1, F3
+				midiDataByteExpected = 1;
+			} else {
+				// F4, F5 undefined, F6 tune request, F7 EndOfSysEx
+				midiDataByteExpected = 0;
+				// TODO process these 1 byte commands here if interesting
+			}
 		}
 	} else {
 		// data
@@ -211,14 +254,34 @@ void midiIn_Process(uint8_t midiByte){
 
 
 //-------------------------------------- R E G I S T E R  ---------------------------------------------
+// valid register are 0...63 !
+// valid programs are 0...63
+
+void registers_CalcCount(){
+	uint8_t count = 0;
+	for (uint8_t regSec = 0; regSec < REGISTER_SEC_COUNT; regSec++){
+		if ((registerMap[regSec].endReg != REGISTER_NONE) && (registerMap[regSec].endReg >= count)){
+			// endReg == 0xFF -> ignore, endReg == 0 -> count=1
+			count = registerMap[regSec].endReg+1;			
+		}
+	}
+	registerCount = count;
+}
 
 void init_Registers(){
 	// init programs to null
 	// init registerMap to null
 	// try to get register map from eeprom
+	for (uint8_t regSec = 0; regSec < REGISTER_SEC_COUNT; regSec++){
+		registerMap[regSec].startReg = REGISTER_NONE; // CAUTION register == 0xFF -> no register
+		registerMap[regSec].endReg = REGISTER_NONE;
+		registerMap[regSec].bitStart = 0;
+	}
 	if (eeprom_ReadReg() == EE_LOAD_ERROR){
 		registerCount = 0;
 		log_putError(LOG_CAT_EE,LOG_CATEE_REGISTER,0);
+	} else {
+		registers_CalcCount(); // registers are loaded from init or eeprom, now get count
 	}
 	// try to get programs
 	if (eeprom_ReadProg() == EE_LOAD_ERROR){
@@ -232,77 +295,125 @@ void init_Registers(){
 	}
 }
 
+ModulBitError_t regNr_to_moduleBit(uint8_t regNr){
+	// returns module+bit_nr in lowByte or 0xFF in HiByte if Note ist not implemented
+	ModulBitError_t result;
+	if ((regNr < registerCount) && (regNr < REGISTER_COUNT)) {
+		// valid regNr
+		regNr++;
+		RegisterMap_t *pRange;
+		pRange = &(registerMap[0]); // check all Ranges 
+		uint8_t i = REGISTER_SEC_COUNT;
+		do {
+			if ((regNr >= pRange->startReg) && (regNr <= pRange->endReg)) {
+				// found in this range
+				result.error = MODULE_NOERROR;
+				result.moduleBit = pRange->bitStart + (regNr - pRange->startReg);
+				return (result);
+			}
+			pRange++;
+		} while (--i > 0);
+	}
+	// when we are here: none off the defined ranges contained register
+	result.error = MODULE_ERROR;
+	return (result);
+}
+
 uint8_t read_Register(uint8_t regNr, uint8_t mode){
 	// mode: REGISTER_READ_HWIN, REGISTER_READ_SWOUT, REGISTER_READ_ALL
 	// result: 0x01: REGISTER_ON, 0x00: REGISTER_OFF
 	if (regNr < registerCount) {
 		// valid register
-		uint8_t modBit = registerMap[regNr];
-		uint8_t bitNr = MODULE_BIT_TO_BIT(modBit);
-		uint8_t modulNr = MODULE_BIT_TO_MODULE(modBit);
-		uint8_t mask = 1 << modulNr;
-		if (((pipe[bitNr].pipeOut & mask) == 0) && ((mode & REGISTER_READ_SWOUT) != 0))
-			// read sw output and output is L (active)
-			return REGISTER_ON;
-		else if (((pipe[bitNr].pipeIn & mask) != 0) && ((mode & REGISTER_READ_HWIN) != 0)) {
-			// read hw input and Input is H (active)
-			// result ON if output is H (works with disconnected HW or input is H
-			return REGISTER_ON;
-		} else  {
-			return REGISTER_OFF;
+		ModulBitError_t modBitComplette = regNr_to_moduleBit(regNr);
+		if (modBitComplette.error == MODULE_NOERROR) {
+			// register is assgined to module
+			uint8_t modBit = modBitComplette.moduleBit; 
+			uint8_t bitNr = MODULE_BIT_TO_BIT(modBit);
+			uint8_t modulNr = MODULE_BIT_TO_MODULE(modBit);
+			uint8_t mask = 1 << modulNr;
+			if (((pipe[bitNr].pipeOut & mask) == 0) && ((mode & REGISTER_READ_SWOUT) != 0))
+				// read sw output and output is L (active)
+				return REGISTER_ON;
+			else if (((pipe[bitNr].pipeIn & mask) != 0) && ((mode & REGISTER_READ_HWIN) != 0)) {
+				// read hw input and Input is H (active)
+				// result ON if output is H (works with disconnected HW or input is H
+				return REGISTER_ON;
+			} else  {
+				return REGISTER_OFF;
+			}
 		}
 	}
-	return REGISTER_OFF; // default
+	return REGISTER_OFF; // default for unassigned/invalid register
 }
 
 void read_allRegister(uint8_t* resultPtr){
-	// read all registers to memory (hw inp or sw out!)
-	uint8_t mask;
-	for (uint8_t regNr = 0; regNr < registerCount; regNr++){
+	// read all registers to memory (no matter if hw inp or sw out)
+	uint8_t mask = 0;
+	for (uint8_t regNr = 0; regNr < REGISTER_COUNT; regNr++){
+		// always read all registers, even if unassigned
+		// begin with first register, bit 0
 		if ((regNr & 0x07) == 0) {
+			// reset mask every 8 bits, bit 0, 8, 16, 24
 			mask = 0;
 		}
-		mask = ((mask << 1 )  | read_Register(regNr, REGISTER_READ_ALL));
-		if (((regNr & 0x07) == 0x07) || (regNr == registerCount-1)){
+		mask = (mask >> 1 )  | (read_Register(regNr, REGISTER_READ_ALL) == REGISTER_OFF ? 0 : 0x80);
+		if ((regNr & 0x07) == 0x07) {
+			// bit 7, 15, 23, 31
 			*resultPtr++ = mask;
 		}
-
 	}
 }
+		
 
 void register_onOff(uint8_t regNr, uint8_t onOff){
 	// onOff: LSB==1: on, LSB==0: off
 	if (regNr < registerCount) {
 		// valid register
-		uint8_t modBit = registerMap[regNr];
-		uint8_t bitNr = MODULE_BIT_TO_BIT(modBit);
-		uint8_t modulNr = MODULE_BIT_TO_MODULE(modBit);
-		if ((onOff & 0x01) != 0){
-			// set register -> output L
-			pipe[bitNr].pipeOut &= ~(1 << modulNr);
-		} else {
-			// reset register -> output H
-			pipe[bitNr].pipeOut |= (1 << modulNr);
+		ModulBitError_t modBitComplette = regNr_to_moduleBit(regNr);
+		if (modBitComplette.error == MODULE_NOERROR) {
+			// register is assigned to module
+			uint8_t modBit = modBitComplette.moduleBit;
+			uint8_t bitNr = MODULE_BIT_TO_BIT(modBit);
+			uint8_t modulNr = MODULE_BIT_TO_MODULE(modBit);
+			if ((onOff & 0x01) != 0){
+				// set register -> output L
+				pipe[bitNr].pipeOut &= ~(1 << modulNr);
+			} else {
+				// reset register -> output H
+				pipe[bitNr].pipeOut |= (1 << modulNr);
+			}
 		}
 	}
 	// TODO Error Logging invalid register
 }
 
 void program_toRegister(uint8_t program){
+	// Program 0..63
 	if (program < PROGRAM_COUNT){
 		uint8_t regBits;
-		uint8_t regNr;
+		uint8_t regNr = 0;
 		uint8_t *regBytePtr = &(programMap[program][0]);
 		for (uint8_t byteNr = 0; byteNr < (REGISTER_COUNT / 8); byteNr++){
-			regBits = *(regBytePtr++);
+			// 8 bytes for 64 registers
+			regBits = *(regBytePtr++); // get adress for next 8 registers
 			for (uint8_t bitNr = 0; bitNr < 8; bitNr++){
-				regNr = (byteNr << 3) || bitNr;
-				register_onOff(regNr, regBits);
+				register_onOff(regNr, ((regBits & 0x01) == 0 ? REGISTER_OFF : REGISTER_ON)); // turn this register on/off according to lsb
 				regBits = regBits >> 1;
+				regNr++;
 			}
 		}
 	}
 }
+
+void register_toProgram(uint8_t program){
+	// Program 0..63
+	// saves current registers to program RAM only, eeprom must be done else where
+	if (program < PROGRAM_COUNT){
+		uint8_t *regBytePtr = &(programMap[program][0]);
+		read_allRegister(regBytePtr);
+	}
+}
+
 
 //------------------------------------- M I D I C H A N N E L   T O   M A N U A L ---------------------------------
 
@@ -353,7 +464,8 @@ void init_Manual2Midi(){
 		midiOutMap[MANUAL_II].channel = MIDI_CHANNEL_2;
 		midiOutMap[MANUAL_I].channel = MIDI_CHANNEL_3;
 		midiOutMap[MANUAL_P].channel = MIDI_CHANNEL_4;
-		midi_TxActivceSense = FALSE;
+		midi_Setting.TxActivceSense = FALSE;
+		midi_Setting.VelZero4Off = FALSE;
 		log_putError(LOG_CAT_EE,LOG_CATEE_MAN2MIDI,0);
 	}
 }
@@ -529,9 +641,11 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 					chanNote = Manual_to_MidiNote(manualNote.manual, manualNote.note);
 					if (chanNote.channel != MIDI_CHANNEL_NONE){
 						// note on/off can be sent
-						serial1MIDISend((command == MESSAGE_PIPE_ON_HI ? MIDI_NOTEON : MIDI_NOTEOFF) | chanNote.channel);
+						serial1MIDISend(((command == MESSAGE_PIPE_ON_HI) || (midi_Setting.VelZero4Off) ? MIDI_NOTEON : MIDI_NOTEOFF) | chanNote.channel);
+						// of note off: use note on an velocity = 0 to turn off note (less bytes !)
 						serial1MIDISend(chanNote.note);
-						serial1MIDISend(MIDI_DEFAULT_VELOCITY);
+						// of note off: use note on an velocity = 0 to turn off note (less bytes !):
+						serial1MIDISend(((command == MESSAGE_PIPE_OFF_HI) && (midi_Setting.VelZero4Off)) ? 0 : MIDI_DEFAULT_VELOCITY);
 						// V0.56 Show MidiOut on Display only if Channel assigned
 						if (command == MESSAGE_PIPE_ON_HI) {
 							// note on -> save this info for status display
@@ -542,25 +656,44 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 					// check couplers
 					uint8_t noteOnOff = (command == MESSAGE_PIPE_ON_HI ? NOTE_ON : NOTE_OFF);
 					if (manualNote.manual == MANUAL_III){
-						if (midiCoupler_2from3 == TRUE){
+						if (midi_Couplers[COUPLER_2FROM3] == TRUE){
 							manual_NoteOnOff(MANUAL_II, manualNote.note, noteOnOff);
 						}
-						if (midiCoupler_1from3 == TRUE){
+						if (midi_Couplers[COUPLER_1FROM3] == TRUE){
 							manual_NoteOnOff(MANUAL_I, manualNote.note, noteOnOff);
 						}
-						if (midiCoupler_Pfrom3 == TRUE){
+						if (midi_Couplers[COUPLER_PFROM3] == TRUE){
 							manual_NoteOnOff(MANUAL_P, manualNote.note, noteOnOff);
 						}
 					} else 	if (manualNote.manual == MANUAL_II) {
-						if (midiCoupler_1from2 == TRUE){
+						if (midi_Couplers[COUPLER_1FROM2] == TRUE){
 							manual_NoteOnOff(MANUAL_I, manualNote.note, noteOnOff);
 						}
-						if (midiCoupler_Pfrom2 == TRUE){
+						if (midi_Couplers[COUPLER_PFROM2] == TRUE){
 							manual_NoteOnOff(MANUAL_P, manualNote.note, noteOnOff);
 						}
+						if (midi_Couplers[COUPLER_3FROM2] == TRUE){
+							manual_NoteOnOff(MANUAL_III, manualNote.note, noteOnOff);
+						}
 					} else 	if (manualNote.manual == MANUAL_I) {
-						if (midiCoupler_Pfrom1 == TRUE){
+						if (midi_Couplers[COUPLER_PFROM1] == TRUE){
 							manual_NoteOnOff(MANUAL_P, manualNote.note, noteOnOff);
+						}
+						if (midi_Couplers[COUPLER_3FROM1] == TRUE){
+							manual_NoteOnOff(MANUAL_III, manualNote.note, noteOnOff);
+						}
+						if (midi_Couplers[COUPLER_2FROM1] == TRUE){
+							manual_NoteOnOff(MANUAL_II, manualNote.note, noteOnOff);
+						}
+					} else if (manualNote.manual == MANUAL_P) {
+						if (midi_Couplers[COUPLER_3FROMP] == TRUE){
+							manual_NoteOnOff(MANUAL_III, manualNote.note, noteOnOff);
+						}
+						if (midi_Couplers[COUPLER_2FROMP] == TRUE){
+							manual_NoteOnOff(MANUAL_II, manualNote.note, noteOnOff);
+						}
+						if (midi_Couplers[COUPLER_1FROMP] == TRUE){
+							manual_NoteOnOff(MANUAL_I, manualNote.note, noteOnOff);
 						}
 					}
 				} // if

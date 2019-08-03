@@ -971,13 +971,6 @@ __vector_26:
 	.uleb128 0x5
 	.long	0x7e
 	.uleb128 0x6
-	.long	0x30
-	.long	0x9a
-	.uleb128 0x7
-	.long	0x77
-	.byte	0x3f
-	.byte	0
-	.uleb128 0x8
 	.byte	0x1
 	.long	.LASF60
 	.byte	0x1
@@ -989,7 +982,7 @@ __vector_26:
 	.uleb128 0x20
 	.sleb128 3
 	.byte	0x1
-	.uleb128 0x9
+	.uleb128 0x7
 	.byte	0x1
 	.long	.LASF11
 	.byte	0x1
@@ -1002,17 +995,17 @@ __vector_26:
 	.uleb128 0x20
 	.sleb128 3
 	.byte	0x1
-	.long	0xf2
-	.uleb128 0xa
+	.long	0xe2
+	.uleb128 0x8
 	.long	.LASF18
 	.byte	0x1
 	.byte	0x3f
 	.long	0x30
 	.long	.LLST0
-	.uleb128 0xb
+	.uleb128 0x9
 	.long	.LBB2
 	.long	.LBE2
-	.uleb128 0xc
+	.uleb128 0xa
 	.long	.LASF13
 	.byte	0x1
 	.byte	0x44
@@ -1020,7 +1013,7 @@ __vector_26:
 	.long	.LLST1
 	.byte	0
 	.byte	0
-	.uleb128 0xd
+	.uleb128 0xb
 	.byte	0x1
 	.long	.LASF12
 	.byte	0x1
@@ -1033,15 +1026,15 @@ __vector_26:
 	.uleb128 0x20
 	.sleb128 3
 	.byte	0x1
-	.long	0x11f
-	.uleb128 0xc
+	.long	0x10f
+	.uleb128 0xa
 	.long	.LASF14
 	.byte	0x1
 	.byte	0x54
 	.long	0x30
 	.long	.LLST2
 	.byte	0
-	.uleb128 0xe
+	.uleb128 0xc
 	.byte	0x1
 	.long	.LASF15
 	.byte	0x1
@@ -1051,17 +1044,17 @@ __vector_26:
 	.long	.LFE9
 	.long	.LLST3
 	.byte	0x1
-	.long	0x162
-	.uleb128 0xc
+	.long	0x152
+	.uleb128 0xa
 	.long	.LASF16
 	.byte	0x1
 	.byte	0x5f
 	.long	0x30
 	.long	.LLST4
-	.uleb128 0xb
+	.uleb128 0x9
 	.long	.LBB3
 	.long	.LBE3
-	.uleb128 0xc
+	.uleb128 0xa
 	.long	.LASF13
 	.byte	0x1
 	.byte	0x66
@@ -1069,7 +1062,7 @@ __vector_26:
 	.long	.LLST5
 	.byte	0
 	.byte	0
-	.uleb128 0xf
+	.uleb128 0xd
 	.byte	0x1
 	.long	.LASF61
 	.byte	0x1
@@ -1079,7 +1072,7 @@ __vector_26:
 	.long	.LFE10
 	.long	.LLST6
 	.byte	0x1
-	.uleb128 0x9
+	.uleb128 0x7
 	.byte	0x1
 	.long	.LASF17
 	.byte	0x1
@@ -1092,21 +1085,21 @@ __vector_26:
 	.uleb128 0x20
 	.sleb128 3
 	.byte	0x1
-	.long	0x1b1
-	.uleb128 0xa
+	.long	0x1a1
+	.uleb128 0x8
 	.long	.LASF18
 	.byte	0x1
 	.byte	0xaf
 	.long	0x30
 	.long	.LLST7
-	.uleb128 0xc
+	.uleb128 0xa
 	.long	.LASF19
 	.byte	0x1
 	.byte	0xb0
 	.long	0x30
 	.long	.LLST8
 	.byte	0
-	.uleb128 0xe
+	.uleb128 0xc
 	.byte	0x1
 	.long	.LASF20
 	.byte	0x1
@@ -1116,44 +1109,44 @@ __vector_26:
 	.long	.LFE12
 	.long	.LLST9
 	.byte	0x1
-	.long	0x21d
-	.uleb128 0xa
+	.long	0x20d
+	.uleb128 0x8
 	.long	.LASF21
 	.byte	0x1
 	.byte	0x9a
-	.long	0x21d
+	.long	0x20d
 	.long	.LLST10
-	.uleb128 0x10
+	.uleb128 0xe
 	.string	"c"
 	.byte	0x1
 	.byte	0x9c
 	.long	0x7e
 	.long	.LLST11
-	.uleb128 0x11
+	.uleb128 0xf
 	.long	.LBB4
 	.long	.LBE4
-	.long	0x213
-	.uleb128 0xc
+	.long	0x203
+	.uleb128 0xa
 	.long	.LASF22
 	.byte	0x1
 	.byte	0x9d
 	.long	0x49
 	.long	.LLST12
-	.uleb128 0xc
+	.uleb128 0xa
 	.long	.LASF23
 	.byte	0x1
 	.byte	0x9d
 	.long	0x30
 	.long	.LLST11
 	.byte	0
-	.uleb128 0x12
+	.uleb128 0x10
 	.long	.LVL28
-	.long	0x178
+	.long	0x168
 	.byte	0
-	.uleb128 0x13
+	.uleb128 0x11
 	.byte	0x2
 	.long	0x85
-	.uleb128 0x14
+	.uleb128 0x12
 	.byte	0x1
 	.long	.LASF24
 	.byte	0x1
@@ -1165,12 +1158,12 @@ __vector_26:
 	.uleb128 0x20
 	.sleb128 3
 	.byte	0x1
-	.long	0x246
-	.uleb128 0x12
+	.long	0x236
+	.uleb128 0x10
 	.long	.LVL33
-	.long	0x1b1
+	.long	0x1a1
 	.byte	0
-	.uleb128 0x14
+	.uleb128 0x12
 	.byte	0x1
 	.long	.LASF25
 	.byte	0x1
@@ -1182,25 +1175,25 @@ __vector_26:
 	.uleb128 0x20
 	.sleb128 3
 	.byte	0x1
-	.long	0x2af
-	.uleb128 0x12
+	.long	0x29f
+	.uleb128 0x10
 	.long	.LVL34
 	.long	0x589
-	.uleb128 0x15
+	.uleb128 0x13
 	.long	.LVL35
 	.long	0x596
-	.long	0x28a
-	.uleb128 0x16
+	.long	0x27a
+	.uleb128 0x14
 	.byte	0x1
 	.byte	0x68
 	.byte	0x1
 	.byte	0x31
-	.uleb128 0x16
+	.uleb128 0x14
 	.byte	0x1
 	.byte	0x66
 	.byte	0x1
 	.byte	0x34
-	.uleb128 0x16
+	.uleb128 0x14
 	.byte	0x6
 	.byte	0x64
 	.byte	0x93
@@ -1211,20 +1204,20 @@ __vector_26:
 	.byte	0x1
 	.byte	0x30
 	.byte	0
-	.uleb128 0x12
+	.uleb128 0x10
 	.long	.LVL36
-	.long	0x1b1
-	.uleb128 0x12
+	.long	0x1a1
+	.uleb128 0x10
 	.long	.LVL37
-	.long	0x1b1
-	.uleb128 0x12
+	.long	0x1a1
+	.uleb128 0x10
 	.long	.LVL38
-	.long	0x223
-	.uleb128 0x12
+	.long	0x213
+	.uleb128 0x10
 	.long	.LVL39
-	.long	0x223
+	.long	0x213
 	.byte	0
-	.uleb128 0xe
+	.uleb128 0xc
 	.byte	0x1
 	.long	.LASF26
 	.byte	0x1
@@ -1234,27 +1227,27 @@ __vector_26:
 	.long	.LFE13
 	.long	.LLST14
 	.byte	0x1
-	.long	0x2ef
-	.uleb128 0x17
+	.long	0x2df
+	.uleb128 0x15
 	.string	"s"
 	.byte	0x1
 	.byte	0xa2
-	.long	0x2ef
+	.long	0x2df
 	.long	.LLST15
-	.uleb128 0xc
+	.uleb128 0xa
 	.long	.LASF27
 	.byte	0x1
 	.byte	0xa4
 	.long	0x30
 	.long	.LLST16
-	.uleb128 0x12
+	.uleb128 0x10
 	.long	.LVL44
-	.long	0x178
+	.long	0x168
 	.byte	0
-	.uleb128 0x13
+	.uleb128 0x11
 	.byte	0x2
 	.long	0x7e
-	.uleb128 0xd
+	.uleb128 0xb
 	.byte	0x1
 	.long	.LASF28
 	.byte	0x1
@@ -1267,21 +1260,21 @@ __vector_26:
 	.uleb128 0x20
 	.sleb128 3
 	.byte	0x1
-	.long	0x331
-	.uleb128 0xc
+	.long	0x321
+	.uleb128 0xa
 	.long	.LASF14
 	.byte	0x1
 	.byte	0xc4
 	.long	0x30
 	.long	.LLST17
-	.uleb128 0xc
+	.uleb128 0xa
 	.long	.LASF19
 	.byte	0x1
 	.byte	0xc5
 	.long	0x30
 	.long	.LLST18
 	.byte	0
-	.uleb128 0xe
+	.uleb128 0xc
 	.byte	0x1
 	.long	.LASF29
 	.byte	0x1
@@ -1291,21 +1284,21 @@ __vector_26:
 	.long	.LFE17
 	.long	.LLST19
 	.byte	0x1
-	.long	0x36a
-	.uleb128 0xc
+	.long	0x35a
+	.uleb128 0xa
 	.long	.LASF16
 	.byte	0x1
 	.byte	0xd0
 	.long	0x30
 	.long	.LLST20
-	.uleb128 0xc
+	.uleb128 0xa
 	.long	.LASF19
 	.byte	0x1
 	.byte	0xd1
 	.long	0x30
 	.long	.LLST21
 	.byte	0
-	.uleb128 0xe
+	.uleb128 0xc
 	.byte	0x1
 	.long	.LASF30
 	.byte	0x1
@@ -1315,87 +1308,94 @@ __vector_26:
 	.long	.LFE18
 	.long	.LLST22
 	.byte	0x1
-	.long	0x394
-	.uleb128 0xc
+	.long	0x384
+	.uleb128 0xa
 	.long	.LASF19
 	.byte	0x1
 	.byte	0xde
 	.long	0x30
 	.long	.LLST23
 	.byte	0
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF31
 	.byte	0x1
 	.byte	0x1f
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	serusbRxInIndex
-	.uleb128 0x19
+	.uleb128 0x17
 	.long	0x30
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF32
 	.byte	0x1
 	.byte	0x20
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	serusbRxOutIndex
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF33
 	.byte	0x1
 	.byte	0x21
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	serusbTxOutIndex
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF34
 	.byte	0x1
 	.byte	0x22
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	serusbTxInIndex
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF35
 	.byte	0x1
 	.byte	0x23
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	serusbOvflFlag
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF36
 	.byte	0x1
 	.byte	0x1a
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	serusb_Active
 	.uleb128 0x18
+	.long	0x30
+	.long	0x405
+	.uleb128 0x19
+	.long	0x77
+	.byte	0x3f
+	.byte	0
+	.uleb128 0x16
 	.long	.LASF37
 	.byte	0x1
 	.byte	0x1c
-	.long	0x8a
+	.long	0x3f5
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	serUsbRxBuffer
-	.uleb128 0x6
+	.uleb128 0x18
 	.long	0x30
 	.long	0x427
-	.uleb128 0x7
+	.uleb128 0x19
 	.long	0x77
 	.byte	0xff
 	.byte	0
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF38
 	.byte	0x1
 	.byte	0x1d
@@ -1404,7 +1404,7 @@ __vector_26:
 	.byte	0x5
 	.byte	0x3
 	.long	serUsbTxBuffer
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF39
 	.byte	0x1
 	.byte	0x25
@@ -1413,9 +1413,9 @@ __vector_26:
 	.byte	0x5
 	.byte	0x3
 	.long	midiTxBytesCount
-	.uleb128 0x19
+	.uleb128 0x17
 	.long	0x49
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF40
 	.byte	0x1
 	.byte	0x26
@@ -1424,50 +1424,50 @@ __vector_26:
 	.byte	0x5
 	.byte	0x3
 	.long	midiRxBytesCount
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF41
 	.byte	0x1
 	.byte	0x15
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	midiRxInIndex
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF42
 	.byte	0x1
 	.byte	0x16
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	midiRxOutIndex
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF43
 	.byte	0x1
 	.byte	0x18
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	midiTxOutIndex
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF44
 	.byte	0x1
 	.byte	0x17
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	midiTxInIndex
-	.uleb128 0x6
+	.uleb128 0x18
 	.long	0x30
 	.long	0x4ba
-	.uleb128 0x7
+	.uleb128 0x19
 	.long	0x77
 	.byte	0x1f
 	.byte	0
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF45
 	.byte	0x1
 	.byte	0x12
@@ -1476,7 +1476,7 @@ __vector_26:
 	.byte	0x5
 	.byte	0x3
 	.long	midiRxBuffer
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF46
 	.byte	0x1
 	.byte	0x13
@@ -1485,25 +1485,25 @@ __vector_26:
 	.byte	0x5
 	.byte	0x3
 	.long	midiTxBuffer
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF47
 	.byte	0x1
 	.byte	0x2a
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	midiRxOvflCount
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF48
 	.byte	0x1
 	.byte	0x2b
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	midiTxOvflCount
-	.uleb128 0x6
+	.uleb128 0x18
 	.long	0x85
 	.long	0x50d
 	.uleb128 0x1a
@@ -1511,23 +1511,23 @@ __vector_26:
 	.uleb128 0x1b
 	.long	.LASF49
 	.byte	0x3
-	.byte	0x64
+	.byte	0x66
 	.long	0x51a
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x5
 	.long	0x502
-	.uleb128 0x6
+	.uleb128 0x18
 	.long	0x30
 	.long	0x52f
-	.uleb128 0x7
+	.uleb128 0x19
 	.long	0x77
 	.byte	0x9
 	.byte	0
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF50
 	.byte	0x4
-	.byte	0x9c
+	.byte	0xa7
 	.long	0x51f
 	.byte	0x1
 	.byte	0x5
@@ -1536,7 +1536,7 @@ __vector_26:
 	.uleb128 0x1b
 	.long	.LASF51
 	.byte	0x4
-	.byte	0xf2
+	.byte	0xf1
 	.long	0x54e
 	.byte	0x1
 	.byte	0x1
@@ -1545,26 +1545,26 @@ __vector_26:
 	.uleb128 0x1b
 	.long	.LASF52
 	.byte	0x4
-	.byte	0xf3
+	.byte	0xf2
 	.long	0x560
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x5
 	.long	0x502
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF53
 	.byte	0x1
 	.byte	0x28
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	midiRxOvfl
-	.uleb128 0x18
+	.uleb128 0x16
 	.long	.LASF54
 	.byte	0x1
 	.byte	0x29
-	.long	0x3a6
+	.long	0x396
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
@@ -1650,24 +1650,6 @@ __vector_26:
 	.byte	0
 	.byte	0
 	.uleb128 0x6
-	.uleb128 0x1
-	.byte	0x1
-	.uleb128 0x49
-	.uleb128 0x13
-	.uleb128 0x1
-	.uleb128 0x13
-	.byte	0
-	.byte	0
-	.uleb128 0x7
-	.uleb128 0x21
-	.byte	0
-	.uleb128 0x49
-	.uleb128 0x13
-	.uleb128 0x2f
-	.uleb128 0xb
-	.byte	0
-	.byte	0
-	.uleb128 0x8
 	.uleb128 0x2e
 	.byte	0
 	.uleb128 0x3f
@@ -1688,7 +1670,7 @@ __vector_26:
 	.uleb128 0xc
 	.byte	0
 	.byte	0
-	.uleb128 0x9
+	.uleb128 0x7
 	.uleb128 0x2e
 	.byte	0x1
 	.uleb128 0x3f
@@ -1713,7 +1695,7 @@ __vector_26:
 	.uleb128 0x13
 	.byte	0
 	.byte	0
-	.uleb128 0xa
+	.uleb128 0x8
 	.uleb128 0x5
 	.byte	0
 	.uleb128 0x3
@@ -1728,7 +1710,7 @@ __vector_26:
 	.uleb128 0x6
 	.byte	0
 	.byte	0
-	.uleb128 0xb
+	.uleb128 0x9
 	.uleb128 0xb
 	.byte	0x1
 	.uleb128 0x11
@@ -1737,7 +1719,7 @@ __vector_26:
 	.uleb128 0x1
 	.byte	0
 	.byte	0
-	.uleb128 0xc
+	.uleb128 0xa
 	.uleb128 0x34
 	.byte	0
 	.uleb128 0x3
@@ -1752,7 +1734,7 @@ __vector_26:
 	.uleb128 0x6
 	.byte	0
 	.byte	0
-	.uleb128 0xd
+	.uleb128 0xb
 	.uleb128 0x2e
 	.byte	0x1
 	.uleb128 0x3f
@@ -1777,7 +1759,7 @@ __vector_26:
 	.uleb128 0x13
 	.byte	0
 	.byte	0
-	.uleb128 0xe
+	.uleb128 0xc
 	.uleb128 0x2e
 	.byte	0x1
 	.uleb128 0x3f
@@ -1802,7 +1784,7 @@ __vector_26:
 	.uleb128 0x13
 	.byte	0
 	.byte	0
-	.uleb128 0xf
+	.uleb128 0xd
 	.uleb128 0x2e
 	.byte	0
 	.uleb128 0x3f
@@ -1825,7 +1807,7 @@ __vector_26:
 	.uleb128 0xc
 	.byte	0
 	.byte	0
-	.uleb128 0x10
+	.uleb128 0xe
 	.uleb128 0x34
 	.byte	0
 	.uleb128 0x3
@@ -1840,7 +1822,7 @@ __vector_26:
 	.uleb128 0x6
 	.byte	0
 	.byte	0
-	.uleb128 0x11
+	.uleb128 0xf
 	.uleb128 0xb
 	.byte	0x1
 	.uleb128 0x11
@@ -1851,7 +1833,7 @@ __vector_26:
 	.uleb128 0x13
 	.byte	0
 	.byte	0
-	.uleb128 0x12
+	.uleb128 0x10
 	.uleb128 0x4109
 	.byte	0
 	.uleb128 0x11
@@ -1860,7 +1842,7 @@ __vector_26:
 	.uleb128 0x13
 	.byte	0
 	.byte	0
-	.uleb128 0x13
+	.uleb128 0x11
 	.uleb128 0xf
 	.byte	0
 	.uleb128 0xb
@@ -1869,7 +1851,7 @@ __vector_26:
 	.uleb128 0x13
 	.byte	0
 	.byte	0
-	.uleb128 0x14
+	.uleb128 0x12
 	.uleb128 0x2e
 	.byte	0x1
 	.uleb128 0x3f
@@ -1892,7 +1874,7 @@ __vector_26:
 	.uleb128 0x13
 	.byte	0
 	.byte	0
-	.uleb128 0x15
+	.uleb128 0x13
 	.uleb128 0x4109
 	.byte	0x1
 	.uleb128 0x11
@@ -1903,7 +1885,7 @@ __vector_26:
 	.uleb128 0x13
 	.byte	0
 	.byte	0
-	.uleb128 0x16
+	.uleb128 0x14
 	.uleb128 0x410a
 	.byte	0
 	.uleb128 0x2
@@ -1912,7 +1894,7 @@ __vector_26:
 	.uleb128 0xa
 	.byte	0
 	.byte	0
-	.uleb128 0x17
+	.uleb128 0x15
 	.uleb128 0x5
 	.byte	0
 	.uleb128 0x3
@@ -1927,7 +1909,7 @@ __vector_26:
 	.uleb128 0x6
 	.byte	0
 	.byte	0
-	.uleb128 0x18
+	.uleb128 0x16
 	.uleb128 0x34
 	.byte	0
 	.uleb128 0x3
@@ -1944,11 +1926,29 @@ __vector_26:
 	.uleb128 0xa
 	.byte	0
 	.byte	0
-	.uleb128 0x19
+	.uleb128 0x17
 	.uleb128 0x35
 	.byte	0
 	.uleb128 0x49
 	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x18
+	.uleb128 0x1
+	.byte	0x1
+	.uleb128 0x49
+	.uleb128 0x13
+	.uleb128 0x1
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x19
+	.uleb128 0x21
+	.byte	0
+	.uleb128 0x49
+	.uleb128 0x13
+	.uleb128 0x2f
+	.uleb128 0xb
 	.byte	0
 	.byte	0
 	.uleb128 0x1a

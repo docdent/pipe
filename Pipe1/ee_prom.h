@@ -63,7 +63,7 @@ typedef struct{
 	uint16_t midiInMap_crc;
 	uint8_t charMidiOutMap;
 	MidiOutMap_t midiOutMap[MANUAL_COUNT];
-	uint8_t midiTXActivSense;
+	MidiSetting_t midiSettings;
 	uint16_t midiOutMap_crc;
 	uint8_t charModInst;
 	uint8_t moduleAssignRead;
@@ -74,13 +74,13 @@ typedef struct{
 	uint16_t usb_crc;
 	uint8_t charReg;
 	uint8_t regCount;
-	uint8_t registerMap[REGISTER_COUNT];
+	RegisterMap_t registerMap[REGISTER_SEC_COUNT];
 	uint16_t reg_crc;
 	uint8_t charProg;
 	uint8_t programMap[PROGRAM_COUNT] [REGISTER_COUNT / 8];
 	uint16_t prog_crc;
 	uint8_t charSoftkey;
-	SoftKey_List_t softKeys[MENU_SOFTKEY_COUNT];
+	uint8_t softKeyMenuIndex[MENU_SOFTKEY_COUNT];
 	uint16_t softKeys_crc;
 	uint8_t charEnd;
 } Ee_t;

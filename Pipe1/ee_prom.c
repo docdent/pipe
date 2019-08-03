@@ -94,11 +94,11 @@ uint8_t eeprom_ReadMidiInMap(){
 }
 
 uint8_t eeprom_ReadMidiOutMap(){
-	if ((eeprom_read_word(&ee.eeData.ee.midiOutMap_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.midiOutMap, sizeof (ee.eeData.ee.midiOutMap)+sizeof(midi_TxActivceSense))  
+	if ((eeprom_read_word(&ee.eeData.ee.midiOutMap_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.midiOutMap, sizeof (ee.eeData.ee.midiOutMap)+sizeof(ee.eeData.ee.midiSettings))  
 		&& eeprom_read_byte(&ee.eeData.ee.charMidiOutMap) == EE_CHAR_MIDIOUTMAP))  {
 		// stored crc16 is ok
-		eeprom_read_block((uint8_t*) midiOutMap, (uint8_t*) &ee.eeData.ee.midiOutMap, sizeof (ee.eeData.ee.midiOutMap));
-		midi_TxActivceSense = eeprom_read_byte(&ee.eeData.ee.midiTXActivSense);
+		eeprom_read_block((uint8_t*)&midiOutMap, (uint8_t*) &ee.eeData.ee.midiOutMap, sizeof(ee.eeData.ee.midiOutMap));
+		eeprom_read_block((uint8_t*)&midi_Setting, (uint8_t*) &ee.eeData.ee.midiSettings, sizeof(ee.eeData.ee.midiSettings));
 		return (EE_LOAD_OK);
 	} else {
 		ee_initError |= EE_ERROR_MIDIOUT;
@@ -134,7 +134,8 @@ uint8_t eeprom_ReadUSB(){
 uint8_t eeprom_ReadReg(){
 	uint16_t crc;
 	crc = crc16_eeprom((uint8_t*) &ee.eeData.ee.regCount, sizeof (registerCount));
-	if ((eeprom_read_word(&ee.eeData.ee.reg_crc) == crc16_eeprom_startVal((uint8_t*) &ee.eeData.ee.registerMap, sizeof (ee.eeData.ee.registerMap), crc))){
+	crc = crc16_eeprom_startVal((uint8_t*) &ee.eeData.ee.registerMap, sizeof (ee.eeData.ee.registerMap), crc);
+	if ((eeprom_read_word(&ee.eeData.ee.reg_crc) == crc) && (eeprom_read_byte(&ee.eeData.ee.charReg) == EE_CHAR_REG)){
 		// stored crc is ok
 		registerCount = eeprom_read_byte(&ee.eeData.ee.regCount);
 		eeprom_read_block((uint8_t*) registerMap, (uint8_t*) &ee.eeData.ee.registerMap, sizeof (ee.eeData.ee.registerMap));
@@ -146,7 +147,7 @@ uint8_t eeprom_ReadReg(){
 }
 
 uint8_t eeprom_ReadProg(){
-	if ((eeprom_read_word(&ee.eeData.ee.prog_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.programMap, sizeof (ee.eeData.ee.programMap)))){
+	if ((eeprom_read_word(&ee.eeData.ee.prog_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.programMap, sizeof (ee.eeData.ee.programMap)))  && (eeprom_read_byte(&ee.eeData.ee.charProg) == EE_CHAR_PROG)){
 		// stored crc is ok
 		eeprom_read_block((uint8_t*) programMap, (uint8_t*) &ee.eeData.ee.programMap, sizeof (ee.eeData.ee.programMap));
 		return(EE_LOAD_OK);
@@ -157,9 +158,9 @@ uint8_t eeprom_ReadProg(){
 }
 
 uint8_t eeprom_ReadSoftkeys(){
-	if ((eeprom_read_word(&ee.eeData.ee.softKeys_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.softKeys, sizeof (ee.eeData.ee.softKeys)))){
+	if ((eeprom_read_word(&ee.eeData.ee.softKeys_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.softKeyMenuIndex, sizeof (ee.eeData.ee.softKeyMenuIndex)))){
 		// stored crc is ok
-		eeprom_read_block((uint8_t*) soft_Key, (uint8_t*) &ee.eeData.ee.softKeys, sizeof (ee.eeData.ee.softKeys));
+		eeprom_read_block((uint8_t*) soft_KeyMenuIndex, (uint8_t*) &ee.eeData.ee.softKeyMenuIndex, sizeof (ee.eeData.ee.softKeyMenuIndex));
 		return(EE_LOAD_OK);
 	} else {
 		ee_initError |= EE_ERROR_ELSE;
@@ -194,11 +195,11 @@ void eeprom_UpdateMidiInMap(){
 
 void eeprom_UpdateMidiOutMap(){
 	uint16_t crc = crc16_ram((uint8_t*)midiOutMap, sizeof(midiOutMap));
-	crc = crc16_ram_startVal(&midi_TxActivceSense,sizeof(midi_TxActivceSense),crc);
+	crc = crc16_ram_startVal((uint8_t*)&midi_Setting,sizeof(midi_Setting),crc);
 	lcd_waitSymbolOn();
 	eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charMidiOutMap), EE_CHAR_MIDIOUTMAP);
 	eeprom_update_block((uint8_t*) &midiOutMap, (uint8_t*) &ee.eeData.ee.midiOutMap, sizeof(midiOutMap));
-	eeprom_update_byte((uint8_t *) &(ee.eeData.ee.midiTXActivSense), midi_TxActivceSense);
+	eeprom_update_block((uint8_t*) &midi_Setting, (uint8_t*) &ee.eeData.ee.midiSettings, sizeof(midi_Setting));
 	eeprom_update_word(&ee.eeData.ee.midiOutMap_crc, crc);
 	eepromWriteSignature();
 	lcd_waitSymbolOff();
@@ -248,10 +249,10 @@ void eeprom_UpdateProg(){
 }
 
 void eeprom_UpdateSoftkeys(){
-	uint16_t crc = crc16_ram((uint8_t*) soft_Key, sizeof(soft_Key));
+	uint16_t crc = crc16_ram((uint8_t*) soft_KeyMenuIndex, sizeof(soft_KeyMenuIndex));
 	lcd_waitSymbolOn();
 	eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charSoftkey), EE_CHAR_SOFTKEYS);
-	eeprom_update_block((uint8_t*) soft_Key, (uint8_t*) &ee.eeData.ee.softKeys, sizeof(soft_Key));
+	eeprom_update_block((uint8_t*) soft_KeyMenuIndex, (uint8_t*) &ee.eeData.ee.softKeyMenuIndex, sizeof(soft_KeyMenuIndex));
 	eeprom_update_word(&(ee.eeData.ee.softKeys_crc), crc);
 	eepromWriteSignature();
 	lcd_waitSymbolOff();

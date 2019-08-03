@@ -475,6 +475,17 @@ static inline void timerADC(){
 	ADCSRA |= (1 << ADSC); // start adc, read value on next corresponding cycle
 }
 
+void softKey_WantLong(uint8_t wantLong){
+	// 0 for wants repeat, != 0 for wantLong
+	for (uint8_t i = 0; i < MESSAGE_KEY_COUNT; i++){
+		// i = 0 is not used (dummy only) array starts with MESSAGE_KEY_MIN
+		if ((i+MESSAGE_KEY_MIN == MESSAGE_KEY_1) || (i+MESSAGE_KEY_MIN == MESSAGE_KEY_2) || (i+MESSAGE_KEY_MIN == MESSAGE_KEY_3) || (i+MESSAGE_KEY_MIN == MESSAGE_KEY_4)) {
+			keyWants[i] = KEY_WANTS_UP | (wantLong == 0 ? KEY_WANTS_REPEAT : KEY_WANTS_LONGPRESS);
+		}
+	}
+
+}
+
 //************************************** P I P E *******************************************
 
 static inline void timerPipeProcess(){

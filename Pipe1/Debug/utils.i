@@ -685,13 +685,7 @@ typedef union{
 extern uint8_t lcd_cursorIsOn;
 
 extern uint8_t nibbleToChr(uint8_t myNibble);
-
-
-
-
-
-
-
+# 41 ".././utils.h"
 extern void lcd_initCG();
 extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
 extern void lcd_wordout(uint16_t hexNumber);
@@ -717,7 +711,7 @@ extern char* putChar_Manual(uint8_t manual, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 73 ".././utils.h"
+# 75 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -734,13 +728,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 98 ".././utils.h"
+# 100 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 100 ".././utils.h" 3
+# 102 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 100 ".././utils.h"
+# 102 ".././utils.h"
                                  ;
 # 13 ".././utils.c" 2
 # 1 ".././lcd_u.h" 1
@@ -885,14 +879,14 @@ extern uint8_t module_TestAllInputs();
 extern void module_WaitOutputInput2Cycles();
 extern void module_StartPowerOn();
 extern void module_PowerControl();
-
+extern void softKey_WantLong(uint8_t wantLong);
 extern void Pipes_AllOutputsOff();
 extern void init_PipeModules();
 extern uint32_t test_PipeModule(uint8_t moduleNr);
 # 15 ".././utils.c" 2
 
 # 1 ".././Midi.h" 1
-# 42 ".././Midi.h"
+# 44 ".././Midi.h"
 typedef struct {
  uint8_t channel;
  uint8_t note;
@@ -928,7 +922,7 @@ typedef struct{
  uint8_t endNote;
 } ManualNoteRange_t;
 extern ManualNoteRange_t ManualNoteRange[4];
-# 113 ".././Midi.h"
+# 115 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -941,12 +935,22 @@ extern MidiInMap_t midiInMap[16][4];
 typedef struct{
  uint8_t channel;
  } MidiOutMap_t;
-
 extern MidiOutMap_t midiOutMap[4];
 
-extern uint8_t registerMap[64];
+
+typedef struct{
+ uint8_t startReg;
+ uint8_t endReg;
+ uint8_t bitStart;
+} RegisterMap_t;
+extern RegisterMap_t registerMap[8];
+
 extern uint8_t registerCount;
 extern uint8_t programMap[64] [64 / 8];
+
+extern void registers_CalcCount();
+extern void register_toProgram(uint8_t program);
+extern void program_toRegister(uint8_t program);
 
 extern void init_Midi2Manual();
 extern void init_Manual2Midi();
@@ -962,7 +966,11 @@ extern void midiSendAllNotesOff();
 
 
 extern uint8_t midiRxActivceSensing;
-extern uint8_t midi_TxActivceSense;
+typedef struct {
+ uint8_t TxActivceSense;
+ uint8_t VelZero4Off;
+} MidiSetting_t;
+extern MidiSetting_t midi_Setting;
 
 extern uint8_t midiLastOutNote;
 extern uint8_t midiLastOutManual;
@@ -982,6 +990,17 @@ extern void midi_CheckTxActiveSense();
 extern void init_Midi();
 extern void midi_ManualOff(uint8_t manual);
 extern void midi_AllManualsOff();
+# 198 ".././Midi.h"
+extern uint8_t midi_Couplers[12];
+
+typedef struct{
+ uint8_t dest;
+ uint8_t source;
+} CplInfo_t;
+extern const __flash CplInfo_t cplInfo[12];
+
+extern uint8_t set_Coupler(uint8_t);
+
 
 extern uint8_t midiCoupler_2from3;
 extern uint8_t midiCoupler_1from3;
@@ -989,6 +1008,12 @@ extern uint8_t midiCoupler_1from2;
 extern uint8_t midiCoupler_Pfrom3;
 extern uint8_t midiCoupler_Pfrom2;
 extern uint8_t midiCoupler_Pfrom1;
+extern uint8_t midiCoupler_3from2;
+extern uint8_t midiCoupler_3from1;
+extern uint8_t midiCoupler_2from1;
+extern uint8_t midiCoupler_3fromP;
+extern uint8_t midiCoupler_2fromP;
+extern uint8_t midiCoupler_1fromP;
 # 17 ".././utils.c" 2
 
 const char cr_lf [] 

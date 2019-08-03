@@ -6548,227 +6548,227 @@ cr_lf:
 	.section	.debug_line,"",@progbits
 .Ldebug_line0:
 	.section	.debug_str,"MS",@progbits,1
-.LASF78:
-	.string	"pChar"
-.LASF45:
-	.string	"lcd_noteOut"
-.LASF67:
-	.string	"keyNr"
-.LASF56:
-	.string	"lcd_blank"
+.LASF57:
+	.string	"count"
 .LASF73:
 	.string	"startEndSpaces"
-.LASF77:
-	.string	"oldCursor"
-.LASF0:
-	.string	"int8_t"
-.LASF44:
-	.string	"byteVal"
-.LASF101:
-	.string	"cgPattern_Up"
-.LASF71:
-	.string	"charBufPtr"
+.LASF59:
+	.string	"lcd_cursosblink"
 .LASF87:
 	.string	"keylabel_plus"
-.LASF54:
-	.string	"channel"
-.LASF13:
-	.string	"sizetype"
-.LASF48:
-	.string	"char2"
-.LASF49:
-	.string	"char3"
-.LASF23:
-	.string	"nibble"
-.LASF33:
-	.string	"putChar_long"
-.LASF46:
-	.string	"noteNr"
-.LASF69:
-	.string	"tempLabelPStr"
-.LASF62:
-	.string	"saveCursor"
-.LASF25:
-	.string	"lcd_longout"
-.LASF74:
-	.string	"keylabel_clr"
+.LASF18:
+	.string	"__addr16"
 .LASF79:
 	.string	"keylabel_statcheck"
-.LASF21:
-	.string	"lcd_hexout"
-.LASF64:
-	.string	"chekcDecNibbles"
-.LASF72:
-	.string	"startText"
-.LASF75:
-	.string	"charPtr"
-.LASF1:
-	.string	"uint8_t"
-.LASF70:
-	.string	"labelLen"
-.LASF51:
-	.string	"modBit"
+.LASF93:
+	.string	"keylabel_onoff"
+.LASF33:
+	.string	"putChar_long"
+.LASF74:
+	.string	"keylabel_clr"
+.LASF42:
+	.string	"decNumber"
+.LASF11:
+	.string	"longval"
+.LASF15:
+	.string	"myNibble"
+.LASF10:
+	.string	"long long unsigned int"
+.LASF45:
+	.string	"lcd_noteOut"
+.LASF16:
+	.string	"charNr"
 .LASF43:
 	.string	"lcd_wordout"
+.LASF39:
+	.string	"putChar_Manual"
+.LASF9:
+	.string	"long long int"
+.LASF2:
+	.string	"signed char"
+.LASF72:
+	.string	"startText"
+.LASF22:
+	.string	"hexNumber"
+.LASF58:
+	.string	"lcd_clrEol"
+.LASF108:
+	.string	"GNU C99 5.4.0 -mn-flash=4 -mno-skip-bug -mrelax -mmcu=avr6 -g2 -Og -std=gnu99 -funsigned-char -funsigned-bitfields -ffunction-sections -fdata-sections -fpack-struct -fshort-enums"
+.LASF6:
+	.string	"long int"
+.LASF95:
+	.string	"keylabel_text"
+.LASF90:
+	.string	"keylabel_down"
+.LASF109:
+	.string	".././utils.c"
+.LASF21:
+	.string	"lcd_hexout"
+.LASF81:
+	.string	"result"
+.LASF4:
+	.string	"uint16_t"
+.LASF100:
+	.string	"lcd_cursorPos"
+.LASF35:
+	.string	"midiNote"
+.LASF66:
+	.string	"keylabel_set"
+.LASF19:
+	.string	"__result"
+.LASF89:
+	.string	"keylabel_up"
+.LASF101:
+	.string	"cgPattern_Up"
+.LASF25:
+	.string	"lcd_longout"
+.LASF46:
+	.string	"noteNr"
+.LASF5:
+	.string	"unsigned int"
+.LASF96:
+	.string	"keylabel_0"
+.LASF65:
+	.string	"myNibbles"
+.LASF40:
+	.string	"manual"
+.LASF106:
+	.string	"lcd_putc"
+.LASF97:
+	.string	"keylabel_1"
+.LASF8:
+	.string	"long unsigned int"
+.LASF84:
+	.string	"editLong"
+.LASF99:
+	.string	"cr_lf"
+.LASF55:
+	.string	"lcd_ManualOutDec"
+.LASF24:
+	.string	"lcd_initCG"
+.LASF32:
+	.string	"putChar_hex"
 .LASF105:
 	.string	"lcd_write_command"
 .LASF91:
 	.string	"keylabel_right"
-.LASF11:
-	.string	"longval"
-.LASF55:
-	.string	"lcd_ManualOutDec"
-.LASF59:
-	.string	"lcd_cursosblink"
-.LASF26:
-	.string	"lcd_dec2out"
-.LASF58:
-	.string	"lcd_clrEol"
-.LASF9:
-	.string	"long long int"
-.LASF15:
-	.string	"myNibble"
-.LASF6:
-	.string	"long int"
-.LASF28:
-	.string	"nibbleToChr"
-.LASF106:
-	.string	"lcd_putc"
-.LASF12:
-	.string	"byteval"
-.LASF81:
-	.string	"result"
 .LASF52:
 	.string	"lcd_ManualOut"
-.LASF107:
-	.string	"lcd_goto"
-.LASF36:
-	.string	"prefix"
-.LASF86:
-	.string	"lcd_cursorIsOn"
-.LASF42:
-	.string	"decNumber"
-.LASF96:
-	.string	"keylabel_0"
-.LASF18:
-	.string	"__addr16"
-.LASF109:
-	.string	".././utils.c"
-.LASF76:
-	.string	"keylabel_toLCD"
-.LASF3:
-	.string	"unsigned char"
-.LASF37:
-	.string	"octave"
-.LASF2:
-	.string	"signed char"
-.LASF10:
-	.string	"long long unsigned int"
-.LASF7:
-	.string	"uint32_t"
-.LASF99:
-	.string	"cr_lf"
-.LASF5:
-	.string	"unsigned int"
-.LASF4:
-	.string	"uint16_t"
-.LASF30:
-	.string	"pOutput"
-.LASF19:
-	.string	"__result"
-.LASF93:
-	.string	"keylabel_onoff"
-.LASF66:
-	.string	"keylabel_set"
-.LASF50:
-	.string	"lcd_ModBitOut"
-.LASF47:
-	.string	"char1"
-.LASF80:
-	.string	"status"
-.LASF89:
-	.string	"keylabel_up"
-.LASF31:
-	.string	"char"
-.LASF94:
-	.string	"keylabel_exit"
-.LASF104:
-	.string	"lcd_write_character"
-.LASF108:
-	.string	"GNU C99 5.4.0 -mn-flash=4 -mno-skip-bug -mrelax -mmcu=avr6 -g2 -Og -std=gnu99 -funsigned-char -funsigned-bitfields -ffunction-sections -fdata-sections -fpack-struct -fshort-enums"
-.LASF84:
-	.string	"editLong"
-.LASF97:
-	.string	"keylabel_1"
-.LASF38:
-	.string	"note"
-.LASF14:
-	.string	"Longint_t"
-.LASF98:
-	.string	"string_Buf"
-.LASF100:
-	.string	"lcd_cursorPos"
-.LASF20:
-	.string	"lcd_setCG"
-.LASF68:
-	.string	"labelPStr"
-.LASF95:
-	.string	"keylabel_text"
-.LASF39:
-	.string	"putChar_Manual"
-.LASF8:
-	.string	"long unsigned int"
-.LASF90:
-	.string	"keylabel_down"
-.LASF32:
-	.string	"putChar_hex"
-.LASF29:
-	.string	"putChar_Dec2"
-.LASF88:
-	.string	"keylabel_minus"
-.LASF57:
-	.string	"count"
-.LASF41:
-	.string	"lcd_decout"
-.LASF103:
-	.string	"cgPattern_Block"
-.LASF16:
-	.string	"charNr"
+.LASF60:
+	.string	"lcd_cursoroff"
 .LASF85:
 	.string	"editByte"
-.LASF92:
-	.string	"keylabel_left"
-.LASF40:
-	.string	"manual"
+.LASF50:
+	.string	"lcd_ModBitOut"
+.LASF70:
+	.string	"labelLen"
+.LASF107:
+	.string	"lcd_goto"
+.LASF94:
+	.string	"keylabel_exit"
 .LASF27:
 	.string	"tens"
 .LASF53:
 	.string	"lcd_ChannelOut"
-.LASF24:
-	.string	"lcd_initCG"
-.LASF102:
-	.string	"cgPattern_Down"
-.LASF63:
-	.string	"lcd_waitSymbolOff"
-.LASF65:
-	.string	"myNibbles"
-.LASF82:
-	.string	"tempChar"
-.LASF60:
-	.string	"lcd_cursoroff"
-.LASF83:
-	.string	"labelBuffer"
-.LASF17:
-	.string	"patternPtr"
-.LASF34:
-	.string	"putChar_Note"
-.LASF61:
-	.string	"lcd_waitSymbolOn"
-.LASF35:
-	.string	"midiNote"
+.LASF36:
+	.string	"prefix"
+.LASF71:
+	.string	"charBufPtr"
+.LASF56:
+	.string	"lcd_blank"
+.LASF69:
+	.string	"tempLabelPStr"
+.LASF13:
+	.string	"sizetype"
+.LASF44:
+	.string	"byteVal"
+.LASF51:
+	.string	"modBit"
+.LASF62:
+	.string	"saveCursor"
+.LASF64:
+	.string	"chekcDecNibbles"
+.LASF86:
+	.string	"lcd_cursorIsOn"
 .LASF110:
 	.string	"E:\\\\Users\\\\Anwender\\\\Sync\\\\Atmel Studio\\\\Pipe1\\\\Pipe1\\\\Debug"
-.LASF22:
-	.string	"hexNumber"
+.LASF68:
+	.string	"labelPStr"
+.LASF3:
+	.string	"unsigned char"
+.LASF38:
+	.string	"note"
+.LASF78:
+	.string	"pChar"
+.LASF26:
+	.string	"lcd_dec2out"
+.LASF63:
+	.string	"lcd_waitSymbolOff"
+.LASF75:
+	.string	"charPtr"
+.LASF88:
+	.string	"keylabel_minus"
+.LASF54:
+	.string	"channel"
+.LASF29:
+	.string	"putChar_Dec2"
+.LASF92:
+	.string	"keylabel_left"
+.LASF7:
+	.string	"uint32_t"
+.LASF12:
+	.string	"byteval"
+.LASF41:
+	.string	"lcd_decout"
+.LASF98:
+	.string	"string_Buf"
+.LASF31:
+	.string	"char"
+.LASF82:
+	.string	"tempChar"
+.LASF20:
+	.string	"lcd_setCG"
+.LASF83:
+	.string	"labelBuffer"
+.LASF47:
+	.string	"char1"
+.LASF48:
+	.string	"char2"
+.LASF49:
+	.string	"char3"
+.LASF34:
+	.string	"putChar_Note"
+.LASF67:
+	.string	"keyNr"
+.LASF0:
+	.string	"int8_t"
+.LASF37:
+	.string	"octave"
+.LASF14:
+	.string	"Longint_t"
+.LASF102:
+	.string	"cgPattern_Down"
+.LASF77:
+	.string	"oldCursor"
+.LASF80:
+	.string	"status"
+.LASF28:
+	.string	"nibbleToChr"
+.LASF17:
+	.string	"patternPtr"
+.LASF1:
+	.string	"uint8_t"
+.LASF76:
+	.string	"keylabel_toLCD"
+.LASF30:
+	.string	"pOutput"
+.LASF61:
+	.string	"lcd_waitSymbolOn"
+.LASF103:
+	.string	"cgPattern_Block"
+.LASF104:
+	.string	"lcd_write_character"
+.LASF23:
+	.string	"nibble"
 	.ident	"GCC: (AVR_8_bit_GNU_Toolchain_3.6.2_1759) 5.4.0"
 .global __do_clear_bss

@@ -25,6 +25,7 @@
 #define MANUAL_II 1
 #define MANUAL_I 2
 #define MANUAL_P 3
+#define MANUAL_R 4 // only for menu setup module assign
 #define MANUAL_NONE 0xFF
 
 #define MIDI_NOTE_C2 36
@@ -36,6 +37,7 @@
 #define RANGE_COUNT 4 // Manual may be plsitted in ranges on io-boards
 #define RANGE_NONE 0xFF // if in startNote: entry invalid
 
+#define REGISTER_SEC_COUNT 8
 #define REGISTER_COUNT 64
 #define PROGRAM_COUNT 64
 
@@ -122,12 +124,22 @@ extern MidiInMap_t midiInMap[MIDI_CHANNEL_COUNT][MIDI_SPLIT_COUNT];
 typedef struct{
 	uint8_t channel;
 	} MidiOutMap_t;
-
 extern MidiOutMap_t midiOutMap[MANUAL_COUNT];
 
-extern uint8_t registerMap[REGISTER_COUNT]; // for each Register 0..63, contains modulBit
+#define REGISTER_NONE 0xFF
+typedef  struct{
+	uint8_t startReg; // valid reg.nr: 1..64 ATTENTION! 0=invalid reg!
+	uint8_t endReg;
+	uint8_t bitStart; //  contains modulBit
+} RegisterMap_t;
+extern RegisterMap_t registerMap[REGISTER_SEC_COUNT]; // for each Register Section
+
 extern uint8_t registerCount; // nr of valid registers
 extern uint8_t programMap[PROGRAM_COUNT] [REGISTER_COUNT / 8]; // for each register one bit
+
+extern void registers_CalcCount();
+extern void register_toProgram(uint8_t program);
+extern void program_toRegister(uint8_t program);
 
 extern void init_Midi2Manual();
 extern void init_Manual2Midi();
@@ -143,7 +155,11 @@ extern void midiSendAllNotesOff();
 //------------------------------ Active Sense ----------------------
 
 extern uint8_t midiRxActivceSensing; // 0 if no active sense, 1 if started
-extern uint8_t midi_TxActivceSense; // 0 if no active sense, 0xFF if active sensing on output
+typedef struct {
+	uint8_t TxActivceSense; // 0 if no active sense, 0xFF if active sensing on output
+	uint8_t VelZero4Off;
+} MidiSetting_t;
+extern MidiSetting_t midi_Setting;
 
 extern uint8_t midiLastOutNote; // written by midi.c read by main for debugging/display
 extern uint8_t midiLastOutManual;
@@ -164,12 +180,44 @@ extern void init_Midi();
 extern void midi_ManualOff(uint8_t manual);
 extern void midi_AllManualsOff();
 
+#define COUPLER_ON 0xFF
+#define COUPLER_OFF 0
+#define COUPLER_COUNT 12
+#define COUPLER_2FROM3 0
+#define COUPLER_1FROM3 1
+#define COUPLER_1FROM2 2
+#define COUPLER_PFROM3 3 
+#define COUPLER_PFROM2 4
+#define COUPLER_PFROM1 5
+#define COUPLER_3FROM2 6
+#define COUPLER_3FROM1 7
+#define COUPLER_2FROM1 8
+#define COUPLER_3FROMP 9
+#define COUPLER_2FROMP 10
+#define COUPLER_1FROMP 11
+extern uint8_t midi_Couplers[COUPLER_COUNT];
+
+typedef struct{
+	uint8_t dest;
+	uint8_t source;	
+} CplInfo_t;
+extern const __flash CplInfo_t cplInfo[COUPLER_COUNT];
+
+extern uint8_t set_Coupler(uint8_t); // set must be done via function, reset ca be done directly, 
+//returns true if inverse coupler had to bee reset
+
 extern  uint8_t midiCoupler_2from3; // set to zero in init_Manual2Module()
 extern  uint8_t midiCoupler_1from3;
 extern  uint8_t midiCoupler_1from2;
 extern  uint8_t midiCoupler_Pfrom3;
 extern  uint8_t midiCoupler_Pfrom2;
 extern  uint8_t midiCoupler_Pfrom1;
+extern  uint8_t midiCoupler_3from2; // set to zero in init_Manual2Module()
+extern  uint8_t midiCoupler_3from1;
+extern  uint8_t midiCoupler_2from1;
+extern  uint8_t midiCoupler_3fromP;
+extern  uint8_t midiCoupler_2fromP;
+extern  uint8_t midiCoupler_1fromP;
 
 
 #endif /* MIDI_H_ */

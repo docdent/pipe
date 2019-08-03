@@ -27,7 +27,9 @@
 #define MENU_T_VARONOFF 9
 #define MENU_T_VARBIN 10
 #define MENU_T_VARLONG 11
-#define MENU_T_COUNT 12
+#define MENU_T_VARPROG 12
+#define MENU_T_VARREG 13
+#define MENU_T_COUNT 14
 
 #define MENU_T_LEFTBOUND 0x80 // Set bit 7 or 6 for first/last entry in menu-row
 #define MENU_T_RIGHTBOUND 0xC0
@@ -108,6 +110,7 @@ typedef struct Menu {
 #define MENUTEXT_MAN2 "Man.2"
 #define MENUTEXT_MAN3 "Man.3"
 #define MENUTEXT_MANP "Pedal"
+#define MENUTEXT_MANR "Register"
 #define MENUTEXT_MCH1 "Ch.1"
 #define MENUTEXT_MCH2 "Ch.2"
 #define MENUTEXT_MCH3 "Ch.3"
@@ -128,10 +131,18 @@ typedef struct Menu {
 #define MENUTEXT_SEC2 "Sect.2"
 #define MENUTEXT_SEC3 "Sect.3"
 #define MENUTEXT_SEC4 "Sect.4"
+#define MENUTEXT_SEC5 "Sect.5"
+#define MENUTEXT_SEC6 "Sect.6"
+#define MENUTEXT_SEC7 "Sect.7"
+#define MENUTEXT_SEC8 "Sect.8"
 #define MENU_VAL_SEC1 0
 #define MENU_VAL_SEC2 1
 #define MENU_VAL_SEC3 2
 #define MENU_VAL_SEC4 3
+#define MENU_VAL_SEC5 4
+#define MENU_VAL_SEC6 5
+#define MENU_VAL_SEC7 6
+#define MENU_VAL_SEC8 7
 #define MENUTEXT_KEY1 "Taste1"
 #define MENUTEXT_KEY2 "Taste2"
 #define MENUTEXT_KEY3 "Taste3"
@@ -175,6 +186,7 @@ extern uint8_t menuVsection;
 extern uint8_t menuVmanual;
 extern uint8_t menuVkey;
 extern uint8_t menuVmodule;
+extern uint8_t menuVKombination;
 extern uint32_t menuModVal;
 extern const __flash char* pMenuTopTitle; // Title of TopMenu: usually "Menu" - may differ in Softkey menus
 extern const __flash Menu_t* menuVMenuSoftKey; // points to menu selcted for softkey
@@ -203,21 +215,6 @@ extern void dataToNibbles();
 
 //---------------------------------- SOFTKEYS -----------------------------------
 
-/* Softkey menu pointer shows saelcted softmey menu item, here structure is
-typedef struct Menu {
-	const uint8_t menuType; // must be MENU_T_MENU, (| R/L)
-	const uint8_t menuFlags; // nust be MENU_FLAG_MENU_SOFTKEY
-	const char text [MENU_MENUTEXTLEN]; // text to be sidplay when selecting a function for softkey
-	const __flash struct Menu *pMenu; // pointer menu to be called, do not enter now!
-	union {
-		uint8_t * pVar; //
-		uint16_t tag;//
-		const __flash char* pString; // ---> Pointer to String in flash for SoftKey (bottom LCD line)
-	};
-	MenuFunc_t pFunc; // pointer to function to be called then (when softkey is pressed), do not call now!
-	MenuFunc_t pOnExitFunc; // to be defined
-} Menu_t; */
-
 #define MENU_SOFTKEY_COUNT 4 // 4 keys
 #define MENU_SOFTKEY_FUNC_RETURN_NULL 0
 #define MENU_SOFTKEY_FUNC_RETURN_STATUS_ON 0x81
@@ -225,9 +222,11 @@ typedef struct Menu {
 
 typedef struct{
 	const __flash struct Menu *pSelMenu; // point to menu that was selected in assignement
-} SoftKey_List_t;
+} SoftKeyMenu_List_t;
 
-extern SoftKey_List_t soft_Key[MENU_SOFTKEY_COUNT];
+#define SOFTKEYINDEX_NONE 0 // index 0 = <none>
+extern uint8_t soft_KeyMenuIndex[MENU_SOFTKEY_COUNT];
+extern SoftKeyMenu_List_t soft_KeyMenu[MENU_SOFTKEY_COUNT];
 
 extern void init_SoftKeys();
 extern void softKey_Set(const __flash Menu_t* pSoftKey, uint8_t nrSoftKey);

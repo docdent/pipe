@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.56";
+const char sw_version [] PROGMEM = "V0.57";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -41,6 +41,12 @@ const __flash Menu_t menu_modDefine[] =
 	{MENU_T_VARNOTE,MENU_FLAG_DATAOFFSET | MENU_FLAG_ALLOWINVALD,"NoteEnd",NULL,{&(manualMap[0][0].endNote)},NULL,NULL},
 	{MENU_T_VARMODBIT | MENU_T_RIGHTBOUND,MENU_FLAG_DATAOFFSET,"Module/Bit",NULL,{&(manualMap[0][0].bitStart)},NULL,NULL}};
 
+const __flash Menu_t menu_modDefineReg[] = {
+	{MENU_T_VARREG | MENU_T_LEFTBOUND,MENU_FLAG_DATAOFFSET,"RegBeg",NULL,{&(registerMap[0].startReg)},NULL,NULL},
+	{MENU_T_VARREG,MENU_FLAG_DATAOFFSET,"RegEnd",NULL,{&(registerMap[0].endReg)},NULL,NULL},
+	{MENU_T_VARMODBIT | MENU_T_RIGHTBOUND,MENU_FLAG_DATAOFFSET,"Module/Bit",NULL,{&(registerMap[0].bitStart)},NULL,NULL}
+};
+
 // --- MAIN --- SETUP --- MODULE --- MODASSIGN --- SECTION ---
 uint8_t menuOnEnterModSec(uint8_t arg);
 const __flash Menu_t menu_modSection[] =
@@ -49,13 +55,27 @@ const __flash Menu_t menu_modSection[] =
 	{MENU_T_MENU,0,MENUTEXT_SEC3,menu_modDefine,{.tag=MENU_VAL_SEC3},menuOnEnterModSec,NULL},
 	{MENU_T_MENU_R,0,MENUTEXT_SEC4,menu_modDefine,{.tag=MENU_VAL_SEC4},menuOnEnterModSec,NULL}};
 
+uint8_t menuOnEnterModSecReg(uint8_t arg);
+const __flash Menu_t menu_modSection8[] = {
+	{MENU_T_MENU_L,0,MENUTEXT_SEC1,menu_modDefineReg,{.tag=MENU_VAL_SEC1},menuOnEnterModSecReg,NULL},
+	{MENU_T_MENU,0,MENUTEXT_SEC2,menu_modDefineReg,{.tag= MENU_VAL_SEC2},menuOnEnterModSecReg,NULL},
+	{MENU_T_MENU,0,MENUTEXT_SEC3,menu_modDefineReg,{.tag=MENU_VAL_SEC3},menuOnEnterModSecReg,NULL},
+	{MENU_T_MENU,0,MENUTEXT_SEC4,menu_modDefineReg,{.tag=MENU_VAL_SEC4},menuOnEnterModSecReg,NULL},
+	{MENU_T_MENU,0,MENUTEXT_SEC5,menu_modDefineReg,{.tag=MENU_VAL_SEC5},menuOnEnterModSecReg,NULL},
+	{MENU_T_MENU,0,MENUTEXT_SEC6,menu_modDefineReg,{.tag=MENU_VAL_SEC6},menuOnEnterModSecReg,NULL},
+	{MENU_T_MENU,0,MENUTEXT_SEC7,menu_modDefineReg,{.tag=MENU_VAL_SEC7},menuOnEnterModSecReg,NULL},
+	{MENU_T_MENU_R,0,MENUTEXT_SEC8,menu_modDefineReg,{.tag=MENU_VAL_SEC8},menuOnEnterModSecReg,NULL}
+};
+
 // --- MAIN --- SETUP --- MODULE --- MODASSIGN ---
 uint8_t menuOnEnterModManual(uint8_t arg);
 const __flash Menu_t menu_modAssign[] =
 	{{MENU_T_MENU_L,0,MENUTEXT_MAN3,menu_modSection,{.tag=MANUAL_III},menuOnEnterModManual,NULL},
 	{MENU_T_MENU,0,MENUTEXT_MAN2,menu_modSection,{.tag=MANUAL_II},menuOnEnterModManual,NULL},
 	{MENU_T_MENU,0,MENUTEXT_MAN1,menu_modSection,{.tag=MANUAL_I},menuOnEnterModManual,NULL},
-	{MENU_T_MENU_R,0,MENUTEXT_MANP,menu_modSection,{.tag=MANUAL_P},menuOnEnterModManual,NULL}};
+	{MENU_T_MENU,0,MENUTEXT_MANP,menu_modSection,{.tag=MANUAL_P},menuOnEnterModManual,NULL},
+	{MENU_T_MENU_R,0,MENUTEXT_MANR,menu_modSection8,{.tag=MANUAL_R},NULL,NULL}
+};
 
 // --- MAIN --- SETUP --- USB ---
 uint8_t menuOnEnterUSBprotokoll(uint8_t arg);
@@ -95,7 +115,7 @@ uint8_t menuOnExitModules(uint8_t arg);
 uint8_t menuOnExitManual(uint8_t arg);
 const __flash Menu_t menu_module[] =
 	{{MENU_T_VARBIN | MENU_T_LEFTBOUND,0,"ModRead",NULL,{&(pipe_ModuleAssnRead)},NULL,menuOnExitModules},
-	{MENU_T_VARBIN,0,"ModWrite",NULL,{&(pipe_ModuleAssnWrite)},NULL,NULL},
+	{MENU_T_VARBIN,0,"ModWrite",NULL,{&(pipe_ModuleAssnWrite)},NULL,menuOnExitModules},
 	{MENU_T_VARBIN,MENU_FLAG_READONLY,"ModOK",NULL,{&(pipe_ModuleTested)},NULL,NULL},
 	{MENU_T_MENU,0,"ModTest",menu_ModeSel,{NULL},NULL,NULL},
 	{MENU_T_MENU_R,0,"ModAssign",menu_modAssign,{NULL},NULL,menuOnExitManual}};
@@ -195,32 +215,48 @@ uint8_t menu_OnEnterMidiPanic(uint8_t arg);
 uint8_t menuOnExitMidiActiveSense(uint8_t arg);
 const __flash Menu_t menu_midi[] =
 	{{MENU_T_MENU_L,0,"NotesOff",NULL,{NULL},menu_OnEnterMidiPanic,NULL},
-	{MENU_T_VARONOFF,0,"Act.Sense",NULL,{&(midi_TxActivceSense)},NULL,menuOnExitMidiActiveSense},
 	{MENU_T_MENU,0,"MIDIin",menu_midiIn,{NULL},NULL,menuOnExitMidiIn},
-	{MENU_T_MENU_R,0,"MIDIout",menu_midiOut,{NULL},NULL,menuOnExitMidiOut}};
+	{MENU_T_MENU,0,"MIDIout",menu_midiOut,{NULL},NULL,menuOnExitMidiOut},
+	{MENU_T_VARONOFF,0,"Act.Sense",NULL,{&(midi_Setting.TxActivceSense)},NULL,menuOnExitMidiActiveSense},
+	{MENU_T_VARONOFF | MENU_T_RIGHTBOUND,0,"Vel04Off",NULL,{&(midi_Setting.VelZero4Off)},NULL,menuOnExitMidiActiveSense}};
 
 // --- MAIN --- MANUAL --- KOPPLER ---
 uint8_t menuOnExitCoupler(uint8_t arg);
 const __flash Menu_t menu_coupler[] = {
-	{MENU_T_VARONOFF | MENU_T_LEFTBOUND,0,"2<3",NULL,{&midiCoupler_2from3},NULL,menuOnExitCoupler},
-	{MENU_T_VARONOFF,0,"1<3",NULL,{&midiCoupler_1from3},NULL,menuOnExitCoupler},
-	{MENU_T_VARONOFF,0,"1<2",NULL,{&midiCoupler_1from2},NULL,menuOnExitCoupler},
-	{MENU_T_VARONOFF,0,"P<3",NULL,{&midiCoupler_Pfrom3},NULL,menuOnExitCoupler},
-	{MENU_T_VARONOFF,0,"P<2",NULL,{&midiCoupler_Pfrom2},NULL,menuOnExitCoupler},
-	{MENU_T_VARONOFF,0,"P<1",NULL,{&midiCoupler_Pfrom1},NULL,menuOnExitCoupler}
+	{MENU_T_VARONOFF | MENU_T_LEFTBOUND,0,"2<3",NULL,{&midi_Couplers[COUPLER_2FROM3]},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"1<3",NULL,{&midi_Couplers[COUPLER_1FROM3]},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"1<2",NULL,{&midi_Couplers[COUPLER_1FROM2]},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"P<3",NULL,{&midi_Couplers[COUPLER_PFROM3]},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"P<2",NULL,{&midi_Couplers[COUPLER_PFROM2]},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"P<1",NULL,{&midi_Couplers[COUPLER_PFROM1]},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"3<2",NULL,{&midi_Couplers[COUPLER_3FROM2]},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"3<1",NULL,{&midi_Couplers[COUPLER_3FROM1]},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"3<P",NULL,{&midi_Couplers[COUPLER_2FROM1]},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"2<1",NULL,{&midi_Couplers[COUPLER_3FROMP]},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF,0,"2<P",NULL,{&midi_Couplers[COUPLER_2FROMP]},NULL,menuOnExitCoupler},
+	{MENU_T_VARONOFF| MENU_T_RIGHTBOUND,0,"1<P",NULL,{&midi_Couplers[COUPLER_1FROMP]},NULL,menuOnExitCoupler}
+};
+
+// --- MAIN --- MANUAL --- KOMBINATION ---
+uint8_t menuOnExitSaveProgram(uint8_t arg);
+uint8_t menuOnExitLoadProgran(uint8_t arg);
+const __flash Menu_t menu_programm[] = {
+	{MENU_T_VARPROG | MENU_T_LEFTBOUND,0,"Laden",NULL,{&menuVKombination},NULL,menuOnExitLoadProgran},
+	{MENU_T_VARPROG | MENU_T_RIGHTBOUND,0,"Speichern",NULL,{&menuVKombination},NULL,menuOnExitSaveProgram},
 };
 
 // --- MAIN --- MANUAL ----
 const __flash Menu_t menu_manual[] = {
-	{MENU_T_MENU_L,0,"Koppler",menu_coupler,{NULL},NULL,NULL},
+	{MENU_T_MENU_L,0,"Kombin.",menu_programm,{NULL},NULL,NULL},
+	{MENU_T_MENU,0,"Koppler",menu_coupler,{NULL},NULL,NULL},
 	{MENU_T_MENU_R,0,"Stimmen",menu_tune,{NULL},NULL,NULL}
 };
 
 // --- MAIN ---
 uint8_t menuOnExitKeys(uint8_t arg);
 const __flash Menu_t menu_main[] = 	{
-	{MENU_T_MENU_L,0,"MIDI",menu_midi,{NULL},NULL,NULL},
-	{MENU_T_MENU,0,"Manual",menu_manual,{NULL},NULL,NULL},
+	{MENU_T_MENU_L,0,"Manual",menu_manual,{NULL},NULL,NULL},
+	{MENU_T_MENU,0,"MIDI",menu_midi,{NULL},NULL,NULL},
 	{MENU_T_MENU,0,"Tasten",menu_key,{NULL},NULL,menuOnExitKeys},
 	{MENU_T_MENU,0,"Status",menu_status,{NULL},NULL,NULL},
 	{MENU_T_MENU_R,0,"Setup",menu_setup,{NULL},NULL,NULL}
@@ -234,7 +270,18 @@ uint8_t softKeyCouplerPfrom3(uint8_t arg);
 uint8_t softKeyCoupler1from2(uint8_t arg);
 uint8_t softKeyCouplerPfrom2(uint8_t arg);
 uint8_t softKeyCouplerPfrom1(uint8_t arg);
+uint8_t softKeyCoupler3from2(uint8_t arg);
+uint8_t softKeyCoupler3from1(uint8_t arg);
+uint8_t softKeyCoupler3fromP(uint8_t arg);
+uint8_t softKeyCoupler2from1(uint8_t arg);
+uint8_t softKeyCoupler2fromP(uint8_t arg);
+uint8_t softKeyCoupler1fromP(uint8_t arg);
+uint8_t softKeyK1A(uint8_t arg);
+uint8_t softKeyK2A(uint8_t arg);
+uint8_t softKeyK3A(uint8_t arg);
+uint8_t softKeyK4A(uint8_t arg);
 
+const __flash char shortKeyTextNone[MENU_LCD_MENUTEXTLEN]  = "";
 const __flash char shortKeyTextMenu[MENU_LCD_MENUTEXTLEN]  = "Menu";
 const __flash char shortKeyTextStim[MENU_LCD_MENUTEXTLEN]  = "Stim";
 const __flash char shortKeyTextSetup[MENU_LCD_MENUTEXTLEN]  = "Setu";
@@ -245,9 +292,20 @@ const __flash char shortKeyTextCplP3[MENU_LCD_MENUTEXTLEN]  = "P<3\x80";
 const __flash char shortKeyTextCpl12[MENU_LCD_MENUTEXTLEN]  = "1<2\x80";
 const __flash char shortKeyTextCplP2[MENU_LCD_MENUTEXTLEN]  = "P<2\x80";
 const __flash char shortKeyTextCplP1[MENU_LCD_MENUTEXTLEN]  = "P<1\x80";
+const __flash char shortKeyTextCpl32[MENU_LCD_MENUTEXTLEN]  = "3<2\x80";
+const __flash char shortKeyTextCpl31[MENU_LCD_MENUTEXTLEN]  = "3<1\x80";
+const __flash char shortKeyTextCpl3P[MENU_LCD_MENUTEXTLEN]  = "3<P\x80";
+const __flash char shortKeyTextCpl21[MENU_LCD_MENUTEXTLEN]  = "2<1\x80";
+const __flash char shortKeyTextCpl2P[MENU_LCD_MENUTEXTLEN]  = "2<P\x80";
+const __flash char shortKeyTextCpl1P[MENU_LCD_MENUTEXTLEN]  = "1<P\x80";
+const __flash char shortKeyTextK1A[MENU_LCD_MENUTEXTLEN]  = "Kb1A";
+const __flash char shortKeyTextK2A[MENU_LCD_MENUTEXTLEN]  = "Kb2A";
+const __flash char shortKeyTextK3A[MENU_LCD_MENUTEXTLEN]  = "Kb3A";
+const __flash char shortKeyTextK4A[MENU_LCD_MENUTEXTLEN]  = "Kb4A";
 
 const __flash Menu_t menu_selFunc[] =
-	{{MENU_T_MENU_L,MENU_FLAG_MENU_SOFTKEY,"Menu",menu_main,{.pString=shortKeyTextMenu},NULL,NULL},
+	{{MENU_T_MENU_L,MENU_FLAG_MENU_SOFTKEY,"<none>",NULL,{.pString=shortKeyTextNone},NULL,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Menu",menu_main,{.pString=shortKeyTextMenu},NULL,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Stimmen",menu_tune,{.pString=shortKeyTextStim},NULL,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Koppel2<3",NULL,{.pString=shortKeyTextCpl23},softKeyCoupler2from3,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Koppel1<3",NULL,{.pString=shortKeyTextCpl13},softKeyCoupler1from3,NULL},
@@ -255,6 +313,16 @@ const __flash Menu_t menu_selFunc[] =
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Koppel1<2",NULL,{.pString=shortKeyTextCpl12},softKeyCoupler1from2,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"KoppelP<2",NULL,{.pString=shortKeyTextCplP2},softKeyCouplerPfrom2,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"KoppelP<1",NULL,{.pString=shortKeyTextCplP1},softKeyCouplerPfrom1,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Koppel3<2",NULL,{.pString=shortKeyTextCpl32},softKeyCoupler3from2,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Koppel3<1",NULL,{.pString=shortKeyTextCpl31},softKeyCoupler3from1,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Koppel3<P",NULL,{.pString=shortKeyTextCpl3P},softKeyCoupler3fromP,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Koppel2<1",NULL,{.pString=shortKeyTextCpl21},softKeyCoupler2from1,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Koppel2<P",NULL,{.pString=shortKeyTextCpl2P},softKeyCoupler2fromP,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Koppel1<P",NULL,{.pString=shortKeyTextCpl1P},softKeyCoupler1fromP,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 1A",NULL,{.pString=shortKeyTextK1A},softKeyK1A,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 2A",NULL,{.pString=shortKeyTextK2A},softKeyK2A,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 3A",NULL,{.pString=shortKeyTextK3A},softKeyK3A,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 4A",NULL,{.pString=shortKeyTextK4A},softKeyK4A,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"MIDI Off",NULL,{.pString=shortKeyTextMIDIoff},menu_OnEnterMidiPanic,NULL},
 	{MENU_T_MENU_R,MENU_FLAG_MENU_SOFTKEY,"Setup",menu_setup,{.pString=shortKeyTextSetup},NULL,NULL}};
 
@@ -271,7 +339,10 @@ const __flash NibbleInfo_t nibbleInfo[MENU_T_COUNT] = {
 	{1,{0,0,0,0,0,0,0,0}}, // MENU_T_VARSECTION 8 // 0..3
 	{1,{0,0,0,0,0,0,0,0}}, // MENU_T_VARONOFF 9 // on 0xFF /off 0x00
 	{8,{0,1,2,3,4,5,6,7}}, // MENU_T_VARBIN 10 // one byte as 8x 1/0
-	{8,{0,1,2,3,4,5,6,7}}}; // MENU_T_VARLONG 9 // 32bit
+	{8,{0,1,2,3,4,5,6,7}}, // MENU_T_VARLONG 11 // 32bit
+	{2,{0,1,0,0,0,0,0,0}}, // MENU_T_VARPROG 12 // Program 3 + 3 bit
+	{2,{0,1,0,0,0,0,0,0}} // MENU_T_VARREG 13 // Register 1..64, none
+};
 
 const __flash char initMenuText[MENU_LCD_MENUTEXTLEN] = "Men\xf5";
 const __flash char MenuMIDIInText[] = "In:";
@@ -303,6 +374,8 @@ uint8_t menuVsection;
 uint8_t menuVmanual;
 uint8_t menuVkey;
 uint8_t menuVmodule;
+uint8_t menuVKombination;
+
 const __flash Menu_t* menuVMenuSoftKey;
 uint8_t menuVSoftKey; // nr of softkey selcted 0..3
 uint32_t menuModVal;
@@ -314,82 +387,155 @@ uint8_t menuManual;
 uint8_t menuTestModuleBit;
 uint8_t menuTestData;
 
-
-
-SoftKey_List_t soft_Key[MENU_SOFTKEY_COUNT];
+uint8_t soft_KeyMenuIndex[MENU_SOFTKEY_COUNT];
+SoftKeyMenu_List_t soft_KeyMenu[MENU_SOFTKEY_COUNT];
 
 //*************************** I N D I V I D U A L   S O F T K E Y   F U N C T I O N S ******************************
 
 uint8_t menuOnExitCoupler(uint8_t arg) {
 	(void) arg;
-	// TODO Check coupler cycle
+	uint8_t cplNr = currentMenu->pVar - &midi_Couplers[0]; // get index in midi_Couplers[] of this menu item
+	if (midi_Couplers[cplNr] != 0){
+		// coupler has been set, now check if inverse coupler must be reset
+		set_Coupler(cplNr); // sets coupler again, buit also checks inverse coupler
+	}
 	return 0;
 }
 
-uint8_t softkeyCoupler(uint8_t arg, uint8_t* pCoupler){
+uint8_t softkeyCoupler(uint8_t arg, uint8_t CplNr){
 	// to be called as softkey function; arg==0 -> give status only
 	if (arg != 0){
-		*pCoupler = ~ *pCoupler; // invert Coupler
+		if (midi_Couplers[CplNr] == COUPLER_OFF){
+			uint8_t turnOffManual = set_Coupler(CplNr);
+			if (turnOffManual != FALSE) { // also reset inverse couple
+				midi_ManualOff(turnOffManual); 
+			}
+		} else {
+			midi_Couplers[CplNr] = COUPLER_OFF;
+			midi_ManualOff(cplInfo[CplNr].dest); // turn off output for coupler destination
+		}
 	}
-	return (*pCoupler == 0 ? MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF : MENU_SOFTKEY_FUNC_RETURN_STATUS_ON);
+	return (midi_Couplers[CplNr] == COUPLER_OFF ? MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF : MENU_SOFTKEY_FUNC_RETURN_STATUS_ON);
 }
 
 uint8_t softKeyCoupler2from3(uint8_t arg){
 	// currently softcoupler off stopps midi notes also!
-	uint8_t result = softkeyCoupler(arg, &midiCoupler_2from3);
-	if (result == MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF){
-		// turn off outputs on manual 2
-		midi_ManualOff(MANUAL_II);
-	}
+	uint8_t result = softkeyCoupler(arg, COUPLER_2FROM3);
 	return result;
 }
 
 uint8_t softKeyCoupler1from3(uint8_t arg){
-	uint8_t result = softkeyCoupler(arg, &midiCoupler_1from3);
-	if (result == MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF){
-		// turn off outputs on manual 2
-		midi_ManualOff(MANUAL_I);
-	}
+	uint8_t result = softkeyCoupler(arg, COUPLER_1FROM3);
 	return result;
 }
 
 uint8_t softKeyCouplerPfrom3(uint8_t arg){
-	uint8_t result = softkeyCoupler(arg, &midiCoupler_Pfrom3);
-	if (result == MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF){
-		// turn off outputs on manual P
-		midi_ManualOff(MANUAL_P);
-	}
+	uint8_t result = softkeyCoupler(arg,COUPLER_PFROM3);
 	return result;
 }
 
 uint8_t softKeyCoupler1from2(uint8_t arg){
-	uint8_t result = softkeyCoupler(arg, &midiCoupler_1from2);
-	if (result == MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF){
-		// turn off outputs on manual 1
-		midi_ManualOff(MANUAL_I);
-	}
+	uint8_t result = softkeyCoupler(arg,COUPLER_1FROM2);
 	return result;
 }
 
 uint8_t softKeyCouplerPfrom2(uint8_t arg){
-	uint8_t result = softkeyCoupler(arg, &midiCoupler_Pfrom2);
-	if (result == MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF){
-		// turn off outputs on manual P
-		midi_ManualOff(MANUAL_P);
-	}
+	uint8_t result = softkeyCoupler(arg,COUPLER_PFROM2);
 	return result;
 }
 
 uint8_t softKeyCouplerPfrom1(uint8_t arg){
-	uint8_t result = softkeyCoupler(arg, &midiCoupler_Pfrom1);
-	if (result == MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF){
-		// turn off outputs on manual P
-		midi_ManualOff(MANUAL_P);
-	}
+	uint8_t result = softkeyCoupler(arg,COUPLER_PFROM1);
 	return result;
 }
 
+uint8_t softKeyCoupler3from2(uint8_t arg){
+	// currently softcoupler off stopps midi notes also!
+	uint8_t result = softkeyCoupler(arg, COUPLER_3FROM2);
+	return result;
+}
+
+uint8_t softKeyCoupler3from1(uint8_t arg){
+	uint8_t result = softkeyCoupler(arg, COUPLER_3FROM1);
+	return result;
+}
+
+uint8_t softKeyCoupler3fromP(uint8_t arg){
+	uint8_t result = softkeyCoupler(arg,COUPLER_3FROMP);
+	return result;
+}
+
+uint8_t softKeyCoupler2from1(uint8_t arg){
+	uint8_t result = softkeyCoupler(arg,COUPLER_2FROM1);
+	return result;
+}
+
+uint8_t softKeyCoupler2fromP(uint8_t arg){
+	uint8_t result = softkeyCoupler(arg,COUPLER_2FROMP);
+	return result;
+}
+
+uint8_t softKeyCoupler1fromP(uint8_t arg){
+	uint8_t result = softkeyCoupler(arg,COUPLER_1FROMP);
+	return result;
+}
+
+
+uint8_t softKeyK1A(uint8_t arg){
+	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
+		// longpress
+		register_toProgram(0);
+	} else if (arg != 0) {
+		program_toRegister(0);
+	}
+	return 0;
+}
+
+uint8_t softKeyK2A(uint8_t arg){
+	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
+		// longpress
+		register_toProgram(1);
+	} else if (arg != 0) {
+		program_toRegister(1);
+	}
+	return 0;
+}
+
+uint8_t softKeyK3A(uint8_t arg){
+	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
+		// longpress
+		register_toProgram(2);
+	} else if (arg != 0) {
+		program_toRegister(2);
+	}
+	return 0;
+}
+
+uint8_t softKeyK4A(uint8_t arg){
+	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
+		// longpress
+		register_toProgram(3);
+	} else if (arg != 0) {
+		program_toRegister(3);
+	}
+	return 0;
+}
+
 //*************************** I N D I V I D U A L   M E N U   F U N C T I O N S ******************************
+
+uint8_t menuOnExitSaveProgram(uint8_t arg){
+	if ((arg != MESSAGE_KEY_ESC) && (menuVKombination < PROGRAM_COUNT)){
+		register_toProgram(menuVKombination);
+		eeprom_UpdateProg();
+	}
+	return 0;
+}
+uint8_t menuOnExitLoadProgran(uint8_t arg){
+	if ((arg != MESSAGE_KEY_ESC) && (menuVKombination < PROGRAM_COUNT)){
+		program_toRegister(menuVKombination);
+	}
+	return 0;
+}
 
 uint8_t menuOnEnterPwrOn(uint8_t arg) {
 	(void) arg;
@@ -607,12 +753,20 @@ uint8_t menuOnEnterModSec(uint8_t arg){
 	return 0;
 }
 
+uint8_t menuOnEnterModSecReg(uint8_t arg){
+	(void) arg;
+	menuVsection = currentMenu->tag; // set Section from tag (dual use of pFunc);
+	DataAdressOffset = (&(registerMap[menuVsection & 0x07]) - &(registerMap[0])) * sizeof(RegisterMap_t);
+	return 0;
+}
+
+
 uint8_t menuOnEnterKey(uint8_t arg){
 	(void) arg;
 	uint8_t softKeyNr;
 	softKeyNr = currentMenu->tag;
 	if (softKeyNr < MENU_SOFTKEY_COUNT){
-		menuVMenuSoftKey = soft_Key[softKeyNr].pSelMenu;
+		menuVMenuSoftKey = soft_KeyMenu[softKeyNr].pSelMenu;
 	}
 	return 0;
 }
@@ -796,6 +950,8 @@ uint8_t menuOnExitMidiOut(uint8_t arg){
 uint8_t menuOnExitManual(uint8_t arg){
 	(void) arg;
 	eeprom_UpdateManualMap();
+	registers_CalcCount();
+	eeprom_UpdateReg();
 	Midi_updateManualRange();
 	return 0;
 }
@@ -812,7 +968,7 @@ uint8_t menuOnEnterLogDisp(uint8_t arg) {
 	(void) arg;
 	static uint8_t logEntryNr;
 	static uint8_t showText;
-	uint8_t result = TRUE;
+	uint8_t continueLogMenu = TRUE;
 	// arg is message
 	if (arg == MESSAGE_KEY_NONE){
 		logEntryNr = log_count()-1; // may be invalid, but checked later
@@ -831,14 +987,14 @@ uint8_t menuOnEnterLogDisp(uint8_t arg) {
 	} else if ((arg == MESSAGE_KEY_DOWN) || (arg == MESSAGE_KEY_SEL)) {
 		showText = ~showText;
 	} else {
-		result = FALSE;
+		continueLogMenu = FALSE;
 	}
-	if (result == TRUE){
+	if (continueLogMenu == TRUE){
 		// show LogDisp
 		lcd_goto(MENU_LCD_CURSOR_EXTRA);
 		if (log_count() == 0){
 			lcd_puts_P(logNone);
-			result = FALSE;
+			continueLogMenu = FALSE;
 		} else {
 			lcd_dec2out(logEntryNr+1);
 			lcd_putc(':');
@@ -850,11 +1006,20 @@ uint8_t menuOnEnterLogDisp(uint8_t arg) {
 			lcd_clrEol();
 			menuCursorSetExtra();
 		}
-		if (keylabel_statcheck(1,(showText == TRUE))) {
-			keylabel_toLCD();
+		keylabel_statcheck(1,(showText == TRUE)); // ignore output
+		if (logEntryNr+1 < log_count()){
+			keylabel_set(3,keylabel_right);
+		} else {
+			keylabel_clr(3);
 		}
+		if (logEntryNr > 0){
+			keylabel_set(2,keylabel_left);
+		} else {
+			keylabel_clr(2);
+		}
+		keylabel_toLCD();
 	}
-	return result;
+	return continueLogMenu;
 }
 
 
@@ -1143,6 +1308,20 @@ void dataToNibbles(){
 			nibble[i] = *pWordByte++ >> 4;
 		}
 		break;
+	case MENU_T_VARPROG:
+		nibble[0] = (dataEntry & 7) + 1;
+		nibble[1] = (dataEntry >> 3) + 1;
+		break;
+	case MENU_T_VARREG:
+		// 0...63,0xFF -> 1...64,0
+		dataEntry++;
+		nibble[0] = 0;
+		while (dataEntry >= 10){
+			nibble[0]++;
+			dataEntry -= 10;
+		}
+		nibble[1] = dataEntry;
+		break;
 	}
 }
 
@@ -1277,10 +1456,25 @@ void nibbleToLCDstring(){
 		break;
 	case MENU_T_VARBIN:
 	case MENU_T_VARLONG:
-		;
 		for (uint8_t i=0; i<8; i++){
 			lcdData[i] = nibbleToChr(nibble[i]);
 		}
+		break;
+	case MENU_T_VARPROG:
+		lcdData[0] = '0' +nibble[0];
+		lcdData[1] = '@' +nibble[1];
+		lcdData[2] = '\0';
+		break;
+	case MENU_T_VARREG:
+		if ((nibble[0] | nibble[1]) == 0) {
+			// 0 (data 0xFF: none
+			lcdData[0] = '-';
+			lcdData[1] = '-';
+		} else {
+			lcdData[0] = '0' +nibble[0];
+			lcdData[1] = '0' +nibble[1];
+		}
+		lcdData[2] = '\0';
 		break;
 	}
 }
@@ -1451,6 +1645,36 @@ void nibbleChange(uint8_t nibbleNr , int8_t addValue){
 		case MENU_T_VARBIN:
 			nibble[nibbleNr] = ((addValue >> 1) & 0x01) ^ 0x01; // V 0.56 instead of adding make +/-1 to 1 or 0
 			break;
+		case MENU_T_VARPROG:
+			if (addValue  == 1) {
+				nibble[nibbleNr] = (nibble[nibbleNr] & 0x07) + 1;
+			} else {
+				nibble[nibbleNr] = ((nibble[nibbleNr]-2) & 0x07) +1;
+			}
+			break;
+		case MENU_T_VARREG:
+			;
+			int8_t myVal = nibble[0] * 10 + nibble[1];
+			if (nibbleNr == 0) {
+				// tens
+				myVal += addValue * 10;
+			} else {
+				// ones
+				myVal += addValue;
+			}
+			if (myVal < 0) {
+				myVal = 0;
+			} else if (myVal > 64) {
+				myVal = 0;
+			}
+			nibble[0] = 0;
+			while (myVal >= 10){
+				nibble[0]++;
+				myVal -= 10;
+			}
+			nibble[1] = myVal;
+			break;
+		// end switch
 	}
 }
 
@@ -1522,6 +1746,12 @@ void nibbleToData(){
 			tempByte += nibble[i] << 4; // nibble 6,4,2,0
 			*pWordByte++ =  tempByte;
 		}
+		break;
+	case MENU_T_VARPROG:
+		dataEntry = (nibble[0]-1) | ((nibble[1]-1) << 3);
+		break;
+	case MENU_T_VARREG:
+		dataEntry = (nibble[0] * 10 + nibble[1]) - 1;
 		break;
 	}
 }
@@ -1834,8 +2064,10 @@ uint8_t menu_ProcessMessage(uint8_t message){
 							if (menuStackIndex < MENU_MAX_STACK) {
 								menuStack[menuStackIndex++] = currentMenu;
 								if (((currentMenu->menuFlags & MENU_FLAG_ENTER_STORED_MENU) != 0) && (menuVMenuSoftKey != NULL)) {
+									// enter stored menu item in menuVMenuSoftKey
 									currentMenu = menuVMenuSoftKey;
 								} else {
+									// usually enter menu item
 									currentMenu = currentMenu->pMenu;
 								}
 								menuClearExtraDisp();
@@ -1917,22 +2149,36 @@ uint8_t menu_ProcessMessage(uint8_t message){
 }
 
 //**************************************** SOFTKEYS ****************************************
+uint8_t SoftKeyFunctionOK(MenuFunc_t  softKeyFunc){
+	// check if address of softkey func is contained in menu_selFunc
+	uint8_t functionCount = sizeof(menu_selFunc) / sizeof(menu_selFunc[0]);
+	for (uint8_t i = 0; i < functionCount; i++){
+		if (menu_selFunc[i].pFunc == softKeyFunc){
+			return TRUE;
+		}
+	}
+	return FALSE;
+} 
+
 
 void init_SoftKeys(){
 	if (eeprom_ReadSoftkeys() == EE_LOAD_ERROR){
 		// softkeys could not be loaded from eeprom, clear
 		for (uint8_t i = 0; i<MENU_SOFTKEY_COUNT; i++){
-			soft_Key[i].pSelMenu = NULL;
+			soft_KeyMenuIndex[i] = SOFTKEYINDEX_NONE;
+			soft_KeyMenu[i].pSelMenu = NULL;
 		}
 		// EEprom info for softkey not valid
 		log_putError(LOG_CAT_EE,LOG_CATEE_SOFTKEY,0);
-	} else {
-		for (uint8_t i = 0; i<MENU_SOFTKEY_COUNT; i++){
-			if ((soft_Key[i].pSelMenu != NULL) && (((soft_Key[i].pSelMenu->menuType & MENU_T_REMOVEBOUND_MASK) !=  MENU_T_MENU) || ((soft_Key[i].pSelMenu->menuFlags & MENU_FLAG_MENU_SOFTKEY) == 0)))  {
-				// pSelMenu is not empty but does not point to softkey menu for key "i"
-				log_putError(LOG_CAT_EE,LOG_CATEE_SOFTKEY,1+i);
-				soft_Key[i].pSelMenu = NULL;
-			}
+	}
+	for (uint8_t i = 0; i<MENU_SOFTKEY_COUNT; i++){
+		const uint8_t SoftKeyMenuListLen = sizeof(menu_selFunc) / sizeof(menu_selFunc[0]);
+		if (soft_KeyMenuIndex[i] < SoftKeyMenuListLen){
+			// should be valid index
+			soft_KeyMenu[i].pSelMenu = &menu_selFunc[soft_KeyMenuIndex[i]];
+		} else {
+			soft_KeyMenu[i].pSelMenu = NULL;
+			log_putError(LOG_CAT_EE,LOG_CATEE_SOFTKEY,i+1 | 0x10);
 		}
 	}
 }
@@ -1940,22 +2186,24 @@ void init_SoftKeys(){
 void softKey_Set(const __flash Menu_t* pSelMenuSoftKey, uint8_t nrSoftKey){
 	if (nrSoftKey < MENU_SOFTKEY_COUNT) {
 		if ((pSelMenuSoftKey != NULL) && ((pSelMenuSoftKey->menuType & MENU_T_REMOVEBOUND_MASK) == MENU_T_MENU) && ((pSelMenuSoftKey->menuFlags & MENU_FLAG_MENU_SOFTKEY) != 0)){
-			soft_Key[nrSoftKey].pSelMenu = pSelMenuSoftKey;
+			soft_KeyMenu[nrSoftKey].pSelMenu = pSelMenuSoftKey;
+			soft_KeyMenuIndex[nrSoftKey] = (pSelMenuSoftKey - &menu_selFunc[0]) / sizeof(menu_selFunc[0]);
 		} else {
-			soft_Key[nrSoftKey].pSelMenu = NULL;
+			soft_KeyMenu[nrSoftKey].pSelMenu = NULL;
+			soft_KeyMenuIndex[nrSoftKey] = SOFTKEYINDEX_NONE; // point to <none>
 		}
 	}
 }
 
 void softKeys_toLCD(){
 	for (uint8_t i = 0; i<MENU_SOFTKEY_COUNT; i++){
-		if (soft_Key[i].pSelMenu->pVar == NULL){
+		if ((soft_KeyMenu[i].pSelMenu == NULL) || (soft_KeyMenu[i].pSelMenu->pString == NULL)){
 			keylabel_clr(i);
 		} else {
-			keylabel_set(i,(soft_Key[i].pSelMenu->pString)); // string for Softkey (may be shorter!) is pointed to by pVar but is in flash
-			if (soft_Key[i].pSelMenu->pFunc != NULL){
+			keylabel_set(i,(soft_KeyMenu[i].pSelMenu->pString)); // string for Softkey (may be shorter!) is pointed to by pVar but is in flash
+			if (soft_KeyMenu[i].pSelMenu->pFunc != NULL){
 				// function can be called
-				keylabel_statcheck(i,soft_Key[i].pSelMenu->pFunc(0)== MENU_SOFTKEY_FUNC_RETURN_STATUS_ON ? TRUE : FALSE); // call function with arg=0 to get status
+				keylabel_statcheck(i,soft_KeyMenu[i].pSelMenu->pFunc(0)== MENU_SOFTKEY_FUNC_RETURN_STATUS_ON ? TRUE : FALSE); // call function with arg=0 to get status
 			}
 		}
 	}
@@ -1980,7 +2228,7 @@ uint8_t softKey_Execute(uint8_t nrSoftKey, uint8_t myMessage){
 	// returns TRUE if softkey is handled, false if only a menu is displayed
 	if (nrSoftKey < MENU_SOFTKEY_COUNT) {
 		// softkey nr is valid
-		const __flash Menu_t* pSoftKeySelMenu = soft_Key[nrSoftKey].pSelMenu;
+		const __flash Menu_t* pSoftKeySelMenu = soft_KeyMenu[nrSoftKey].pSelMenu;
 		if (pSoftKeySelMenu != NULL){
 			// pointer given
 			if (((pSoftKeySelMenu->menuType & MENU_T_REMOVEBOUND_MASK) == MENU_T_MENU) && ((pSoftKeySelMenu->menuFlags & MENU_FLAG_MENU_SOFTKEY) != 0)){

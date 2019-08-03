@@ -198,7 +198,7 @@ extern uint8_t module_TestAllInputs();
 extern void module_WaitOutputInput2Cycles();
 extern void module_StartPowerOn();
 extern void module_PowerControl();
-
+extern void softKey_WantLong(uint8_t wantLong); // 0 Want repeat 1 Want Longpress
 extern void Pipes_AllOutputsOff();
 extern void  init_PipeModules();
 extern uint32_t test_PipeModule(uint8_t moduleNr); // should return testpattern PIPE_MODULE_TESTPATTERN_BYTE

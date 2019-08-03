@@ -51,6 +51,7 @@ int main(void)
 	init_Midi2Manual();
 	init_Manual2Midi();
 	init_Midi();
+	init_Registers();
 	init_Manual2Module();
 	init_SoftKeys();
 	eeprom_UpdateALL(); // save all current settings (eventually defaults) to eeprom
@@ -97,10 +98,12 @@ int main(void)
 					menu_Init(NULL, NULL); // menu initaliszed but not displayed -> new reset each time
 					menu_InitLCD(); //display menu
 					menuNotActive = FALSE; // notify that menu is displayed
+					softKey_WantLong(FALSE); // we are in menu now: Softkey should autoreturn
 				} else if ((keyMasked == MESSAGE_KEY_1) || (keyMasked == MESSAGE_KEY_2) || (keyMasked == MESSAGE_KEY_3) || (keyMasked == MESSAGE_KEY_4)){
 					// SOFTKEY pressed
 					uint8_t softKey_Nr = softKey_MessageKey_ToSoftKeyNr(keyMasked);
 					menuNotActive = softKey_Execute(softKey_Nr, keyMessage); // execute softkey; returns false if menu started
+					softKeys_toLCD();
 				}
 			} else {
 				// MENU IS ACTIVE: PROCESS MESSAGE
@@ -115,11 +118,12 @@ int main(void)
 			}
 		}
 		if (menuNotActive == TRUE) {
-			// Startpage is beeing displayed
+			// Startpage is or should be beeing displayed now
 			if (updateStatus == TRUE) {
 				// menu has been exit: clear display to have more room for status
 				menu_ClearAllDisp();
 				softKeys_toLCD();
+				softKey_WantLong(TRUE);
 				updateStatus = FALSE; // set when entering menu or from elsewhere if there is a update
 			}
 		} else {
@@ -159,7 +163,6 @@ int main(void)
 					// if this is status after module_PowerControl(), still waiting for key release!
 					lcd_puts_P(releaseKeyString);
 				} else if (pipe_PowerStatus == POWERSTATE_WAIT_FOR_POWERON) {
-					uint8_t saveCursor = lcd_cursorPos;
 					lcd_blank(LCD_LINELEN);
 				}
 				lcd_goto(saveCursor);
@@ -193,8 +196,9 @@ int main(void)
 			lcd_goto(oldcursor);
 			midiLastInNote = MIDI_NOTE_NONE;
 			TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)
-		} else if TIMER_ELAPSED(TIMER_MIDIIN_DISP) {
+		} else if (TIMER_ELAPSED(TIMER_MIDIIN_DISP) || (time_UpTimeUpdated == TRUE)) {
 			// timer for showing note has elapsed
+			// or about every second just in case screen got scrambeled
 			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
 			lcd_blank(6);
 			lcd_goto(oldcursor);
@@ -210,8 +214,9 @@ int main(void)
 			lcd_goto(oldcursor);
 			midiLastOutNote = MIDI_NOTE_NONE;
 			TIMER_SET(TIMER_MIDIOUT_DISP,TIMER_MIDIOUT_DISP_MS)
-		} else if TIMER_ELAPSED(TIMER_MIDIOUT_DISP) {
+		} else if (TIMER_ELAPSED(TIMER_MIDIOUT_DISP) || (time_UpTimeUpdated == TRUE)) {
 			// timer for showing note has elapsed
+			// or about every second just in case screen got scrambeled
 			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIOUT);
 			lcd_blank(5);
 			lcd_goto(oldcursor);

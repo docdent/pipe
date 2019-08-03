@@ -35,6 +35,8 @@ extern uint8_t nibbleToChr(uint8_t myNibble);
 #define LCD_NOTESTRAIGHT_SYM 0xA5
 #define LCD_ARROW_UP 0x08
 #define LCD_ARROW_DOWN 0x09
+#define LCD_ARROW_RIGHT 0x7E
+#define LCD_ARROW_LEFT 0x7F
 
 extern void lcd_initCG();
 extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);

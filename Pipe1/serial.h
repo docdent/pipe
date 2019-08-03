@@ -115,10 +115,15 @@ extern volatile uint8_t midiTxOvflCount;
 // wird beim Empfang ignoriert!
 #define MIDI_CTRL_ALLNOTESOFF 0x7B
 #define MIDI_SYSEX 0xF0
+#define MIDI_CLOCK 0xF8
+#define MIDI_REALTIME_FIRST 0xF8
+#define MIDI_REALTIME_LAST 0xFF
 #define MIDI_UNDEFINED 0xFD
 #define MIDI_ACTIVESENSING 0xFE
 #define MIDI_RESET 0xFF
 // as default if byte from receiver is read but no data in buffer
 #define MIDI_IGNORE_DATA 0xFF
 #define MIDI_MAX_INTERESTING_BYTES 2
+// receivable SysEx
+#define MIDI_RX_SYSEX_HEADER0 0x7D
 #endif /* SERIAL_H_ */

@@ -24,6 +24,12 @@ midi.h softcoupler off turns off all manual notes
 menu.c changed entry for bin values (1/0) instead of (+/-)
 main.c longpress of esc key clears all manual notes
 menu.c Tasten Koppler
+0.57
+register storage changed, similar to manuals
+couplers extended to 12
+on set couplers reset corresponding inverse coupler
+menu.c check for soft_coupler function assigned correctly
+menu.c soft_coupler list changed
 */
 
 
