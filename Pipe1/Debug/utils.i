@@ -703,6 +703,8 @@ extern void lcd_waitSymbolOn();
 extern void lcd_waitSymbolOff();
 extern uint8_t lcd_noteOut(uint8_t noteNr);
 
+
+extern char* putString_P(const __flash char* pSourceString, char* pOutput);
 extern char* putChar_Dec2(uint8_t val, char* pOutput);
 extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
@@ -711,7 +713,7 @@ extern char* putChar_Manual(uint8_t manual, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 75 ".././utils.h"
+# 77 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -723,19 +725,26 @@ extern const __flash char keylabel_exit [] ;
 extern const __flash char keylabel_text [] ;
 extern const __flash char keylabel_0 [] ;
 extern const __flash char keylabel_1 [] ;
+extern const __flash char keylabel_on [] ;
+extern const __flash char keylabel_off [] ;
+
 
 extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 100 ".././utils.h"
+# 105 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 102 ".././utils.h" 3
+# 107 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 102 ".././utils.h"
+# 107 ".././utils.h"
                                  ;
+
+extern uint8_t get_StrLenP(const __flash char* pString);
+extern uint8_t get_StrLen(const char* pString);
+extern uint8_t reverse_Bits(uint8_t val);
 # 13 ".././utils.c" 2
 # 1 ".././lcd_u.h" 1
 # 82 ".././lcd_u.h"
@@ -946,11 +955,18 @@ typedef struct{
 extern RegisterMap_t registerMap[8];
 
 extern uint8_t registerCount;
-extern uint8_t programMap[64] [64 / 8];
+typedef struct{
+ uint8_t registers [64 / 8];
+ uint16_t couplers;
+ } ProgramInfo_t;
+extern ProgramInfo_t programMap[64] ;
 
+extern uint8_t read_allRegister(uint8_t* resultPtr);
+extern void register_onOff(uint8_t regNr, uint8_t onOff);
 extern void registers_CalcCount();
-extern void register_toProgram(uint8_t program);
-extern void program_toRegister(uint8_t program);
+extern uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm);
+extern uint8_t program_toRegister(uint8_t program);
+extern void midi_resetRegisters();
 
 extern void init_Midi2Manual();
 extern void init_Manual2Midi();
@@ -981,7 +997,7 @@ extern uint8_t midiLastInManual;
 extern void midiKeyPress_Process(PipeMessage_t pipeMessage);
 extern void midiIn_Process(uint8_t midiByte);
 extern void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff);
-extern void program_toRegister(uint8_t program);
+extern uint8_t program_toRegister(uint8_t program);
 extern void midi_SendActiveSense();
 extern void midi_CheckRxActiveSense();
 extern void midi_CheckTxActiveSense();
@@ -990,7 +1006,10 @@ extern void midi_CheckTxActiveSense();
 extern void init_Midi();
 extern void midi_ManualOff(uint8_t manual);
 extern void midi_AllManualsOff();
-# 198 ".././Midi.h"
+extern void midi_CouplerReset();
+extern Word_t getAllCouplers();
+extern void setAllCouplers(Word_t couplers);
+# 208 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1238,6 +1257,17 @@ char* putChar_Manual(uint8_t manual, char* pOutput){
  return pOutput;
 }
 
+extern char* putString_P(const __flash char* pSourceString, char* pOutput){
+ uint8_t count = 0;
+ do {
+  if (*pSourceString == 0){
+   return pOutput;
+  }
+  *pOutput++ = *pSourceString++;
+ } while (count++ < 20);
+ return pOutput;
+}
+
 void lcd_decout(uint8_t decNumber){
  uint8_t nibble = 0;
  while (decNumber >= 100) {
@@ -1436,6 +1466,8 @@ const char __flash keylabel_left [] = "\x7F";
 const char __flash keylabel_plus [] = "+";
 const char __flash keylabel_minus [] = "-";
 const char __flash keylabel_onoff [] = "Ein" "\x80";
+const char __flash keylabel_on [] = "\x7E" "ein";
+const char __flash keylabel_off [] = "\x7E" "aus";
 const char __flash keylabel_exit [] = "Exit";
 const char __flash keylabel_text [] = "Text" "\x80";
 const char __flash keylabel_0 [] = "0";
@@ -1497,6 +1529,41 @@ uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status){
    result = 0xFF;
   }
   charPtr++;
+ }
+ return result;
+}
+
+
+uint8_t get_StrLenP(const __flash char* pString){
+ uint8_t result = 0;
+ do
+ {
+  if (*pString == 0) {
+   return result;
+  }
+  pString++;
+ } while (++ result < 32);
+ return result;
+}
+
+uint8_t get_StrLen(const char* pString){
+ uint8_t result = 0;
+ do
+ {
+  if (*pString == 0) {
+   return result;
+  }
+  pString++;
+ } while (++ result < 32);
+ return result;
+}
+
+extern uint8_t reverse_Bits(uint8_t val){
+ uint8_t result = 0;
+ for (uint8_t i = 0; i < 8; i++) {
+  result = result << 1;
+  result = result | (val & 0x01);
+  val = val >> 1;
  }
  return result;
 }

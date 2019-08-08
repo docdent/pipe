@@ -67,7 +67,7 @@ extern volatile uint8_t time_Uptime[4]; // 0: prescaler cycles @ 4ms, 1: seconds
 #define TIMER_INPUTTIMEOUT_MS 5000 // cancel edit after 500oms
 
 #define TIMER_POWER 1
-#define TIMER_POWER_INIT_MS 1000
+#define TIMER_POWER_INIT_MS 800
 #define TIMER_POWER_TEST_REPEAT_MS 250
 #define TIMER_POWER_CHECK_MS 20
 
@@ -115,8 +115,8 @@ extern void init_Pipe();
 #define KEY_WANTS_LONGPRESS 0x04
 #define KEY_WANTS_REPEAT	0x08
 
-#define KEY_LONGPRESS_CYCLES (1500 / (ADC_MAX_INPUTS * TIMER_CYCLE_MS))
-#define KEY_AUTOREP_START_CYCLES (1200 / (ADC_MAX_INPUTS * TIMER_CYCLE_MS))
+#define KEY_LONGPRESS_CYCLES (1200 / (ADC_MAX_INPUTS * TIMER_CYCLE_MS))
+#define KEY_AUTOREP_START_CYCLES (800 / (ADC_MAX_INPUTS * TIMER_CYCLE_MS))
 #define KEY_AUTOREP_REP_CYCLES (200 / (ADC_MAX_INPUTS * TIMER_CYCLE_MS))
 
 #define ADCKEY_CYCLE_MS ADC_MAX_INPUTS*TIMER_CYCLE_MS	// adckey routine is called every 4 (adc count) * 4 (frequency of adc calls) = 16 ms

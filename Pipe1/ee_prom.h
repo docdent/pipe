@@ -77,7 +77,7 @@ typedef struct{
 	RegisterMap_t registerMap[REGISTER_SEC_COUNT];
 	uint16_t reg_crc;
 	uint8_t charProg;
-	uint8_t programMap[PROGRAM_COUNT] [REGISTER_COUNT / 8];
+	ProgramInfo_t programMap[PROGRAM_COUNT];
 	uint16_t prog_crc;
 	uint8_t charSoftkey;
 	uint8_t softKeyMenuIndex[MENU_SOFTKEY_COUNT];
@@ -85,7 +85,7 @@ typedef struct{
 	uint8_t charEnd;
 } Ee_t;
 
-#define EEPROM_DATABLOCK_SIZE 1024 // adapt to size of EE_t manually !
+#define EEPROM_DATABLOCK_SIZE 2048 // adapt to size of EE_t manually !
 
 typedef union{
 	Ee_t ee;

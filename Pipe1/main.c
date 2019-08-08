@@ -30,7 +30,7 @@ const char eprom_ok [] PROGMEM = "EE:";
 const char module_string [] PROGMEM = " Mod.:";
 const char prog_name [] PROGMEM = "MIDI-Interface";
 const __flash char releaseKeyString[] = "Tasten/Reg. l" LCD_UMLAUTO "sen";
-
+const __flash char panicString[] = "T" LCD_UMLAUTO "ne aus";
 uint8_t menuNotActive;
 
 int main(void)
@@ -68,11 +68,11 @@ int main(void)
 	lcd_goto(LCD_LINE2+7);
 	lcd_puts_P(sw_version);
 	sei();
-	_delay_ms(2000);
+	_delay_ms(1200);
 	lcd_clrscr ();
-	
+
 	// TURN ON POWER
-	
+
 	module_StartPowerOn();
 	MESSAGE_PIPE_HANDLING_ON
 
@@ -85,11 +85,15 @@ int main(void)
 		if MESSAGE_PENDING {
 			uint8_t keyMessage = message_get();
 			if (keyMessage == (MESSAGE_KEY_LONGPRESSED | MESSAGE_KEY_ESC)){
-				menu_OnEnterMidiPanic(0);
+				// PANIC BUTTON
+				midiSendAllNotesOff();
 				midi_AllManualsOff();
+				midi_resetRegisters();
+				midi_CouplerReset();
+				menu_DisplayMainMessage_P(panicString);
 			}
 			if (menuNotActive == TRUE) {
-				// --- MESSAGE 
+				// --- MESSAGE
 				// not in menu; start page is displayed
 				uint8_t keyMasked = keyMessage & MESSAGE_KEY_REMOVE_TYPE_MASK;
 				if 	(keyMessage == MESSAGE_KEY_SEL) {
@@ -135,7 +139,7 @@ int main(void)
 			// if (! menuNotActive) {
 				// currently: always check timer, not only when menu active menu
 				uint8_t saveCursor = lcd_cursorPos;
-				menu_ClearDataDisp();
+				menu_deleteMessage();
 				lcd_goto(saveCursor);
 			 //}
 			TIMER_DEACTIVATE(TIMER_MENUDATA_LCDCLEAR)
@@ -149,7 +153,7 @@ int main(void)
 				TIMER_DEACTIVATE(TIMER_TESTMODULE)
 			}
 		}
-		
+
 		// ----------------------------- TIMER POWER ------------------------
 
 		if TIMER_ELAPSED(TIMER_POWER) {
@@ -168,11 +172,11 @@ int main(void)
 				lcd_goto(saveCursor);
 			}
 		}
-		
+
 		// ------------------------- ACTIVE SENSE ----------------------------
 		midi_CheckTxActiveSense(); // out going active Sense?
 		midi_CheckRxActiveSense(); // check for Error of incoming Active Sense
-		
+
 		// ------------------------ TOP STATUS LINE --------------------------
 		uint8_t oldcursor = lcd_cursorPos;
 		if (midiLastInNote != MIDI_NOTE_NONE){
@@ -268,7 +272,7 @@ int main(void)
 				lcd_cursosblink();
 			}
 		}
-		
+
 		//------------------ CHEKC MESSAGE PIPIE OVFL ------------------
 		if (msgPipeOverflow == MESSAGE_PIPE_OVERFLOW_YES){
 			msgPipeOverflow = MESSAGE_PIPE_OVERFLOW_NO;

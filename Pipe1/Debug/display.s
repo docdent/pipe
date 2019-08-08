@@ -2210,8 +2210,8 @@ displayBuffer:
 	.string	"CursorStart"
 .LASF22:
 	.string	"disp_redraw"
-.LASF39:
-	.string	"sectionBuffer"
+.LASF2:
+	.string	"unsigned int"
 .LASF9:
 	.string	"SubSectCount"
 .LASF28:
@@ -2240,22 +2240,22 @@ displayBuffer:
 	.string	"updating"
 .LASF27:
 	.string	"currentSection"
-.LASF47:
-	.string	"E:\\\\Users\\\\Anwender\\\\Sync\\\\Atmel Studio\\\\Pipe1\\\\Pipe1\\\\Debug"
 .LASF12:
 	.string	"CursorPos"
 .LASF40:
 	.string	"displaySize"
 .LASF19:
 	.string	"pChar"
-.LASF2:
-	.string	"unsigned int"
+.LASF47:
+	.string	"C:\\\\Users\\\\Anwender\\\\Documents\\\\Sync\\\\Atmel Studio\\\\Pipe1\\\\Pipe1\\\\Debug"
 .LASF6:
 	.string	"long long unsigned int"
 .LASF10:
 	.string	"uint8_t"
 .LASF15:
 	.string	"SectionStatus_t"
+.LASF39:
+	.string	"sectionBuffer"
 .LASF8:
 	.string	"SectionLen"
 .LASF16:
@@ -2288,6 +2288,6 @@ displayBuffer:
 	.string	"signed char"
 .LASF43:
 	.string	"lcd_putc"
-	.ident	"GCC: (AVR_8_bit_GNU_Toolchain_3.6.2_1759) 5.4.0"
+	.ident	"GCC: (AVR_8_bit_GNU_Toolchain_3.6.1_1750) 5.4.0"
 .global __do_copy_data
 .global __do_clear_bss

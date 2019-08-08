@@ -492,7 +492,7 @@ lcd_putc:
 	.loc 1 220 0
 	lds r25,lcd_cursorPos
 	subi r25,lo8(-(1))
-	andi r25,lo8(63)
+	andi r25,lo8(127)
 	sts lcd_cursorPos,r25
 	.loc 1 221 0
 	call lcd_write_character
@@ -2481,6 +2481,8 @@ lcd_puts_P:
 	.string	"lcd_clrscr"
 .LASF21:
 	.string	"lcd_write_command"
+.LASF4:
+	.string	"unsigned int"
 .LASF15:
 	.string	"__us"
 .LASF17:
@@ -2497,8 +2499,6 @@ lcd_puts_P:
 	.string	"_delay_ms"
 .LASF32:
 	.string	"__result"
-.LASF35:
-	.string	"E:\\\\Users\\\\Anwender\\\\Sync\\\\Atmel Studio\\\\Pipe1\\\\Pipe1\\\\Debug"
 .LASF12:
 	.string	"double"
 .LASF29:
@@ -2507,8 +2507,8 @@ lcd_puts_P:
 	.string	"__tmp"
 .LASF25:
 	.string	"lcd_home"
-.LASF4:
-	.string	"unsigned int"
+.LASF35:
+	.string	"C:\\\\Users\\\\Anwender\\\\Documents\\\\Sync\\\\Atmel Studio\\\\Pipe1\\\\Pipe1\\\\Debug"
 .LASF13:
 	.string	"_delay_us"
 .LASF9:
@@ -2539,5 +2539,5 @@ lcd_puts_P:
 	.string	"lcd_putc"
 .LASF16:
 	.string	"__ms"
-	.ident	"GCC: (AVR_8_bit_GNU_Toolchain_3.6.2_1759) 5.4.0"
+	.ident	"GCC: (AVR_8_bit_GNU_Toolchain_3.6.1_1750) 5.4.0"
 .global __do_clear_bss

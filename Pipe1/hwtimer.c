@@ -262,11 +262,11 @@ uint8_t module_TestAllInputs(){
 	uint8_t result = 0;
 	Pipe_t* pPipe = &(pipe[0]);
 	// read all 32 recent input  values
-	// only for module that are assigned to read, 
+	// only for module that are assigned to read,
 	// but also for modules that did NOT pass loop test or that are NOT assigned to write
 	for (uint8_t i = 0; i < PIPE_SHIFTBIT_COUNT; i++){
 		pPipe->pipeOut = 0xFF; // outputs off
-		result |= pPipe->pipeIn; 
+		result |= pPipe->pipeIn;
 		pPipe++;
 	}
 	return result & pipe_ModuleAssnRead; // modules unassgined to read will be ignored (return bit=0)
@@ -299,7 +299,7 @@ void module_PowerControl(){
 			pipe_PowerStatus = POWERSTATE_WAIT_FOR_POWERON;
 			TIMER_SET(TIMER_POWER,TIMER_POWER_CHECK_MS)
 		} else {
-			// keys are not released	
+			// keys are not released
 			TIMER_SET(TIMER_POWER,TIMER_POWER_TEST_REPEAT_MS)
 		}
 	} else if (pipe_PowerStatus == POWERSTATE_WAIT_FOR_POWERON) {
@@ -495,9 +495,8 @@ static inline void timerPipeProcess(){
 	for (uint8_t shiftBitNr = 0; shiftBitNr < PIPE_SHIFTBIT_COUNT; shiftBitNr++) {
 		// check output error
 		PipeMessage_t myMessage;
-		uint8_t pipeIn = curPipe->pipeIn;
-
 		#ifdef PIPE_CHECKERROR
+		uint8_t pipeIn = curPipe->pipeIn;
 		uint8_t outPipeError = (~(curPipe->pipeOut | curPipe->pipeOutM4 | pipeIn)) & pipe_ModuleTested; // 1 if output should be high, but ist read as low
 		if (outPipeError != 0) {
 			// Error Pipe has bit set
@@ -510,12 +509,9 @@ static inline void timerPipeProcess(){
 		#endif
 
 		// Check new pipe status
-//		uint8_t oldPipeStat = curPipe->pipeInStat;
-// 		uint8_t newPipeStat = (pipeIn) | (curPipe->pipeInM4) | (curPipe->pipeInM8)
-// 			| (curPipe->pipeInM12) | (curPipe->pipeInM16) ; // 1 if key pressed at least onece in last 16m, 0 if key was never pressed
 		// new V 0.56
-		uint8_t newOnState = 0xFF;
-		uint8_t newOffState = 0;
+		uint8_t newOnState = 0xFF; // and operation of recent states -> 1 == input was allways 1
+		uint8_t newOffState = 0; // or operation of recent states -> 0 == input was allways 0
 		uint8_t* pInByte = &(curPipe->pipeInM16);
 		newOnState &= *pInByte; //pipeInM16
 		newOffState |= *pInByte++;
@@ -528,7 +524,7 @@ static inline void timerPipeProcess(){
 		newOnState &= *pInByte; //pipeIn
 		newOffState |= *pInByte++; // now pointer to pipeInStat
 		uint8_t oldPipeStat = *pInByte;
-		uint8_t newPipeStat = (oldPipeStat & newOffState) | newOnState; // ->0 only if recent reads are all 0, -> 1 if reads are all 1
+		uint8_t newPipeStat = (oldPipeStat & newOffState) | newOnState; // ->0 only if recent reads are all 0, -> 1 if reads are all 1, else keep old val
 		*pInByte = newPipeStat;
 		// end new V 0.56
 		uint8_t statChange = (newPipeStat & ~oldPipeStat) & local_pipe_ModuleAssnRead; // new = 1, old = 0
@@ -545,7 +541,6 @@ static inline void timerPipeProcess(){
 			myMessage.message8[MSG_BYTE_CMD_SHIFTBIT] = MESSAGE_PIPE_OFF_HI | shiftBitNr;
 			pipeMsgPush(myMessage);
 		}
-		//curPipe->pipeInStat = newPipeStat;
 		curPipe++;
 		pipeProcessing |= PIPE_IO_PROC_DONE; // to show that pipe[].pipeInStat is updated
 	}

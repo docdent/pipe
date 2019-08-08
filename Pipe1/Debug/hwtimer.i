@@ -428,6 +428,8 @@ extern void lcd_waitSymbolOn();
 extern void lcd_waitSymbolOff();
 extern uint8_t lcd_noteOut(uint8_t noteNr);
 
+
+extern char* putString_P(const __flash char* pSourceString, char* pOutput);
 extern char* putChar_Dec2(uint8_t val, char* pOutput);
 extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
@@ -436,7 +438,7 @@ extern char* putChar_Manual(uint8_t manual, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 75 ".././utils.h"
+# 77 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -448,19 +450,26 @@ extern const __flash char keylabel_exit [] ;
 extern const __flash char keylabel_text [] ;
 extern const __flash char keylabel_0 [] ;
 extern const __flash char keylabel_1 [] ;
+extern const __flash char keylabel_on [] ;
+extern const __flash char keylabel_off [] ;
+
 
 extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 100 ".././utils.h"
+# 105 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 102 ".././utils.h" 3
+# 107 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 102 ".././utils.h"
+# 107 ".././utils.h"
                                  ;
+
+extern uint8_t get_StrLenP(const __flash char* pString);
+extern uint8_t get_StrLen(const char* pString);
+extern uint8_t reverse_Bits(uint8_t val);
 # 12 ".././message.h" 2
 
 
@@ -865,11 +874,18 @@ typedef struct{
 extern RegisterMap_t registerMap[8];
 
 extern uint8_t registerCount;
-extern uint8_t programMap[64] [64 / 8];
+typedef struct{
+ uint8_t registers [64 / 8];
+ uint16_t couplers;
+ } ProgramInfo_t;
+extern ProgramInfo_t programMap[64] ;
 
+extern uint8_t read_allRegister(uint8_t* resultPtr);
+extern void register_onOff(uint8_t regNr, uint8_t onOff);
 extern void registers_CalcCount();
-extern void register_toProgram(uint8_t program);
-extern void program_toRegister(uint8_t program);
+extern uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm);
+extern uint8_t program_toRegister(uint8_t program);
+extern void midi_resetRegisters();
 
 extern void init_Midi2Manual();
 extern void init_Manual2Midi();
@@ -900,7 +916,7 @@ extern uint8_t midiLastInManual;
 extern void midiKeyPress_Process(PipeMessage_t pipeMessage);
 extern void midiIn_Process(uint8_t midiByte);
 extern void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff);
-extern void program_toRegister(uint8_t program);
+extern uint8_t program_toRegister(uint8_t program);
 extern void midi_SendActiveSense();
 extern void midi_CheckRxActiveSense();
 extern void midi_CheckTxActiveSense();
@@ -909,7 +925,10 @@ extern void midi_CheckTxActiveSense();
 extern void init_Midi();
 extern void midi_ManualOff(uint8_t manual);
 extern void midi_AllManualsOff();
-# 198 ".././Midi.h"
+extern void midi_CouplerReset();
+extern Word_t getAllCouplers();
+extern void setAllCouplers(Word_t couplers);
+# 208 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -935,7 +954,7 @@ extern uint8_t midiCoupler_2fromP;
 extern uint8_t midiCoupler_1fromP;
 # 16 ".././ee_prom.h" 2
 # 1 ".././menu.h" 1
-# 51 ".././menu.h"
+# 53 ".././menu.h"
 typedef uint8_t (*MenuFunc_t) (uint8_t arg);
 
 typedef struct Menu {
@@ -954,14 +973,11 @@ typedef struct Menu {
 
 
 } Menu_t;
-# 165 ".././menu.h"
+# 171 ".././menu.h"
 extern const __flash Menu_t * menuStack[16];
 
 uint8_t lcdData[10];
-
-
-
-
+# 182 ".././menu.h"
 typedef struct {
  uint8_t nibbleCount;
  uint8_t nibblePos[8];
@@ -980,6 +996,8 @@ extern uint8_t menuVmanual;
 extern uint8_t menuVkey;
 extern uint8_t menuVmodule;
 extern uint8_t menuVKombination;
+extern uint8_t menuVRegisters[64 / 8];
+
 extern uint32_t menuModVal;
 extern const __flash char* pMenuTopTitle;
 extern const __flash Menu_t* menuVMenuSoftKey;
@@ -1005,7 +1023,11 @@ extern uint8_t nibbleCheckOvfl(int8_t myNibble);
 extern void LCDStringOut();
 extern void nibbleToLCDstring();
 extern void dataToNibbles();
-# 223 ".././menu.h"
+
+extern void menu_DisplayMainMessage_P(const __flash char* pMessage);
+extern void menu_DisplayMainMessage(const char* pMessage);
+extern void menu_deleteMessage();
+# 239 ".././menu.h"
 typedef struct{
  const __flash struct Menu *pSelMenu;
 } SoftKeyMenu_List_t;
@@ -1025,14 +1047,14 @@ extern uint8_t softKey_Execute(uint8_t nrSoftKey, uint8_t myMessage);
 
 
 extern const char sw_version [] 
-# 241 ".././menu.h" 3
+# 257 ".././menu.h" 3
                                __attribute__((__progmem__))
-# 241 ".././menu.h"
+# 257 ".././menu.h"
                                       ;
 extern const char HelloMsg [] 
-# 242 ".././menu.h" 3
+# 258 ".././menu.h" 3
                              __attribute__((__progmem__))
-# 242 ".././menu.h"
+# 258 ".././menu.h"
                                     ;
 
 extern uint8_t menu_TestModulePattern;
@@ -1104,7 +1126,7 @@ typedef struct{
  RegisterMap_t registerMap[8];
  uint16_t reg_crc;
  uint8_t charProg;
- uint8_t programMap[64] [64 / 8];
+ ProgramInfo_t programMap[64];
  uint16_t prog_crc;
  uint8_t charSoftkey;
  uint8_t softKeyMenuIndex[4];
@@ -1116,7 +1138,7 @@ typedef struct{
 
 typedef union{
  Ee_t ee;
- uint8_t raw[1024];
+ uint8_t raw[2048];
 } EEblock_t;
 
 typedef struct{
@@ -2135,7 +2157,7 @@ void module_StartPowerOn(){
 # 289 ".././hwtimer.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
 # 289 ".././hwtimer.c"
-{swTimer[1].counter = 1000 / 20; swTimer[1].prescaler = (1000 % 20) / 4;};
+{swTimer[1].counter = 800 / 20; swTimer[1].prescaler = (800 % 20) / 4;};
 }
 
 void module_PowerControl(){
@@ -2311,7 +2333,7 @@ static inline void timerADC(){
     if (newKey != 0xFF) {
 
      adcKeys[adcNr].keyTimer++;
-     if (adcKeys[adcNr].keyTimer == (1500 / (4 * 4))) {
+     if (adcKeys[adcNr].keyTimer == (1200 / (4 * 4))) {
 
       if (keyWants[oldKey-1] & 0x04) {
        message_push(0x80 | newKey);
@@ -2320,7 +2342,7 @@ static inline void timerADC(){
      }
      if (keyWants[oldKey-1] & 0x08) {
       if (adcKeys[adcNr].keyRepeating == 0) {
-       if (adcKeys[adcNr].keyTimer == (1200 / (4 * 4))) {
+       if (adcKeys[adcNr].keyTimer == (800 / (4 * 4))) {
 
         adcKeys[adcNr].keyRepeating = 1;
         adcKeys[adcNr].keyTimer = 0;
@@ -2400,8 +2422,7 @@ static inline void timerPipeProcess(){
  for (uint8_t shiftBitNr = 0; shiftBitNr < 32; shiftBitNr++) {
 
   PipeMessage_t myMessage;
-  uint8_t pipeIn = curPipe->pipeIn;
-# 517 ".././hwtimer.c"
+# 513 ".././hwtimer.c"
   uint8_t newOnState = 0xFF;
   uint8_t newOffState = 0;
   uint8_t* pInByte = &(curPipe->pipeInM16);
@@ -2433,7 +2454,6 @@ static inline void timerPipeProcess(){
    myMessage.message8[1] = 0x00 | shiftBitNr;
    pipeMsgPush(myMessage);
   }
-
   curPipe++;
   pipeProcessing |= 0x01;
  }
@@ -2442,94 +2462,94 @@ static inline void timerPipeProcess(){
 static inline void timerPipeIO(){
  Pipe_t *curPipe;
  
-# 556 ".././hwtimer.c" 3
+# 551 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 556 ".././hwtimer.c"
+# 551 ".././hwtimer.c"
               |= ((1 << 0) | (1 << 1) | (1 << 2));
  
-# 557 ".././hwtimer.c" 3
+# 552 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 557 ".././hwtimer.c"
+# 552 ".././hwtimer.c"
 &= ~(1 << 2);
  curPipe = &pipe[32 -1];
  uint8_t local_pipe_ModuleAssnWrite = ~pipe_ModuleAssnWrite;
  uint8_t i = 32;
  _delay_us(0.5);
  
-# 562 ".././hwtimer.c" 3
+# 557 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 562 ".././hwtimer.c"
+# 557 ".././hwtimer.c"
 |= (1 << 2);
  do {
   curPipe->pipeInM16 = curPipe->pipeInM12;
   curPipe->pipeInM12 = curPipe->pipeInM8;
   
-# 566 ".././hwtimer.c" 3
+# 561 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 566 ".././hwtimer.c"
+# 561 ".././hwtimer.c"
  |= (1 << 0);
   
-# 567 ".././hwtimer.c" 3
+# 562 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 567 ".././hwtimer.c"
+# 562 ".././hwtimer.c"
               = curPipe->pipeOut | local_pipe_ModuleAssnWrite;
   curPipe->pipeInM8 = curPipe->pipeInM4;
   curPipe->pipeInM4 = curPipe->pipeIn;
   curPipe->pipeIn = 
-# 570 ".././hwtimer.c" 3
+# 565 ".././hwtimer.c" 3
                    (*(volatile uint8_t *)((0X00) + 0x20))
-# 570 ".././hwtimer.c"
+# 565 ".././hwtimer.c"
                              ;
   
-# 571 ".././hwtimer.c" 3
+# 566 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 571 ".././hwtimer.c"
+# 566 ".././hwtimer.c"
  &= ~(1 << 0);
   curPipe--;
  } while (--i > 0);
  asm("nop");
  asm("nop");
  
-# 576 ".././hwtimer.c" 3
+# 571 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 576 ".././hwtimer.c"
+# 571 ".././hwtimer.c"
 |= (1 << 0);
  
-# 577 ".././hwtimer.c" 3
+# 572 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 577 ".././hwtimer.c"
+# 572 ".././hwtimer.c"
 &= ~(1 << 1);
  pipeProcessing |= 0x02;
  
-# 579 ".././hwtimer.c" 3
+# 574 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 579 ".././hwtimer.c"
+# 574 ".././hwtimer.c"
              = 0;
  
-# 580 ".././hwtimer.c" 3
+# 575 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x0B) + 0x20)) 
-# 580 ".././hwtimer.c"
+# 575 ".././hwtimer.c"
 |= (1 << 7);
  
-# 581 ".././hwtimer.c" 3
+# 576 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 581 ".././hwtimer.c"
+# 576 ".././hwtimer.c"
 |= (1 << 1);
 }
 
 
 
 
-# 586 ".././hwtimer.c" 3
+# 581 ".././hwtimer.c" 3
 void __vector_21 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_21 (void)
 
-# 587 ".././hwtimer.c"
+# 582 ".././hwtimer.c"
 {
 
  
-# 589 ".././hwtimer.c" 3
+# 584 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 589 ".././hwtimer.c"
+# 584 ".././hwtimer.c"
          |= (1 << 7);
 
  switch (++msecCtr & 0x03) {
@@ -2546,9 +2566,9 @@ void __vector_21 (void) __attribute__ ((signal,used, externally_visible)) ; void
    break;
  }
  
-# 604 ".././hwtimer.c" 3
+# 599 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 604 ".././hwtimer.c"
+# 599 ".././hwtimer.c"
          &= ~(1 << 7);
 
 }

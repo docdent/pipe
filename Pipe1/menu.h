@@ -6,6 +6,7 @@
  */
 
 #include "hw_defs.h"
+#include "Midi.h"
 
 #ifndef MENU_H_
 #define MENU_H_
@@ -29,7 +30,8 @@
 #define MENU_T_VARLONG 11
 #define MENU_T_VARPROG 12
 #define MENU_T_VARREG 13
-#define MENU_T_COUNT 14
+#define MENU_T_VARBINREG 14
+#define MENU_T_COUNT 15
 
 #define MENU_T_LEFTBOUND 0x80 // Set bit 7 or 6 for first/last entry in menu-row
 #define MENU_T_RIGHTBOUND 0xC0
@@ -81,6 +83,8 @@ typedef struct Menu {
 	#define MENU_LCD_DATALEN 8
 	#define MENU_LCD_CURSOR_EXTRA LCD_LINE1
 	#define MENU_LCD_EXTRALEN 8
+	#define MENU_LCD_CURSOR_MAINMESSAGE LCD_LINE1
+	#define MENU_LCD_LEN_MAINMESSAGE 16
 	#define MENU_LCD_CURSOR_PARENT LCD_LINE0
 	#define MENU_LCD_CURSOR_MENU (LCD_LINE0 + 8)
 	#define MENU_LCD_CURSOR_STATUS LCD_LINE0
@@ -93,6 +97,8 @@ typedef struct Menu {
 	#define MENU_LCD_MENUTEXTLEN 10 // 9 valid chars
 	#define MENU_LCD_DATALEN 10
 	#define MENU_LCD_EXTRALEN 10
+	#define MENU_LCD_CURSOR_MAINMESSAGE LCD_LINE1
+	#define MENU_LCD_LEN_MAINMESSAGE 20
 	#define MENU_LCD_CURSOR_PARENT LCD_LINE1
 	#define MENU_LCD_CURSOR_MENU (LCD_LINE1 + 10)
 	#define MENU_LCD_CURSOR_DATA (LCD_LINE2 + 10)
@@ -169,6 +175,10 @@ uint8_t lcdData[MENU_LCD_DATALEN];
 
 #define NIBBLE_NONE 0xFF
 
+#define MENU_DISPLAY_AREA_EXTRA 0
+#define MENU_DISPLAY_AREA_DATA 1
+#define MENU_DISPLAY_AREA_MAIN 2
+
 typedef struct {
 	uint8_t nibbleCount;
 	uint8_t nibblePos[MENU_MAX_NIBBLE];
@@ -187,6 +197,8 @@ extern uint8_t menuVmanual;
 extern uint8_t menuVkey;
 extern uint8_t menuVmodule;
 extern uint8_t menuVKombination;
+extern uint8_t menuVRegisters[REGISTER_COUNT / 8];
+
 extern uint32_t menuModVal;
 extern const __flash char* pMenuTopTitle; // Title of TopMenu: usually "Menu" - may differ in Softkey menus
 extern const __flash Menu_t* menuVMenuSoftKey; // points to menu selcted for softkey
@@ -212,6 +224,10 @@ extern uint8_t nibbleCheckOvfl(int8_t myNibble);
 extern void LCDStringOut();
 extern void nibbleToLCDstring();
 extern void dataToNibbles();
+
+extern void menu_DisplayMainMessage_P(const __flash char* pMessage);
+extern void menu_DisplayMainMessage(const char* pMessage);
+extern void menu_deleteMessage();
 
 //---------------------------------- SOFTKEYS -----------------------------------
 

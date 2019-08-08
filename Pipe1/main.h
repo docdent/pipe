@@ -30,8 +30,22 @@ couplers extended to 12
 on set couplers reset corresponding inverse coupler
 menu.c check for soft_coupler function assigned correctly
 menu.c soft_coupler list changed
+0.58
+main.c Panic key extended functions: couplers off
+menu.c OnOff Variables easier to edit
+menu.c Save Programs in EEPROM
+menu. cSave Softkeys in EEPROM
+Improved message for menu and softkey
+Program Settings Show registers
+midi.h Extend Program memory to coupplers
+TODO
+EEPROM memory structure
+MIDI Through SW
+Program Change like viscount
+Register Setting liek viscount
+Failsafe for keys from time to time
+watchdog
 */
-
 
 
 

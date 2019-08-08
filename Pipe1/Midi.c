@@ -50,11 +50,15 @@ MidiSetting_t midi_Setting; // active sense, sendVelocity=0 instead of NoteOff
 uint8_t midiEEPromLoadError = EE_LOAD_OK;
 RegisterMap_t registerMap[REGISTER_SEC_COUNT]; // for each Register section contains regStart, regEnd, modulBit
 uint8_t registerCount; // nr of valid registers
-uint8_t programMap[PROGRAM_COUNT] [REGISTER_COUNT / 8]; // for each register one bit
+ProgramInfo_t programMap[PROGRAM_COUNT]; // for each register one bit
 
 // ------------------------------------ M I D I   G E N E R A L --------------------------------------
 
 void init_Midi(){
+	midi_CouplerReset();
+}
+
+void midi_CouplerReset(){
 	// turn off all 12 couplers
 	uint8_t* pCoupler = midi_Couplers;
 	for (uint8_t i = 0; i < COUPLER_COUNT; i++){
@@ -83,6 +87,33 @@ uint8_t set_Coupler(uint8_t cplNr){
 		}
 	}
 	return FALSE;
+}
+
+Word_t getAllCouplers(){
+	Word_t result;
+	result.wordval = 0;
+	uint8_t cplNr = COUPLER_COUNT-1;
+	do 
+	{
+		result.wordval = result.wordval << 1;
+		if (midi_Couplers[cplNr] == COUPLER_ON) {
+			result.byteval[0] |= 1; // LSB -> 1
+		}
+	} while (cplNr-- > 0);
+	return result;		
+}
+
+void setAllCouplers(Word_t couplers){
+	uint8_t cplNr = 0;
+	do
+	{
+		if ((couplers.byteval[0] & 0x01) != 0){
+			midi_Couplers[cplNr] = COUPLER_ON;
+		} else {
+			midi_Couplers[cplNr] = COUPLER_OFF;
+		}
+		couplers.wordval = couplers.wordval >> 1;
+	} while (++cplNr < COUPLER_COUNT);
 }
 //------------------------------------- M I D I    P R O C E S S I N G ---------------------------------
 
@@ -288,8 +319,9 @@ void init_Registers(){
 		// load error, reset programs
 		for (uint8_t progNr = 0; progNr < PROGRAM_COUNT; progNr++){
 			for (uint8_t regNr = 0; regNr < (REGISTER_COUNT / 8); regNr++) {
-				programMap[progNr][regNr] = 0;
+				programMap[progNr].registers[regNr] = 0;
 			}
+			programMap[progNr].couplers = 0;
 		}
 		log_putError(LOG_CAT_EE,LOG_CATEE_PROGRAM,0);
 	}
@@ -300,7 +332,6 @@ ModulBitError_t regNr_to_moduleBit(uint8_t regNr){
 	ModulBitError_t result;
 	if ((regNr < registerCount) && (regNr < REGISTER_COUNT)) {
 		// valid regNr
-		regNr++;
 		RegisterMap_t *pRange;
 		pRange = &(registerMap[0]); // check all Ranges 
 		uint8_t i = REGISTER_SEC_COUNT;
@@ -331,13 +362,16 @@ uint8_t read_Register(uint8_t regNr, uint8_t mode){
 			uint8_t bitNr = MODULE_BIT_TO_BIT(modBit);
 			uint8_t modulNr = MODULE_BIT_TO_MODULE(modBit);
 			uint8_t mask = 1 << modulNr;
-			if (((pipe[bitNr].pipeOut & mask) == 0) && ((mode & REGISTER_READ_SWOUT) != 0))
+			if (((pipe[bitNr].pipeOut & mask) == 0) && ((mode & REGISTER_READ_SWOUT) != 0)) {
 				// read sw output and output is L (active)
 				return REGISTER_ON;
-			else if (((pipe[bitNr].pipeIn & mask) != 0) && ((mode & REGISTER_READ_HWIN) != 0)) {
+			} else if (((pipe[bitNr].pipeIn & mask) != 0) && ((mode & REGISTER_READ_HWIN) != 0)) {
 				// read hw input and Input is H (active)
 				// result ON if output is H (works with disconnected HW or input is H
 				return REGISTER_ON;
+			} else if (((pipe[bitNr].pipeOut & mask) != 0) && ((pipe[bitNr].pipeIn & mask) != 0) && (mode == REGISTER_READ_HWIN_XOR_SWOUT)){
+				return REGISTER_ON;
+				// sw out off and hw input on -> additional register manually active
 			} else  {
 				return REGISTER_OFF;
 			}
@@ -346,7 +380,8 @@ uint8_t read_Register(uint8_t regNr, uint8_t mode){
 	return REGISTER_OFF; // default for unassigned/invalid register
 }
 
-void read_allRegister(uint8_t* resultPtr){
+uint8_t read_allRegister(uint8_t* resultPtr){
+	uint8_t result = 0;
 	// read all registers to memory (no matter if hw inp or sw out)
 	uint8_t mask = 0;
 	for (uint8_t regNr = 0; regNr < REGISTER_COUNT; regNr++){
@@ -356,12 +391,19 @@ void read_allRegister(uint8_t* resultPtr){
 			// reset mask every 8 bits, bit 0, 8, 16, 24
 			mask = 0;
 		}
-		mask = (mask >> 1 )  | (read_Register(regNr, REGISTER_READ_ALL) == REGISTER_OFF ? 0 : 0x80);
+		mask = (mask >> 1 );
+		if (read_Register(regNr, REGISTER_READ_ALL) != REGISTER_OFF ){
+			mask |= 0x80;
+			result++;
+		}
 		if ((regNr & 0x07) == 0x07) {
 			// bit 7, 15, 23, 31
-			*resultPtr++ = mask;
+			if (resultPtr != NULL) {
+				*resultPtr++ = mask;
+			}
 		}
 	}
+	return result;
 }
 		
 
@@ -387,31 +429,51 @@ void register_onOff(uint8_t regNr, uint8_t onOff){
 	// TODO Error Logging invalid register
 }
 
-void program_toRegister(uint8_t program){
+uint8_t program_toRegister(uint8_t program){
 	// Program 0..63
+	uint8_t result = 0;
 	if (program < PROGRAM_COUNT){
 		uint8_t regBits;
 		uint8_t regNr = 0;
-		uint8_t *regBytePtr = &(programMap[program][0]);
+		uint8_t *regBytePtr = &(programMap[program].registers[0]);
 		for (uint8_t byteNr = 0; byteNr < (REGISTER_COUNT / 8); byteNr++){
 			// 8 bytes for 64 registers
 			regBits = *(regBytePtr++); // get adress for next 8 registers
 			for (uint8_t bitNr = 0; bitNr < 8; bitNr++){
+				if ((regBits & 0x01) != 0) {
+					result++;
+				}
 				register_onOff(regNr, ((regBits & 0x01) == 0 ? REGISTER_OFF : REGISTER_ON)); // turn this register on/off according to lsb
 				regBits = regBits >> 1;
 				regNr++;
 			}
 		}
+		Word_t couplers;
+		couplers.wordval = programMap[program].couplers;
+		setAllCouplers(couplers);
+	}
+	return result;
+}
+
+void midi_resetRegisters(){
+	for (uint8_t i = 0; i < registerCount; i++){
+		register_onOff(i,REGISTER_OFF);
 	}
 }
 
-void register_toProgram(uint8_t program){
+uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm){
 	// Program 0..63
-	// saves current registers to program RAM only, eeprom must be done else where
+	// saves current registers to program
+	uint8_t result = 0;
 	if (program < PROGRAM_COUNT){
-		uint8_t *regBytePtr = &(programMap[program][0]);
-		read_allRegister(regBytePtr);
+		uint8_t *regBytePtr = &(programMap[program].registers[0]);
+		result = read_allRegister(regBytePtr);
 	}
+	programMap[program].couplers = getAllCouplers().wordval;
+	if (SaveEEProm) {
+		eeprom_UpdateProg();
+	}
+	return result;
 }
 
 

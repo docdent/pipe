@@ -905,7 +905,7 @@ __vector_26:
 	.file 6 ".././log.h"
 	.section	.debug_info,"",@progbits
 .Ldebug_info0:
-	.long	0x5a0
+	.long	0x5a2
 	.word	0x2
 	.long	.Ldebug_abbrev0
 	.byte	0x4
@@ -1178,10 +1178,10 @@ __vector_26:
 	.long	0x29f
 	.uleb128 0x10
 	.long	.LVL34
-	.long	0x589
+	.long	0x58b
 	.uleb128 0x13
 	.long	.LVL35
-	.long	0x596
+	.long	0x598
 	.long	0x27a
 	.uleb128 0x14
 	.byte	0x1
@@ -1511,7 +1511,7 @@ __vector_26:
 	.uleb128 0x1b
 	.long	.LASF49
 	.byte	0x3
-	.byte	0x66
+	.byte	0x6b
 	.long	0x51a
 	.byte	0x1
 	.byte	0x1
@@ -1527,26 +1527,26 @@ __vector_26:
 	.uleb128 0x16
 	.long	.LASF50
 	.byte	0x4
-	.byte	0xa7
+	.byte	0xad
 	.long	0x51f
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	lcdData
-	.uleb128 0x1b
+	.uleb128 0x1c
 	.long	.LASF51
 	.byte	0x4
-	.byte	0xf1
-	.long	0x54e
+	.word	0x101
+	.long	0x54f
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x5
 	.long	0x502
-	.uleb128 0x1b
+	.uleb128 0x1c
 	.long	.LASF52
 	.byte	0x4
-	.byte	0xf2
-	.long	0x560
+	.word	0x102
+	.long	0x562
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x5
@@ -1569,14 +1569,14 @@ __vector_26:
 	.byte	0x5
 	.byte	0x3
 	.long	midiTxOvfl
-	.uleb128 0x1c
+	.uleb128 0x1d
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF55
 	.long	.LASF55
 	.byte	0x5
 	.byte	0x1b
-	.uleb128 0x1c
+	.uleb128 0x1d
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF56
@@ -1974,6 +1974,23 @@ __vector_26:
 	.byte	0
 	.byte	0
 	.uleb128 0x1c
+	.uleb128 0x34
+	.byte	0
+	.uleb128 0x3
+	.uleb128 0xe
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0x5
+	.uleb128 0x49
+	.uleb128 0x13
+	.uleb128 0x3f
+	.uleb128 0xc
+	.uleb128 0x3c
+	.uleb128 0xc
+	.byte	0
+	.byte	0
+	.uleb128 0x1d
 	.uleb128 0x2e
 	.byte	0
 	.uleb128 0x3f
@@ -2672,8 +2689,6 @@ __vector_26:
 	.string	".././serial.c"
 .LASF54:
 	.string	"midiTxOvfl"
-.LASF59:
-	.string	"E:\\\\Users\\\\Anwender\\\\Sync\\\\Atmel Studio\\\\Pipe1\\\\Pipe1\\\\Debug"
 .LASF1:
 	.string	"unsigned char"
 .LASF17:
@@ -2712,6 +2727,8 @@ __vector_26:
 	.string	"midiTxBytesCount"
 .LASF12:
 	.string	"serial1MIDIReadRx"
+.LASF59:
+	.string	"C:\\\\Users\\\\Anwender\\\\Documents\\\\Sync\\\\Atmel Studio\\\\Pipe1\\\\Pipe1\\\\Debug"
 .LASF2:
 	.string	"uint8_t"
 .LASF35:
@@ -2730,5 +2747,5 @@ __vector_26:
 	.string	"result"
 .LASF60:
 	.string	"init_Serial1MIDI"
-	.ident	"GCC: (AVR_8_bit_GNU_Toolchain_3.6.2_1759) 5.4.0"
+	.ident	"GCC: (AVR_8_bit_GNU_Toolchain_3.6.1_1750) 5.4.0"
 .global __do_clear_bss

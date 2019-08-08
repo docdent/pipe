@@ -1699,7 +1699,7 @@ ErrorText:
 	.uleb128 0x1e
 	.long	.LASF41
 	.byte	0x4
-	.byte	0x66
+	.byte	0x6b
 	.long	0x620
 	.byte	0x1
 	.byte	0x1
@@ -1800,21 +1800,21 @@ ErrorText:
 	.long	.LASF49
 	.long	.LASF49
 	.byte	0x4
-	.byte	0x3a
-	.uleb128 0x21
-	.byte	0x1
-	.byte	0x1
-	.long	.LASF50
-	.long	.LASF50
-	.byte	0x4
-	.byte	0x3b
-	.uleb128 0x21
-	.byte	0x1
-	.byte	0x1
-	.long	.LASF51
-	.long	.LASF51
-	.byte	0x4
 	.byte	0x3c
+	.uleb128 0x21
+	.byte	0x1
+	.byte	0x1
+	.long	.LASF50
+	.long	.LASF50
+	.byte	0x4
+	.byte	0x3d
+	.uleb128 0x21
+	.byte	0x1
+	.byte	0x1
+	.long	.LASF51
+	.long	.LASF51
+	.byte	0x4
+	.byte	0x3e
 	.uleb128 0x21
 	.byte	0x1
 	.byte	0x1

@@ -55,6 +55,8 @@ extern void lcd_waitSymbolOn();
 extern void lcd_waitSymbolOff();
 extern uint8_t lcd_noteOut(uint8_t noteNr);
 
+#define PUTSTRING_MAXLEN 20
+extern char* putString_P(const __flash char* pSourceString, char* pOutput);
 extern char* putChar_Dec2(uint8_t val, char* pOutput);
 extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
@@ -83,6 +85,9 @@ extern const __flash char keylabel_exit [] ;
 extern const __flash char keylabel_text [] ;
 extern const __flash char keylabel_0 [] ;
 extern const __flash char keylabel_1 [] ;
+extern const __flash char keylabel_on [] ;
+extern const __flash char keylabel_off [] ;
+
 
 extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
@@ -100,5 +105,9 @@ extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
 extern char  string_Buf[STRINGBUFLEN];
 
 extern const char cr_lf [] PROGMEM;
+#define GET_STRLEN_MAXLEN 32
+extern uint8_t get_StrLenP(const __flash char* pString);
+extern uint8_t get_StrLen(const char* pString);
+extern uint8_t reverse_Bits(uint8_t val);
 
 #endif /* UTILS_H_ */

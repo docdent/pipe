@@ -1,5 +1,5 @@
 # 1 ".././lcd_u.c"
-# 1 "E:\\Users\\Anwender\\Sync\\Atmel Studio\\Pipe1\\Pipe1\\Debug//"
+# 1 "C:\\Users\\Anwender\\Documents\\Sync\\Atmel Studio\\Pipe1\\Pipe1\\Debug//"
 # 1 "<built-in>"
 # 1 "<command-line>"
 # 1 ".././lcd_u.c"
@@ -1018,7 +1018,7 @@ void lcd_home()
 
 void lcd_putc(char c)
 {
- lcd_cursorPos = (lcd_cursorPos+1) &0x3F;
+ lcd_cursorPos = (lcd_cursorPos+1) &0x7F;
  lcd_write_character(c);
 }
 

@@ -213,6 +213,17 @@ char* putChar_Manual(uint8_t manual, char* pOutput){
 	return pOutput;
 }
 
+extern char* putString_P(const __flash char* pSourceString, char* pOutput){
+	uint8_t count = 0;
+	do {
+		if (*pSourceString == 0){
+			return pOutput;
+		}
+		*pOutput++ = *pSourceString++;
+	} while (count++ < PUTSTRING_MAXLEN);
+	return pOutput;
+}
+
 void lcd_decout(uint8_t decNumber){
 	uint8_t nibble = 0;
 	while (decNumber >= 100) {
@@ -411,6 +422,8 @@ const char __flash keylabel_left []  = LCD_ARROWLEFT;
 const char __flash keylabel_plus []  = "+";
 const char __flash keylabel_minus []  = "-";
 const char __flash keylabel_onoff []  = "Ein" LCD_STATEONOFF; // \x80 KEYLABEL_STATEOFF_CHAR
+const char __flash keylabel_on []  = LCD_ARROWRIGHT "ein";
+const char __flash keylabel_off []  = LCD_ARROWRIGHT "aus";
 const char __flash keylabel_exit []  = "Exit";
 const char __flash keylabel_text []  = "Text" LCD_STATEONOFF; // \x80 KEYLABEL_STATEOFF_CHAR
 const char __flash keylabel_0 [] = "0";
@@ -475,4 +488,38 @@ uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status){
 	}
 	return result; // true if changes made
 }
-// ------------------------------------------- P I P E -----------------------------------------
+// -------------------------------------------  G E N E R A L -----------------------------------------
+
+uint8_t get_StrLenP(const __flash char* pString){
+	uint8_t result = 0;
+	do
+	{
+		if (*pString == 0) {
+			return result;
+		}
+		pString++;
+	} while (++ result < GET_STRLEN_MAXLEN);
+	return result;
+}
+
+uint8_t get_StrLen(const char* pString){
+	uint8_t result = 0;
+	do
+	{
+		if (*pString == 0) {
+			return result;
+		}
+		pString++;
+	} while (++ result < GET_STRLEN_MAXLEN);
+	return result;
+}
+
+extern uint8_t reverse_Bits(uint8_t val){
+	uint8_t result = 0;
+	for (uint8_t i = 0; i < 8; i++) {
+		result = result << 1;
+		result = result | (val & 0x01);
+		val = val >> 1;
+	}
+	return result;
+}

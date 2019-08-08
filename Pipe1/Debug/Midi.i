@@ -1,5 +1,5 @@
 # 1 ".././Midi.c"
-# 1 "E:\\Users\\Anwender\\Sync\\Atmel Studio\\Pipe1\\Pipe1\\Debug//"
+# 1 "C:\\Users\\Anwender\\Documents\\Sync\\Atmel Studio\\Pipe1\\Pipe1\\Debug//"
 # 1 "<built-in>"
 # 1 "<command-line>"
 # 1 ".././Midi.c"
@@ -729,6 +729,8 @@ extern void lcd_waitSymbolOn();
 extern void lcd_waitSymbolOff();
 extern uint8_t lcd_noteOut(uint8_t noteNr);
 
+
+extern char* putString_P(const __flash char* pSourceString, char* pOutput);
 extern char* putChar_Dec2(uint8_t val, char* pOutput);
 extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
@@ -737,7 +739,7 @@ extern char* putChar_Manual(uint8_t manual, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 75 ".././utils.h"
+# 77 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -749,19 +751,26 @@ extern const __flash char keylabel_exit [] ;
 extern const __flash char keylabel_text [] ;
 extern const __flash char keylabel_0 [] ;
 extern const __flash char keylabel_1 [] ;
+extern const __flash char keylabel_on [] ;
+extern const __flash char keylabel_off [] ;
+
 
 extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 100 ".././utils.h"
+# 105 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 102 ".././utils.h" 3
+# 107 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 102 ".././utils.h"
+# 107 ".././utils.h"
                                  ;
+
+extern uint8_t get_StrLenP(const __flash char* pString);
+extern uint8_t get_StrLen(const char* pString);
+extern uint8_t reverse_Bits(uint8_t val);
 # 12 ".././message.h" 2
 
 
@@ -1009,11 +1018,18 @@ typedef struct{
 extern RegisterMap_t registerMap[8];
 
 extern uint8_t registerCount;
-extern uint8_t programMap[64] [64 / 8];
+typedef struct{
+ uint8_t registers [64 / 8];
+ uint16_t couplers;
+ } ProgramInfo_t;
+extern ProgramInfo_t programMap[64] ;
 
+extern uint8_t read_allRegister(uint8_t* resultPtr);
+extern void register_onOff(uint8_t regNr, uint8_t onOff);
 extern void registers_CalcCount();
-extern void register_toProgram(uint8_t program);
-extern void program_toRegister(uint8_t program);
+extern uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm);
+extern uint8_t program_toRegister(uint8_t program);
+extern void midi_resetRegisters();
 
 extern void init_Midi2Manual();
 extern void init_Manual2Midi();
@@ -1044,7 +1060,7 @@ extern uint8_t midiLastInManual;
 extern void midiKeyPress_Process(PipeMessage_t pipeMessage);
 extern void midiIn_Process(uint8_t midiByte);
 extern void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff);
-extern void program_toRegister(uint8_t program);
+extern uint8_t program_toRegister(uint8_t program);
 extern void midi_SendActiveSense();
 extern void midi_CheckRxActiveSense();
 extern void midi_CheckTxActiveSense();
@@ -1053,7 +1069,10 @@ extern void midi_CheckTxActiveSense();
 extern void init_Midi();
 extern void midi_ManualOff(uint8_t manual);
 extern void midi_AllManualsOff();
-# 198 ".././Midi.h"
+extern void midi_CouplerReset();
+extern Word_t getAllCouplers();
+extern void setAllCouplers(Word_t couplers);
+# 208 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1247,7 +1266,7 @@ typedef int ptrdiff_t;
 # 328 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\lib\\gcc\\avr\\5.4.0\\include\\stddef.h" 3 4
 typedef int wchar_t;
 # 51 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\eeprom.h" 2 3
-# 139 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\eeprom.h" 3
+# 137 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\eeprom.h" 3
 uint8_t eeprom_read_byte (const uint8_t *__p) __attribute__((__pure__));
 
 
@@ -1338,9 +1357,9 @@ void eeprom_update_block (const void *__src, void *__dst, size_t __n);
 
 # 1 ".././hw_defs.h" 1
 # 9 ".././menu.h" 2
-# 51 ".././menu.h"
+# 53 ".././menu.h"
 
-# 51 ".././menu.h"
+# 53 ".././menu.h"
 typedef uint8_t (*MenuFunc_t) (uint8_t arg);
 
 typedef struct Menu {
@@ -1359,14 +1378,11 @@ typedef struct Menu {
 
 
 } Menu_t;
-# 165 ".././menu.h"
+# 171 ".././menu.h"
 extern const __flash Menu_t * menuStack[16];
 
 uint8_t lcdData[10];
-
-
-
-
+# 182 ".././menu.h"
 typedef struct {
  uint8_t nibbleCount;
  uint8_t nibblePos[8];
@@ -1385,6 +1401,8 @@ extern uint8_t menuVmanual;
 extern uint8_t menuVkey;
 extern uint8_t menuVmodule;
 extern uint8_t menuVKombination;
+extern uint8_t menuVRegisters[64 / 8];
+
 extern uint32_t menuModVal;
 extern const __flash char* pMenuTopTitle;
 extern const __flash Menu_t* menuVMenuSoftKey;
@@ -1410,7 +1428,11 @@ extern uint8_t nibbleCheckOvfl(int8_t myNibble);
 extern void LCDStringOut();
 extern void nibbleToLCDstring();
 extern void dataToNibbles();
-# 223 ".././menu.h"
+
+extern void menu_DisplayMainMessage_P(const __flash char* pMessage);
+extern void menu_DisplayMainMessage(const char* pMessage);
+extern void menu_deleteMessage();
+# 239 ".././menu.h"
 typedef struct{
  const __flash struct Menu *pSelMenu;
 } SoftKeyMenu_List_t;
@@ -1430,14 +1452,14 @@ extern uint8_t softKey_Execute(uint8_t nrSoftKey, uint8_t myMessage);
 
 
 extern const char sw_version [] 
-# 241 ".././menu.h" 3
+# 257 ".././menu.h" 3
                                __attribute__((__progmem__))
-# 241 ".././menu.h"
+# 257 ".././menu.h"
                                       ;
 extern const char HelloMsg [] 
-# 242 ".././menu.h" 3
+# 258 ".././menu.h" 3
                              __attribute__((__progmem__))
-# 242 ".././menu.h"
+# 258 ".././menu.h"
                                     ;
 
 extern uint8_t menu_TestModulePattern;
@@ -1509,7 +1531,7 @@ typedef struct{
  RegisterMap_t registerMap[8];
  uint16_t reg_crc;
  uint8_t charProg;
- uint8_t programMap[64] [64 / 8];
+ ProgramInfo_t programMap[64];
  uint16_t prog_crc;
  uint8_t charSoftkey;
  uint8_t softKeyMenuIndex[4];
@@ -1521,7 +1543,7 @@ typedef struct{
 
 typedef union{
  Ee_t ee;
- uint8_t raw[1024];
+ uint8_t raw[2048];
 } EEblock_t;
 
 typedef struct{
@@ -1713,11 +1735,15 @@ MidiSetting_t midi_Setting;
 uint8_t midiEEPromLoadError = 0x00;
 RegisterMap_t registerMap[8];
 uint8_t registerCount;
-uint8_t programMap[64] [64 / 8];
+ProgramInfo_t programMap[64];
 
 
 
 void init_Midi(){
+ midi_CouplerReset();
+}
+
+void midi_CouplerReset(){
 
  uint8_t* pCoupler = midi_Couplers;
  for (uint8_t i = 0; i < 12; i++){
@@ -1746,6 +1772,33 @@ uint8_t set_Coupler(uint8_t cplNr){
   }
  }
  return 0x00;
+}
+
+Word_t getAllCouplers(){
+ Word_t result;
+ result.wordval = 0;
+ uint8_t cplNr = 12 -1;
+ do
+ {
+  result.wordval = result.wordval << 1;
+  if (midi_Couplers[cplNr] == 0xFF) {
+   result.byteval[0] |= 1;
+  }
+ } while (cplNr-- > 0);
+ return result;
+}
+
+void setAllCouplers(Word_t couplers){
+ uint8_t cplNr = 0;
+ do
+ {
+  if ((couplers.byteval[0] & 0x01) != 0){
+   midi_Couplers[cplNr] = 0xFF;
+  } else {
+   midi_Couplers[cplNr] = 0;
+  }
+  couplers.wordval = couplers.wordval >> 1;
+ } while (++cplNr < 12);
 }
 
 
@@ -1818,9 +1871,9 @@ void midi_CheckTxActiveSense(){
   if (!(((swTimer[8].counter != 0x00) && (swTimer[8].counter != 0xFF)))){
 
    
-# 157 ".././Midi.c" 3
+# 188 ".././Midi.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 157 ".././Midi.c"
+# 188 ".././Midi.c"
   {swTimer[8].counter = 200 / 20; swTimer[8].prescaler = (200 % 20) / 4;};
    midi_SendActiveSense();
   }
@@ -1838,9 +1891,9 @@ void midiIn_Process(uint8_t midiByte){
    if (midiByte == 0xFE) {
     midiRxActivceSensing = 1;
     
-# 173 ".././Midi.c" 3
+# 204 ".././Midi.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 173 ".././Midi.c"
+# 204 ".././Midi.c"
    {swTimer[3].counter = 500 / 20; swTimer[3].prescaler = (500 % 20) / 4;};
    } else if (midiByte == 0xFF){
     midiAllReset();
@@ -1959,8 +2012,9 @@ void init_Registers(){
 
   for (uint8_t progNr = 0; progNr < 64; progNr++){
    for (uint8_t regNr = 0; regNr < (64 / 8); regNr++) {
-    programMap[progNr][regNr] = 0;
+    programMap[progNr].registers[regNr] = 0;
    }
+   programMap[progNr].couplers = 0;
   }
   log_putError(1,6,0);
  }
@@ -1971,7 +2025,6 @@ ModulBitError_t regNr_to_moduleBit(uint8_t regNr){
  ModulBitError_t result;
  if ((regNr < registerCount) && (regNr < 64)) {
 
-  regNr++;
   RegisterMap_t *pRange;
   pRange = &(registerMap[0]);
   uint8_t i = 8;
@@ -2002,13 +2055,16 @@ uint8_t read_Register(uint8_t regNr, uint8_t mode){
    uint8_t bitNr = (modBit & 0x1f);
    uint8_t modulNr = (modBit >> 5);
    uint8_t mask = 1 << modulNr;
-   if (((pipe[bitNr].pipeOut & mask) == 0) && ((mode & 0x02) != 0))
+   if (((pipe[bitNr].pipeOut & mask) == 0) && ((mode & 0x02) != 0)) {
 
     return 0x01;
-   else if (((pipe[bitNr].pipeIn & mask) != 0) && ((mode & 0x01) != 0)) {
+   } else if (((pipe[bitNr].pipeIn & mask) != 0) && ((mode & 0x01) != 0)) {
 
 
     return 0x01;
+   } else if (((pipe[bitNr].pipeOut & mask) != 0) && ((pipe[bitNr].pipeIn & mask) != 0) && (mode == 0x04)){
+    return 0x01;
+
    } else {
     return 0x00;
    }
@@ -2017,7 +2073,8 @@ uint8_t read_Register(uint8_t regNr, uint8_t mode){
  return 0x00;
 }
 
-void read_allRegister(uint8_t* resultPtr){
+uint8_t read_allRegister(uint8_t* resultPtr){
+ uint8_t result = 0;
 
  uint8_t mask = 0;
  for (uint8_t regNr = 0; regNr < 64; regNr++){
@@ -2027,12 +2084,23 @@ void read_allRegister(uint8_t* resultPtr){
 
    mask = 0;
   }
-  mask = (mask >> 1 ) | (read_Register(regNr, 0x03) == 0x00 ? 0 : 0x80);
+  mask = (mask >> 1 );
+  if (read_Register(regNr, 0x03) != 0x00 ){
+   mask |= 0x80;
+   result++;
+  }
   if ((regNr & 0x07) == 0x07) {
 
-   *resultPtr++ = mask;
+   if (resultPtr != 
+# 401 ".././Midi.c" 3 4
+                   ((void *)0)
+# 401 ".././Midi.c"
+                       ) {
+    *resultPtr++ = mask;
+   }
   }
  }
+ return result;
 }
 
 
@@ -2058,31 +2126,51 @@ void register_onOff(uint8_t regNr, uint8_t onOff){
 
 }
 
-void program_toRegister(uint8_t program){
+uint8_t program_toRegister(uint8_t program){
 
+ uint8_t result = 0;
  if (program < 64){
   uint8_t regBits;
   uint8_t regNr = 0;
-  uint8_t *regBytePtr = &(programMap[program][0]);
+  uint8_t *regBytePtr = &(programMap[program].registers[0]);
   for (uint8_t byteNr = 0; byteNr < (64 / 8); byteNr++){
 
    regBits = *(regBytePtr++);
    for (uint8_t bitNr = 0; bitNr < 8; bitNr++){
+    if ((regBits & 0x01) != 0) {
+     result++;
+    }
     register_onOff(regNr, ((regBits & 0x01) == 0 ? 0x00 : 0x01));
     regBits = regBits >> 1;
     regNr++;
    }
   }
+  Word_t couplers;
+  couplers.wordval = programMap[program].couplers;
+  setAllCouplers(couplers);
+ }
+ return result;
+}
+
+void midi_resetRegisters(){
+ for (uint8_t i = 0; i < registerCount; i++){
+  register_onOff(i,0x00);
  }
 }
 
-void register_toProgram(uint8_t program){
+uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm){
 
 
+ uint8_t result = 0;
  if (program < 64){
-  uint8_t *regBytePtr = &(programMap[program][0]);
-  read_allRegister(regBytePtr);
+  uint8_t *regBytePtr = &(programMap[program].registers[0]);
+  result = read_allRegister(regBytePtr);
  }
+ programMap[program].couplers = getAllCouplers().wordval;
+ if (SaveEEProm) {
+  eeprom_UpdateProg();
+ }
+ return result;
 }
 
 

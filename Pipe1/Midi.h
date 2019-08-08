@@ -110,7 +110,7 @@ extern ManualNoteRange_t ManualNoteRange[MANUAL_COUNT];
 #define REGISTER_READ_HWIN 0x01
 #define REGISTER_READ_SWOUT 0x02
 #define REGISTER_READ_ALL 0x03
-
+#define REGISTER_READ_HWIN_XOR_SWOUT 0x04
 
 typedef  struct{
 	uint8_t manual;
@@ -135,11 +135,18 @@ typedef  struct{
 extern RegisterMap_t registerMap[REGISTER_SEC_COUNT]; // for each Register Section
 
 extern uint8_t registerCount; // nr of valid registers
-extern uint8_t programMap[PROGRAM_COUNT] [REGISTER_COUNT / 8]; // for each register one bit
+typedef struct{
+	uint8_t registers [REGISTER_COUNT / 8];
+	uint16_t couplers; 
+	} ProgramInfo_t;
+extern ProgramInfo_t programMap[PROGRAM_COUNT] ; // for each register one bit, 2 for couplers
 
+extern uint8_t read_allRegister(uint8_t* resultPtr);
+extern void register_onOff(uint8_t regNr, uint8_t onOff);
 extern void registers_CalcCount();
-extern void register_toProgram(uint8_t program);
-extern void program_toRegister(uint8_t program);
+extern uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm);
+extern uint8_t program_toRegister(uint8_t program);
+extern void midi_resetRegisters(); // turn off all register outputs
 
 extern void init_Midi2Manual();
 extern void init_Manual2Midi();
@@ -170,7 +177,7 @@ extern uint8_t midiLastInManual; // written by midi.c read by main for debugging
 extern void midiKeyPress_Process(PipeMessage_t pipeMessage);
 extern void midiIn_Process(uint8_t midiByte);
 extern void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff);
-extern void program_toRegister(uint8_t program); // sets regsiter according to programm
+extern uint8_t program_toRegister(uint8_t program); // sets regsiter according to programm
 extern void midi_SendActiveSense();
 extern void midi_CheckRxActiveSense(); // check for RxActiveSense Error
 extern void midi_CheckTxActiveSense();
@@ -179,6 +186,9 @@ extern void midi_CheckTxActiveSense();
 extern void init_Midi();
 extern void midi_ManualOff(uint8_t manual);
 extern void midi_AllManualsOff();
+extern void midi_CouplerReset();
+extern Word_t getAllCouplers();
+extern void setAllCouplers(Word_t couplers);
 
 #define COUPLER_ON 0xFF
 #define COUPLER_OFF 0

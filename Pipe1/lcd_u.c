@@ -217,7 +217,7 @@ Returns:  none
 *************************************************************************/
 void lcd_putc(char c)
 {
-	lcd_cursorPos =  (lcd_cursorPos+1) &0x3F;
+	lcd_cursorPos =  (lcd_cursorPos+1) &0x7F;
 	lcd_write_character(c);
 }
 
