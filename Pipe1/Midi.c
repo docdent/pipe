@@ -51,6 +51,8 @@ uint8_t midiEEPromLoadError = EE_LOAD_OK;
 RegisterMap_t registerMap[REGISTER_SEC_COUNT]; // for each Register section contains regStart, regEnd, modulBit
 uint8_t registerCount; // nr of valid registers
 ProgramInfo_t programMap[PROGRAM_COUNT]; // for each register one bit
+MidiThrough_t midiThrough;
+uint8_t midi_RegisterChanged;
 
 // ------------------------------------ M I D I   G E N E R A L --------------------------------------
 
@@ -93,14 +95,14 @@ Word_t getAllCouplers(){
 	Word_t result;
 	result.wordval = 0;
 	uint8_t cplNr = COUPLER_COUNT-1;
-	do 
+	do
 	{
 		result.wordval = result.wordval << 1;
 		if (midi_Couplers[cplNr] == COUPLER_ON) {
 			result.byteval[0] |= 1; // LSB -> 1
 		}
 	} while (cplNr-- > 0);
-	return result;		
+	return result;
 }
 
 void setAllCouplers(Word_t couplers){
@@ -127,6 +129,7 @@ uint8_t midiLastOutManual = MANUAL_NONE;
 uint8_t midiLastInNote = MIDI_NOTE_NONE; // written by midi.c read by main for debugging/display
 uint8_t midiLastInChannel = MANUAL_NONE;
 uint8_t midiLastInManual = MANUAL_NONE; // written by midi.c read by main for debugging/display
+uint8_t midiLastProgram = MIDI_PROGRAM_NONE;
 
 
 void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff);
@@ -193,6 +196,23 @@ void midi_CheckTxActiveSense(){
 
 // **************************************** P R O C E S S   M I D I    I N *********************************************
 
+void midiInSysEx(){
+	// process Sysex after receiving ENDSYSEX
+	if ((midiLastCommand == MIDI_SYSEX) && (midiDataByte[0] == MIDI_RX_SYSEX_HEADER0)){
+		// SysEx Command for our device
+		if (((midiDataByte[1] & 0xF0) == MIDI_MYSYSEX_REGISTER_ON) || ((midiDataByte[1] & 0xF0) == MIDI_MYSYSEX_REGISTER_OFF)){
+			// ATTENTION: Midi Channel is ignored by & 0xF0
+			// SysexCmd is register on off but first check follwoing data
+			if ((midiDataByte[3] == MIDI_MYSYSEX_REGISTER_HEADER) && (midiDataByteCount == 4)) {
+				// only if exactly 4 bytes and register MSB is our arbitrary trigger byte
+				// ---> turn on/off register
+				register_onOff(midiDataByte[3], ((midiDataByte[1] & 0xF0) == MIDI_MYSYSEX_REGISTER_ON) ? REGISTER_ON : REGISTER_OFF);
+			}
+		}
+		// Append other SysEx commands here with "else if"
+	}
+}
+
 void midiIn_Process(uint8_t midiByte){
 	if (midiByte > 0x7f) {
 		// command
@@ -221,15 +241,17 @@ void midiIn_Process(uint8_t midiByte){
 				midiDataByteExpected = 2;
 			} else if (midiByte == MIDI_SYSEX) {
 				// F0
-				midiDataByteExpected = MIDI_IGNORE_DATA; // wait for next cmd
+				midiDataByteExpected = MIDI_IGNORE_DATA; // wait for next cmd, Data are stored but ignored in data processing
 			} else if ((midiByte >= MIDI_PRGCHG) && (midiByte  <= (MIDI_CHANAFFT | 0x0F))) {
 				// C0 - DF
 				midiDataByteExpected = 1;
 			} else if ((midiByte == MIDI_TIMECODE) || (midiByte == MIDI_SONGSEL)){
 				// F1, F3
 				midiDataByteExpected = 1;
+			} else if (midiByte == MIDI_ENDSYSEX) {
+				// F7 EndOfSysEx -> process Sysex HERE !
 			} else {
-				// F4, F5 undefined, F6 tune request, F7 EndOfSysEx
+				// F4, F5 undefined, F6 tune request,
 				midiDataByteExpected = 0;
 				// TODO process these 1 byte commands here if interesting
 			}
@@ -270,7 +292,7 @@ void midiIn_Process(uint8_t midiByte){
 						}
 						break;
 					case MIDI_PRGCHG:
-						program_toRegister(midiDataByte[0]);
+						midi_ProgramChange(channel,midiDataByte[0]);
 						break;
 					// TODO process commands with data bytes here
 					}
@@ -293,7 +315,7 @@ void registers_CalcCount(){
 	for (uint8_t regSec = 0; regSec < REGISTER_SEC_COUNT; regSec++){
 		if ((registerMap[regSec].endReg != REGISTER_NONE) && (registerMap[regSec].endReg >= count)){
 			// endReg == 0xFF -> ignore, endReg == 0 -> count=1
-			count = registerMap[regSec].endReg+1;			
+			count = registerMap[regSec].endReg+1;
 		}
 	}
 	registerCount = count;
@@ -302,6 +324,7 @@ void registers_CalcCount(){
 void init_Registers(){
 	// init programs to null
 	// init registerMap to null
+	midi_RegisterChanged = REGISTER_NONE;
 	// try to get register map from eeprom
 	for (uint8_t regSec = 0; regSec < REGISTER_SEC_COUNT; regSec++){
 		registerMap[regSec].startReg = REGISTER_NONE; // CAUTION register == 0xFF -> no register
@@ -333,7 +356,7 @@ ModulBitError_t regNr_to_moduleBit(uint8_t regNr){
 	if ((regNr < registerCount) && (regNr < REGISTER_COUNT)) {
 		// valid regNr
 		RegisterMap_t *pRange;
-		pRange = &(registerMap[0]); // check all Ranges 
+		pRange = &(registerMap[0]); // check all Ranges
 		uint8_t i = REGISTER_SEC_COUNT;
 		do {
 			if ((regNr >= pRange->startReg) && (regNr <= pRange->endReg)) {
@@ -350,6 +373,17 @@ ModulBitError_t regNr_to_moduleBit(uint8_t regNr){
 	return (result);
 }
 
+uint8_t moduleBit_to_registerNr(uint8_t modulebit){
+	RegisterMap_t * pSection = & (registerMap[0]);
+	for (uint8_t section = 0; section < REGISTER_SEC_COUNT; section++){
+		if ((modulebit >= pSection->bitStart) && (modulebit <= pSection->bitStart + pSection->endReg - pSection->startReg)) {
+			// found
+			return pSection->startReg + (modulebit - pSection->bitStart);
+		}
+	}
+	return REGISTER_NONE;
+}
+
 uint8_t read_Register(uint8_t regNr, uint8_t mode){
 	// mode: REGISTER_READ_HWIN, REGISTER_READ_SWOUT, REGISTER_READ_ALL
 	// result: 0x01: REGISTER_ON, 0x00: REGISTER_OFF
@@ -358,7 +392,7 @@ uint8_t read_Register(uint8_t regNr, uint8_t mode){
 		ModulBitError_t modBitComplette = regNr_to_moduleBit(regNr);
 		if (modBitComplette.error == MODULE_NOERROR) {
 			// register is assgined to module
-			uint8_t modBit = modBitComplette.moduleBit; 
+			uint8_t modBit = modBitComplette.moduleBit;
 			uint8_t bitNr = MODULE_BIT_TO_BIT(modBit);
 			uint8_t modulNr = MODULE_BIT_TO_MODULE(modBit);
 			uint8_t mask = 1 << modulNr;
@@ -378,6 +412,43 @@ uint8_t read_Register(uint8_t regNr, uint8_t mode){
 		}
 	}
 	return REGISTER_OFF; // default for unassigned/invalid register
+}
+
+uint8_t get_RegisterStatus(uint8_t regNr){
+	// result: REGISTER_READ_HWIN 0x01, REGISTER_READ_SWOUT 0x02; 0x00: REGISTER_OFF
+	if (regNr < registerCount) {
+		// valid register
+		ModulBitError_t modBitComplette = regNr_to_moduleBit(regNr);
+		if (modBitComplette.error == MODULE_NOERROR) {
+			// register is assgined to module
+			uint8_t modBit = modBitComplette.moduleBit;
+			uint8_t bitNr = MODULE_BIT_TO_BIT(modBit);
+			uint8_t modulNr = MODULE_BIT_TO_MODULE(modBit);
+			uint8_t mask = 1 << modulNr;
+			if ((pipe[bitNr].pipeOut & mask) == 0) {
+				// read sw output is L (active)
+				return REGISTER_READ_SWOUT;
+			} else if ((pipe[bitNr].pipeIn & mask) != 0) {
+				// read hw input and Input is H (active)
+				// result ON if output is H (works with disconnected HW or input is H
+				return REGISTER_READ_HWIN;
+			} else {
+				return REGISTER_OFF;
+			}
+		}
+	}
+	return REGISTER_OFF; // default for unassigned/invalid register
+}
+
+
+uint8_t count_Registers(uint8_t mode){
+	uint8_t result = 0;
+	for (uint8_t regNr = 0; regNr < REGISTER_COUNT; regNr++){
+		if (read_Register(regNr, mode) != REGISTER_OFF ){
+			result++;
+		}
+	}
+	return result;
 }
 
 uint8_t read_allRegister(uint8_t* resultPtr){
@@ -405,7 +476,7 @@ uint8_t read_allRegister(uint8_t* resultPtr){
 	}
 	return result;
 }
-		
+
 
 void register_onOff(uint8_t regNr, uint8_t onOff){
 	// onOff: LSB==1: on, LSB==0: off
@@ -431,19 +502,21 @@ void register_onOff(uint8_t regNr, uint8_t onOff){
 
 uint8_t program_toRegister(uint8_t program){
 	// Program 0..63
-	uint8_t result = 0;
+	uint8_t result = 0; // return nr of registers that are turned on by program
 	if (program < PROGRAM_COUNT){
 		uint8_t regBits;
 		uint8_t regNr = 0;
 		uint8_t *regBytePtr = &(programMap[program].registers[0]);
 		for (uint8_t byteNr = 0; byteNr < (REGISTER_COUNT / 8); byteNr++){
 			// 8 bytes for 64 registers
+			// TODO process only implemented registers instead of all possible registers here
 			regBits = *(regBytePtr++); // get adress for next 8 registers
 			for (uint8_t bitNr = 0; bitNr < 8; bitNr++){
 				if ((regBits & 0x01) != 0) {
 					result++;
 				}
 				register_onOff(regNr, ((regBits & 0x01) == 0 ? REGISTER_OFF : REGISTER_ON)); // turn this register on/off according to lsb
+				// not implemented registers are ignored by register_onOff
 				regBits = regBits >> 1;
 				regNr++;
 			}
@@ -454,6 +527,37 @@ uint8_t program_toRegister(uint8_t program){
 	}
 	return result;
 }
+
+void midi_ProgramChange(uint8_t channel, uint8_t program){
+	if (midi_Setting.AcceptProgChange != FALSE){
+		// V 0.59 program change may be ignored
+		uint8_t channelValid = FALSE;
+		// V 0.58 check MIDI Channel. Accept PC only when channel is in in midiInMap[] !
+		for (uint8_t splitCount = 0; splitCount < MIDI_SPLIT_COUNT; splitCount++){
+			if (midiInMap[channel][splitCount].manual != MANUAL_NONE){
+				// in this section of midi channel a manual is assigned
+				channelValid = TRUE;
+				break;
+			}
+		}
+		if (channelValid == TRUE) {
+			// only if input channel is assigned to any manual
+			program_toRegister(program);
+			midiLastProgram = program;
+		}
+	}
+	// V 0.58 SW MIDI Through
+	if (channel == midiThrough.InChannel){
+		// if IN Channel is matched (through OFF -> midiThrough.InChannel = 0xFF)
+		if (midiThrough.OutChannel != MIDI_CHANNEL_NONE) {
+			// only if out channel is valid: do as in midiKeyPress_Process
+			serial1MIDISend(MIDI_PRGCHG | midiThrough.OutChannel);
+			// if note off: use note on an velocity = 0 to turn off note (less bytes !)
+			serial1MIDISend(program);
+		}
+	}
+}
+
 
 void midi_resetRegisters(){
 	for (uint8_t i = 0; i < registerCount; i++){
@@ -476,6 +580,40 @@ uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm){
 	return result;
 }
 
+uint8_t midi_RegisterMatchProgram(uint8_t program){
+	// if program registers completely match current output returns number of additionally (manually) activated registers 0..64
+	// if program register dont' match: returns 0xFF
+	uint8_t result = 0;
+	uint8_t* progPtr = &(programMap[program].registers[0]);
+	uint8_t tempReg = 0; // just to get rid off warnung unit. var
+	uint8_t actualReg;
+	for (uint8_t i = 0; i < registerCount; i++){
+		if ((i & 0x07) == 0) {
+			// first bit in byte
+			tempReg = * progPtr++;
+		}
+		actualReg = get_RegisterStatus(i);
+		if ((tempReg & 0x01) != 0) {
+			// this register should be set
+			if (actualReg != REGISTER_READ_SWOUT) {
+				// output is not set by SW: return 0xFF
+				return REG_DONT_MATCH_PROG;
+			}
+			// else: OK, register is set
+		} else {
+			// this register should not be set
+			if (actualReg == REGISTER_READ_SWOUT) {
+				// is set: return 0xFF
+				return REG_DONT_MATCH_PROG;
+			} else if (actualReg == REGISTER_READ_HWIN) {
+				// is set by HW
+				result++; // inc return val
+			}
+		}
+		tempReg = tempReg >> 1;
+	}
+	return result;
+}
 
 //------------------------------------- M I D I C H A N N E L   T O   M A N U A L ---------------------------------
 
@@ -512,6 +650,11 @@ void init_Midi2Manual(){
 		midiInMap[MIDI_CHANNEL_4][0].noteRange = MIDI_NOTE_F4 - MIDI_NOTE_C2 + 1;
 		log_putError(LOG_CAT_EE,LOG_CATEE_MIDI2MAN,0);
 	}
+	if (eeprom_ReadMidiThrough() == EE_LOAD_ERROR){
+		midiThrough.InChannel = MIDI_CHANNEL_NONE;
+		midiThrough.OutChannel = MIDI_CHANNEL_NONE;
+		log_putError(LOG_CAT_EE,LOG_CATEE_MIDI2MAN,0);
+	}
 }
 
 void init_Manual2Midi(){
@@ -528,6 +671,7 @@ void init_Manual2Midi(){
 		midiOutMap[MANUAL_P].channel = MIDI_CHANNEL_4;
 		midi_Setting.TxActivceSense = FALSE;
 		midi_Setting.VelZero4Off = FALSE;
+		midi_Setting.AcceptProgChange = TRUE;
 		log_putError(LOG_CAT_EE,LOG_CATEE_MAN2MIDI,0);
 	}
 }
@@ -557,6 +701,18 @@ void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff){
 		midiLastInNote = note;
 		midiLastInChannel = channel;
 		midiLastInManual = MANUAL_NONE;
+	}
+	// V 0.58 When SW Midi Through: send Note
+	if (channel == midiThrough.InChannel){
+		// if IN Channel is matched (through OFF -> midiThrough.InChannel = 0xFF)
+		if (midiThrough.OutChannel != MIDI_CHANNEL_NONE) {
+			// only if out channel is valid: do as in midiKeyPress_Process
+			serial1MIDISend(((onOff == NOTE_ON) || (midi_Setting.VelZero4Off) ? MIDI_NOTEON : MIDI_NOTEOFF) | midiThrough.OutChannel);
+			// if note off: use note on an velocity = 0 to turn off note (less bytes !)
+			serial1MIDISend(note);
+			// if note off: use note on an velocity = 0 to turn off note (less bytes !):
+			serial1MIDISend(((onOff == NOTE_OFF) && (midi_Setting.VelZero4Off)) ? 0 : MIDI_DEFAULT_VELOCITY);
+		}
 	}
 }
 
@@ -588,10 +744,10 @@ void Midi_updateManualRange(){
 			}
 			if ((rangeEnd == 0) || (rangeStart == 0xFF)){
 				ManualNoteRange[i].startNote = MIDI_NOTE_NONE;
-				ManualNoteRange[i].endNote = MIDI_NOTE_NONE;			
+				ManualNoteRange[i].endNote = MIDI_NOTE_NONE;
 			} else {
 				ManualNoteRange[i].startNote = rangeStart;
-				ManualNoteRange[i].endNote = rangeEnd;			
+				ManualNoteRange[i].endNote = rangeEnd;
 			}
 		}
 	}
@@ -660,7 +816,8 @@ ManualNote_t moduleBit_to_manualNote(uint8_t moduleBit){
 		manual++;
 	} while (manual <= MANUAL_COUNT);
 	result.manual = MANUAL_NONE;
-	log_putWarning(LOG_CAT_MODULES,LOG_CATMODULES_UNKNOWNINP,moduleBit);
+	// V 0.59 removed warning, moduleBiut may be register!
+	// log_putWarning(LOG_CAT_MODULES,LOG_CATMODULES_UNKNOWNINP,moduleBit);
 	return (result); // actually this should not hapen if manaulRange is setup up correctly according to HW
 }
 
@@ -681,21 +838,21 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
 	}
 }
 
-//********************************************* P R O C E S S   M I D I   O U T *******************************
+//********************************************* P R O C E S S   P I P E   M E S S A G E ->MIDI, COUPLER *******************************
 
 void midiKeyPress_Process(PipeMessage_t pipeMessage){
-	 uint8_t command = pipeMessage.message8[MSG_BYTE_CMD_SHIFTBIT] & MESSAGE_PIPE_CMD_MASK_H;
-	 uint8_t shiftBit = pipeMessage.message8[MSG_BYTE_CMD_SHIFTBIT] & MESSAGE_PIPE_SHIFTBIT_MASK_H;
-	 uint8_t moduleBits = pipeMessage.message8[MSG_BYTE_MODULEBITS];
+	 uint8_t command = pipeMessage.message8[MSG_BYTE_CMD_SHIFTBIT] & MESSAGE_PIPE_CMD_MASK_H; // upper 3 bit
+	 uint8_t shiftBit = pipeMessage.message8[MSG_BYTE_CMD_SHIFTBIT] & MESSAGE_PIPE_SHIFTBIT_MASK_H; // lower 5 bits = BitNr of each module 0..31
+	 uint8_t moduleBits = pipeMessage.message8[MSG_BYTE_MODULEBITS]; // one bit for each module, so one message can countain up to 8 messages for 8 modules
 	 ManualNote_t manualNote;
 	 ChannelNote_t chanNote;
 	 if ((command == MESSAGE_PIPE_ON_HI) || (command == MESSAGE_PIPE_OFF_HI)){
 		// Note on or off
 		for (uint8_t i = 0; i < 8; i++){
-			// check all 8 bits for 8 modules
+			// check all 8 bits for 8 modules, so i is number of current Module
 			if ((moduleBits & 0x01) != 0) {
-				// LSB==1 -> Module has message
-				manualNote = moduleBit_to_manualNote(MODULE_BIT(i,shiftBit));
+				// LSB==1 -> Module "i" has message
+				manualNote = moduleBit_to_manualNote(MODULE_BIT(i,shiftBit)); // modBit = mmmb bbbb, m = moduleNr, b = bitNr
 				// manual and note for that module/bit
 				if (manualNote.manual != MANUAL_NONE){
 					// manual is assigned
@@ -717,6 +874,7 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 					}
 					// check couplers
 					uint8_t noteOnOff = (command == MESSAGE_PIPE_ON_HI ? NOTE_ON : NOTE_OFF);
+					// TODO check if Pipe was activated my different event (MIDI, other coupler)
 					if (manualNote.manual == MANUAL_III){
 						if (midi_Couplers[COUPLER_2FROM3] == TRUE){
 							manual_NoteOnOff(MANUAL_II, manualNote.note, noteOnOff);
@@ -759,6 +917,9 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 						}
 					}
 				} // if
+				//Register change
+				midi_RegisterChanged = moduleBit_to_registerNr(MODULE_BIT(i,shiftBit)) | (command == MESSAGE_PIPE_ON_HI ? REGISTER_WAS_SET : 0); // processed and reset in main
+				// TODO process other key events here
 			}
 			moduleBits >>= 1; // next module
 		} // for

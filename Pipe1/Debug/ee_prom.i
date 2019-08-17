@@ -1,5 +1,5 @@
 # 1 ".././ee_prom.c"
-# 1 "C:\\Users\\Anwender\\Documents\\Sync\\Atmel Studio\\Pipe1\\Pipe1\\Debug//"
+# 1 "E:\\Users\\Anwender\\Sync\\Atmel Studio\\Pipe1\\Pipe1\\Debug//"
 # 1 "<built-in>"
 # 1 "<command-line>"
 # 1 ".././ee_prom.c"
@@ -245,7 +245,7 @@ typedef unsigned int size_t;
 # 328 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\lib\\gcc\\avr\\5.4.0\\include\\stddef.h" 3 4
 typedef int wchar_t;
 # 51 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\eeprom.h" 2 3
-# 137 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\eeprom.h" 3
+# 139 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\eeprom.h" 3
 uint8_t eeprom_read_byte (const uint8_t *__p) __attribute__((__pure__));
 
 
@@ -677,6 +677,7 @@ extern uint8_t lcd_noteOut(uint8_t noteNr);
 
 extern char* putString_P(const __flash char* pSourceString, char* pOutput);
 extern char* putChar_Dec2(uint8_t val, char* pOutput);
+extern char* putChar_Dec(uint8_t val, char* pOutput);
 extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
@@ -684,7 +685,7 @@ extern char* putChar_Manual(uint8_t manual, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 77 ".././utils.h"
+# 78 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -704,13 +705,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 105 ".././utils.h"
+# 106 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 107 ".././utils.h" 3
+# 108 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 107 ".././utils.h"
+# 108 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -741,7 +742,7 @@ extern uint8_t msgPipe_Handling;
 # 16 ".././hwtimer.h" 2
 # 31 ".././hwtimer.h"
 extern volatile uint8_t time_Uptime[4];
-# 77 ".././hwtimer.h"
+# 79 ".././hwtimer.h"
 typedef struct {
  uint8_t counter;
  uint8_t prescaler;
@@ -754,7 +755,7 @@ extern void init_HwTimer();
 extern void init_Timers();
 extern void init_ADC();
 extern void init_Pipe();
-# 130 ".././hwtimer.h"
+# 132 ".././hwtimer.h"
 typedef struct {
  uint8_t mux;
  uint8_t ADCval;
@@ -766,7 +767,7 @@ typedef struct {
 extern volatile KeyInfo adcKeys[1];
 
 extern uint8_t keyWants[6];
-# 163 ".././hwtimer.h"
+# 165 ".././hwtimer.h"
 typedef struct {
  uint8_t pipeOutM4;
  uint8_t pipeOut;
@@ -789,7 +790,7 @@ extern volatile uint8_t pipeProcessing;
 extern uint8_t pipe_ModuleTested;
 extern uint8_t pipe_ModuleAssnRead;
 extern uint8_t pipe_ModuleAssnWrite;
-# 193 ".././hwtimer.h"
+# 195 ".././hwtimer.h"
 extern uint8_t pipe_PowerStatus;
 
 
@@ -878,7 +879,9 @@ typedef struct{
  uint8_t endNote;
 } ManualNoteRange_t;
 extern ManualNoteRange_t ManualNoteRange[4];
-# 115 ".././Midi.h"
+
+extern void midi_ProgramChange(uint8_t channel, uint8_t program);
+# 114 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -889,9 +892,19 @@ typedef struct{
 extern MidiInMap_t midiInMap[16][4];
 
 typedef struct{
+ uint8_t InChannel;
+ uint8_t OutChannel;
+} MidiThrough_t;
+
+extern MidiThrough_t midiThrough;
+
+
+typedef struct{
  uint8_t channel;
  } MidiOutMap_t;
 extern MidiOutMap_t midiOutMap[4];
+
+
 
 
 typedef struct{
@@ -908,12 +921,27 @@ typedef struct{
  } ProgramInfo_t;
 extern ProgramInfo_t programMap[64] ;
 
+extern uint8_t midi_RegisterChanged;
+
 extern uint8_t read_allRegister(uint8_t* resultPtr);
+
+
+
+
 extern void register_onOff(uint8_t regNr, uint8_t onOff);
 extern void registers_CalcCount();
 extern uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm);
 extern uint8_t program_toRegister(uint8_t program);
 extern void midi_resetRegisters();
+
+extern uint8_t midi_RegisterMatchProgram(uint8_t program);
+
+
+
+
+
+extern uint8_t count_Registers(uint8_t mode);
+
 
 extern void init_Midi2Manual();
 extern void init_Manual2Midi();
@@ -925,6 +953,9 @@ extern ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note);
 extern void Midi_updateManualRange();
 
 extern void midiSendAllNotesOff();
+extern void init_Midi();
+extern void midi_ManualOff(uint8_t manual);
+extern void midi_AllManualsOff();
 
 
 
@@ -932,6 +963,7 @@ extern uint8_t midiRxActivceSensing;
 typedef struct {
  uint8_t TxActivceSense;
  uint8_t VelZero4Off;
+ uint8_t AcceptProgChange;
 } MidiSetting_t;
 extern MidiSetting_t midi_Setting;
 
@@ -940,23 +972,20 @@ extern uint8_t midiLastOutManual;
 extern uint8_t midiLastInNote;
 extern uint8_t midiLastInChannel;
 extern uint8_t midiLastInManual;
+extern uint8_t midiLastProgram;
 
 extern void midiKeyPress_Process(PipeMessage_t pipeMessage);
 extern void midiIn_Process(uint8_t midiByte);
 extern void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff);
-extern uint8_t program_toRegister(uint8_t program);
 extern void midi_SendActiveSense();
 extern void midi_CheckRxActiveSense();
 extern void midi_CheckTxActiveSense();
 
 
-extern void init_Midi();
-extern void midi_ManualOff(uint8_t manual);
-extern void midi_AllManualsOff();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 208 ".././Midi.h"
+# 233 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -966,20 +995,6 @@ typedef struct{
 extern const __flash CplInfo_t cplInfo[12];
 
 extern uint8_t set_Coupler(uint8_t);
-
-
-extern uint8_t midiCoupler_2from3;
-extern uint8_t midiCoupler_1from3;
-extern uint8_t midiCoupler_1from2;
-extern uint8_t midiCoupler_Pfrom3;
-extern uint8_t midiCoupler_Pfrom2;
-extern uint8_t midiCoupler_Pfrom1;
-extern uint8_t midiCoupler_3from2;
-extern uint8_t midiCoupler_3from1;
-extern uint8_t midiCoupler_2from1;
-extern uint8_t midiCoupler_3fromP;
-extern uint8_t midiCoupler_2fromP;
-extern uint8_t midiCoupler_1fromP;
 # 14 ".././ee_prom.c" 2
 # 1 ".././menu.h" 1
 
@@ -1014,7 +1029,7 @@ typedef struct Menu {
 extern const __flash Menu_t * menuStack[16];
 
 uint8_t lcdData[10];
-# 182 ".././menu.h"
+# 183 ".././menu.h"
 typedef struct {
  uint8_t nibbleCount;
  uint8_t nibblePos[8];
@@ -1064,7 +1079,7 @@ extern void dataToNibbles();
 extern void menu_DisplayMainMessage_P(const __flash char* pMessage);
 extern void menu_DisplayMainMessage(const char* pMessage);
 extern void menu_deleteMessage();
-# 239 ".././menu.h"
+# 240 ".././menu.h"
 typedef struct{
  const __flash struct Menu *pSelMenu;
 } SoftKeyMenu_List_t;
@@ -1084,14 +1099,14 @@ extern uint8_t softKey_Execute(uint8_t nrSoftKey, uint8_t myMessage);
 
 
 extern const char sw_version [] 
-# 257 ".././menu.h" 3
+# 258 ".././menu.h" 3
                                __attribute__((__progmem__))
-# 257 ".././menu.h"
+# 258 ".././menu.h"
                                       ;
 extern const char HelloMsg [] 
-# 258 ".././menu.h" 3
+# 259 ".././menu.h" 3
                              __attribute__((__progmem__))
-# 258 ".././menu.h"
+# 259 ".././menu.h"
                                     ;
 
 extern uint8_t menu_TestModulePattern;
@@ -1131,6 +1146,8 @@ extern uint8_t eeprom_ReadUSB();
 extern uint8_t eeprom_ReadReg();
 extern uint8_t eeprom_ReadProg();
 extern uint8_t eeprom_ReadSoftkeys();
+extern uint8_t eeprom_ReadMidiThrough();
+
 extern void eeprom_UpdateManualMap();
 extern void eeprom_UpdateMidiInMap();
 extern void eeprom_UpdateMidiOutMap();
@@ -1139,10 +1156,12 @@ extern void eeprom_UpdateUSB();
 extern void eeprom_UpdateReg();
 extern void eeprom_UpdateProg();
 extern void eeprom_UpdateSoftkeys();
+extern void eeprom_UpdateMidiThrough();
+
 extern void eeprom_Backup();
 extern void eeprom_Restore();
 extern void eeprom_UpdateALL();
-# 56 ".././ee_prom.h"
+# 61 ".././ee_prom.h"
 typedef struct{
  uint8_t charStart;
  uint8_t charManMap;
@@ -1172,6 +1191,9 @@ typedef struct{
  uint8_t charSoftkey;
  uint8_t softKeyMenuIndex[4];
  uint16_t softKeys_crc;
+ uint8_t charMidiThrough;
+ MidiThrough_t midiThrough;
+ uint16_t midiThrough_crc;
  uint8_t charEnd;
 } Ee_t;
 
@@ -1188,11 +1210,11 @@ typedef struct{
 } EECompl_t;
 
 extern 
-# 100 ".././ee_prom.h" 3
+# 108 ".././ee_prom.h" 3
       __attribute__((section(".eeprom"))) 
-# 100 ".././ee_prom.h"
+# 108 ".././ee_prom.h"
             EECompl_t ee;
-# 112 ".././ee_prom.h"
+# 120 ".././ee_prom.h"
 extern uint8_t ee_initError;
 # 16 ".././ee_prom.c" 2
 # 31 ".././ee_prom.c"
@@ -1287,6 +1309,18 @@ uint8_t eeprom_ReadModules(){
   return (0x00);
  } else {
   ee_initError |= 0x08;;
+  return (0xFF);
+ }
+}
+
+uint8_t eeprom_ReadMidiThrough(){
+ if ((eeprom_read_word(&ee.eeData.ee.midiThrough_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.midiThrough, sizeof (ee.eeData.ee.midiThrough))
+ && eeprom_read_byte(&ee.eeData.ee.charMidiThrough) == 'T')) {
+
+  eeprom_read_block((uint8_t*) &midiThrough, (uint8_t*) &ee.eeData.ee.midiThrough, sizeof(ee.eeData.ee.midiThrough));
+  return (0x00);
+ } else {
+  ee_initError |= 0x02;
   return (0xFF);
  }
 }
@@ -1398,6 +1432,16 @@ void eeprom_UpdateUSB(){
  lcd_waitSymbolOff();
 }
 
+void eeprom_UpdateMidiThrough(){
+ uint16_t crc = crc16_ram((uint8_t*) &midiThrough, sizeof(midiThrough));
+ lcd_waitSymbolOn();
+ eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charMidiThrough), 'T');
+ eeprom_update_block((uint8_t*) &midiThrough, (uint8_t*) &ee.eeData.ee.midiThrough, sizeof(midiThrough));
+ eeprom_update_word(&(ee.eeData.ee.midiThrough_crc), crc);
+ eepromWriteSignature();
+ lcd_waitSymbolOff();
+}
+
 void eeprom_UpdateReg(){
  uint16_t crc = crc16_ram((uint8_t*) &registerCount, sizeof(registerCount));
  crc = crc16_ram_startVal((uint8_t*) &registerMap, sizeof(registerMap), crc);
@@ -1439,6 +1483,7 @@ void eeprom_UpdateALL(){
  eeprom_UpdateReg();
  eeprom_UpdateProg();
  eeprom_UpdateSoftkeys();
+ eeprom_UpdateMidiThrough();
 }
 
 

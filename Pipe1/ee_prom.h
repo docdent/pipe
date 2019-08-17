@@ -28,6 +28,8 @@ extern uint8_t eeprom_ReadUSB();
 extern uint8_t eeprom_ReadReg();
 extern uint8_t eeprom_ReadProg();
 extern uint8_t eeprom_ReadSoftkeys();
+extern uint8_t eeprom_ReadMidiThrough();
+
 extern void eeprom_UpdateManualMap();
 extern void eeprom_UpdateMidiInMap();
 extern void eeprom_UpdateMidiOutMap();
@@ -36,6 +38,8 @@ extern void eeprom_UpdateUSB();
 extern void eeprom_UpdateReg();
 extern void eeprom_UpdateProg();
 extern void eeprom_UpdateSoftkeys();
+extern void eeprom_UpdateMidiThrough();
+
 extern void eeprom_Backup();
 extern void eeprom_Restore();
 extern void eeprom_UpdateALL();
@@ -52,6 +56,7 @@ extern void eeprom_UpdateALL();
 #define EE_CHAR_REG 'R'
 #define EE_CHAR_PROG 'P'
 #define EE_CHAR_SOFTKEYS 'K'
+#define EE_CHAR_MIDITHROUGH 'T'
 
 typedef struct{
 	uint8_t charStart;
@@ -82,6 +87,9 @@ typedef struct{
 	uint8_t charSoftkey;
 	uint8_t softKeyMenuIndex[MENU_SOFTKEY_COUNT];
 	uint16_t softKeys_crc;
+	uint8_t charMidiThrough;
+	MidiThrough_t midiThrough;
+	uint16_t midiThrough_crc;
 	uint8_t charEnd;
 } Ee_t;
 

@@ -119,6 +119,18 @@ uint8_t eeprom_ReadModules(){
 	}
 }
 
+uint8_t eeprom_ReadMidiThrough(){
+	if ((eeprom_read_word(&ee.eeData.ee.midiThrough_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.midiThrough, sizeof (ee.eeData.ee.midiThrough))
+	&& eeprom_read_byte(&ee.eeData.ee.charMidiThrough) == EE_CHAR_MIDITHROUGH))  {
+		// stored crc16 is ok
+		eeprom_read_block((uint8_t*) &midiThrough, (uint8_t*) &ee.eeData.ee.midiThrough, sizeof(ee.eeData.ee.midiThrough));
+		return (EE_LOAD_OK);
+	} else {
+		ee_initError |= EE_EPROM_MIDIIN;
+		return (EE_LOAD_ERROR);
+	}
+}
+
 uint8_t eeprom_ReadUSB(){
 	if ((eeprom_read_word(&ee.eeData.ee.usb_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.usbActive, sizeof (ee.eeData.ee.usbActive))
 	&& eeprom_read_byte(&ee.eeData.ee.charUSB) == EE_CHAR_USB))  {
@@ -226,6 +238,16 @@ void eeprom_UpdateUSB(){
 	lcd_waitSymbolOff();
 }
 
+void eeprom_UpdateMidiThrough(){
+	uint16_t crc = crc16_ram((uint8_t*) &midiThrough, sizeof(midiThrough));
+	lcd_waitSymbolOn();
+	eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charMidiThrough), EE_CHAR_MIDITHROUGH);
+	eeprom_update_block((uint8_t*) &midiThrough, (uint8_t*) &ee.eeData.ee.midiThrough, sizeof(midiThrough));
+	eeprom_update_word(&(ee.eeData.ee.midiThrough_crc), crc);
+	eepromWriteSignature();
+	lcd_waitSymbolOff();
+}
+
 void eeprom_UpdateReg(){
 	uint16_t crc = crc16_ram((uint8_t*) &registerCount, sizeof(registerCount));
 	crc = crc16_ram_startVal((uint8_t*) &registerMap, sizeof(registerMap), crc);
@@ -267,6 +289,7 @@ void eeprom_UpdateALL(){
 	eeprom_UpdateReg();
 	eeprom_UpdateProg();
 	eeprom_UpdateSoftkeys();
+	eeprom_UpdateMidiThrough();
 }
 
 

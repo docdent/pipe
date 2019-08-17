@@ -77,6 +77,8 @@ typedef struct{
 } ManualNoteRange_t;
 extern ManualNoteRange_t ManualNoteRange[MANUAL_COUNT];
 
+extern void midi_ProgramChange(uint8_t channel, uint8_t program);
+
 // --------------- Conversion MIDI Channel to Manual ------------
 #define MIDI_CHANNEL_COUNT 16
 #define MIDI_CHANNEL_MASK 0x0F
@@ -99,19 +101,16 @@ extern ManualNoteRange_t ManualNoteRange[MANUAL_COUNT];
 
 #define MIDI_CHANNEL_NONE 0xFF
 
+#define MIDI_PROGRAM_NONE 0xFF // for Status display
+
 #define MIDI_DEFAULT_VELOCITY 64
 
 #define MIDI_SPLIT_COUNT 4
 
 #define NOTE_ON 0x01
 #define NOTE_OFF 0x00
-#define REGISTER_ON 0x01
-#define REGISTER_OFF 0x00
-#define REGISTER_READ_HWIN 0x01
-#define REGISTER_READ_SWOUT 0x02
-#define REGISTER_READ_ALL 0x03
-#define REGISTER_READ_HWIN_XOR_SWOUT 0x04
 
+//--------------------- MIDIN IN OUT ASSIGN ------------------------
 typedef  struct{
 	uint8_t manual;
 	uint8_t midiNote;
@@ -122,10 +121,20 @@ typedef  struct{
 extern MidiInMap_t midiInMap[MIDI_CHANNEL_COUNT][MIDI_SPLIT_COUNT];
 
 typedef struct{
+	uint8_t InChannel; // In Channel for SW MIDI Through 0...0x0F -> 1..16, 0xFF = off
+	uint8_t OutChannel; // Out channel for SW MIDI Through
+} MidiThrough_t;
+ 
+extern MidiThrough_t midiThrough;
+
+
+typedef struct{
 	uint8_t channel;
 	} MidiOutMap_t;
 extern MidiOutMap_t midiOutMap[MANUAL_COUNT];
 
+
+// -------------- REGISTER --------------------
 #define REGISTER_NONE 0xFF
 typedef  struct{
 	uint8_t startReg; // valid reg.nr: 1..64 ATTENTION! 0=invalid reg!
@@ -141,13 +150,28 @@ typedef struct{
 	} ProgramInfo_t;
 extern ProgramInfo_t programMap[PROGRAM_COUNT] ; // for each register one bit, 2 for couplers
 
+extern uint8_t midi_RegisterChanged;
+
 extern uint8_t read_allRegister(uint8_t* resultPtr);
+
+#define REGISTER_WAS_SET 0x80 // prefix bit 7 = 1 
+#define REGISTER_ON 0x01
+#define REGISTER_OFF 0x00
 extern void register_onOff(uint8_t regNr, uint8_t onOff);
 extern void registers_CalcCount();
 extern uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm);
 extern uint8_t program_toRegister(uint8_t program);
 extern void midi_resetRegisters(); // turn off all register outputs
+#define REG_DONT_MATCH_PROG 0xFF
+extern uint8_t midi_RegisterMatchProgram(uint8_t program); 
 
+#define REGISTER_READ_HWIN 0x01
+#define REGISTER_READ_SWOUT 0x02
+#define REGISTER_READ_ALL 0x03
+#define REGISTER_READ_HWIN_XOR_SWOUT 0x04
+extern uint8_t count_Registers(uint8_t mode);
+
+//----------------------- FUNCTIONS -------------------
 extern void init_Midi2Manual();
 extern void init_Manual2Midi();
 extern void init_Manual2Module();
@@ -158,6 +182,9 @@ extern ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note);
 extern void Midi_updateManualRange();
 
 extern void midiSendAllNotesOff();
+extern void init_Midi();
+extern void midi_ManualOff(uint8_t manual);
+extern void midi_AllManualsOff();
 
 //------------------------------ Active Sense ----------------------
 
@@ -165,6 +192,7 @@ extern uint8_t midiRxActivceSensing; // 0 if no active sense, 1 if started
 typedef struct {
 	uint8_t TxActivceSense; // 0 if no active sense, 0xFF if active sensing on output
 	uint8_t VelZero4Off;
+	uint8_t AcceptProgChange;
 } MidiSetting_t;
 extern MidiSetting_t midi_Setting;
 
@@ -173,19 +201,16 @@ extern uint8_t midiLastOutManual;
 extern uint8_t midiLastInNote; // written by midi.c read by main for debugging/display
 extern uint8_t midiLastInChannel;
 extern uint8_t midiLastInManual; // written by midi.c read by main for debugging/display
+extern uint8_t midiLastProgram; // written by midi.c read by main for debugging/display
 
 extern void midiKeyPress_Process(PipeMessage_t pipeMessage);
 extern void midiIn_Process(uint8_t midiByte);
 extern void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff);
-extern uint8_t program_toRegister(uint8_t program); // sets regsiter according to programm
 extern void midi_SendActiveSense();
 extern void midi_CheckRxActiveSense(); // check for RxActiveSense Error
 extern void midi_CheckTxActiveSense();
-//------------------------------- Couplers --------------------------
 
-extern void init_Midi();
-extern void midi_ManualOff(uint8_t manual);
-extern void midi_AllManualsOff();
+//------------------------------- Couplers --------------------------
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
@@ -215,19 +240,6 @@ extern const __flash CplInfo_t cplInfo[COUPLER_COUNT];
 
 extern uint8_t set_Coupler(uint8_t); // set must be done via function, reset ca be done directly, 
 //returns true if inverse coupler had to bee reset
-
-extern  uint8_t midiCoupler_2from3; // set to zero in init_Manual2Module()
-extern  uint8_t midiCoupler_1from3;
-extern  uint8_t midiCoupler_1from2;
-extern  uint8_t midiCoupler_Pfrom3;
-extern  uint8_t midiCoupler_Pfrom2;
-extern  uint8_t midiCoupler_Pfrom1;
-extern  uint8_t midiCoupler_3from2; // set to zero in init_Manual2Module()
-extern  uint8_t midiCoupler_3from1;
-extern  uint8_t midiCoupler_2from1;
-extern  uint8_t midiCoupler_3fromP;
-extern  uint8_t midiCoupler_2fromP;
-extern  uint8_t midiCoupler_1fromP;
 
 
 #endif /* MIDI_H_ */

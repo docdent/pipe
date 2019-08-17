@@ -273,6 +273,8 @@ uint8_t module_TestAllInputs(){
 }
 
 void module_WaitOutputInput2Cycles(){
+	// wait until current output in pipe[] is transferred to modules and inputs is read back to pipe[]
+	// does NOT wait until these input values are proccessed to pipe messages!
 	pipeProcessing = PIPE_IO_START;
 	while ((pipeProcessing & PIPE_IO_INOUT_DONE) == 0){
 		// wait for Data write to outpur

@@ -431,6 +431,7 @@ extern uint8_t lcd_noteOut(uint8_t noteNr);
 
 extern char* putString_P(const __flash char* pSourceString, char* pOutput);
 extern char* putChar_Dec2(uint8_t val, char* pOutput);
+extern char* putChar_Dec(uint8_t val, char* pOutput);
 extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
@@ -438,7 +439,7 @@ extern char* putChar_Manual(uint8_t manual, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 77 ".././utils.h"
+# 78 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -458,13 +459,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 105 ".././utils.h"
+# 106 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 107 ".././utils.h" 3
+# 108 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 107 ".././utils.h"
+# 108 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -495,7 +496,7 @@ extern uint8_t msgPipe_Handling;
 # 16 ".././hwtimer.h" 2
 # 31 ".././hwtimer.h"
 extern volatile uint8_t time_Uptime[4];
-# 77 ".././hwtimer.h"
+# 79 ".././hwtimer.h"
 typedef struct {
  uint8_t counter;
  uint8_t prescaler;
@@ -508,7 +509,7 @@ extern void init_HwTimer();
 extern void init_Timers();
 extern void init_ADC();
 extern void init_Pipe();
-# 130 ".././hwtimer.h"
+# 132 ".././hwtimer.h"
 typedef struct {
  uint8_t mux;
  uint8_t ADCval;
@@ -520,7 +521,7 @@ typedef struct {
 extern volatile KeyInfo adcKeys[1];
 
 extern uint8_t keyWants[6];
-# 163 ".././hwtimer.h"
+# 165 ".././hwtimer.h"
 typedef struct {
  uint8_t pipeOutM4;
  uint8_t pipeOut;
@@ -543,7 +544,7 @@ extern volatile uint8_t pipeProcessing;
 extern uint8_t pipe_ModuleTested;
 extern uint8_t pipe_ModuleAssnRead;
 extern uint8_t pipe_ModuleAssnWrite;
-# 193 ".././hwtimer.h"
+# 195 ".././hwtimer.h"
 extern uint8_t pipe_PowerStatus;
 
 
@@ -850,7 +851,9 @@ typedef struct{
  uint8_t endNote;
 } ManualNoteRange_t;
 extern ManualNoteRange_t ManualNoteRange[4];
-# 115 ".././Midi.h"
+
+extern void midi_ProgramChange(uint8_t channel, uint8_t program);
+# 114 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -861,9 +864,19 @@ typedef struct{
 extern MidiInMap_t midiInMap[16][4];
 
 typedef struct{
+ uint8_t InChannel;
+ uint8_t OutChannel;
+} MidiThrough_t;
+
+extern MidiThrough_t midiThrough;
+
+
+typedef struct{
  uint8_t channel;
  } MidiOutMap_t;
 extern MidiOutMap_t midiOutMap[4];
+
+
 
 
 typedef struct{
@@ -880,12 +893,27 @@ typedef struct{
  } ProgramInfo_t;
 extern ProgramInfo_t programMap[64] ;
 
+extern uint8_t midi_RegisterChanged;
+
 extern uint8_t read_allRegister(uint8_t* resultPtr);
+
+
+
+
 extern void register_onOff(uint8_t regNr, uint8_t onOff);
 extern void registers_CalcCount();
 extern uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm);
 extern uint8_t program_toRegister(uint8_t program);
 extern void midi_resetRegisters();
+
+extern uint8_t midi_RegisterMatchProgram(uint8_t program);
+
+
+
+
+
+extern uint8_t count_Registers(uint8_t mode);
+
 
 extern void init_Midi2Manual();
 extern void init_Manual2Midi();
@@ -897,6 +925,9 @@ extern ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note);
 extern void Midi_updateManualRange();
 
 extern void midiSendAllNotesOff();
+extern void init_Midi();
+extern void midi_ManualOff(uint8_t manual);
+extern void midi_AllManualsOff();
 
 
 
@@ -904,6 +935,7 @@ extern uint8_t midiRxActivceSensing;
 typedef struct {
  uint8_t TxActivceSense;
  uint8_t VelZero4Off;
+ uint8_t AcceptProgChange;
 } MidiSetting_t;
 extern MidiSetting_t midi_Setting;
 
@@ -912,23 +944,20 @@ extern uint8_t midiLastOutManual;
 extern uint8_t midiLastInNote;
 extern uint8_t midiLastInChannel;
 extern uint8_t midiLastInManual;
+extern uint8_t midiLastProgram;
 
 extern void midiKeyPress_Process(PipeMessage_t pipeMessage);
 extern void midiIn_Process(uint8_t midiByte);
 extern void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff);
-extern uint8_t program_toRegister(uint8_t program);
 extern void midi_SendActiveSense();
 extern void midi_CheckRxActiveSense();
 extern void midi_CheckTxActiveSense();
 
 
-extern void init_Midi();
-extern void midi_ManualOff(uint8_t manual);
-extern void midi_AllManualsOff();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 208 ".././Midi.h"
+# 233 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -938,20 +967,6 @@ typedef struct{
 extern const __flash CplInfo_t cplInfo[12];
 
 extern uint8_t set_Coupler(uint8_t);
-
-
-extern uint8_t midiCoupler_2from3;
-extern uint8_t midiCoupler_1from3;
-extern uint8_t midiCoupler_1from2;
-extern uint8_t midiCoupler_Pfrom3;
-extern uint8_t midiCoupler_Pfrom2;
-extern uint8_t midiCoupler_Pfrom1;
-extern uint8_t midiCoupler_3from2;
-extern uint8_t midiCoupler_3from1;
-extern uint8_t midiCoupler_2from1;
-extern uint8_t midiCoupler_3fromP;
-extern uint8_t midiCoupler_2fromP;
-extern uint8_t midiCoupler_1fromP;
 # 16 ".././ee_prom.h" 2
 # 1 ".././menu.h" 1
 # 53 ".././menu.h"
@@ -977,7 +992,7 @@ typedef struct Menu {
 extern const __flash Menu_t * menuStack[16];
 
 uint8_t lcdData[10];
-# 182 ".././menu.h"
+# 183 ".././menu.h"
 typedef struct {
  uint8_t nibbleCount;
  uint8_t nibblePos[8];
@@ -1027,7 +1042,7 @@ extern void dataToNibbles();
 extern void menu_DisplayMainMessage_P(const __flash char* pMessage);
 extern void menu_DisplayMainMessage(const char* pMessage);
 extern void menu_deleteMessage();
-# 239 ".././menu.h"
+# 240 ".././menu.h"
 typedef struct{
  const __flash struct Menu *pSelMenu;
 } SoftKeyMenu_List_t;
@@ -1047,14 +1062,14 @@ extern uint8_t softKey_Execute(uint8_t nrSoftKey, uint8_t myMessage);
 
 
 extern const char sw_version [] 
-# 257 ".././menu.h" 3
+# 258 ".././menu.h" 3
                                __attribute__((__progmem__))
-# 257 ".././menu.h"
+# 258 ".././menu.h"
                                       ;
 extern const char HelloMsg [] 
-# 258 ".././menu.h" 3
+# 259 ".././menu.h" 3
                              __attribute__((__progmem__))
-# 258 ".././menu.h"
+# 259 ".././menu.h"
                                     ;
 
 extern uint8_t menu_TestModulePattern;
@@ -1090,6 +1105,8 @@ extern uint8_t eeprom_ReadUSB();
 extern uint8_t eeprom_ReadReg();
 extern uint8_t eeprom_ReadProg();
 extern uint8_t eeprom_ReadSoftkeys();
+extern uint8_t eeprom_ReadMidiThrough();
+
 extern void eeprom_UpdateManualMap();
 extern void eeprom_UpdateMidiInMap();
 extern void eeprom_UpdateMidiOutMap();
@@ -1098,10 +1115,12 @@ extern void eeprom_UpdateUSB();
 extern void eeprom_UpdateReg();
 extern void eeprom_UpdateProg();
 extern void eeprom_UpdateSoftkeys();
+extern void eeprom_UpdateMidiThrough();
+
 extern void eeprom_Backup();
 extern void eeprom_Restore();
 extern void eeprom_UpdateALL();
-# 56 ".././ee_prom.h"
+# 61 ".././ee_prom.h"
 typedef struct{
  uint8_t charStart;
  uint8_t charManMap;
@@ -1131,6 +1150,9 @@ typedef struct{
  uint8_t charSoftkey;
  uint8_t softKeyMenuIndex[4];
  uint16_t softKeys_crc;
+ uint8_t charMidiThrough;
+ MidiThrough_t midiThrough;
+ uint16_t midiThrough_crc;
  uint8_t charEnd;
 } Ee_t;
 
@@ -1147,11 +1169,11 @@ typedef struct{
 } EECompl_t;
 
 extern 
-# 100 ".././ee_prom.h" 3
+# 108 ".././ee_prom.h" 3
       __attribute__((section(".eeprom"))) 
-# 100 ".././ee_prom.h"
+# 108 ".././ee_prom.h"
             EECompl_t ee;
-# 112 ".././ee_prom.h"
+# 120 ".././ee_prom.h"
 extern uint8_t ee_initError;
 # 12 ".././hwtimer.c" 2
 # 1 ".././log.h" 1
@@ -1295,7 +1317,7 @@ typedef struct{
  uint8_t errNr;
  char text[16];
  } ErrorText_t;
-# 88 ".././log.h"
+# 89 ".././log.h"
 extern uint8_t log_unreadErrors;
 # 13 ".././hwtimer.c" 2
 
@@ -2140,6 +2162,8 @@ uint8_t module_TestAllInputs(){
 }
 
 void module_WaitOutputInput2Cycles(){
+
+
  pipeProcessing = 0x00;
  while ((pipeProcessing & 0x02) == 0){
 
@@ -2154,9 +2178,9 @@ void module_StartPowerOn(){
 
  pipe_PowerStatus = 0x01;
  
-# 289 ".././hwtimer.c" 3
+# 291 ".././hwtimer.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 289 ".././hwtimer.c"
+# 291 ".././hwtimer.c"
 {swTimer[1].counter = 800 / 20; swTimer[1].prescaler = (800 % 20) / 4;};
 }
 
@@ -2167,22 +2191,22 @@ void module_PowerControl(){
   if (module_TestAllInputs() == 0){
 
    
-# 298 ".././hwtimer.c" 3
+# 300 ".././hwtimer.c" 3
   (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 298 ".././hwtimer.c"
+# 300 ".././hwtimer.c"
   |= 1 << 6;
    pipe_PowerStatus = 0x12;
    
-# 300 ".././hwtimer.c" 3
+# 302 ".././hwtimer.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 300 ".././hwtimer.c"
+# 302 ".././hwtimer.c"
   {swTimer[1].counter = 20 / 20; swTimer[1].prescaler = (20 % 20) / 4;};
   } else {
 
    
-# 303 ".././hwtimer.c" 3
+# 305 ".././hwtimer.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 303 ".././hwtimer.c"
+# 305 ".././hwtimer.c"
   {swTimer[1].counter = 250 / 20; swTimer[1].prescaler = (250 % 20) / 4;};
   }
  } else if (pipe_PowerStatus == 0x12) {
@@ -2194,9 +2218,9 @@ void module_PowerControl(){
 
    log_putError(5,0,testResult);
    
-# 313 ".././hwtimer.c" 3
+# 315 ".././hwtimer.c" 3
   (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 313 ".././hwtimer.c"
+# 315 ".././hwtimer.c"
   &= ~(1 << 6);
    pipe_PowerStatus = 0x80;
   }
@@ -2260,22 +2284,22 @@ static inline void timerTimers(){
 
 static inline void timerADC(){
  if ((adcNr < 1) && ((
-# 375 ".././hwtimer.c" 3
+# 377 ".././hwtimer.c" 3
                                  (*(volatile uint8_t *)(0x7A)) 
-# 375 ".././hwtimer.c"
+# 377 ".././hwtimer.c"
                                         & (1 << 
-# 375 ".././hwtimer.c" 3
+# 377 ".././hwtimer.c" 3
                                                 6
-# 375 ".././hwtimer.c"
+# 377 ".././hwtimer.c"
                                                     )) == 0)){
 
 
   uint8_t oldADC;
   oldADC = adcKeys[adcNr].ADCval;
   uint8_t newADC = 
-# 380 ".././hwtimer.c" 3
+# 382 ".././hwtimer.c" 3
                   (*(volatile uint8_t *)(0x79))
-# 380 ".././hwtimer.c"
+# 382 ".././hwtimer.c"
                       ;
   adcKeys[adcNr].ADCval = newADC;
   if (absDifference(oldADC,newADC) < 4) {
@@ -2370,35 +2394,35 @@ static inline void timerADC(){
   newMux = 0x1F;
  }
  
-# 473 ".././hwtimer.c" 3
+# 475 ".././hwtimer.c" 3
 (*(volatile uint8_t *)(0x7C)) 
-# 473 ".././hwtimer.c"
+# 475 ".././hwtimer.c"
       = ((1 << 
-# 473 ".././hwtimer.c" 3
+# 475 ".././hwtimer.c" 3
         6
-# 473 ".././hwtimer.c"
+# 475 ".././hwtimer.c"
         ) | (1 << 
-# 473 ".././hwtimer.c" 3
+# 475 ".././hwtimer.c" 3
         5
-# 473 ".././hwtimer.c"
+# 475 ".././hwtimer.c"
         )) | (newMux & 0x1F);
  
-# 474 ".././hwtimer.c" 3
+# 476 ".././hwtimer.c" 3
 (*(volatile uint8_t *)(0x7B)) 
-# 474 ".././hwtimer.c"
+# 476 ".././hwtimer.c"
        = (
-# 474 ".././hwtimer.c" 3
+# 476 ".././hwtimer.c" 3
           (*(volatile uint8_t *)(0x7B)) 
-# 474 ".././hwtimer.c"
+# 476 ".././hwtimer.c"
                  & ~0x20) | ((newMux & 0x20) >> 2);
  
-# 475 ".././hwtimer.c" 3
+# 477 ".././hwtimer.c" 3
 (*(volatile uint8_t *)(0x7A)) 
-# 475 ".././hwtimer.c"
+# 477 ".././hwtimer.c"
        |= (1 << 
-# 475 ".././hwtimer.c" 3
+# 477 ".././hwtimer.c" 3
                 6
-# 475 ".././hwtimer.c"
+# 477 ".././hwtimer.c"
                     );
 }
 
@@ -2422,7 +2446,7 @@ static inline void timerPipeProcess(){
  for (uint8_t shiftBitNr = 0; shiftBitNr < 32; shiftBitNr++) {
 
   PipeMessage_t myMessage;
-# 513 ".././hwtimer.c"
+# 515 ".././hwtimer.c"
   uint8_t newOnState = 0xFF;
   uint8_t newOffState = 0;
   uint8_t* pInByte = &(curPipe->pipeInM16);
@@ -2462,94 +2486,94 @@ static inline void timerPipeProcess(){
 static inline void timerPipeIO(){
  Pipe_t *curPipe;
  
-# 551 ".././hwtimer.c" 3
+# 553 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 551 ".././hwtimer.c"
+# 553 ".././hwtimer.c"
               |= ((1 << 0) | (1 << 1) | (1 << 2));
  
-# 552 ".././hwtimer.c" 3
+# 554 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 552 ".././hwtimer.c"
+# 554 ".././hwtimer.c"
 &= ~(1 << 2);
  curPipe = &pipe[32 -1];
  uint8_t local_pipe_ModuleAssnWrite = ~pipe_ModuleAssnWrite;
  uint8_t i = 32;
  _delay_us(0.5);
  
-# 557 ".././hwtimer.c" 3
+# 559 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 557 ".././hwtimer.c"
+# 559 ".././hwtimer.c"
 |= (1 << 2);
  do {
   curPipe->pipeInM16 = curPipe->pipeInM12;
   curPipe->pipeInM12 = curPipe->pipeInM8;
   
-# 561 ".././hwtimer.c" 3
+# 563 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 561 ".././hwtimer.c"
+# 563 ".././hwtimer.c"
  |= (1 << 0);
   
-# 562 ".././hwtimer.c" 3
+# 564 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 562 ".././hwtimer.c"
+# 564 ".././hwtimer.c"
               = curPipe->pipeOut | local_pipe_ModuleAssnWrite;
   curPipe->pipeInM8 = curPipe->pipeInM4;
   curPipe->pipeInM4 = curPipe->pipeIn;
   curPipe->pipeIn = 
-# 565 ".././hwtimer.c" 3
+# 567 ".././hwtimer.c" 3
                    (*(volatile uint8_t *)((0X00) + 0x20))
-# 565 ".././hwtimer.c"
+# 567 ".././hwtimer.c"
                              ;
   
-# 566 ".././hwtimer.c" 3
+# 568 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 566 ".././hwtimer.c"
+# 568 ".././hwtimer.c"
  &= ~(1 << 0);
   curPipe--;
  } while (--i > 0);
  asm("nop");
  asm("nop");
  
-# 571 ".././hwtimer.c" 3
+# 573 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 571 ".././hwtimer.c"
+# 573 ".././hwtimer.c"
 |= (1 << 0);
  
-# 572 ".././hwtimer.c" 3
+# 574 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 572 ".././hwtimer.c"
+# 574 ".././hwtimer.c"
 &= ~(1 << 1);
  pipeProcessing |= 0x02;
  
-# 574 ".././hwtimer.c" 3
+# 576 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 574 ".././hwtimer.c"
+# 576 ".././hwtimer.c"
              = 0;
  
-# 575 ".././hwtimer.c" 3
+# 577 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x0B) + 0x20)) 
-# 575 ".././hwtimer.c"
+# 577 ".././hwtimer.c"
 |= (1 << 7);
  
-# 576 ".././hwtimer.c" 3
+# 578 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 576 ".././hwtimer.c"
+# 578 ".././hwtimer.c"
 |= (1 << 1);
 }
 
 
 
 
-# 581 ".././hwtimer.c" 3
+# 583 ".././hwtimer.c" 3
 void __vector_21 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_21 (void)
 
-# 582 ".././hwtimer.c"
+# 584 ".././hwtimer.c"
 {
 
  
-# 584 ".././hwtimer.c" 3
+# 586 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 584 ".././hwtimer.c"
+# 586 ".././hwtimer.c"
          |= (1 << 7);
 
  switch (++msecCtr & 0x03) {
@@ -2566,9 +2590,9 @@ void __vector_21 (void) __attribute__ ((signal,used, externally_visible)) ; void
    break;
  }
  
-# 599 ".././hwtimer.c" 3
+# 601 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 599 ".././hwtimer.c"
+# 601 ".././hwtimer.c"
          &= ~(1 << 7);
 
 }

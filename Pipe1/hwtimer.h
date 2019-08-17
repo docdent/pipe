@@ -35,6 +35,7 @@ extern volatile uint8_t time_Uptime[4]; // 0: prescaler cycles @ 4ms, 1: seconds
 #define TIMER_SET(N,MSEC) ATOMIC_BLOCK(ATOMIC_RESTORESTATE ) {swTimer[N].counter = MSEC / TIMER_BASE_MS; swTimer[N].prescaler = (MSEC % TIMER_BASE_MS) / TIMER_CYCLE_MS;};
 #define TIMER_DEACTIVATE(N) swTimer[N].counter = TIMER_INACTIVE;
 
+#define TIMER_NOTSTARTED(N) (swTimer[N].counter == TIMER_INACTIVE)
 #define TIMER_RUNNING(N) ((swTimer[N].counter != TIMER_ENDED) && (swTimer[N].counter != TIMER_INACTIVE))
 #define TIMER_ELAPSED(N) (swTimer[N].counter == TIMER_ENDED)
 
@@ -54,6 +55,7 @@ extern volatile uint8_t time_Uptime[4]; // 0: prescaler cycles @ 4ms, 1: seconds
 // when elapsed clear display of last midiout note
 #define TIMER_MIDIOUT_DISP 5
 #define TIMER_MIDIOUT_DISP_MS 1000
+#define TIMER_MIDDISP_CLEANUP_INTERVALL 2500 // cleanup 
 
 // when elapsed clear display of last midiin note
 #define TIMER_MIDIIN_DISP 4
@@ -192,7 +194,7 @@ extern uint8_t pipe_ModuleAssnWrite; // 1 for each module can be writte (if ==0 
 #define POWERSTATE_OFF_DUE_TO_ERROR 0x80
 extern uint8_t pipe_PowerStatus;
 
-#define POWERSTAT_CHAR (pipe_PowerStatus & 0x10 ? ' ' : LCD_ARROW_DOWN)
+#define POWERSTAT_CHAR (pipe_PowerStatus & 0x10 ? ' ' : LCDCHAR_ARROW_DOWN)
 //-------------------- FUNCIOTNS ---------------------
 extern uint8_t module_TestAllInputs();
 extern void module_WaitOutputInput2Cycles();

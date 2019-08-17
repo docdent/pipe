@@ -34,17 +34,30 @@ menu.c soft_coupler list changed
 main.c Panic key extended functions: couplers off
 menu.c OnOff Variables easier to edit
 menu.c Save Programs in EEPROM
-menu. cSave Softkeys in EEPROM
-Improved message for menu and softkey
-Program Settings Show registers
+menu.c Save Softkeys in EEPROM
+menu.c Improved message for menu and softkey
+menu.c Show registers
 midi.h Extend Program memory to coupplers
+midi.h Midi IN Program Change accepted if channel is valid
+midi.h MIDI Through SW for Notes, Program Change
+0.59
+midi.c Register Setting received as midi sysex
+midi.c Setting to ignore program change on midi in
+menu.c Clear Combination as Softkey
+main.c Show received Program Change
+
 TODO
+
+Show Set of Registers
 EEPROM memory structure
-MIDI Through SW
 Program Change like viscount
-Register Setting liek viscount
+Combination in selecteable Bank
 Failsafe for keys from time to time
 watchdog
+log for events and input
+REstore Manu display after panic button message
+Restore Menu display after MEssage
+Coupler for lowest bass note  only
 */
 
 

@@ -131,6 +131,31 @@ char* putChar_Dec2(uint8_t val, char* pOutput) {
 	return pOutput;
 }
 
+char* putChar_Dec(uint8_t val, char* pOutput) {
+	uint8_t hundreds = 0;
+	uint8_t weHadHundreds = FALSE;
+	while (val > 99) {
+		val -= 100;
+		hundreds++;
+	}
+	if (hundreds > 0){
+		*(pOutput++) = '0'+hundreds;
+		weHadHundreds = TRUE;
+	}
+	uint8_t tens = 0;
+	while (val > 9) {
+		val -= 10;
+		tens++;
+	}
+	if ((tens > 0) || (weHadHundreds == TRUE)){
+		*(pOutput++) = '0'+tens;
+	}
+	*(pOutput++) = '0'+val;
+	*pOutput = 0;
+	return pOutput;
+}
+
+
 char* putChar_hex(uint8_t val, char* pOutput){
 	uint8_t nibble = val >> 4;
 	*(pOutput++) =  (nibble > 9 ) ? 'A'-10+nibble : '0'+nibble;
@@ -266,37 +291,37 @@ uint8_t lcd_noteOut(uint8_t noteNr){
 		}
 		switch (noteNr){
 			case 0:
-				char2 = LCD_NOTESTRAIGHT_SYM;
+				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
 			case 1:
 				char1 = 'C';
 			break;
 			case 2:
-				char2 = LCD_NOTESTRAIGHT_SYM;
+				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
 			case 3:
 				char1 = 'D';
 			break;
 			case 4:
 				char1 = 'E';
-				char2 = LCD_NOTESTRAIGHT_SYM;
+				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
 			break;
 			case 5:
-				char2 = LCD_NOTESTRAIGHT_SYM;
+				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
 			case 6:
 				char1 = 'F';
 			break;
 			case 7:
-				char2 = LCD_NOTESTRAIGHT_SYM;
+				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
 			case 8:
 				char1 = 'G';
 			break;
 			case 9:
-				char2 = LCD_NOTESTRAIGHT_SYM;
+				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
 			case 10:
 				char1 = 'A';
 			break;
 			case 11:
 				char1 = 'H';
-				char2 = LCD_NOTESTRAIGHT_SYM;
+				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
 			break;
 		}
 		if (octave == 0) {
@@ -392,14 +417,14 @@ void lcd_cursoroff(){
 
 void lcd_waitSymbolOn(){
 	uint8_t saveCursor = lcd_cursorPos;
-	lcd_goto(LCD_WAIT_CURSOR);
-	lcd_putc(LCD_WAIT_SYMBOL);
+	lcd_goto(LCDCHAR_WAIT_CURSOR);
+	lcd_putc(LCDCHAR_WAIT_SYMBOL);
 	lcd_goto(saveCursor);
 }
 
 void lcd_waitSymbolOff(){
 	uint8_t saveCursor = lcd_cursorPos;
-	lcd_goto(LCD_WAIT_CURSOR);
+	lcd_goto(LCDCHAR_WAIT_CURSOR);
 	lcd_putc(' ');
 	lcd_goto(saveCursor);
 }

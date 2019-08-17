@@ -200,9 +200,17 @@ int main(void)
 			lcd_goto(oldcursor);
 			midiLastInNote = MIDI_NOTE_NONE;
 			TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)
-		} else if (TIMER_ELAPSED(TIMER_MIDIIN_DISP) || (time_UpTimeUpdated == TRUE)) {
+		} else if (midiLastProgram != MIDI_PROGRAM_NONE) {
+			// no midi not but a program change
+			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
+			lcd_putc('p');
+			lcd_dec2out(midiLastProgram); // here max 0..99 displayed, but Prog Change currently accepts only 0..63 anyway
+			lcd_putc(LCDCHAR_ARROW_RIGHT);
+			midiLastProgram = MIDI_PROGRAM_NONE; // we are done, don't display again
+			TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)
+		} else if (TIMER_ELAPSED(TIMER_MIDIIN_DISP) ) {
 			// timer for showing note has elapsed
-			// or about every second just in case screen got scrambeled
+			// removed or about every 2.5 second just in case screen got scrambeled
 			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
 			lcd_blank(6);
 			lcd_goto(oldcursor);
@@ -218,9 +226,19 @@ int main(void)
 			lcd_goto(oldcursor);
 			midiLastOutNote = MIDI_NOTE_NONE;
 			TIMER_SET(TIMER_MIDIOUT_DISP,TIMER_MIDIOUT_DISP_MS)
-		} else if (TIMER_ELAPSED(TIMER_MIDIOUT_DISP) || (time_UpTimeUpdated == TRUE)) {
+		} else if (midi_RegisterChanged != REGISTER_NONE) {
+			// register change has top priority in display so it is processed later (!) and will overwrite previos note display
+			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIOUT);
+			lcd_putc('R');
+			lcd_dec2out(midi_RegisterChanged & ~REGISTER_WAS_SET); // remove MSB
+			lcd_putc((midi_RegisterChanged & REGISTER_WAS_SET) == 0 ?  LCDCHAR_ARROW_DOWN : LCDCHAR_ARROW_UP); // MSB = register was set
+			lcd_putc(' ');
+			lcd_goto(oldcursor);
+			midi_RegisterChanged = REGISTER_NONE;
+			TIMER_SET(TIMER_MIDIOUT_DISP,TIMER_MIDIOUT_DISP_MS)
+		} else if (TIMER_ELAPSED(TIMER_MIDIOUT_DISP)) {
 			// timer for showing note has elapsed
-			// or about every second just in case screen got scrambeled
+			// removed V0.59: or about every second just in case screen got scrambeled
 			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIOUT);
 			lcd_blank(5);
 			lcd_goto(oldcursor);
@@ -270,6 +288,14 @@ int main(void)
 			lcd_goto(oldCursor);
 			if (oldBlink == TRUE) {
 				lcd_cursosblink();
+			}
+			// finally start Timers to clear MIDI Status display if not already running,
+			// just to clean up status line in case it had been scrambled
+			if (TIMER_NOTSTARTED(TIMER_MIDIIN_DISP)) {
+				TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDDISP_CLEANUP_INTERVALL)
+			}
+			if (TIMER_NOTSTARTED(TIMER_MIDIOUT_DISP)) {
+				TIMER_SET(TIMER_MIDIOUT_DISP,TIMER_MIDDISP_CLEANUP_INTERVALL)
 			}
 		}
 

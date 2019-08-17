@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.58";
+const char sw_version [] PROGMEM = "V0.59";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -209,6 +209,7 @@ const __flash Menu_t menu_midiIn[] =
 	{MENU_T_MENU_R,0,MENUTEXT_MCH16,menu_midiInSec,{.tag=MIDI_CHANNEL_16},menuOnEnterMidiInCh,NULL}};
 
 // --- MAIN --- MIDI ---
+uint8_t menuOnExitMidiThrough(uint8_t arg);
 uint8_t menuOnExitMidiIn(uint8_t arg);
 uint8_t menuOnExitMidiOut(uint8_t arg);
 uint8_t menu_OnEnterMidiPanic(uint8_t arg);
@@ -217,6 +218,9 @@ const __flash Menu_t menu_midi[] =
 	{{MENU_T_MENU_L,0,"NotesOff",NULL,{NULL},menu_OnEnterMidiPanic,NULL},
 	{MENU_T_MENU,0,"MIDIin",menu_midiIn,{NULL},NULL,menuOnExitMidiIn},
 	{MENU_T_MENU,0,"MIDIout",menu_midiOut,{NULL},NULL,menuOnExitMidiOut},
+	{MENU_T_VARMIDICHAN,MENU_FLAG_ALLOWINVALD,"Thru-In",NULL,{&midiThrough.InChannel},NULL,menuOnExitMidiThrough},
+	{MENU_T_VARMIDICHAN,MENU_FLAG_ALLOWINVALD,"Thru-Out",NULL,{&midiThrough.OutChannel},NULL,menuOnExitMidiThrough},
+	{MENU_T_VARONOFF,0,"Accept PC",NULL,{&(midi_Setting.AcceptProgChange)},NULL,menuOnExitMidiActiveSense},
 	{MENU_T_VARONOFF,0,"Act.Sense",NULL,{&(midi_Setting.TxActivceSense)},NULL,menuOnExitMidiActiveSense},
 	{MENU_T_VARONOFF | MENU_T_RIGHTBOUND,0,"Vel04Off",NULL,{&(midi_Setting.VelZero4Off)},NULL,menuOnExitMidiActiveSense}};
 
@@ -292,6 +296,7 @@ uint8_t softKeyK1A(uint8_t arg);
 uint8_t softKeyK2A(uint8_t arg);
 uint8_t softKeyK3A(uint8_t arg);
 uint8_t softKeyK4A(uint8_t arg);
+uint8_t softKeyRegOff(uint8_t arg);
 
 const __flash char shortKeyTextNone[MENU_LCD_MENUTEXTLEN]  = "";
 const __flash char shortKeyTextMenu[MENU_LCD_MENUTEXTLEN]  = "Menu";
@@ -310,10 +315,11 @@ const __flash char shortKeyTextCpl3P[MENU_LCD_MENUTEXTLEN]  = "3<P\x80";
 const __flash char shortKeyTextCpl21[MENU_LCD_MENUTEXTLEN]  = "2<1\x80";
 const __flash char shortKeyTextCpl2P[MENU_LCD_MENUTEXTLEN]  = "2<P\x80";
 const __flash char shortKeyTextCpl1P[MENU_LCD_MENUTEXTLEN]  = "1<P\x80";
-const __flash char shortKeyTextK1A[MENU_LCD_MENUTEXTLEN]  = "Kb1A";
-const __flash char shortKeyTextK2A[MENU_LCD_MENUTEXTLEN]  = "Kb2A";
-const __flash char shortKeyTextK3A[MENU_LCD_MENUTEXTLEN]  = "Kb3A";
-const __flash char shortKeyTextK4A[MENU_LCD_MENUTEXTLEN]  = "Kb4A";
+const __flash char shortKeyTextK1A[MENU_LCD_MENUTEXTLEN]  = "Kb1A\x80";
+const __flash char shortKeyTextK2A[MENU_LCD_MENUTEXTLEN]  = "Kb2A\x80";
+const __flash char shortKeyTextK3A[MENU_LCD_MENUTEXTLEN]  = "Kb3A\x80";
+const __flash char shortKeyTextK4A[MENU_LCD_MENUTEXTLEN]  = "Kb4A\x80";
+const __flash char shortKeyTextRegOff[MENU_LCD_MENUTEXTLEN]  = "Reg" LCD_ARROWDOWN;
 
 const __flash Menu_t menu_selFunc[] =
 	{{MENU_T_MENU_L,MENU_FLAG_MENU_SOFTKEY,"<none>",NULL,{.pString=shortKeyTextNone},NULL,NULL},
@@ -335,6 +341,7 @@ const __flash Menu_t menu_selFunc[] =
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 2A",NULL,{.pString=shortKeyTextK2A},softKeyK2A,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 3A",NULL,{.pString=shortKeyTextK3A},softKeyK3A,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 4A",NULL,{.pString=shortKeyTextK4A},softKeyK4A,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Reg.aus",NULL,{.pString=shortKeyTextRegOff},softKeyRegOff,NULL},	
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"MIDI Off",NULL,{.pString=shortKeyTextMIDIoff},menu_OnEnterMidiPanic,NULL},
 	{MENU_T_MENU_R,MENU_FLAG_MENU_SOFTKEY,"Setup",menu_setup,{.pString=shortKeyTextSetup},NULL,NULL}};
 
@@ -409,6 +416,12 @@ uint8_t displayMenuMessage_P(const __flash char* pMessage);
 void menuCheckArrowDown();
 
 //*************************** I N D I V I D U A L   S O F T K E Y   F U N C T I O N S ******************************
+
+uint8_t menuOnExitMidiThrough(uint8_t arg){
+	(void) arg;
+	eeprom_UpdateMidiThrough();
+	return 0;
+}
 
 void reverseRegisterBits(){
 	for (uint8_t i = 0; i < REGISTER_COUNT / 8; i++){
@@ -531,20 +544,28 @@ uint8_t softKeyCoupler1fromP(uint8_t arg){
 	return result;
 }
 
-const __flash char messageSaved[] = " Reg. gespeichert";
-const __flash char messageLoaded[] = " Reg. geladen";
+const __flash char messageSaved[] = " Reg.in Komb.gesp.";
+const __flash char messageLoaded[] = " Reg.gesetzt";
+const __flash char messageRegisterMan[] = "+";
+
 
 void menuDisplaySaveMessage(uint8_t regNumber){
 	char* pChar = string_Buf; // utils.c
-	pChar = putChar_Dec2(regNumber, pChar);
+	pChar = putChar_Dec(regNumber, pChar);
 	putString_P(messageSaved, pChar);
 	menu_DisplayMainMessage(string_Buf);
 }
 
 void menuDisplayLoadMessage(uint8_t regNumber){
 	char* pChar = string_Buf; // utils.c
-	pChar = putChar_Dec2(regNumber, pChar);
-	putString_P(messageLoaded, pChar);
+	pChar = putChar_Dec(regNumber, pChar);
+	pChar = putString_P(messageLoaded, pChar);
+	module_WaitOutputInput2Cycles(); // wait until new register are transferred to output and read back 
+	uint8_t extraRegisters = count_Registers(REGISTER_READ_HWIN_XOR_SWOUT);
+	if (extraRegisters > 0){
+		pChar = putString_P(messageRegisterMan, pChar);
+		putChar_Dec(extraRegisters, pChar);
+	}
 	menu_DisplayMainMessage(string_Buf);
 }
 
@@ -555,7 +576,7 @@ uint8_t softKeyK1A(uint8_t arg){
 	} else if (arg != 0) {
 		menuDisplayLoadMessage(program_toRegister(0));
 	}
-	return 0;
+	return 	(midi_RegisterMatchProgram(0) == 0) ? MENU_SOFTKEY_FUNC_RETURN_STATUS_ON : MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF;
 }
 
 uint8_t softKeyK2A(uint8_t arg){
@@ -565,7 +586,7 @@ uint8_t softKeyK2A(uint8_t arg){
 	} else if (arg != 0) {
 		menuDisplayLoadMessage(program_toRegister(1));
 	}
-	return 0;
+	return 	(midi_RegisterMatchProgram(1) == 0) ? MENU_SOFTKEY_FUNC_RETURN_STATUS_ON : MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF;
 }
 
 uint8_t softKeyK3A(uint8_t arg){
@@ -575,7 +596,7 @@ uint8_t softKeyK3A(uint8_t arg){
 	} else if (arg != 0) {
 		menuDisplayLoadMessage(program_toRegister(2));
 	}
-	return 0;
+	return 	(midi_RegisterMatchProgram(2) == 0) ? MENU_SOFTKEY_FUNC_RETURN_STATUS_ON : MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF;
 }
 
 uint8_t softKeyK4A(uint8_t arg){
@@ -585,9 +606,16 @@ uint8_t softKeyK4A(uint8_t arg){
 	} else if (arg != 0) {
 		menuDisplayLoadMessage(program_toRegister(3));
 	}
-	return 0;
+	return 	(midi_RegisterMatchProgram(3) == 0) ? MENU_SOFTKEY_FUNC_RETURN_STATUS_ON : MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF;
 }
 
+
+uint8_t softKeyRegOff(uint8_t arg){
+	if (arg != 0){
+		midi_resetRegisters();
+	}
+	return 0;
+}
 //*************************** I N D I V I D U A L   M E N U   F U N C T I O N S ******************************
 
 uint8_t menuOnExitSaveProgram(uint8_t arg){
@@ -1408,7 +1436,7 @@ void nibbleToLCDstring(){
 				lcdData[2] = '1';
 				lcdData[3] = nibbleToChr(nibble[0]-10);
 			} else {
-				lcdData[2] = '0';
+				lcdData[2] = ' ';
 				lcdData[3] = nibbleToChr(nibble[0]);
 			}
 		}
@@ -1585,9 +1613,10 @@ void nibbleChange(uint8_t nibbleNr , int8_t addValue){
 		case MENU_T_VARMIDICHAN:
 			if (allowInvalid == 0) {
 				// 1 -> 2 -> ... -> 16 -> 1
-				if ((addValue == 1)	 && (nibble[0] == 16)){
+				if ((addValue == 1)	 && (nibble[0] >= 16)){
 					nibble[0] = 1;
-				} else if ((addValue == -1)	 && (nibble[0] == 1)){
+				} else if ((addValue == -1)	 && ((nibble[0] <= 1) || (nibble[0] > 16))){
+					// V 0.58 failsafe if nibble[0] was invalid
 					nibble[0] = 16;
 				} else {
 					nibble[0] = nibble[0] + addValue;
@@ -1758,7 +1787,8 @@ void nibbleToData(){
 		dataEntry = (nibble[0] << 4) | (nibble[1] & 0x0F);
 		break;
 	case MENU_T_VARMIDICHAN:
-		if (nibble[0] == 0xFF) {
+		if ((nibble[0] == 0) || (nibble[0] > 16)) {
+			// V 0.58 catch invalid values
 			dataEntry = nibble[0];
 		} else {
 			dataEntry = nibble[0]-1;
@@ -2264,8 +2294,10 @@ uint8_t displayMenuMessage_P(const __flash char* pMessage){
 	uint8_t cursorPosMessage;
 	if ((currentMenu->menuType & MENU_T_REMOVEBOUND_MASK) == MENU_T_MENU){
 		// menu type: menu
-		lcd_goto(MENU_LCD_CURSOR_DATA);
-		displayMessageArea = MENU_DISPLAY_AREA_DATA;
+		// center message in extra and data display area
+		uint8_t strlen = get_StrLenP(pMessage);
+		lcd_goto(MENU_LCD_CURSOR_EXTRA + ((MENU_LCD_DATALEN + MENU_LCD_EXTRALEN - strlen) >> 1));
+		displayMessageArea = MENU_DISPLAY_AREA_EXTRA_AND_DATA;
 	} else {
 		// menu type: data
 		lcd_goto(MENU_LCD_CURSOR_EXTRA);
@@ -2286,7 +2318,10 @@ void menudeleteMainMessage(){
 }
 
 void menu_deleteMessage(){
-	if (displayMessageArea == MENU_DISPLAY_AREA_EXTRA){
+	if (displayMessageArea == MENU_DISPLAY_AREA_EXTRA_AND_DATA) {
+		menuClearExtraDisp();
+		menu_ClearDataDisp();
+	} else if (displayMessageArea == MENU_DISPLAY_AREA_EXTRA) {
 		menuClearExtraDisp();
 	} else if (displayMessageArea == MENU_DISPLAY_AREA_DATA) {
 		menu_ClearDataDisp();

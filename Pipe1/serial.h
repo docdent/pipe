@@ -121,9 +121,14 @@ extern volatile uint8_t midiTxOvflCount;
 #define MIDI_UNDEFINED 0xFD
 #define MIDI_ACTIVESENSING 0xFE
 #define MIDI_RESET 0xFF
+#define MIDI_ENDSYSEX 0xF7
 // as default if byte from receiver is read but no data in buffer
 #define MIDI_IGNORE_DATA 0xFF
-#define MIDI_MAX_INTERESTING_BYTES 2
+#define MIDI_MAX_INTERESTING_BYTES 8 // V 0.59 2->8 for sysex receive
 // receivable SysEx
 #define MIDI_RX_SYSEX_HEADER0 0x7D
+#define MIDI_MYSYSEX_REGISTER_ON 0x40
+#define MIDI_MYSYSEX_REGISTER_OFF 0x00
+#define MIDI_MYSYSEX_REGISTER_HEADER 0xA5 // arbitrary header  followed by regNr
+
 #endif /* SERIAL_H_ */

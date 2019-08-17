@@ -178,6 +178,7 @@ uint8_t lcdData[MENU_LCD_DATALEN];
 #define MENU_DISPLAY_AREA_EXTRA 0
 #define MENU_DISPLAY_AREA_DATA 1
 #define MENU_DISPLAY_AREA_MAIN 2
+#define MENU_DISPLAY_AREA_EXTRA_AND_DATA 3
 
 typedef struct {
 	uint8_t nibbleCount;

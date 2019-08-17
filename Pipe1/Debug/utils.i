@@ -706,6 +706,7 @@ extern uint8_t lcd_noteOut(uint8_t noteNr);
 
 extern char* putString_P(const __flash char* pSourceString, char* pOutput);
 extern char* putChar_Dec2(uint8_t val, char* pOutput);
+extern char* putChar_Dec(uint8_t val, char* pOutput);
 extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
@@ -713,7 +714,7 @@ extern char* putChar_Manual(uint8_t manual, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 77 ".././utils.h"
+# 78 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -733,13 +734,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 105 ".././utils.h"
+# 106 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 107 ".././utils.h" 3
+# 108 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 107 ".././utils.h"
+# 108 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -831,7 +832,7 @@ extern uint8_t msgPipe_Handling;
 # 16 ".././hwtimer.h" 2
 # 31 ".././hwtimer.h"
 extern volatile uint8_t time_Uptime[4];
-# 77 ".././hwtimer.h"
+# 79 ".././hwtimer.h"
 typedef struct {
  uint8_t counter;
  uint8_t prescaler;
@@ -844,7 +845,7 @@ extern void init_HwTimer();
 extern void init_Timers();
 extern void init_ADC();
 extern void init_Pipe();
-# 130 ".././hwtimer.h"
+# 132 ".././hwtimer.h"
 typedef struct {
  uint8_t mux;
  uint8_t ADCval;
@@ -856,7 +857,7 @@ typedef struct {
 extern volatile KeyInfo adcKeys[1];
 
 extern uint8_t keyWants[6];
-# 163 ".././hwtimer.h"
+# 165 ".././hwtimer.h"
 typedef struct {
  uint8_t pipeOutM4;
  uint8_t pipeOut;
@@ -879,7 +880,7 @@ extern volatile uint8_t pipeProcessing;
 extern uint8_t pipe_ModuleTested;
 extern uint8_t pipe_ModuleAssnRead;
 extern uint8_t pipe_ModuleAssnWrite;
-# 193 ".././hwtimer.h"
+# 195 ".././hwtimer.h"
 extern uint8_t pipe_PowerStatus;
 
 
@@ -931,7 +932,9 @@ typedef struct{
  uint8_t endNote;
 } ManualNoteRange_t;
 extern ManualNoteRange_t ManualNoteRange[4];
-# 115 ".././Midi.h"
+
+extern void midi_ProgramChange(uint8_t channel, uint8_t program);
+# 114 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -942,9 +945,19 @@ typedef struct{
 extern MidiInMap_t midiInMap[16][4];
 
 typedef struct{
+ uint8_t InChannel;
+ uint8_t OutChannel;
+} MidiThrough_t;
+
+extern MidiThrough_t midiThrough;
+
+
+typedef struct{
  uint8_t channel;
  } MidiOutMap_t;
 extern MidiOutMap_t midiOutMap[4];
+
+
 
 
 typedef struct{
@@ -961,12 +974,27 @@ typedef struct{
  } ProgramInfo_t;
 extern ProgramInfo_t programMap[64] ;
 
+extern uint8_t midi_RegisterChanged;
+
 extern uint8_t read_allRegister(uint8_t* resultPtr);
+
+
+
+
 extern void register_onOff(uint8_t regNr, uint8_t onOff);
 extern void registers_CalcCount();
 extern uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm);
 extern uint8_t program_toRegister(uint8_t program);
 extern void midi_resetRegisters();
+
+extern uint8_t midi_RegisterMatchProgram(uint8_t program);
+
+
+
+
+
+extern uint8_t count_Registers(uint8_t mode);
+
 
 extern void init_Midi2Manual();
 extern void init_Manual2Midi();
@@ -978,6 +1006,9 @@ extern ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note);
 extern void Midi_updateManualRange();
 
 extern void midiSendAllNotesOff();
+extern void init_Midi();
+extern void midi_ManualOff(uint8_t manual);
+extern void midi_AllManualsOff();
 
 
 
@@ -985,6 +1016,7 @@ extern uint8_t midiRxActivceSensing;
 typedef struct {
  uint8_t TxActivceSense;
  uint8_t VelZero4Off;
+ uint8_t AcceptProgChange;
 } MidiSetting_t;
 extern MidiSetting_t midi_Setting;
 
@@ -993,23 +1025,20 @@ extern uint8_t midiLastOutManual;
 extern uint8_t midiLastInNote;
 extern uint8_t midiLastInChannel;
 extern uint8_t midiLastInManual;
+extern uint8_t midiLastProgram;
 
 extern void midiKeyPress_Process(PipeMessage_t pipeMessage);
 extern void midiIn_Process(uint8_t midiByte);
 extern void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff);
-extern uint8_t program_toRegister(uint8_t program);
 extern void midi_SendActiveSense();
 extern void midi_CheckRxActiveSense();
 extern void midi_CheckTxActiveSense();
 
 
-extern void init_Midi();
-extern void midi_ManualOff(uint8_t manual);
-extern void midi_AllManualsOff();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 208 ".././Midi.h"
+# 233 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1019,20 +1048,6 @@ typedef struct{
 extern const __flash CplInfo_t cplInfo[12];
 
 extern uint8_t set_Coupler(uint8_t);
-
-
-extern uint8_t midiCoupler_2from3;
-extern uint8_t midiCoupler_1from3;
-extern uint8_t midiCoupler_1from2;
-extern uint8_t midiCoupler_Pfrom3;
-extern uint8_t midiCoupler_Pfrom2;
-extern uint8_t midiCoupler_Pfrom1;
-extern uint8_t midiCoupler_3from2;
-extern uint8_t midiCoupler_3from1;
-extern uint8_t midiCoupler_2from1;
-extern uint8_t midiCoupler_3fromP;
-extern uint8_t midiCoupler_2fromP;
-extern uint8_t midiCoupler_1fromP;
 # 17 ".././utils.c" 2
 
 const char cr_lf [] 
@@ -1174,6 +1189,31 @@ char* putChar_Dec2(uint8_t val, char* pOutput) {
  *pOutput = 0;
  return pOutput;
 }
+
+char* putChar_Dec(uint8_t val, char* pOutput) {
+ uint8_t hundreds = 0;
+ uint8_t weHadHundreds = 0x00;
+ while (val > 99) {
+  val -= 100;
+  hundreds++;
+ }
+ if (hundreds > 0){
+  *(pOutput++) = '0'+hundreds;
+  weHadHundreds = 0xFF;
+ }
+ uint8_t tens = 0;
+ while (val > 9) {
+  val -= 10;
+  tens++;
+ }
+ if ((tens > 0) || (weHadHundreds == 0xFF)){
+  *(pOutput++) = '0'+tens;
+ }
+ *(pOutput++) = '0'+val;
+ *pOutput = 0;
+ return pOutput;
+}
+
 
 char* putChar_hex(uint8_t val, char* pOutput){
  uint8_t nibble = val >> 4;
