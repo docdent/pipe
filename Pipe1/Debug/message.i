@@ -415,7 +415,9 @@ typedef union{
 extern uint8_t lcd_cursorIsOn;
 
 extern uint8_t nibbleToChr(uint8_t myNibble);
-# 41 ".././utils.h"
+
+
+
 extern void lcd_initCG();
 extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
 extern void lcd_wordout(uint16_t hexNumber);
@@ -441,10 +443,11 @@ extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
 extern char* putChar_Manual(uint8_t manual, char* pOutput);
+extern char* putChar_MidiChan(uint8_t channel, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 78 ".././utils.h"
+# 73 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -464,13 +467,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 106 ".././utils.h"
+# 101 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 108 ".././utils.h" 3
+# 103 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 108 ".././utils.h"
+# 103 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);

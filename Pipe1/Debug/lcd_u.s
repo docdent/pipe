@@ -14,17 +14,17 @@ __zero_reg__ = 1
 lcd_write_nibble:
 .LFB10:
 	.file 1 ".././lcd_u.c"
-	.loc 1 148 0
+	.loc 1 149 0
 	.cfi_startproc
 .LVL0:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 149 0
+	.loc 1 150 0
 	tst r24
 	brge .L2
-	.loc 1 150 0
+	.loc 1 151 0
 	ldi r30,lo8(2)
 	ldi r31,lo8(1)
 	ld r25,Z
@@ -32,17 +32,17 @@ lcd_write_nibble:
 	st Z,r25
 	rjmp .L3
 .L2:
-	.loc 1 152 0
+	.loc 1 153 0
 	ldi r30,lo8(2)
 	ldi r31,lo8(1)
 	ld r25,Z
 	andi r25,lo8(-17)
 	st Z,r25
 .L3:
-	.loc 1 154 0
+	.loc 1 155 0
 	sbrs r24,6
 	rjmp .L4
-	.loc 1 155 0
+	.loc 1 156 0
 	ldi r30,lo8(2)
 	ldi r31,lo8(1)
 	ld r25,Z
@@ -50,31 +50,31 @@ lcd_write_nibble:
 	st Z,r25
 	rjmp .L5
 .L4:
-	.loc 1 157 0
+	.loc 1 158 0
 	ldi r30,lo8(2)
 	ldi r31,lo8(1)
 	ld r25,Z
 	andi r25,lo8(-9)
 	st Z,r25
 .L5:
-	.loc 1 159 0
+	.loc 1 160 0
 	sbrs r24,5
 	rjmp .L6
-	.loc 1 160 0
+	.loc 1 161 0
 	in r25,0xe
 	ori r25,lo8(8)
 	out 0xe,r25
 	rjmp .L7
 .L6:
-	.loc 1 162 0
+	.loc 1 163 0
 	in r25,0xe
 	andi r25,lo8(-9)
 	out 0xe,r25
 .L7:
-	.loc 1 164 0
+	.loc 1 165 0
 	sbrs r24,4
 	rjmp .L8
-	.loc 1 165 0
+	.loc 1 166 0
 	in r24,0x14
 .LVL1:
 	ori r24,lo8(32)
@@ -82,13 +82,13 @@ lcd_write_nibble:
 	rjmp .L9
 .LVL2:
 .L8:
-	.loc 1 167 0
+	.loc 1 168 0
 	in r24,0x14
 .LVL3:
 	andi r24,lo8(-33)
 	out 0x14,r24
 .L9:
-	.loc 1 170 0
+	.loc 1 171 0
 	ldi r30,lo8(2)
 	ldi r31,lo8(1)
 	ld r24,Z
@@ -106,7 +106,7 @@ lcd_write_nibble:
 .LVL5:
 .LBE23:
 .LBE22:
-	.loc 1 172 0
+	.loc 1 173 0
 	ld r24,Z
 	andi r24,lo8(-65)
 	st Z,r24
@@ -130,7 +130,7 @@ lcd_write_nibble:
 	.type	lcd_write_character, @function
 lcd_write_character:
 .LFB8:
-	.loc 1 109 0
+	.loc 1 110 0
 	.cfi_startproc
 .LVL8:
 	push r28
@@ -142,22 +142,22 @@ lcd_write_character:
 /* stack size = 1 */
 .L__stack_usage = 1
 	mov r28,r24
-	.loc 1 110 0
+	.loc 1 111 0
 	ldi r30,lo8(2)
 	ldi r31,lo8(1)
 	ld r24,Z
 .LVL9:
 	ori r24,lo8(32)
 	st Z,r24
-	.loc 1 111 0
+	.loc 1 112 0
 	ld r24,Z
 	andi r24,lo8(-65)
 	st Z,r24
-	.loc 1 112 0
+	.loc 1 113 0
 	mov r24,r28
 	call lcd_write_nibble
 .LVL10:
-	.loc 1 113 0
+	.loc 1 114 0
 	mov r24,r28
 	swap r24
 	andi r24,lo8(-16)
@@ -176,7 +176,7 @@ lcd_write_character:
 /* epilogue start */
 .LBE27:
 .LBE26:
-	.loc 1 115 0
+	.loc 1 116 0
 	pop r28
 .LVL13:
 	ret
@@ -188,7 +188,7 @@ lcd_write_character:
 	.type	lcd_write_command, @function
 lcd_write_command:
 .LFB9:
-	.loc 1 125 0
+	.loc 1 126 0
 	.cfi_startproc
 .LVL14:
 	push r28
@@ -200,28 +200,28 @@ lcd_write_command:
 /* stack size = 1 */
 .L__stack_usage = 1
 	mov r28,r24
-	.loc 1 126 0
+	.loc 1 127 0
 	ldi r30,lo8(2)
 	ldi r31,lo8(1)
 	ld r24,Z
 .LVL15:
 	andi r24,lo8(-33)
 	st Z,r24
-	.loc 1 127 0
+	.loc 1 128 0
 	ld r24,Z
 	andi r24,lo8(-65)
 	st Z,r24
-	.loc 1 128 0
+	.loc 1 129 0
 	mov r24,r28
 	call lcd_write_nibble
 .LVL16:
-	.loc 1 129 0
+	.loc 1 130 0
 	mov r24,r28
 	swap r24
 	andi r24,lo8(-16)
 	call lcd_write_nibble
 .LVL17:
-	.loc 1 130 0
+	.loc 1 131 0
 	subi r28,lo8(-(-1))
 .LVL18:
 	cpi r28,lo8(2)
@@ -254,7 +254,7 @@ lcd_write_command:
 /* epilogue start */
 .LBE31:
 .LBE30:
-	.loc 1 135 0
+	.loc 1 136 0
 	pop r28
 .LVL22:
 	ret
@@ -266,35 +266,35 @@ lcd_write_command:
 	.type	lcd_init, @function
 lcd_init:
 .LFB7:
-	.loc 1 40 0
+	.loc 1 41 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 42 0
+	.loc 1 43 0
 	ldi r30,lo8(1)
 	ldi r31,lo8(1)
 	ld r24,Z
 	ori r24,lo8(16)
 	st Z,r24
-	.loc 1 43 0
+	.loc 1 44 0
 	ld r24,Z
 	ori r24,lo8(8)
 	st Z,r24
-	.loc 1 44 0
+	.loc 1 45 0
 	in r24,0xd
 	ori r24,lo8(8)
 	out 0xd,r24
-	.loc 1 45 0
+	.loc 1 46 0
 	in r24,0x13
 	ori r24,lo8(32)
 	out 0x13,r24
-	.loc 1 47 0
+	.loc 1 48 0
 	ld r24,Z
 	ori r24,lo8(64)
 	st Z,r24
-	.loc 1 48 0
+	.loc 1 49 0
 	ld r24,Z
 	ori r24,lo8(32)
 	st Z,r24
@@ -314,17 +314,17 @@ lcd_init:
 .LVL24:
 .LBE33:
 .LBE32:
-	.loc 1 66 0
+	.loc 1 67 0
 	ldi r30,lo8(2)
 	ldi r31,lo8(1)
 	ld r24,Z
 	andi r24,lo8(-33)
 	st Z,r24
-	.loc 1 67 0
+	.loc 1 68 0
 	ld r24,Z
 	andi r24,lo8(-65)
 	st Z,r24
-	.loc 1 70 0
+	.loc 1 71 0
 	ldi r24,lo8(48)
 	call lcd_write_nibble
 .LVL25:
@@ -340,7 +340,7 @@ lcd_init:
 .LVL26:
 .LBE35:
 .LBE34:
-	.loc 1 72 0
+	.loc 1 73 0
 	ldi r24,lo8(48)
 	call lcd_write_nibble
 .LVL27:
@@ -356,7 +356,7 @@ lcd_init:
 .LVL28:
 .LBE37:
 .LBE36:
-	.loc 1 74 0
+	.loc 1 75 0
 	ldi r24,lo8(48)
 	call lcd_write_nibble
 .LVL29:
@@ -372,7 +372,7 @@ lcd_init:
 .LVL30:
 .LBE39:
 .LBE38:
-	.loc 1 80 0
+	.loc 1 81 0
 	ldi r24,lo8(40)
 	call lcd_write_nibble
 .LVL31:
@@ -388,23 +388,23 @@ lcd_init:
 .LVL32:
 .LBE41:
 .LBE40:
-	.loc 1 83 0
+	.loc 1 84 0
 	ldi r24,lo8(40)
 	call lcd_write_command
 .LVL33:
-	.loc 1 89 0
+	.loc 1 90 0
 	ldi r24,lo8(8)
 	call lcd_write_command
 .LVL34:
-	.loc 1 91 0
+	.loc 1 92 0
 	ldi r24,lo8(1)
 	call lcd_write_command
 .LVL35:
-	.loc 1 93 0
+	.loc 1 94 0
 	ldi r24,lo8(6)
 	call lcd_write_command
 .LVL36:
-	.loc 1 97 0
+	.loc 1 98 0
 	ldi r24,lo8(12)
 	call lcd_write_command
 .LVL37:
@@ -417,16 +417,16 @@ lcd_init:
 	.type	lcd_goto, @function
 lcd_goto:
 .LFB11:
-	.loc 1 183 0
+	.loc 1 184 0
 	.cfi_startproc
 .LVL38:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 184 0
-	sts lcd_cursorPos,r24
 	.loc 1 185 0
+	sts lcd_cursorPos,r24
+	.loc 1 186 0
 	subi r24,lo8(-(-128))
 .LVL39:
 	call lcd_write_command
@@ -440,18 +440,46 @@ lcd_goto:
 	.type	lcd_clrscr, @function
 lcd_clrscr:
 .LFB12:
-	.loc 1 195 0
+	.loc 1 196 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 196 0
-	sts lcd_cursorPos,__zero_reg__
 	.loc 1 197 0
+	sts lcd_cursorPos,__zero_reg__
+	.loc 1 198 0
 	ldi r24,lo8(1)
 	call lcd_write_command
 .LVL41:
+.LBB42:
+	.loc 1 200 0
+	ldi r24,0
+.LBE42:
+	.loc 1 199 0
+	ldi r30,lo8(lcd_buffer)
+	ldi r31,hi8(lcd_buffer)
+.LBB43:
+	.loc 1 200 0
+	rjmp .L17
+.LVL42:
+.L18:
+	.loc 1 201 0 discriminator 3
+	ldi r25,lo8(32)
+	st Z,r25
+	.loc 1 200 0 discriminator 3
+	subi r24,lo8(-(1))
+.LVL43:
+	.loc 1 201 0 discriminator 3
+	adiw r30,1
+.LVL44:
+.L17:
+	.loc 1 200 0 discriminator 1
+	cpi r24,lo8(80)
+	brlo .L18
+/* epilogue start */
+.LBE43:
+	.loc 1 203 0
 	ret
 	.cfi_endproc
 .LFE12:
@@ -461,54 +489,87 @@ lcd_clrscr:
 	.type	lcd_home, @function
 lcd_home:
 .LFB13:
-	.loc 1 207 0
+	.loc 1 212 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 208 0
+	.loc 1 213 0
 	sts lcd_cursorPos,__zero_reg__
-	.loc 1 209 0
+	.loc 1 214 0
 	ldi r24,lo8(2)
 	call lcd_write_command
-.LVL42:
+.LVL45:
 	ret
 	.cfi_endproc
 .LFE13:
 	.size	lcd_home, .-lcd_home
-	.section	.text.lcd_putc,"ax",@progbits
-.global	lcd_putc
-	.type	lcd_putc, @function
-lcd_putc:
+	.section	.text.getCursorFromLCDRAMcursor,"ax",@progbits
+.global	getCursorFromLCDRAMcursor
+	.type	getCursorFromLCDRAMcursor, @function
+getCursorFromLCDRAMcursor:
 .LFB14:
-	.loc 1 219 0
+	.loc 1 217 0
 	.cfi_startproc
-.LVL43:
+.LVL46:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 220 0
-	lds r25,lcd_cursorPos
-	subi r25,lo8(-(1))
-	andi r25,lo8(127)
-	sts lcd_cursorPos,r25
+	.loc 1 218 0
+	cpi r24,lo8(20)
+	brlo .L21
 	.loc 1 221 0
-	call lcd_write_character
-.LVL44:
+	ldi r25,lo8(-64)
+	add r25,r24
+	cpi r25,lo8(20)
+	brsh .L22
+	.loc 1 222 0
+	subi r24,lo8(-(-44))
+.LVL47:
+	ret
+.LVL48:
+.L22:
+	.loc 1 223 0
+	ldi r25,lo8(-20)
+	add r25,r24
+	cpi r25,lo8(20)
+	brsh .L23
+	.loc 1 224 0
+	subi r24,lo8(-(20))
+.LVL49:
+	ret
+.LVL50:
+.L23:
+	.loc 1 225 0
+	ldi r25,lo8(-84)
+	add r25,r24
+	cpi r25,lo8(20)
+	brsh .L25
+	.loc 1 226 0
+	subi r24,lo8(-(-24))
+.LVL51:
+	ret
+.LVL52:
+.L25:
+	.loc 1 228 0
+	ldi r24,lo8(-1)
+.LVL53:
+.L21:
+	.loc 1 230 0
 	ret
 	.cfi_endproc
 .LFE14:
-	.size	lcd_putc, .-lcd_putc
-	.section	.text.lcd_puts,"ax",@progbits
-.global	lcd_puts
-	.type	lcd_puts, @function
-lcd_puts:
+	.size	getCursorFromLCDRAMcursor, .-getCursorFromLCDRAMcursor
+	.section	.text.lcd_putc,"ax",@progbits
+.global	lcd_putc
+	.type	lcd_putc, @function
+lcd_putc:
 .LFB15:
-	.loc 1 231 0
+	.loc 1 240 0
 	.cfi_startproc
-.LVL45:
+.LVL54:
 	push r28
 .LCFI2:
 	.cfi_def_cfa_offset 4
@@ -521,47 +582,113 @@ lcd_puts:
 /* frame size = 0 */
 /* stack size = 2 */
 .L__stack_usage = 2
-	movw r30,r24
-	.loc 1 232 0
-	or r24,r25
-	brne .L20
-.LBB42:
-	rjmp .L19
-.LVL46:
-.L22:
-	.loc 1 236 0
-	call lcd_putc
-.LVL47:
-	.loc 1 235 0
-	movw r30,r28
-.LVL48:
-.L20:
-	movw r28,r30
-	adiw r28,1
-.LVL49:
-	ld r24,Z
-.LVL50:
-	cpse r24,__zero_reg__
-	rjmp .L22
-.LVL51:
-.L19:
+	mov r29,r24
+	.loc 1 243 0
+	lds r28,lcd_cursorPos
+	mov r24,r28
+.LVL55:
+	call getCursorFromLCDRAMcursor
+.LVL56:
+	.loc 1 244 0
+	cpi r24,lo8(-1)
+	breq .L27
+.LVL57:
+.LBB44:
+	.loc 1 246 0
+	cpi r29,lo8(-95)
+	breq .L29
+	.loc 1 248 0
+	cpi r29,lo8(-128)
+	breq .L30
+	.loc 1 250 0
+	cpi r29,lo8(-91)
+	breq .L31
+	.loc 1 252 0
+	cpi r29,lo8(10)
+	breq .L32
+	.loc 1 254 0
+	cpi r29,lo8(-30)
+	breq .L33
+	.loc 1 256 0
+	cpi r29,lo8(-11)
+	breq .L34
+	.loc 1 258 0
+	cpi r29,lo8(-17)
+	breq .L35
+	.loc 1 260 0
+	cpi r29,lo8(-31)
+	breq .L36
+	.loc 1 245 0
+	mov r25,r29
+	rjmp .L28
+.L29:
+	.loc 1 247 0
+	ldi r25,lo8(32)
+	rjmp .L28
+.L30:
+	.loc 1 249 0
+	ldi r25,lo8(32)
+	rjmp .L28
+.L31:
+	.loc 1 251 0
+	ldi r25,lo8(20)
+	rjmp .L28
+.L32:
+	.loc 1 253 0
+	ldi r25,lo8(21)
+	rjmp .L28
+.L33:
+	.loc 1 255 0
+	ldi r25,lo8(19)
+	rjmp .L28
+.L34:
+	.loc 1 257 0
+	ldi r25,lo8(18)
+	rjmp .L28
+.L35:
+	.loc 1 259 0
+	ldi r25,lo8(17)
+	rjmp .L28
+.L36:
+	.loc 1 261 0
+	ldi r25,lo8(16)
+.L28:
+.LVL58:
+	.loc 1 263 0
+	mov r30,r24
+	ldi r31,0
+	subi r30,lo8(-(lcd_buffer))
+	sbci r31,hi8(-(lcd_buffer))
+	st Z,r25
+.LVL59:
+.L27:
+.LBE44:
+	.loc 1 265 0
+	subi r28,lo8(-(1))
+	andi r28,lo8(127)
+	sts lcd_cursorPos,r28
+	.loc 1 266 0
+	mov r24,r29
+.LVL60:
+	call lcd_write_character
+.LVL61:
 /* epilogue start */
-.LBE42:
-	.loc 1 238 0
+	.loc 1 267 0
 	pop r29
+.LVL62:
 	pop r28
 	ret
 	.cfi_endproc
 .LFE15:
-	.size	lcd_puts, .-lcd_puts
-	.section	.text.lcd_puts_P,"ax",@progbits
-.global	lcd_puts_P
-	.type	lcd_puts_P, @function
-lcd_puts_P:
+	.size	lcd_putc, .-lcd_putc
+	.section	.text.lcd_puts,"ax",@progbits
+.global	lcd_puts
+	.type	lcd_puts, @function
+lcd_puts:
 .LFB16:
-	.loc 1 247 0
+	.loc 1 276 0
 	.cfi_startproc
-.LVL52:
+.LVL63:
 	push r28
 .LCFI4:
 	.cfi_def_cfa_offset 4
@@ -575,63 +702,117 @@ lcd_puts_P:
 /* stack size = 2 */
 .L__stack_usage = 2
 	movw r30,r24
-	.loc 1 248 0
+	.loc 1 277 0
 	or r24,r25
-	brne .L24
-.LBB43:
-	rjmp .L23
-.LVL53:
-.L26:
-	.loc 1 251 0
+	brne .L38
+.LBB45:
+	rjmp .L37
+.LVL64:
+.L40:
+	.loc 1 281 0
 	call lcd_putc
-.LVL54:
-.LBB44:
-	.loc 1 250 0
+.LVL65:
+	.loc 1 280 0
 	movw r30,r28
-.LVL55:
-.L24:
+.LVL66:
+.L38:
 	movw r28,r30
 	adiw r28,1
-.LVL56:
-	.loc 1 250 0
-/* #APP */
- ;  250 ".././lcd_u.c" 1
-	lpm r24, Z
-	
- ;  0 "" 2
-.LVL57:
-/* #NOAPP */
-.LBE44:
-	.loc 1 250 0
+.LVL67:
+	ld r24,Z
+.LVL68:
 	cpse r24,__zero_reg__
-	rjmp .L26
-.LVL58:
-.L23:
+	rjmp .L40
+.LVL69:
+.L37:
 /* epilogue start */
-.LBE43:
-	.loc 1 253 0
+.LBE45:
+	.loc 1 283 0
 	pop r29
 	pop r28
 	ret
 	.cfi_endproc
 .LFE16:
+	.size	lcd_puts, .-lcd_puts
+	.section	.text.lcd_puts_P,"ax",@progbits
+.global	lcd_puts_P
+	.type	lcd_puts_P, @function
+lcd_puts_P:
+.LFB17:
+	.loc 1 292 0
+	.cfi_startproc
+.LVL70:
+	push r28
+.LCFI6:
+	.cfi_def_cfa_offset 4
+	.cfi_offset 28, -3
+	push r29
+.LCFI7:
+	.cfi_def_cfa_offset 5
+	.cfi_offset 29, -4
+/* prologue: function */
+/* frame size = 0 */
+/* stack size = 2 */
+.L__stack_usage = 2
+	movw r30,r24
+	.loc 1 293 0
+	or r24,r25
+	brne .L42
+.LBB46:
+	rjmp .L41
+.LVL71:
+.L44:
+	.loc 1 296 0
+	call lcd_putc
+.LVL72:
+.LBB47:
+	.loc 1 295 0
+	movw r30,r28
+.LVL73:
+.L42:
+	movw r28,r30
+	adiw r28,1
+.LVL74:
+	.loc 1 295 0
+/* #APP */
+ ;  295 ".././lcd_u.c" 1
+	lpm r24, Z
+	
+ ;  0 "" 2
+.LVL75:
+/* #NOAPP */
+.LBE47:
+	.loc 1 295 0
+	cpse r24,__zero_reg__
+	rjmp .L44
+.LVL76:
+.L41:
+/* epilogue start */
+.LBE46:
+	.loc 1 298 0
+	pop r29
+	pop r28
+	ret
+	.cfi_endproc
+.LFE17:
 	.size	lcd_puts_P, .-lcd_puts_P
+	.comm	lcd_buffer,80,1
 	.comm	lcd_cursorPos,1,1
 	.text
 .Letext0:
 	.file 3 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\stdint.h"
 	.section	.debug_info,"",@progbits
 .Ldebug_info0:
-	.long	0x693
+	.long	0x75d
 	.word	0x2
 	.long	.Ldebug_abbrev0
 	.byte	0x4
 	.uleb128 0x1
-	.long	.LASF33
+	.long	.LASF40
 	.byte	0xc
-	.long	.LASF34
-	.long	.LASF35
-	.long	.Ldebug_ranges0+0
+	.long	.LASF41
+	.long	.LASF42
+	.long	.Ldebug_ranges0+0x18
 	.long	0
 	.long	0
 	.long	.Ldebug_line0
@@ -750,7 +931,7 @@ lcd_puts_P:
 	.byte	0x1
 	.long	.LASF18
 	.byte	0x1
-	.byte	0x93
+	.byte	0x94
 	.byte	0x1
 	.long	.LFB10
 	.long	.LFE10
@@ -763,7 +944,7 @@ lcd_puts_P:
 	.uleb128 0xc
 	.long	.LASF20
 	.byte	0x1
-	.byte	0x93
+	.byte	0x94
 	.long	0x30
 	.long	.LLST0
 	.uleb128 0xd
@@ -771,7 +952,7 @@ lcd_puts_P:
 	.long	.LBB22
 	.long	.LBE22
 	.byte	0x1
-	.byte	0xab
+	.byte	0xac
 	.long	0x160
 	.uleb128 0xe
 	.long	0x8f
@@ -792,7 +973,7 @@ lcd_puts_P:
 	.long	.LBB24
 	.long	.LBE24
 	.byte	0x1
-	.byte	0xad
+	.byte	0xae
 	.uleb128 0xe
 	.long	0x8f
 	.long	.LLST4
@@ -812,7 +993,7 @@ lcd_puts_P:
 	.byte	0x1
 	.long	.LASF19
 	.byte	0x1
-	.byte	0x6c
+	.byte	0x6d
 	.byte	0x1
 	.long	.LFB8
 	.long	.LFE8
@@ -822,7 +1003,7 @@ lcd_puts_P:
 	.uleb128 0xc
 	.long	.LASF20
 	.byte	0x1
-	.byte	0x6c
+	.byte	0x6d
 	.long	0x30
 	.long	.LLST8
 	.uleb128 0xd
@@ -830,7 +1011,7 @@ lcd_puts_P:
 	.long	.LBB26
 	.long	.LBE26
 	.byte	0x1
-	.byte	0x72
+	.byte	0x73
 	.long	0x1f8
 	.uleb128 0xe
 	.long	0x8f
@@ -893,7 +1074,7 @@ lcd_puts_P:
 	.byte	0x1
 	.long	.LASF21
 	.byte	0x1
-	.byte	0x7c
+	.byte	0x7d
 	.byte	0x1
 	.long	.LFB9
 	.long	.LFE9
@@ -903,7 +1084,7 @@ lcd_puts_P:
 	.uleb128 0xc
 	.long	.LASF20
 	.byte	0x1
-	.byte	0x7c
+	.byte	0x7d
 	.long	0x30
 	.long	.LLST13
 	.uleb128 0xd
@@ -911,7 +1092,7 @@ lcd_puts_P:
 	.long	.LBB28
 	.long	.LBE28
 	.byte	0x1
-	.byte	0x83
+	.byte	0x84
 	.long	0x294
 	.uleb128 0xe
 	.long	0x8f
@@ -932,7 +1113,7 @@ lcd_puts_P:
 	.long	.LBB30
 	.long	.LBE30
 	.byte	0x1
-	.byte	0x85
+	.byte	0x86
 	.long	0x2cd
 	.uleb128 0xe
 	.long	0x8f
@@ -995,7 +1176,7 @@ lcd_puts_P:
 	.byte	0x1
 	.long	.LASF22
 	.byte	0x1
-	.byte	0x27
+	.byte	0x28
 	.byte	0x1
 	.long	.LFB7
 	.long	.LFE7
@@ -1010,7 +1191,7 @@ lcd_puts_P:
 	.long	.LBB32
 	.long	.LBE32
 	.byte	0x1
-	.byte	0x32
+	.byte	0x33
 	.long	0x35a
 	.uleb128 0xe
 	.long	0xd2
@@ -1031,7 +1212,7 @@ lcd_puts_P:
 	.long	.LBB34
 	.long	.LBE34
 	.byte	0x1
-	.byte	0x47
+	.byte	0x48
 	.long	0x393
 	.uleb128 0xe
 	.long	0x8f
@@ -1052,7 +1233,7 @@ lcd_puts_P:
 	.long	.LBB36
 	.long	.LBE36
 	.byte	0x1
-	.byte	0x49
+	.byte	0x4a
 	.long	0x3cc
 	.uleb128 0xe
 	.long	0x8f
@@ -1073,7 +1254,7 @@ lcd_puts_P:
 	.long	.LBB38
 	.long	.LBE38
 	.byte	0x1
-	.byte	0x4b
+	.byte	0x4c
 	.long	0x405
 	.uleb128 0xe
 	.long	0x8f
@@ -1094,7 +1275,7 @@ lcd_puts_P:
 	.long	.LBB40
 	.long	.LBE40
 	.byte	0x1
-	.byte	0x51
+	.byte	0x52
 	.long	0x43e
 	.uleb128 0xe
 	.long	0x8f
@@ -1209,7 +1390,7 @@ lcd_puts_P:
 	.byte	0x1
 	.long	.LASF23
 	.byte	0x1
-	.byte	0xb6
+	.byte	0xb7
 	.byte	0x1
 	.long	.LFB11
 	.long	.LFE11
@@ -1222,7 +1403,7 @@ lcd_puts_P:
 	.uleb128 0x16
 	.string	"pos"
 	.byte	0x1
-	.byte	0xb6
+	.byte	0xb7
 	.long	0x30
 	.long	.LLST35
 	.uleb128 0x15
@@ -1242,9 +1423,9 @@ lcd_puts_P:
 	.byte	0
 	.uleb128 0x17
 	.byte	0x1
-	.long	.LASF24
+	.long	.LASF25
 	.byte	0x1
-	.byte	0xc2
+	.byte	0xc3
 	.long	.LFB12
 	.long	.LFE12
 	.byte	0x3
@@ -1252,7 +1433,23 @@ lcd_puts_P:
 	.uleb128 0x20
 	.sleb128 3
 	.byte	0x1
-	.long	0x552
+	.long	0x578
+	.uleb128 0x18
+	.long	.LASF24
+	.byte	0x1
+	.byte	0xc7
+	.long	0x578
+	.long	.LLST36
+	.uleb128 0x19
+	.long	.Ldebug_ranges0+0
+	.long	0x568
+	.uleb128 0x1a
+	.string	"i"
+	.byte	0x1
+	.byte	0xc8
+	.long	0x30
+	.long	.LLST37
+	.byte	0
 	.uleb128 0x15
 	.long	.LVL41
 	.long	0x232
@@ -1263,11 +1460,14 @@ lcd_puts_P:
 	.byte	0x31
 	.byte	0
 	.byte	0
+	.uleb128 0x1b
+	.byte	0x2
+	.long	0x30
 	.uleb128 0x17
 	.byte	0x1
-	.long	.LASF25
+	.long	.LASF26
 	.byte	0x1
-	.byte	0xce
+	.byte	0xd3
 	.long	.LFB13
 	.long	.LFE13
 	.byte	0x3
@@ -1275,9 +1475,9 @@ lcd_puts_P:
 	.uleb128 0x20
 	.sleb128 3
 	.byte	0x1
-	.long	0x57b
+	.long	0x5a7
 	.uleb128 0x15
-	.long	.LVL42
+	.long	.LVL45
 	.long	0x232
 	.uleb128 0x14
 	.byte	0x1
@@ -1286,12 +1486,13 @@ lcd_puts_P:
 	.byte	0x32
 	.byte	0
 	.byte	0
-	.uleb128 0xb
+	.uleb128 0x1c
 	.byte	0x1
-	.long	.LASF26
+	.long	.LASF43
 	.byte	0x1
-	.byte	0xda
+	.byte	0xd9
 	.byte	0x1
+	.long	0x30
 	.long	.LFB14
 	.long	.LFE14
 	.byte	0x3
@@ -1299,115 +1500,160 @@ lcd_puts_P:
 	.uleb128 0x20
 	.sleb128 3
 	.byte	0x1
-	.long	0x5b4
+	.long	0x5d5
+	.uleb128 0xc
+	.long	.LASF27
+	.byte	0x1
+	.byte	0xd9
+	.long	0x30
+	.long	.LLST38
+	.byte	0
+	.uleb128 0x12
+	.byte	0x1
+	.long	.LASF28
+	.byte	0x1
+	.byte	0xef
+	.byte	0x1
+	.long	.LFB15
+	.long	.LFE15
+	.long	.LLST39
+	.byte	0x1
+	.long	0x64d
 	.uleb128 0x16
 	.string	"c"
 	.byte	0x1
-	.byte	0xda
-	.long	0x5b4
-	.long	.LLST36
+	.byte	0xef
+	.long	0x64d
+	.long	.LLST40
+	.uleb128 0x18
+	.long	.LASF29
+	.byte	0x1
+	.byte	0xf3
+	.long	0x30
+	.long	.LLST41
+	.uleb128 0x1d
+	.long	.LBB44
+	.long	.LBE44
+	.long	0x628
+	.uleb128 0x18
+	.long	.LASF30
+	.byte	0x1
+	.byte	0xf5
+	.long	0x30
+	.long	.LLST42
+	.byte	0
+	.uleb128 0x13
+	.long	.LVL56
+	.long	0x5a7
+	.long	0x63c
+	.uleb128 0x14
+	.byte	0x1
+	.byte	0x68
+	.byte	0x2
+	.byte	0x8c
+	.sleb128 0
+	.byte	0
 	.uleb128 0x15
-	.long	.LVL44
+	.long	.LVL61
 	.long	0x196
 	.uleb128 0x14
 	.byte	0x1
 	.byte	0x68
-	.byte	0x3
-	.byte	0xf3
-	.uleb128 0x1
-	.byte	0x68
+	.byte	0x2
+	.byte	0x8d
+	.sleb128 0
 	.byte	0
 	.byte	0
 	.uleb128 0x2
 	.byte	0x1
 	.byte	0x8
-	.long	.LASF27
-	.uleb128 0x12
+	.long	.LASF31
+	.uleb128 0x1e
 	.byte	0x1
-	.long	.LASF28
+	.long	.LASF32
 	.byte	0x1
-	.byte	0xe6
-	.byte	0x1
-	.long	.LFB15
-	.long	.LFE15
-	.long	.LLST37
-	.byte	0x1
-	.long	0x603
-	.uleb128 0x16
-	.string	"s"
-	.byte	0x1
-	.byte	0xe6
-	.long	0x603
-	.long	.LLST38
-	.uleb128 0xf
-	.long	.LBB42
-	.long	.LBE42
-	.uleb128 0x18
-	.string	"c"
-	.byte	0x1
-	.byte	0xe9
-	.long	0x5b4
-	.long	.LLST39
-	.uleb128 0x19
-	.long	.LVL47
-	.long	0x57b
-	.byte	0
-	.byte	0
-	.uleb128 0x1a
-	.byte	0x2
-	.long	0x609
-	.uleb128 0x1b
-	.long	0x5b4
-	.uleb128 0x12
-	.byte	0x1
-	.long	.LASF29
-	.byte	0x1
-	.byte	0xf6
+	.word	0x113
 	.byte	0x1
 	.long	.LFB16
 	.long	.LFE16
-	.long	.LLST40
+	.long	.LLST43
 	.byte	0x1
-	.long	0x684
-	.uleb128 0xc
-	.long	.LASF30
+	.long	0x69f
+	.uleb128 0x1f
+	.string	"s"
 	.byte	0x1
-	.byte	0xf6
-	.long	0x603
-	.long	.LLST41
+	.word	0x113
+	.long	0x69f
+	.long	.LLST44
 	.uleb128 0xf
-	.long	.LBB43
-	.long	.LBE43
-	.uleb128 0x18
+	.long	.LBB45
+	.long	.LBE45
+	.uleb128 0x20
 	.string	"c"
 	.byte	0x1
-	.byte	0xf9
-	.long	0x5b4
-	.long	.LLST42
-	.uleb128 0x1c
-	.long	.LBB44
-	.long	.LBE44
-	.long	0x679
-	.uleb128 0x1d
-	.long	.LASF31
-	.byte	0x1
-	.byte	0xfa
-	.long	0x49
-	.long	.LLST43
-	.uleb128 0x1d
-	.long	.LASF32
-	.byte	0x1
-	.byte	0xfa
-	.long	0x30
-	.long	.LLST42
-	.byte	0
-	.uleb128 0x19
-	.long	.LVL54
-	.long	0x57b
+	.word	0x116
+	.long	0x64d
+	.long	.LLST45
+	.uleb128 0x21
+	.long	.LVL65
+	.long	0x5d5
 	.byte	0
 	.byte	0
+	.uleb128 0x1b
+	.byte	0x2
+	.long	0x6a5
+	.uleb128 0x22
+	.long	0x64d
 	.uleb128 0x1e
+	.byte	0x1
+	.long	.LASF33
+	.byte	0x1
+	.word	0x123
+	.byte	0x1
+	.long	.LFB17
+	.long	.LFE17
+	.long	.LLST46
+	.byte	0x1
+	.long	0x725
+	.uleb128 0x23
+	.long	.LASF34
+	.byte	0x1
+	.word	0x123
+	.long	0x69f
+	.long	.LLST47
+	.uleb128 0xf
+	.long	.LBB46
+	.long	.LBE46
+	.uleb128 0x20
+	.string	"c"
+	.byte	0x1
+	.word	0x126
+	.long	0x64d
+	.long	.LLST48
+	.uleb128 0x1d
+	.long	.LBB47
+	.long	.LBE47
+	.long	0x71a
+	.uleb128 0x24
+	.long	.LASF35
+	.byte	0x1
+	.word	0x127
+	.long	0x49
+	.long	.LLST49
+	.uleb128 0x24
 	.long	.LASF36
+	.byte	0x1
+	.word	0x127
+	.long	0x30
+	.long	.LLST48
+	.byte	0
+	.uleb128 0x21
+	.long	.LVL72
+	.long	0x5d5
+	.byte	0
+	.byte	0
+	.uleb128 0x25
+	.long	.LASF38
 	.byte	0x1
 	.byte	0x23
 	.long	0x30
@@ -1415,6 +1661,26 @@ lcd_puts_P:
 	.byte	0x5
 	.byte	0x3
 	.long	lcd_cursorPos
+	.uleb128 0x26
+	.long	0x30
+	.long	0x747
+	.uleb128 0x27
+	.long	0x747
+	.byte	0x4f
+	.byte	0
+	.uleb128 0x2
+	.byte	0x2
+	.byte	0x7
+	.long	.LASF37
+	.uleb128 0x25
+	.long	.LASF39
+	.byte	0x1
+	.byte	0x24
+	.long	0x737
+	.byte	0x1
+	.byte	0x5
+	.byte	0x3
+	.long	lcd_buffer
 	.byte	0
 	.section	.debug_abbrev,"",@progbits
 .Ldebug_abbrev0:
@@ -1759,57 +2025,6 @@ lcd_puts_P:
 	.uleb128 0x34
 	.byte	0
 	.uleb128 0x3
-	.uleb128 0x8
-	.uleb128 0x3a
-	.uleb128 0xb
-	.uleb128 0x3b
-	.uleb128 0xb
-	.uleb128 0x49
-	.uleb128 0x13
-	.uleb128 0x2
-	.uleb128 0x6
-	.byte	0
-	.byte	0
-	.uleb128 0x19
-	.uleb128 0x4109
-	.byte	0
-	.uleb128 0x11
-	.uleb128 0x1
-	.uleb128 0x31
-	.uleb128 0x13
-	.byte	0
-	.byte	0
-	.uleb128 0x1a
-	.uleb128 0xf
-	.byte	0
-	.uleb128 0xb
-	.uleb128 0xb
-	.uleb128 0x49
-	.uleb128 0x13
-	.byte	0
-	.byte	0
-	.uleb128 0x1b
-	.uleb128 0x26
-	.byte	0
-	.uleb128 0x49
-	.uleb128 0x13
-	.byte	0
-	.byte	0
-	.uleb128 0x1c
-	.uleb128 0xb
-	.byte	0x1
-	.uleb128 0x11
-	.uleb128 0x1
-	.uleb128 0x12
-	.uleb128 0x1
-	.uleb128 0x1
-	.uleb128 0x13
-	.byte	0
-	.byte	0
-	.uleb128 0x1d
-	.uleb128 0x34
-	.byte	0
-	.uleb128 0x3
 	.uleb128 0xe
 	.uleb128 0x3a
 	.uleb128 0xb
@@ -1821,7 +2036,179 @@ lcd_puts_P:
 	.uleb128 0x6
 	.byte	0
 	.byte	0
+	.uleb128 0x19
+	.uleb128 0xb
+	.byte	0x1
+	.uleb128 0x55
+	.uleb128 0x6
+	.uleb128 0x1
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x1a
+	.uleb128 0x34
+	.byte	0
+	.uleb128 0x3
+	.uleb128 0x8
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0xb
+	.uleb128 0x49
+	.uleb128 0x13
+	.uleb128 0x2
+	.uleb128 0x6
+	.byte	0
+	.byte	0
+	.uleb128 0x1b
+	.uleb128 0xf
+	.byte	0
+	.uleb128 0xb
+	.uleb128 0xb
+	.uleb128 0x49
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x1c
+	.uleb128 0x2e
+	.byte	0x1
+	.uleb128 0x3f
+	.uleb128 0xc
+	.uleb128 0x3
+	.uleb128 0xe
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0xb
+	.uleb128 0x27
+	.uleb128 0xc
+	.uleb128 0x49
+	.uleb128 0x13
+	.uleb128 0x11
+	.uleb128 0x1
+	.uleb128 0x12
+	.uleb128 0x1
+	.uleb128 0x40
+	.uleb128 0xa
+	.uleb128 0x2117
+	.uleb128 0xc
+	.uleb128 0x1
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x1d
+	.uleb128 0xb
+	.byte	0x1
+	.uleb128 0x11
+	.uleb128 0x1
+	.uleb128 0x12
+	.uleb128 0x1
+	.uleb128 0x1
+	.uleb128 0x13
+	.byte	0
+	.byte	0
 	.uleb128 0x1e
+	.uleb128 0x2e
+	.byte	0x1
+	.uleb128 0x3f
+	.uleb128 0xc
+	.uleb128 0x3
+	.uleb128 0xe
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0x5
+	.uleb128 0x27
+	.uleb128 0xc
+	.uleb128 0x11
+	.uleb128 0x1
+	.uleb128 0x12
+	.uleb128 0x1
+	.uleb128 0x40
+	.uleb128 0x6
+	.uleb128 0x2117
+	.uleb128 0xc
+	.uleb128 0x1
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x1f
+	.uleb128 0x5
+	.byte	0
+	.uleb128 0x3
+	.uleb128 0x8
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0x5
+	.uleb128 0x49
+	.uleb128 0x13
+	.uleb128 0x2
+	.uleb128 0x6
+	.byte	0
+	.byte	0
+	.uleb128 0x20
+	.uleb128 0x34
+	.byte	0
+	.uleb128 0x3
+	.uleb128 0x8
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0x5
+	.uleb128 0x49
+	.uleb128 0x13
+	.uleb128 0x2
+	.uleb128 0x6
+	.byte	0
+	.byte	0
+	.uleb128 0x21
+	.uleb128 0x4109
+	.byte	0
+	.uleb128 0x11
+	.uleb128 0x1
+	.uleb128 0x31
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x22
+	.uleb128 0x26
+	.byte	0
+	.uleb128 0x49
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x23
+	.uleb128 0x5
+	.byte	0
+	.uleb128 0x3
+	.uleb128 0xe
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0x5
+	.uleb128 0x49
+	.uleb128 0x13
+	.uleb128 0x2
+	.uleb128 0x6
+	.byte	0
+	.byte	0
+	.uleb128 0x24
+	.uleb128 0x34
+	.byte	0
+	.uleb128 0x3
+	.uleb128 0xe
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0x5
+	.uleb128 0x49
+	.uleb128 0x13
+	.uleb128 0x2
+	.uleb128 0x6
+	.byte	0
+	.byte	0
+	.uleb128 0x25
 	.uleb128 0x34
 	.byte	0
 	.uleb128 0x3
@@ -1836,6 +2223,24 @@ lcd_puts_P:
 	.uleb128 0xc
 	.uleb128 0x2
 	.uleb128 0xa
+	.byte	0
+	.byte	0
+	.uleb128 0x26
+	.uleb128 0x1
+	.byte	0x1
+	.uleb128 0x49
+	.uleb128 0x13
+	.uleb128 0x1
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x27
+	.uleb128 0x21
+	.byte	0
+	.uleb128 0x49
+	.uleb128 0x13
+	.uleb128 0x2f
+	.uleb128 0xb
 	.byte	0
 	.byte	0
 	.byte	0
@@ -2226,11 +2631,71 @@ lcd_puts_P:
 	.long	0
 	.long	0
 .LLST36:
-	.long	.LVL43
-	.long	.LVL44-1
+	.long	.LVL42
+	.long	.LVL44
+	.word	0x3
+	.byte	0x8e
+	.sleb128 1
+	.byte	0x9f
+	.long	.LVL44
+	.long	.LFE12
+	.word	0x6
+	.byte	0x6e
+	.byte	0x93
+	.uleb128 0x1
+	.byte	0x6f
+	.byte	0x93
+	.uleb128 0x1
+	.long	0
+	.long	0
+.LLST37:
+	.long	.LVL41
+	.long	.LVL42
+	.word	0x2
+	.byte	0x30
+	.byte	0x9f
+	.long	.LVL42
+	.long	.LFE12
 	.word	0x1
 	.byte	0x68
-	.long	.LVL44-1
+	.long	0
+	.long	0
+.LLST38:
+	.long	.LVL46
+	.long	.LVL47
+	.word	0x1
+	.byte	0x68
+	.long	.LVL47
+	.long	.LVL48
+	.word	0x3
+	.byte	0x88
+	.sleb128 44
+	.byte	0x9f
+	.long	.LVL48
+	.long	.LVL49
+	.word	0x1
+	.byte	0x68
+	.long	.LVL49
+	.long	.LVL50
+	.word	0x3
+	.byte	0x88
+	.sleb128 -20
+	.byte	0x9f
+	.long	.LVL50
+	.long	.LVL51
+	.word	0x1
+	.byte	0x68
+	.long	.LVL51
+	.long	.LVL52
+	.word	0x3
+	.byte	0x88
+	.sleb128 24
+	.byte	0x9f
+	.long	.LVL52
+	.long	.LVL53
+	.word	0x1
+	.byte	0x68
+	.long	.LVL53
 	.long	.LFE14
 	.word	0x4
 	.byte	0xf3
@@ -2239,7 +2704,7 @@ lcd_puts_P:
 	.byte	0x9f
 	.long	0
 	.long	0
-.LLST37:
+.LLST39:
 	.long	.LFB15
 	.long	.LCFI2
 	.word	0x3
@@ -2260,57 +2725,43 @@ lcd_puts_P:
 	.sleb128 5
 	.long	0
 	.long	0
-.LLST38:
-	.long	.LVL45
-	.long	.LVL46
-	.word	0x6
-	.byte	0x68
-	.byte	0x93
-	.uleb128 0x1
-	.byte	0x69
-	.byte	0x93
-	.uleb128 0x1
-	.long	.LVL46
-	.long	.LVL48
-	.word	0x6
-	.byte	0x6c
-	.byte	0x93
-	.uleb128 0x1
-	.byte	0x6d
-	.byte	0x93
-	.uleb128 0x1
-	.long	.LVL48
-	.long	.LVL49
-	.word	0x6
-	.byte	0x6e
-	.byte	0x93
-	.uleb128 0x1
-	.byte	0x6f
-	.byte	0x93
-	.uleb128 0x1
-	.long	.LVL49
-	.long	.LVL51
-	.word	0x6
-	.byte	0x6c
-	.byte	0x93
-	.uleb128 0x1
-	.byte	0x6d
-	.byte	0x93
-	.uleb128 0x1
-	.long	0
-	.long	0
-.LLST39:
-	.long	.LVL46
-	.long	.LVL47-1
-	.word	0x1
-	.byte	0x68
-	.long	.LVL50
-	.long	.LVL51
-	.word	0x1
-	.byte	0x68
-	.long	0
-	.long	0
 .LLST40:
+	.long	.LVL54
+	.long	.LVL55
+	.word	0x1
+	.byte	0x68
+	.long	.LVL55
+	.long	.LVL62
+	.word	0x1
+	.byte	0x6d
+	.long	.LVL62
+	.long	.LFE15
+	.word	0x4
+	.byte	0xf3
+	.uleb128 0x1
+	.byte	0x68
+	.byte	0x9f
+	.long	0
+	.long	0
+.LLST41:
+	.long	.LVL56
+	.long	.LVL60
+	.word	0x1
+	.byte	0x68
+	.long	0
+	.long	0
+.LLST42:
+	.long	.LVL57
+	.long	.LVL58
+	.word	0x1
+	.byte	0x6d
+	.long	.LVL58
+	.long	.LVL59
+	.word	0x1
+	.byte	0x69
+	.long	0
+	.long	0
+.LLST43:
 	.long	.LFB16
 	.long	.LCFI4
 	.word	0x3
@@ -2331,9 +2782,9 @@ lcd_puts_P:
 	.sleb128 5
 	.long	0
 	.long	0
-.LLST41:
-	.long	.LVL52
-	.long	.LVL53
+.LLST44:
+	.long	.LVL63
+	.long	.LVL64
 	.word	0x6
 	.byte	0x68
 	.byte	0x93
@@ -2341,8 +2792,8 @@ lcd_puts_P:
 	.byte	0x69
 	.byte	0x93
 	.uleb128 0x1
-	.long	.LVL53
-	.long	.LVL55
+	.long	.LVL64
+	.long	.LVL66
 	.word	0x6
 	.byte	0x6c
 	.byte	0x93
@@ -2350,8 +2801,8 @@ lcd_puts_P:
 	.byte	0x6d
 	.byte	0x93
 	.uleb128 0x1
-	.long	.LVL55
-	.long	.LVL56
+	.long	.LVL66
+	.long	.LVL67
 	.word	0x6
 	.byte	0x6e
 	.byte	0x93
@@ -2359,8 +2810,8 @@ lcd_puts_P:
 	.byte	0x6f
 	.byte	0x93
 	.uleb128 0x1
-	.long	.LVL56
-	.long	.LVL58
+	.long	.LVL67
+	.long	.LVL69
 	.word	0x6
 	.byte	0x6c
 	.byte	0x93
@@ -2370,20 +2821,59 @@ lcd_puts_P:
 	.uleb128 0x1
 	.long	0
 	.long	0
-.LLST42:
-	.long	.LVL53
-	.long	.LVL54-1
+.LLST45:
+	.long	.LVL64
+	.long	.LVL65-1
 	.word	0x1
 	.byte	0x68
-	.long	.LVL57
-	.long	.LVL58
+	.long	.LVL68
+	.long	.LVL69
 	.word	0x1
 	.byte	0x68
 	.long	0
 	.long	0
-.LLST43:
-	.long	.LVL53
-	.long	.LVL54-1
+.LLST46:
+	.long	.LFB17
+	.long	.LCFI6
+	.word	0x3
+	.byte	0x92
+	.uleb128 0x20
+	.sleb128 3
+	.long	.LCFI6
+	.long	.LCFI7
+	.word	0x3
+	.byte	0x92
+	.uleb128 0x20
+	.sleb128 4
+	.long	.LCFI7
+	.long	.LFE17
+	.word	0x3
+	.byte	0x92
+	.uleb128 0x20
+	.sleb128 5
+	.long	0
+	.long	0
+.LLST47:
+	.long	.LVL70
+	.long	.LVL71
+	.word	0x6
+	.byte	0x68
+	.byte	0x93
+	.uleb128 0x1
+	.byte	0x69
+	.byte	0x93
+	.uleb128 0x1
+	.long	.LVL71
+	.long	.LVL73
+	.word	0x6
+	.byte	0x6c
+	.byte	0x93
+	.uleb128 0x1
+	.byte	0x6d
+	.byte	0x93
+	.uleb128 0x1
+	.long	.LVL73
+	.long	.LVL74
 	.word	0x6
 	.byte	0x6e
 	.byte	0x93
@@ -2391,14 +2881,46 @@ lcd_puts_P:
 	.byte	0x6f
 	.byte	0x93
 	.uleb128 0x1
-	.long	.LVL54-1
-	.long	.LVL55
+	.long	.LVL74
+	.long	.LVL76
+	.word	0x6
+	.byte	0x6c
+	.byte	0x93
+	.uleb128 0x1
+	.byte	0x6d
+	.byte	0x93
+	.uleb128 0x1
+	.long	0
+	.long	0
+.LLST48:
+	.long	.LVL71
+	.long	.LVL72-1
+	.word	0x1
+	.byte	0x68
+	.long	.LVL75
+	.long	.LVL76
+	.word	0x1
+	.byte	0x68
+	.long	0
+	.long	0
+.LLST49:
+	.long	.LVL71
+	.long	.LVL72-1
+	.word	0x6
+	.byte	0x6e
+	.byte	0x93
+	.uleb128 0x1
+	.byte	0x6f
+	.byte	0x93
+	.uleb128 0x1
+	.long	.LVL72-1
+	.long	.LVL73
 	.word	0x3
 	.byte	0x8c
 	.sleb128 -1
 	.byte	0x9f
-	.long	.LVL56
-	.long	.LVL58
+	.long	.LVL74
+	.long	.LVL76
 	.word	0x6
 	.byte	0x6e
 	.byte	0x93
@@ -2409,7 +2931,7 @@ lcd_puts_P:
 	.long	0
 	.long	0
 	.section	.debug_aranges,"",@progbits
-	.long	0x64
+	.long	0x6c
 	.word	0x2
 	.long	.Ldebug_info0
 	.byte	0x4
@@ -2436,10 +2958,18 @@ lcd_puts_P:
 	.long	.LFE15-.LFB15
 	.long	.LFB16
 	.long	.LFE16-.LFB16
+	.long	.LFB17
+	.long	.LFE17-.LFB17
 	.long	0
 	.long	0
 	.section	.debug_ranges,"",@progbits
 .Ldebug_ranges0:
+	.long	.LBB42
+	.long	.LBE42
+	.long	.LBB43
+	.long	.LBE43
+	.long	0
+	.long	0
 	.long	.LFB10
 	.long	.LFE10
 	.long	.LFB8
@@ -2460,29 +2990,33 @@ lcd_puts_P:
 	.long	.LFE15
 	.long	.LFB16
 	.long	.LFE16
+	.long	.LFB17
+	.long	.LFE17
 	.long	0
 	.long	0
 	.section	.debug_line,"",@progbits
 .Ldebug_line0:
 	.section	.debug_str,"MS",@progbits,1
-.LASF33:
+.LASF40:
 	.string	"GNU C99 5.4.0 -mn-flash=4 -mno-skip-bug -mrelax -mmcu=avr6 -g2 -Og -std=gnu99 -funsigned-char -funsigned-bitfields -ffunction-sections -fdata-sections -fpack-struct -fshort-enums"
+.LASF30:
+	.string	"stored_char"
 .LASF23:
 	.string	"lcd_goto"
-.LASF36:
+.LASF38:
 	.string	"lcd_cursorPos"
-.LASF31:
-	.string	"__addr16"
-.LASF28:
+.LASF32:
 	.string	"lcd_puts"
 .LASF19:
 	.string	"lcd_write_character"
-.LASF24:
+.LASF25:
 	.string	"lcd_clrscr"
+.LASF35:
+	.string	"__addr16"
+.LASF39:
+	.string	"lcd_buffer"
 .LASF21:
 	.string	"lcd_write_command"
-.LASF4:
-	.string	"unsigned int"
 .LASF15:
 	.string	"__us"
 .LASF17:
@@ -2497,47 +3031,59 @@ lcd_puts_P:
 	.string	"lcd_init"
 .LASF14:
 	.string	"_delay_ms"
-.LASF32:
+.LASF43:
+	.string	"getCursorFromLCDRAMcursor"
+.LASF36:
 	.string	"__result"
+.LASF42:
+	.string	"E:\\\\Users\\\\Anwender\\\\Sync\\\\Atmel Studio\\\\Pipe1\\\\Pipe1\\\\Debug"
 .LASF12:
 	.string	"double"
-.LASF29:
+.LASF33:
 	.string	"lcd_puts_P"
 .LASF10:
 	.string	"__tmp"
-.LASF25:
+.LASF26:
 	.string	"lcd_home"
-.LASF35:
-	.string	"C:\\\\Users\\\\Anwender\\\\Documents\\\\Sync\\\\Atmel Studio\\\\Pipe1\\\\Pipe1\\\\Debug"
+.LASF29:
+	.string	"cursor"
+.LASF24:
+	.string	"pchar"
+.LASF4:
+	.string	"unsigned int"
 .LASF13:
 	.string	"_delay_us"
 .LASF9:
 	.string	"long long unsigned int"
 .LASF2:
 	.string	"uint8_t"
+.LASF27:
+	.string	"lcd_cursor"
+.LASF37:
+	.string	"sizetype"
 .LASF8:
 	.string	"long long int"
 .LASF11:
 	.string	"__ticks_dc"
-.LASF34:
+.LASF41:
 	.string	".././lcd_u.c"
 .LASF3:
 	.string	"uint16_t"
-.LASF30:
+.LASF34:
 	.string	"progmem_s"
 .LASF6:
 	.string	"uint32_t"
 .LASF5:
 	.string	"long int"
-.LASF27:
+.LASF31:
 	.string	"char"
 .LASF0:
 	.string	"signed char"
 .LASF18:
 	.string	"lcd_write_nibble"
-.LASF26:
+.LASF28:
 	.string	"lcd_putc"
 .LASF16:
 	.string	"__ms"
-	.ident	"GCC: (AVR_8_bit_GNU_Toolchain_3.6.1_1750) 5.4.0"
+	.ident	"GCC: (AVR_8_bit_GNU_Toolchain_3.6.2_1759) 5.4.0"
 .global __do_clear_bss

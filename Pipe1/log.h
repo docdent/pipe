@@ -55,7 +55,7 @@ uint8_t log_count();
 LogList_t* log_getLog(uint8_t nr);
 char* log_getShortTextFromIndex(uint8_t nr, char changeNotifyStatus);
 char* log_getShortTextFromPtr(LogList_t* pLogEntry,  char changeNotifyStatus);
-const __flash char* getErrorText(uint8_t logNr);
+const __flash char* log_getErrorText(uint8_t logNr);
 
 #define LOG_ERRTEXT_LEN 16
 typedef struct{

@@ -45,9 +45,18 @@ midi.c Register Setting received as midi sysex
 midi.c Setting to ignore program change on midi in
 menu.c Clear Combination as Softkey
 main.c Show received Program Change
+0.60
+serial.c Interface zu ESP8266 via USART3
+menu.c bugfix: call onExitFunction when DataType is OnOff
+menu.c Output HW Config including registers
+0.61
 
 TODO
-
+MIDI out for manual additionally to PipeOut
+Show pressed keys
+Save USB Status
+Make USB Baudrate selectable
+Coupler more accurate when more  than 1 source manual
 Show Set of Registers
 EEPROM memory structure
 Program Change like viscount
@@ -55,9 +64,10 @@ Combination in selecteable Bank
 Failsafe for keys from time to time
 watchdog
 log for events and input
-REstore Manu display after panic button message
+Restore Menu display after panic button message
 Restore Menu display after MEssage
 Coupler for lowest bass note  only
+PC Out to MIDI for PC In
 */
 
 

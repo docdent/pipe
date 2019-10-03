@@ -43,7 +43,7 @@ void init_log(){ // init Log Vars
 }
 
 
-const __flash char* getErrorText(uint8_t logNr){
+const __flash char* log_getErrorText(uint8_t logNr){
 	LogList_t* pLogEntry;
 	pLogEntry = log_getLog(logNr);
 	if (pLogEntry != NULL){

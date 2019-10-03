@@ -30,13 +30,7 @@ extern uint8_t lcd_cursorIsOn;
 
 extern uint8_t nibbleToChr(uint8_t myNibble);
 
-#define LCDCHAR_WAIT_SYMBOL 0xA1
-#define LCDCHAR_WAIT_CURSOR LCD_LINE0+12
-#define LCDCHAR_NOTESTRAIGHT_SYM 0xA5
-#define LCDCHAR_ARROW_UP 0x08
-#define LCDCHAR_ARROW_DOWN 0x09
-#define LCDCHAR_ARROW_RIGHT 0x7E
-#define LCDCHAR_ARROW_LEFT 0x7F
+#define LCD_CHAR_WAIT_CURSOR LCD_LINE0+12
 
 extern void lcd_initCG();
 extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
@@ -63,6 +57,7 @@ extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
 extern char* putChar_Manual(uint8_t manual, char* pOutput);
+extern char* putChar_MidiChan(uint8_t channel, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);

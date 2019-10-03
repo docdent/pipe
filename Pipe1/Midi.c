@@ -615,6 +615,25 @@ uint8_t midi_RegisterMatchProgram(uint8_t program){
 	return result;
 }
 
+uint8_t midi_CountRegisterInProgram(uint8_t program){
+	// returns number of registers that are set in this program
+	uint8_t result = 0;
+	uint8_t* progPtr = &(programMap[program].registers[0]);
+	uint8_t tempReg = 0; // just to get rid off warnung unit. var
+	for (uint8_t i = 0; i < registerCount; i++){
+		if ((i & 0x07) == 0) {
+			// first bit in byte
+			tempReg = * progPtr++;
+		}
+		if ((tempReg & 0x01) == 1) {
+			result++;
+		}
+		tempReg = tempReg >> 1;
+	}
+	return result;
+	
+}
+
 //------------------------------------- M I D I C H A N N E L   T O   M A N U A L ---------------------------------
 
 void init_Midi2Manual(){
@@ -660,15 +679,16 @@ void init_Midi2Manual(){
 void init_Manual2Midi(){
 	// reset all
 	for (uint8_t i = 0; i << MANUAL_COUNT; i++){
-		midiOutMap[i].channel = MIDI_CHANNEL_NONE;
+		midiOutMap[i].hw_channel = MIDI_CHANNEL_NONE;
+		midiOutMap[i].sw_channel = MIDI_CHANNEL_NONE;
 	}
 	if (eeprom_ReadMidiOutMap() == EE_LOAD_ERROR){
 		midiEEPromLoadError = EE_LOAD_ERROR;
 		// default entries
-		midiOutMap[MANUAL_III].channel = MIDI_CHANNEL_1;
-		midiOutMap[MANUAL_II].channel = MIDI_CHANNEL_2;
-		midiOutMap[MANUAL_I].channel = MIDI_CHANNEL_3;
-		midiOutMap[MANUAL_P].channel = MIDI_CHANNEL_4;
+		midiOutMap[MANUAL_III].hw_channel = MIDI_CHANNEL_1;
+		midiOutMap[MANUAL_II].hw_channel = MIDI_CHANNEL_2;
+		midiOutMap[MANUAL_I].hw_channel = MIDI_CHANNEL_3;
+		midiOutMap[MANUAL_P].hw_channel = MIDI_CHANNEL_4;
 		midi_Setting.TxActivceSense = FALSE;
 		midi_Setting.VelZero4Off = FALSE;
 		midi_Setting.AcceptProgChange = TRUE;
@@ -719,9 +739,10 @@ void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff){
 ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note){
 	ChannelNote_t result = {MIDI_CHANNEL_NONE,MIDI_NOTE_NONE};
 	if (manual < MANUAL_COUNT) {
-		if (midiOutMap[manual].channel != MIDI_CHANNEL_NONE) {
-			result.channel = midiOutMap[manual].channel;
+		if (midiOutMap[manual].hw_channel != MIDI_CHANNEL_NONE) {
+			result.hw_channel = midiOutMap[manual].hw_channel;
 			result.note = note; // currently no transpose, might be added later
+			// caution: sw_channel used in manual_NoteOnOff() does not look up note ! if transpose added here, do it there, too!
 		}
 	}
 	return(result);
@@ -836,6 +857,16 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
 			pipe[bitNr].pipeOut &= ~(1 << modulNr);
 		}
 	}
+	// V0.61 midi sw_channel output
+	if (midiOutMap[manual].sw_channel != MIDI_CHANNEL_NONE){
+		// lines from midiKeyPress_Process():
+		// if settings are appropriate: note off = use note on an velocity = 0 to turn off note (less bytes !) / or send real not off!
+		serial1MIDISend(((onOff == NOTE_ON) || (midi_Setting.VelZero4Off) ? MIDI_NOTEON : MIDI_NOTEOFF) | midiOutMap[manual].sw_channel);
+		serial1MIDISend(note);
+		serial1MIDISend(((onOff == NOTE_OFF) && (midi_Setting.VelZero4Off)) ? 0 : MIDI_DEFAULT_VELOCITY);
+		// caution: sw_channel should be used only if no HW output implemented for manual. If used midi through should not be set for
+		// corresponding channel/manual 
+	}
 }
 
 //********************************************* P R O C E S S   P I P E   M E S S A G E ->MIDI, COUPLER *******************************
@@ -858,9 +889,9 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 					// manual is assigned
 					// check midi assigneemnt for this manual/note
 					chanNote = Manual_to_MidiNote(manualNote.manual, manualNote.note);
-					if (chanNote.channel != MIDI_CHANNEL_NONE){
+					if (chanNote.hw_channel != MIDI_CHANNEL_NONE){
 						// note on/off can be sent
-						serial1MIDISend(((command == MESSAGE_PIPE_ON_HI) || (midi_Setting.VelZero4Off) ? MIDI_NOTEON : MIDI_NOTEOFF) | chanNote.channel);
+						serial1MIDISend(((command == MESSAGE_PIPE_ON_HI) || (midi_Setting.VelZero4Off) ? MIDI_NOTEON : MIDI_NOTEOFF) | chanNote.hw_channel);
 						// of note off: use note on an velocity = 0 to turn off note (less bytes !)
 						serial1MIDISend(chanNote.note);
 						// of note off: use note on an velocity = 0 to turn off note (less bytes !):
@@ -930,7 +961,7 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 
 void midiSendAllNotesOff(){
 	for (uint8_t i = 0; i < MANUAL_COUNT; i++){
-		uint8_t chan = midiOutMap[i].channel;
+		uint8_t chan = midiOutMap[i].hw_channel;
 		if (chan <= MIDI_CHANNEL_16) {
 			serial1MIDISend(MIDI_CTRLCHG | chan);
 			serial1MIDISend(MIDI_CTRL_ALLNOTESOFF);

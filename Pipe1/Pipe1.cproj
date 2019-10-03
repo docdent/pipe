@@ -36,7 +36,7 @@
         <documentation help="" />
         <offline-documentation help="" />
         <dependencies>
-          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.37" />
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.39.0" />
         </dependencies>
       </framework-data>
     </AsfFrameworkConfig>
@@ -48,7 +48,7 @@
     <com_atmel_avrdbg_tool_ispmk2>
       <ToolOptions>
         <InterfaceProperties>
-          <IspClock>0</IspClock>
+          <IspClock>125000</IspClock>
         </InterfaceProperties>
         <InterfaceName>ISP</InterfaceName>
       </ToolOptions>
@@ -60,7 +60,8 @@
       <ToolOptions>
         <InterfaceProperties>
         </InterfaceProperties>
-        <InterfaceName>ISP</InterfaceName>
+        <InterfaceName>
+        </InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.simulator</ToolType>
       <ToolNumber>
@@ -70,7 +71,7 @@
     <com_atmel_avrdbg_tool_avrdragon>
       <ToolOptions>
         <InterfaceProperties>
-          <IspClock>125000</IspClock>
+          <IspClock>1000000</IspClock>
           <JtagDbgClock>200000</JtagDbgClock>
         </InterfaceProperties>
         <InterfaceName>JTAG</InterfaceName>
@@ -176,12 +177,6 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="display.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="display.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="ee_prom.c">
       <SubType>compile</SubType>
     </Compile>

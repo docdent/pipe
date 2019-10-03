@@ -165,6 +165,24 @@ char* putChar_hex(uint8_t val, char* pOutput){
 	return pOutput;
 }
 
+char* putChar_MidiChan(uint8_t channel, char* pOutput){
+	if (channel > MIDI_CHANNEL_MAX){
+		*pOutput++ = 'n';
+		*pOutput++ = 'o';
+	} else {
+		channel++;
+		if (channel > 9){
+			*pOutput++ = '1';
+			channel =- 10;
+		} else {
+			*pOutput++ = ' ';		
+		}
+		*pOutput++ = '0'+channel;
+	}
+	*pOutput = 0;
+	return pOutput;
+}
+
 char* putChar_long(uint16_t val, char* pOutput){
 	pOutput = pOutput + 4;
 	*pOutput = 0;
@@ -276,7 +294,7 @@ void lcd_wordout(uint16_t hexNumber){
 uint8_t lcd_noteOut(uint8_t noteNr){
 	// returns number of chars that were send to lcd (actually always 3 now)
 	uint8_t octave = 0;
-	char char1;
+	char char1 = ' '; // only to avoid warning
 	char char2 = '#';
 	char char3;
 	if (noteNr > 127){
@@ -291,37 +309,37 @@ uint8_t lcd_noteOut(uint8_t noteNr){
 		}
 		switch (noteNr){
 			case 0:
-				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
+				char2 = LCD_CHAR_NOTESTRAIGHT_SYM;
 			case 1:
 				char1 = 'C';
 			break;
 			case 2:
-				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
+				char2 = LCD_CHAR_NOTESTRAIGHT_SYM;
 			case 3:
 				char1 = 'D';
 			break;
 			case 4:
 				char1 = 'E';
-				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
+				char2 = LCD_CHAR_NOTESTRAIGHT_SYM;
 			break;
 			case 5:
-				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
+				char2 = LCD_CHAR_NOTESTRAIGHT_SYM;
 			case 6:
 				char1 = 'F';
 			break;
 			case 7:
-				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
+				char2 = LCD_CHAR_NOTESTRAIGHT_SYM;
 			case 8:
 				char1 = 'G';
 			break;
 			case 9:
-				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
+				char2 = LCD_CHAR_NOTESTRAIGHT_SYM;
 			case 10:
 				char1 = 'A';
 			break;
 			case 11:
 				char1 = 'H';
-				char2 = LCDCHAR_NOTESTRAIGHT_SYM;
+				char2 = LCD_CHAR_NOTESTRAIGHT_SYM;
 			break;
 		}
 		if (octave == 0) {
@@ -417,14 +435,14 @@ void lcd_cursoroff(){
 
 void lcd_waitSymbolOn(){
 	uint8_t saveCursor = lcd_cursorPos;
-	lcd_goto(LCDCHAR_WAIT_CURSOR);
-	lcd_putc(LCDCHAR_WAIT_SYMBOL);
+	lcd_goto(LCD_CHAR_WAIT_CURSOR);
+	lcd_putc(LCD_CHAR_WAIT_SYMBOL);
 	lcd_goto(saveCursor);
 }
 
 void lcd_waitSymbolOff(){
 	uint8_t saveCursor = lcd_cursorPos;
-	lcd_goto(LCDCHAR_WAIT_CURSOR);
+	lcd_goto(LCD_CHAR_WAIT_CURSOR);
 	lcd_putc(' ');
 	lcd_goto(saveCursor);
 }
@@ -440,17 +458,17 @@ uint8_t chekcDecNibbles(uint8_t myNibbles[3]){
 
 // --------------------------------- K E Y    L A B E L ---------------------------------------
 
-const char __flash keylabel_up []  = LCD_ARROWUP;
-const char __flash keylabel_down []  = LCD_ARROWDOWN;
-const char __flash keylabel_right []  = LCD_ARROWRIGHT;
-const char __flash keylabel_left []  = LCD_ARROWLEFT;
+const char __flash keylabel_up []  = LCD_STRING_ARROWUP;
+const char __flash keylabel_down []  = LCD_STRING_ARROWDOWN;
+const char __flash keylabel_right []  = LCD_STRING_ARROWRIGHT;
+const char __flash keylabel_left []  = LCD_STRING_ARROWLEFT;
 const char __flash keylabel_plus []  = "+";
 const char __flash keylabel_minus []  = "-";
-const char __flash keylabel_onoff []  = "Ein" LCD_STATEONOFF; // \x80 KEYLABEL_STATEOFF_CHAR
-const char __flash keylabel_on []  = LCD_ARROWRIGHT "ein";
-const char __flash keylabel_off []  = LCD_ARROWRIGHT "aus";
+const char __flash keylabel_onoff []  = "Ein" LCD_STRING_STATEONOFF; // \x80 KEYLABEL_STATEOFF_CHAR
+const char __flash keylabel_on []  = LCD_STRING_ARROWRIGHT "ein";
+const char __flash keylabel_off []  = LCD_STRING_ARROWRIGHT "aus";
 const char __flash keylabel_exit []  = "Exit";
-const char __flash keylabel_text []  = "Text" LCD_STATEONOFF; // \x80 KEYLABEL_STATEOFF_CHAR
+const char __flash keylabel_text []  = "Text" LCD_STRING_STATEONOFF; // \x80 KEYLABEL_STATEOFF_CHAR
 const char __flash keylabel_0 [] = "0";
 const char __flash keylabel_1 [] = "1";
 

@@ -656,7 +656,9 @@ typedef union{
 extern uint8_t lcd_cursorIsOn;
 
 extern uint8_t nibbleToChr(uint8_t myNibble);
-# 41 ".././utils.h"
+
+
+
 extern void lcd_initCG();
 extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
 extern void lcd_wordout(uint16_t hexNumber);
@@ -682,10 +684,11 @@ extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
 extern char* putChar_Manual(uint8_t manual, char* pOutput);
+extern char* putChar_MidiChan(uint8_t channel, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 78 ".././utils.h"
+# 73 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -705,13 +708,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 106 ".././utils.h"
+# 101 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 108 ".././utils.h" 3
+# 103 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 108 ".././utils.h"
+# 103 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -807,7 +810,24 @@ extern uint32_t test_PipeModule(uint8_t moduleNr);
 # 1 ".././utils.h" 1
 # 12 ".././ee_prom.c" 2
 # 1 ".././serial.h" 1
-# 34 ".././serial.h"
+# 32 ".././serial.h"
+extern void init_Serial3SerESP();
+extern void serial3SER_ESPSend(uint8_t data);
+extern void serial3SER_ESP_sendStringP(const char *progmem_s);
+extern void serial3SER_ESP_sendString(char *s);
+extern void serial3SER_ESP_sendCRLF();
+extern uint8_t serial3SER_ESPReadRx();
+
+extern volatile uint8_t* serESPRxInIndex;
+extern volatile uint8_t* serESPRxOutIndex;
+extern volatile uint8_t* serESPTxOutIndex;
+extern volatile uint8_t* serESPTxInIndex;
+extern volatile uint8_t serESPOvflFlag;
+extern volatile uint8_t serESP_Active;
+
+extern uint8_t serESPRxBuffer[128];
+extern uint8_t serESPTxBuffer[512];
+# 80 ".././serial.h"
 extern void init_Serial0SerUSB();
 extern void serial0SER_USBSend(uint8_t data);
 extern void serial0SER_USB_sendStringP(const char *progmem_s);
@@ -826,7 +846,7 @@ extern uint8_t serUsbRxBuffer[64];
 extern uint8_t serUsbTxBuffer[256];
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
-# 77 ".././serial.h"
+# 123 ".././serial.h"
 extern void init_Serial1MIDI();
 extern void serial1MIDISend(uint8_t data);
 extern uint8_t serial1MIDIReadRx();
@@ -845,7 +865,7 @@ extern volatile uint8_t midiTxOvflCount;
 # 1 ".././Midi.h" 1
 # 44 ".././Midi.h"
 typedef struct {
- uint8_t channel;
+ uint8_t hw_channel;
  uint8_t note;
 } ChannelNote_t;
 
@@ -881,7 +901,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 114 ".././Midi.h"
+# 115 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -900,7 +920,9 @@ extern MidiThrough_t midiThrough;
 
 
 typedef struct{
- uint8_t channel;
+ uint8_t hw_channel;
+ uint8_t sw_channel;
+
  } MidiOutMap_t;
 extern MidiOutMap_t midiOutMap[4];
 
@@ -922,7 +944,7 @@ typedef struct{
 extern ProgramInfo_t programMap[64] ;
 
 extern uint8_t midi_RegisterChanged;
-
+extern uint8_t midi_CountRegisterInProgram(uint8_t program);
 extern uint8_t read_allRegister(uint8_t* resultPtr);
 
 
@@ -985,7 +1007,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 233 ".././Midi.h"
+# 236 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{

@@ -144,10 +144,10 @@ log_getLog:
 	.cfi_endproc
 .LFE13:
 	.size	log_getLog, .-log_getLog
-	.section	.text.getErrorText,"ax",@progbits
-.global	getErrorText
-	.type	getErrorText, @function
-getErrorText:
+	.section	.text.log_getErrorText,"ax",@progbits
+.global	log_getErrorText
+	.type	log_getErrorText, @function
+log_getErrorText:
 .LFB7:
 	.loc 1 46 0
 	.cfi_startproc
@@ -257,7 +257,7 @@ getErrorText:
 	ret
 	.cfi_endproc
 .LFE7:
-	.size	getErrorText, .-getErrorText
+	.size	log_getErrorText, .-log_getErrorText
 	.section	.text.logCheckUnreadErrorLogs,"ax",@progbits
 .global	logCheckUnreadErrorLogs
 	.type	logCheckUnreadErrorLogs, @function
@@ -1703,7 +1703,7 @@ ErrorText:
 	.uleb128 0x1e
 	.long	.LASF41
 	.byte	0x4
-	.byte	0x6c
+	.byte	0x67
 	.long	0x620
 	.byte	0x1
 	.byte	0x1
@@ -1730,7 +1730,7 @@ ErrorText:
 	.uleb128 0x1e
 	.long	.LASF43
 	.byte	0x6
-	.byte	0x2e
+	.byte	0x5c
 	.long	0x635
 	.byte	0x1
 	.byte	0x1
@@ -1804,35 +1804,35 @@ ErrorText:
 	.long	.LASF49
 	.long	.LASF49
 	.byte	0x4
-	.byte	0x3c
+	.byte	0x36
 	.uleb128 0x21
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF50
 	.long	.LASF50
 	.byte	0x4
-	.byte	0x3e
+	.byte	0x38
 	.uleb128 0x21
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF51
 	.long	.LASF51
 	.byte	0x4
-	.byte	0x3f
+	.byte	0x39
 	.uleb128 0x21
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF52
 	.long	.LASF52
 	.byte	0x6
-	.byte	0x24
+	.byte	0x52
 	.uleb128 0x21
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF53
 	.long	.LASF53
 	.byte	0x6
-	.byte	0x25
+	.byte	0x53
 	.byte	0
 	.section	.debug_abbrev,"",@progbits
 .Ldebug_abbrev0:
@@ -3172,6 +3172,8 @@ ErrorText:
 	.string	"long long int"
 .LASF14:
 	.string	"logInfo"
+.LASF19:
+	.string	"log_getErrorText"
 .LASF5:
 	.string	"long int"
 .LASF16:
@@ -3244,8 +3246,6 @@ ErrorText:
 	.string	"Log_TextBuff"
 .LASF25:
 	.string	"pLog"
-.LASF19:
-	.string	"getErrorText"
 .LASF21:
 	.string	"pLogEntry"
 .LASF32:

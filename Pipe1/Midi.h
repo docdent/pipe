@@ -42,7 +42,7 @@
 #define PROGRAM_COUNT 64
 
 typedef struct {
-	uint8_t channel;
+	uint8_t hw_channel;
 	uint8_t note;
 } ChannelNote_t;
 
@@ -98,6 +98,7 @@ extern void midi_ProgramChange(uint8_t channel, uint8_t program);
 #define MIDI_CHANNEL_14 13
 #define MIDI_CHANNEL_15 14
 #define MIDI_CHANNEL_16 15
+#define MIDI_CHANNEL_MAX 15
 
 #define MIDI_CHANNEL_NONE 0xFF
 
@@ -129,7 +130,9 @@ extern MidiThrough_t midiThrough;
 
 
 typedef struct{
-	uint8_t channel;
+	uint8_t hw_channel; // midi out channel for hardware key/pipe changes. If Output is present in HW, software key ebents are triggered here too
+	uint8_t sw_channel; // midi out channel for software key events sent to hardware (even if no hw out implemented in module). Called "(int)" in Menu
+	// sw_channel is to be used if no hardware for output is present in module/manual so that couplers etc must be sent to midi channel too
 	} MidiOutMap_t;
 extern MidiOutMap_t midiOutMap[MANUAL_COUNT];
 
@@ -151,7 +154,7 @@ typedef struct{
 extern ProgramInfo_t programMap[PROGRAM_COUNT] ; // for each register one bit, 2 for couplers
 
 extern uint8_t midi_RegisterChanged;
-
+extern uint8_t midi_CountRegisterInProgram(uint8_t program);
 extern uint8_t read_allRegister(uint8_t* resultPtr);
 
 #define REGISTER_WAS_SET 0x80 // prefix bit 7 = 1 

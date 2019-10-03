@@ -12,6 +12,7 @@
 #include "log.h"
 #include "utils.h"
 #include "menu.h"
+#include <util/atomic.h>
 
 //*********************************** V A R *********************************
 
@@ -41,6 +42,16 @@ volatile uint8_t midiRxOvfl;
 volatile uint8_t midiTxOvfl;
 volatile uint8_t midiRxOvflCount;
 volatile uint8_t midiTxOvflCount;
+
+volatile uint8_t* serESPRxInIndex;
+volatile uint8_t* serESPRxOutIndex;
+volatile uint8_t* serESPTxOutIndex;
+volatile uint8_t* serESPTxInIndex;
+volatile uint8_t serESPOvflFlag;
+volatile uint8_t serESP_Active;
+
+uint8_t serESPRxBuffer[SER_ESP_RX_BUFFER_SIZE];
+uint8_t serESPTxBuffer[SER_ESP_TX_BUFFER_SIZE];
 
 //************************************* M I D I *****************************************
 
@@ -133,7 +144,7 @@ void init_Serial0SerUSB() {
 	UBRR0H = (SER_USB_BAUDRATE>>8);                      // shift the register right by 8 bits
 	UBRR0L = SER_USB_BAUDRATE;                           // set baud rate
 	UCSR0B|= (1 << TXEN0) | (1 << RXEN0) | (1 << RXCIE0) ;                // enable receiver and transmitter and (only) rec. interrupt
-	UCSR0C|= (1 << UCSZ00) | (1 << UCSZ01);
+	UCSR0C|= (1 << UCSZ30) | (1 << UCSZ31);				// 8bit, Async, NoParity, 1StopBit
 	midiRxInIndex = 0;
 	midiRxOutIndex = 0;
 	midiTxInIndex = 0;
@@ -149,6 +160,7 @@ void init_Serial0SerUSB() {
 		serial0SER_USB_sendCRLF();
 		serial0SER_USB_sendCRLF();
 	}
+
 }
 
 void serial0SER_USB_sendStringP(const char *progmem_s)
@@ -227,6 +239,130 @@ ISR(USART0_UDRE_vect) {
 	} else {
 		// nothing to send
 		UCSR0B &= ~(1 << UDRIE0);
+		// Interrupt abschalten - wird beim Schreiben des Sendepuffer wieder gesetzt
+	}
+}
+
+//================================= S E R I A L _ E S P ===========================
+
+void init_Serial3SerESP(){
+	UBRR3H = (SER_ESP_BAUDRATE>>8);                      // shift the register right by 8 bits
+	UBRR3L = SER_ESP_BAUDRATE;                           // set baud rate
+	UCSR3B|= (1 << TXEN3) | (1 << RXEN3) | (1 << RXCIE3) ;                // enable receiver and transmitter and (only) rec. interrupt
+	UCSR3C|= (1 << UCSZ00) | (1 << UCSZ01);				// 8bit, Async, NoParity, 1StopBit
+	serESPRxInIndex = serESPRxBuffer;
+	serESPRxOutIndex = serESPRxBuffer;
+	serESPTxOutIndex = serESPTxBuffer;
+	serESPTxInIndex = serESPTxBuffer;
+	serESPOvflFlag = SER_OVFL_NO;
+	serESP_Active = TRUE; // may be controlled by EEPROM later
+
+}
+
+void serial3SER_ESPSend(uint8_t data){
+	uint8_t* index = (uint8_t*) serESPTxInIndex; // temp for voilatile pointer
+	UCSR3B &= ~(1 << UDRIE3);	// Interrupt abschalten für "Senderegister leer", damit Sendewarteschlange bearbeitet werden kann
+	// write data to buffer
+	*index++ = data;
+	// handle warp around
+	if (index > &serESPTxBuffer[SER_ESP_TX_BUFFER_SIZE-1]){
+		index = serESPTxBuffer;
+	}
+	// check ovfl
+	uint8_t* outIndex;
+	ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
+		outIndex = (uint8_t*) serESPTxOutIndex; // temp for volatile pointer
+	}
+	if (index == outIndex) {
+		// ovfl
+		#ifdef SER_USB_WAIT
+			serESPTxInIndex = index; // write back pointer
+			UCSR3B |= (1 << UDRIE3); // Interrupt einschalten für "Senderegister leer"
+			while (index == serESPTxOutIndex) {}; // TODO: observe timeout!
+		#else
+			// forget oldest data: don't update pointer
+			serESPOvflFlag = SER_OVFL_YES;
+			UCSR3B |= (1 << UDRIE3); // Interrupt einschalten für "Senderegister leer"
+		#endif
+	} else {
+		// else no Overflow
+		serESPTxInIndex = index; // write back pointer
+		UCSR3B |= (1 << UDRIE3); // Interrupt einschalten für "Senderegister leer"
+	}
+}
+
+
+void serial3SER_ESP_sendStringP(const char *progmem_s){
+	uint8_t count = SER_ESP_MAX_STRINGLEN;
+	char c;
+	while (((c=pgm_read_byte(progmem_s++)) != 0) && (! SER_ESP_OVFLOW) && (count-- > 0)){
+		serial3SER_ESPSend(c);
+	}
+}
+
+void serial3SER_ESP_sendString(char *s){
+	uint8_t count = SER_ESP_MAX_STRINGLEN;
+	char c;
+	while (((c= *s++) != 0) && (! SER_ESP_OVFLOW) && (count-- != 0)){
+		serial3SER_ESPSend(c);
+	}
+}
+
+void serial3SER_ESP_sendCRLF(){
+		serial3SER_ESP_sendStringP(cr_lf);
+}
+
+uint8_t serial3SER_ESPReadRx(){
+	uint8_t result;
+	uint8_t* index = (uint8_t*) serESPRxOutIndex; // temp storage for voilatile pointer
+	if SER_ESP_RX_BUFFER_EMPTY {
+		// auxilliary only: return defined value - but better check before if data is avaiavble
+		result = SER_ESP_UNDEFINED;
+	} else {
+		result = *index++;
+		if (index > &serESPRxBuffer[SER_ESP_RX_BUFFER_SIZE-1]){
+			// wrap around
+			index = serESPRxBuffer;
+		}
+		serESPRxOutIndex = index;
+	}
+	return result;
+}
+
+ISR(USART3_RX_vect) {
+	// received byt from uart3
+	uint8_t* index = (uint8_t*) serESPRxInIndex; // temp storage of voilatile pointer
+	*index++ = UDR3; // store in receive buffer
+	if (index > &serESPRxBuffer[SER_ESP_RX_BUFFER_SIZE-1]) {
+		// wrap around
+		index = serESPRxBuffer;
+	}
+	uint8_t* outIndex;
+	ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
+		outIndex = (uint8_t*) serESPRxOutIndex; // temp storage of volatile
+	}
+	if (index == outIndex) {
+		// overflow!
+		// serusbRxInIndex is NOT updated, keep writing last available byte in buffer
+		serESPOvflFlag = SER_OVFL_YES; // must be checked and reset by main
+	} else {
+		serESPRxInIndex = index; // Update serESPRxInIndex
+	}
+}
+
+ISR(USART3_UDRE_vect) {
+	uint8_t* index = (uint8_t*) serESPTxOutIndex; // temp storage of volatile pointer
+	if (SER_ESP_TX_BUFFER_NONEMPTY){
+		// es ist was zu senden da
+		UDR3 = *index++;
+		if (index > &serESPTxBuffer[SER_ESP_TX_BUFFER_SIZE-1]) {
+			// wrap around
+			index = serESPTxBuffer;
+		}
+		serESPTxOutIndex = index; // V0.61 bug: write back index was forgotten
+	} else {
+		// nothing to send
+		UCSR3B &= ~(1 << UDRIE3);
 		// Interrupt abschalten - wird beim Schreiben des Sendepuffer wieder gesetzt
 	}
 }

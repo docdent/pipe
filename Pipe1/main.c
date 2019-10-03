@@ -29,9 +29,10 @@
 const char eprom_ok [] PROGMEM = "EE:";
 const char module_string [] PROGMEM = " Mod.:";
 const char prog_name [] PROGMEM = "MIDI-Interface";
-const __flash char releaseKeyString[] = "Tasten/Reg. l" LCD_UMLAUTO "sen";
-const __flash char panicString[] = "T" LCD_UMLAUTO "ne aus";
+const __flash char releaseKeyString[] = "Tasten/Reg. l" LCD_STRING_UMLAUTO "sen";
+const __flash char panicString[] = "T" LCD_STRING_UMLAUTO "ne aus";
 uint8_t menuNotActive;
+uint8_t messageFromESP;
 
 int main(void)
 {
@@ -69,6 +70,7 @@ int main(void)
 	lcd_puts_P(sw_version);
 	sei();
 	_delay_ms(1200);
+	init_Serial3SerESP(); // activate serial from esp8266 not to early to ignore it's scrambled boot messages
 	lcd_clrscr ();
 
 	// TURN ON POWER
@@ -79,8 +81,19 @@ int main(void)
 	menuNotActive = TRUE;
 	// menu_Init(NULL, NULL); // menu initaliszed but not displayed -> now alter when displayed
 	uint8_t updateStatus = TRUE;
+	messageFromESP = SER_ESP_SEND_LCD; // for first transfer
     while (1)
     {
+		// V0.60 read message from usart3 (esp)
+		if SER_ESP_RX_BUFFER_NONEMPTY {
+			uint8_t esp_message = serial3SER_ESPReadRx();
+			messageFromESP = esp_message; // save for later transfer of LCD
+			serial0SER_USBSend(esp_message); // TODO ask if USB out is enabled
+			if ((esp_message > SER_ESP_MSGOFFSET) && (esp_message <= SER_ESP_MSGOFFSET+MESSAGE_KEY_MAX)){
+				// push message from esp to queue
+				message_push(esp_message-SER_ESP_MSGOFFSET);
+			} // TODO further ESP message to handle
+		}
 		// ---------------------- KEYBOARD AND MENU ----------------------
 		if MESSAGE_PENDING {
 			uint8_t keyMessage = message_get();
@@ -173,6 +186,24 @@ int main(void)
 			}
 		}
 
+		// ----------------------- DISPLAY TRANSFER TO ESP -----------------------
+		if (((messageFromESP > SER_ESP_MSGOFFSET) && (messageFromESP <= SER_ESP_MSGOFFSET+MESSAGE_KEY_MAX))
+			|| (messageFromESP == SER_ESP_SEND_LCD)) {
+			// key press was sent from ESP, should be processed now - > Send LCD Content now!
+			if (lcd_cursorIsOn == TRUE){
+				serial3SER_ESPSend(getCursorFromLCDRAMcursor(lcd_cursorPos));
+			} else {
+				serial3SER_ESPSend(0x7F); // send invalid cursor so that no cursor is displayed
+			}
+			serial3SER_ESPSend(SER_ESP_OUTMSG_LCD_SETCURSOR); // set cursor
+			uint8_t* pChar = &(lcd_buffer[0]); // LCD Content already sorted to lines and converted to ascii < 0x80 and some special chars < 0x20
+			for (uint8_t i = 0; i < sizeof(lcd_buffer); i++){
+				serial3SER_ESPSend(*pChar++);
+			}
+			serial3SER_ESPSend(SER_ESP_OUTMSG_LCD_TRANSFER);
+		}
+		messageFromESP = SER_ESP_MESSAGE_NONE;
+
 		// ------------------------- ACTIVE SENSE ----------------------------
 		midi_CheckTxActiveSense(); // out going active Sense?
 		midi_CheckRxActiveSense(); // check for Error of incoming Active Sense
@@ -205,7 +236,7 @@ int main(void)
 			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
 			lcd_putc('p');
 			lcd_dec2out(midiLastProgram); // here max 0..99 displayed, but Prog Change currently accepts only 0..63 anyway
-			lcd_putc(LCDCHAR_ARROW_RIGHT);
+			lcd_putc(LCD_CHAR_ARROW_RIGHT);
 			midiLastProgram = MIDI_PROGRAM_NONE; // we are done, don't display again
 			TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)
 		} else if (TIMER_ELAPSED(TIMER_MIDIIN_DISP) ) {
@@ -231,7 +262,8 @@ int main(void)
 			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIOUT);
 			lcd_putc('R');
 			lcd_dec2out(midi_RegisterChanged & ~REGISTER_WAS_SET); // remove MSB
-			lcd_putc((midi_RegisterChanged & REGISTER_WAS_SET) == 0 ?  LCDCHAR_ARROW_DOWN : LCDCHAR_ARROW_UP); // MSB = register was set
+			// V 0.60 changed: down = Register ON!
+			lcd_putc((midi_RegisterChanged & REGISTER_WAS_SET) == 0 ?  LCD_CHAR_ARROW_UP : LCD_CHAR_ARROW_DOWN); // MSB = register was set
 			lcd_putc(' ');
 			lcd_goto(oldcursor);
 			midi_RegisterChanged = REGISTER_NONE;

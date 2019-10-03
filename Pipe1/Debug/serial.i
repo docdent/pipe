@@ -351,9 +351,26 @@ static __inline__ size_t strlen_P(const char *s) {
 }
 # 10 ".././serial.c" 2
 # 1 ".././serial.h" 1
-# 34 ".././serial.h"
+# 32 ".././serial.h"
 
-# 34 ".././serial.h"
+# 32 ".././serial.h"
+extern void init_Serial3SerESP();
+extern void serial3SER_ESPSend(uint8_t data);
+extern void serial3SER_ESP_sendStringP(const char *progmem_s);
+extern void serial3SER_ESP_sendString(char *s);
+extern void serial3SER_ESP_sendCRLF();
+extern uint8_t serial3SER_ESPReadRx();
+
+extern volatile uint8_t* serESPRxInIndex;
+extern volatile uint8_t* serESPRxOutIndex;
+extern volatile uint8_t* serESPTxOutIndex;
+extern volatile uint8_t* serESPTxInIndex;
+extern volatile uint8_t serESPOvflFlag;
+extern volatile uint8_t serESP_Active;
+
+extern uint8_t serESPRxBuffer[128];
+extern uint8_t serESPTxBuffer[512];
+# 80 ".././serial.h"
 extern void init_Serial0SerUSB();
 extern void serial0SER_USBSend(uint8_t data);
 extern void serial0SER_USB_sendStringP(const char *progmem_s);
@@ -372,7 +389,7 @@ extern uint8_t serUsbRxBuffer[64];
 extern uint8_t serUsbTxBuffer[256];
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
-# 77 ".././serial.h"
+# 123 ".././serial.h"
 extern void init_Serial1MIDI();
 extern void serial1MIDISend(uint8_t data);
 extern uint8_t serial1MIDIReadRx();
@@ -661,7 +678,9 @@ typedef union{
 extern uint8_t lcd_cursorIsOn;
 
 extern uint8_t nibbleToChr(uint8_t myNibble);
-# 41 ".././utils.h"
+
+
+
 extern void lcd_initCG();
 extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
 extern void lcd_wordout(uint16_t hexNumber);
@@ -687,10 +706,11 @@ extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
 extern char* putChar_Manual(uint8_t manual, char* pOutput);
+extern char* putChar_MidiChan(uint8_t channel, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 78 ".././utils.h"
+# 73 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -710,13 +730,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 106 ".././utils.h"
+# 101 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 108 ".././utils.h" 3
+# 103 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 108 ".././utils.h"
+# 103 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -747,7 +767,7 @@ extern uint8_t msgPipe_Handling;
 # 13 ".././Midi.h" 2
 # 44 ".././Midi.h"
 typedef struct {
- uint8_t channel;
+ uint8_t hw_channel;
  uint8_t note;
 } ChannelNote_t;
 
@@ -783,7 +803,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 114 ".././Midi.h"
+# 115 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -802,7 +822,9 @@ extern MidiThrough_t midiThrough;
 
 
 typedef struct{
- uint8_t channel;
+ uint8_t hw_channel;
+ uint8_t sw_channel;
+
  } MidiOutMap_t;
 extern MidiOutMap_t midiOutMap[4];
 
@@ -824,7 +846,7 @@ typedef struct{
 extern ProgramInfo_t programMap[64] ;
 
 extern uint8_t midi_RegisterChanged;
-
+extern uint8_t midi_CountRegisterInProgram(uint8_t program);
 extern uint8_t read_allRegister(uint8_t* resultPtr);
 
 
@@ -887,7 +909,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 233 ".././Midi.h"
+# 236 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1248,7 +1270,7 @@ uint8_t log_count();
 LogList_t* log_getLog(uint8_t nr);
 char* log_getShortTextFromIndex(uint8_t nr, char changeNotifyStatus);
 char* log_getShortTextFromPtr(LogList_t* pLogEntry, char changeNotifyStatus);
-const __flash char* getErrorText(uint8_t logNr);
+const __flash char* log_getErrorText(uint8_t logNr);
 
 
 typedef struct{
@@ -1263,9 +1285,47 @@ extern uint8_t log_unreadErrors;
 # 14 ".././serial.c" 2
 # 1 ".././menu.h" 1
 # 15 ".././serial.c" 2
+# 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\atomic.h" 1 3
+# 42 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\atomic.h" 3
+
+# 42 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\atomic.h" 3
+static __inline__ uint8_t __iSeiRetVal(void)
+{
+    __asm__ __volatile__ ("sei" ::: "memory");
+    return 1;
+}
+
+static __inline__ uint8_t __iCliRetVal(void)
+{
+    __asm__ __volatile__ ("cli" ::: "memory");
+    return 1;
+}
+
+static __inline__ void __iSeiParam(const uint8_t *__s)
+{
+    __asm__ __volatile__ ("sei" ::: "memory");
+    __asm__ volatile ("" ::: "memory");
+    (void)__s;
+}
+
+static __inline__ void __iCliParam(const uint8_t *__s)
+{
+    __asm__ __volatile__ ("cli" ::: "memory");
+    __asm__ volatile ("" ::: "memory");
+    (void)__s;
+}
+
+static __inline__ void __iRestore(const uint8_t *__s)
+{
+    (*(volatile uint8_t *)((0x3F) + 0x20)) = *__s;
+    __asm__ volatile ("" ::: "memory");
+}
+# 16 ".././serial.c" 2
 
 
 
+
+# 19 ".././serial.c"
 uint8_t midiRxBuffer[32];
 uint8_t midiTxBuffer[32];
 
@@ -1293,49 +1353,59 @@ volatile uint8_t midiTxOvfl;
 volatile uint8_t midiRxOvflCount;
 volatile uint8_t midiTxOvflCount;
 
+volatile uint8_t* serESPRxInIndex;
+volatile uint8_t* serESPRxOutIndex;
+volatile uint8_t* serESPTxOutIndex;
+volatile uint8_t* serESPTxInIndex;
+volatile uint8_t serESPOvflFlag;
+volatile uint8_t serESP_Active;
+
+uint8_t serESPRxBuffer[128];
+uint8_t serESPTxBuffer[512];
+
 
 
 void init_Serial1MIDI() {
 
  
-# 49 ".././serial.c" 3
+# 60 ".././serial.c" 3
 (*(volatile uint8_t *)(0xCD)) 
-# 49 ".././serial.c"
+# 60 ".././serial.c"
        = (((16000000UL)/(31250*16UL)-1) >> 8);
  
-# 50 ".././serial.c" 3
+# 61 ".././serial.c" 3
 (*(volatile uint8_t *)(0xCC)) 
-# 50 ".././serial.c"
+# 61 ".././serial.c"
        = ((16000000UL)/(31250*16UL)-1);
  
-# 51 ".././serial.c" 3
+# 62 ".././serial.c" 3
 (*(volatile uint8_t *)(0XC9))
-# 51 ".././serial.c"
+# 62 ".././serial.c"
       |= (1 << 
-# 51 ".././serial.c" 3
+# 62 ".././serial.c" 3
                3
-# 51 ".././serial.c"
+# 62 ".././serial.c"
                     ) | (1 << 
-# 51 ".././serial.c" 3
+# 62 ".././serial.c" 3
                               4
-# 51 ".././serial.c"
+# 62 ".././serial.c"
                                    ) | (1 << 
-# 51 ".././serial.c" 3
+# 62 ".././serial.c" 3
                                              7
-# 51 ".././serial.c"
+# 62 ".././serial.c"
                                                    ) ;
  
-# 52 ".././serial.c" 3
+# 63 ".././serial.c" 3
 (*(volatile uint8_t *)(0xCA))
-# 52 ".././serial.c"
+# 63 ".././serial.c"
       |= (1 << 
-# 52 ".././serial.c" 3
+# 63 ".././serial.c" 3
                1
-# 52 ".././serial.c"
+# 63 ".././serial.c"
                      ) | (1 << 
-# 52 ".././serial.c" 3
+# 63 ".././serial.c" 3
                                2
-# 52 ".././serial.c"
+# 63 ".././serial.c"
                                      );
  midiRxInIndex = 0;
  midiRxOutIndex = 0;
@@ -1349,13 +1419,13 @@ void init_Serial1MIDI() {
 
 void serial1MIDISend(uint8_t data){
  
-# 64 ".././serial.c" 3
+# 75 ".././serial.c" 3
 (*(volatile uint8_t *)(0XC9)) 
-# 64 ".././serial.c"
+# 75 ".././serial.c"
        &= ~(1 << 
-# 64 ".././serial.c" 3
+# 75 ".././serial.c" 3
                  5
-# 64 ".././serial.c"
+# 75 ".././serial.c"
                        );
  midiTxBuffer[midiTxInIndex] = data;
  midiTxInIndex = (midiTxInIndex+1) & 0x1F;
@@ -1373,13 +1443,13 @@ void serial1MIDISend(uint8_t data){
   }
  }
  
-# 80 ".././serial.c" 3
+# 91 ".././serial.c" 3
 (*(volatile uint8_t *)(0XC9)) 
-# 80 ".././serial.c"
+# 91 ".././serial.c"
        |= (1 << 
-# 80 ".././serial.c" 3
+# 91 ".././serial.c" 3
                 5
-# 80 ".././serial.c"
+# 91 ".././serial.c"
                       );
 }
 
@@ -1395,15 +1465,15 @@ uint8_t serial1MIDIReadRx(){
 }
 
 
-# 94 ".././serial.c" 3
+# 105 ".././serial.c" 3
 void __vector_36 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_36 (void) 
-# 94 ".././serial.c"
+# 105 ".././serial.c"
                    {
  uint8_t received_byte;
  received_byte = 
-# 96 ".././serial.c" 3
+# 107 ".././serial.c" 3
                 (*(volatile uint8_t *)(0XCE))
-# 96 ".././serial.c"
+# 107 ".././serial.c"
                     ;
 
  midiRxBuffer[midiRxInIndex] = received_byte;
@@ -1426,29 +1496,29 @@ void __vector_36 (void) __attribute__ ((signal,used, externally_visible)) ; void
 }
 
 
-# 117 ".././serial.c" 3
+# 128 ".././serial.c" 3
 void __vector_37 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_37 (void) 
-# 117 ".././serial.c"
+# 128 ".././serial.c"
                      {
  if ((midiTxOutIndex != midiTxInIndex)){
 
   
-# 120 ".././serial.c" 3
+# 131 ".././serial.c" 3
  (*(volatile uint8_t *)(0XCE)) 
-# 120 ".././serial.c"
+# 131 ".././serial.c"
       = midiTxBuffer[midiTxOutIndex];
   midiTxOutIndex = (midiTxOutIndex+1) & 0x1F;
   midiTxBytesCount++;
  } else {
 
   
-# 125 ".././serial.c" 3
+# 136 ".././serial.c" 3
  (*(volatile uint8_t *)(0XC9)) 
-# 125 ".././serial.c"
+# 136 ".././serial.c"
         &= ~(1 << 
-# 125 ".././serial.c" 3
+# 136 ".././serial.c" 3
                   5
-# 125 ".././serial.c"
+# 136 ".././serial.c"
                         );
 
  }
@@ -1458,44 +1528,44 @@ void __vector_37 (void) __attribute__ ((signal,used, externally_visible)) ; void
 void init_Serial0SerUSB() {
 
  
-# 133 ".././serial.c" 3
+# 144 ".././serial.c" 3
 (*(volatile uint8_t *)(0xC5)) 
-# 133 ".././serial.c"
-       = (((16000000UL)/(19200*16UL)-1)>>8);
+# 144 ".././serial.c"
+       = (((16000000UL +115200*8)/(115200*16)-1)>>8);
  
-# 134 ".././serial.c" 3
+# 145 ".././serial.c" 3
 (*(volatile uint8_t *)(0xC4)) 
-# 134 ".././serial.c"
-       = ((16000000UL)/(19200*16UL)-1);
+# 145 ".././serial.c"
+       = ((16000000UL +115200*8)/(115200*16)-1);
  
-# 135 ".././serial.c" 3
+# 146 ".././serial.c" 3
 (*(volatile uint8_t *)(0XC1))
-# 135 ".././serial.c"
+# 146 ".././serial.c"
       |= (1 << 
-# 135 ".././serial.c" 3
+# 146 ".././serial.c" 3
                3
-# 135 ".././serial.c"
+# 146 ".././serial.c"
                     ) | (1 << 
-# 135 ".././serial.c" 3
+# 146 ".././serial.c" 3
                               4
-# 135 ".././serial.c"
+# 146 ".././serial.c"
                                    ) | (1 << 
-# 135 ".././serial.c" 3
+# 146 ".././serial.c" 3
                                              7
-# 135 ".././serial.c"
+# 146 ".././serial.c"
                                                    ) ;
  
-# 136 ".././serial.c" 3
+# 147 ".././serial.c" 3
 (*(volatile uint8_t *)(0xC2))
-# 136 ".././serial.c"
+# 147 ".././serial.c"
       |= (1 << 
-# 136 ".././serial.c" 3
+# 147 ".././serial.c" 3
                1
-# 136 ".././serial.c"
+# 147 ".././serial.c"
                      ) | (1 << 
-# 136 ".././serial.c" 3
+# 147 ".././serial.c" 3
                                2
-# 136 ".././serial.c"
+# 147 ".././serial.c"
                                      );
  midiRxInIndex = 0;
  midiRxOutIndex = 0;
@@ -1512,19 +1582,20 @@ void init_Serial0SerUSB() {
   serial0SER_USB_sendCRLF();
   serial0SER_USB_sendCRLF();
  }
+
 }
 
 void serial0SER_USB_sendStringP(const char *progmem_s)
 {
  char c;
  while (((c=
-# 157 ".././serial.c" 3
+# 169 ".././serial.c" 3
            (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 157 ".././serial.c"
+# 169 ".././serial.c"
            progmem_s++
-# 157 ".././serial.c" 3
+# 169 ".././serial.c" 3
            )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 157 ".././serial.c"
+# 169 ".././serial.c"
                                      ) != 0) && (! (serusbOvflFlag == 0xFF))){
   serial0SER_USBSend(c);
  }
@@ -1546,43 +1617,35 @@ void serial0SER_USB_sendCRLF(){
 void serial0SER_USBSend(uint8_t data){
  uint8_t index = serusbTxInIndex;
  
-# 177 ".././serial.c" 3
+# 189 ".././serial.c" 3
 (*(volatile uint8_t *)(0XC1)) 
-# 177 ".././serial.c"
+# 189 ".././serial.c"
        &= ~(1 << 
-# 177 ".././serial.c" 3
+# 189 ".././serial.c" 3
                  5
-# 177 ".././serial.c"
+# 189 ".././serial.c"
                        );
  serUsbTxBuffer[index] = data;
  index = (index+1) & 0xFF;
  if (index == serusbTxOutIndex) {
 
 
+   serusbOvflFlag = 0xFF;
 
 
-   
-# 185 ".././serial.c" 3
-  (*(volatile uint8_t *)(0XC1)) 
-# 185 ".././serial.c"
-         |= (1 << 
-# 185 ".././serial.c" 3
-                  5
-# 185 ".././serial.c"
-                        );
-   while (serusbTxOutIndex == index) {};
-   serusbTxInIndex = index;
+
+
 
  } else {
   serusbTxInIndex = index;
   
-# 191 ".././serial.c" 3
+# 203 ".././serial.c" 3
  (*(volatile uint8_t *)(0XC1)) 
-# 191 ".././serial.c"
+# 203 ".././serial.c"
         |= (1 << 
-# 191 ".././serial.c" 3
+# 203 ".././serial.c" 3
                  5
-# 191 ".././serial.c"
+# 203 ".././serial.c"
                        );
  }
 }
@@ -1600,16 +1663,16 @@ uint8_t serial0SER_USBReadRx(){
 }
 
 
-# 207 ".././serial.c" 3
+# 219 ".././serial.c" 3
 void __vector_25 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_25 (void) 
-# 207 ".././serial.c"
+# 219 ".././serial.c"
                    {
  uint8_t received_byte;
  uint8_t index = serusbRxInIndex;
  received_byte = 
-# 210 ".././serial.c" 3
+# 222 ".././serial.c" 3
                 (*(volatile uint8_t *)(0XC6))
-# 210 ".././serial.c"
+# 222 ".././serial.c"
                     ;
  serUsbRxBuffer[index++] = received_byte;
  index &= 0x3F;
@@ -1622,29 +1685,253 @@ void __vector_25 (void) __attribute__ ((signal,used, externally_visible)) ; void
 }
 
 
-# 221 ".././serial.c" 3
+# 233 ".././serial.c" 3
 void __vector_26 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_26 (void) 
-# 221 ".././serial.c"
+# 233 ".././serial.c"
                      {
  uint8_t index = serusbTxOutIndex;
  if ((serusbTxInIndex != serusbTxOutIndex)){
 
   
-# 225 ".././serial.c" 3
+# 237 ".././serial.c" 3
  (*(volatile uint8_t *)(0XC6)) 
-# 225 ".././serial.c"
+# 237 ".././serial.c"
       = serUsbTxBuffer[index];
   serusbTxOutIndex = (index+1) & 0xFF;
  } else {
 
   
-# 229 ".././serial.c" 3
+# 241 ".././serial.c" 3
  (*(volatile uint8_t *)(0XC1)) 
-# 229 ".././serial.c"
+# 241 ".././serial.c"
         &= ~(1 << 
-# 229 ".././serial.c" 3
+# 241 ".././serial.c" 3
                   5
-# 229 ".././serial.c"
+# 241 ".././serial.c"
+                        );
+
+ }
+}
+
+
+
+void init_Serial3SerESP(){
+ 
+# 249 ".././serial.c" 3
+(*(volatile uint8_t *)(0x135)) 
+# 249 ".././serial.c"
+       = (((16000000UL +115200*8)/(115200*16)-1)>>8);
+ 
+# 250 ".././serial.c" 3
+(*(volatile uint8_t *)(0x134)) 
+# 250 ".././serial.c"
+       = ((16000000UL +115200*8)/(115200*16)-1);
+ 
+# 251 ".././serial.c" 3
+(*(volatile uint8_t *)(0X131))
+# 251 ".././serial.c"
+      |= (1 << 
+# 251 ".././serial.c" 3
+               3
+# 251 ".././serial.c"
+                    ) | (1 << 
+# 251 ".././serial.c" 3
+                              4
+# 251 ".././serial.c"
+                                   ) | (1 << 
+# 251 ".././serial.c" 3
+                                             7
+# 251 ".././serial.c"
+                                                   ) ;
+ 
+# 252 ".././serial.c" 3
+(*(volatile uint8_t *)(0x132))
+# 252 ".././serial.c"
+      |= (1 << 
+# 252 ".././serial.c" 3
+               1
+# 252 ".././serial.c"
+                     ) | (1 << 
+# 252 ".././serial.c" 3
+                               2
+# 252 ".././serial.c"
+                                     );
+ serESPRxInIndex = serESPRxBuffer;
+ serESPRxOutIndex = serESPRxBuffer;
+ serESPTxOutIndex = serESPTxBuffer;
+ serESPTxInIndex = serESPTxBuffer;
+ serESPOvflFlag = 0x00;
+ serESP_Active = 0xFF;
+
+}
+
+void serial3SER_ESPSend(uint8_t data){
+ uint8_t* index = (uint8_t*) serESPTxInIndex;
+ 
+# 264 ".././serial.c" 3
+(*(volatile uint8_t *)(0X131)) 
+# 264 ".././serial.c"
+       &= ~(1 << 
+# 264 ".././serial.c" 3
+                 5
+# 264 ".././serial.c"
+                       );
+
+ *index++ = data;
+
+ if (index > &serESPTxBuffer[512 -1]){
+  index = serESPTxBuffer;
+ }
+
+ uint8_t* outIndex;
+ 
+# 273 ".././serial.c" 3
+for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 )
+# 273 ".././serial.c"
+                                 {
+  outIndex = (uint8_t*) serESPTxOutIndex;
+ }
+ if (index == outIndex) {
+
+
+
+
+
+
+
+   serESPOvflFlag = 0xFF;
+   
+# 285 ".././serial.c" 3
+  (*(volatile uint8_t *)(0X131)) 
+# 285 ".././serial.c"
+         |= (1 << 
+# 285 ".././serial.c" 3
+                  5
+# 285 ".././serial.c"
+                        );
+
+ } else {
+
+  serESPTxInIndex = index;
+  
+# 290 ".././serial.c" 3
+ (*(volatile uint8_t *)(0X131)) 
+# 290 ".././serial.c"
+        |= (1 << 
+# 290 ".././serial.c" 3
+                 5
+# 290 ".././serial.c"
+                       );
+ }
+}
+
+
+void serial3SER_ESP_sendStringP(const char *progmem_s){
+ uint8_t count = 255;
+ char c;
+ while (((c=
+# 298 ".././serial.c" 3
+           (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
+# 298 ".././serial.c"
+           progmem_s++
+# 298 ".././serial.c" 3
+           )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
+# 298 ".././serial.c"
+                                     ) != 0) && (! (serESPOvflFlag == 0xFF)) && (count-- > 0)){
+  serial3SER_ESPSend(c);
+ }
+}
+
+void serial3SER_ESP_sendString(char *s){
+ uint8_t count = 255;
+ char c;
+ while (((c= *s++) != 0) && (! (serESPOvflFlag == 0xFF)) && (count-- != 0)){
+  serial3SER_ESPSend(c);
+ }
+}
+
+void serial3SER_ESP_sendCRLF(){
+  serial3SER_ESP_sendStringP(cr_lf);
+}
+
+uint8_t serial3SER_ESPReadRx(){
+ uint8_t result;
+ uint8_t* index = (uint8_t*) serESPRxOutIndex;
+ if (serESPRxInIndex == serESPRxOutIndex) {
+
+  result = 0;
+ } else {
+  result = *index++;
+  if (index > &serESPRxBuffer[128 -1]){
+
+   index = serESPRxBuffer;
+  }
+  serESPRxOutIndex = index;
+ }
+ return result;
+}
+
+
+# 332 ".././serial.c" 3
+void __vector_54 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_54 (void) 
+# 332 ".././serial.c"
+                   {
+
+ uint8_t* index = (uint8_t*) serESPRxInIndex;
+ *index++ = 
+# 335 ".././serial.c" 3
+           (*(volatile uint8_t *)(0X136))
+# 335 ".././serial.c"
+               ;
+ if (index > &serESPRxBuffer[128 -1]) {
+
+  index = serESPRxBuffer;
+ }
+ uint8_t* outIndex;
+ 
+# 341 ".././serial.c" 3
+for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 )
+# 341 ".././serial.c"
+                                 {
+  outIndex = (uint8_t*) serESPRxOutIndex;
+ }
+ if (index == outIndex) {
+
+
+  serESPOvflFlag = 0xFF;
+ } else {
+  serESPRxInIndex = index;
+ }
+}
+
+
+# 353 ".././serial.c" 3
+void __vector_55 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_55 (void) 
+# 353 ".././serial.c"
+                     {
+ uint8_t* index = (uint8_t*) serESPTxOutIndex;
+ if ((serESPTxInIndex != serESPTxOutIndex)){
+
+  
+# 357 ".././serial.c" 3
+ (*(volatile uint8_t *)(0X136)) 
+# 357 ".././serial.c"
+      = *index++;
+  if (index > &serESPTxBuffer[512 -1]) {
+
+   index = serESPTxBuffer;
+  }
+  serESPTxOutIndex = index;
+ } else {
+
+  
+# 365 ".././serial.c" 3
+ (*(volatile uint8_t *)(0X131)) 
+# 365 ".././serial.c"
+        &= ~(1 << 
+# 365 ".././serial.c" 3
+                  5
+# 365 ".././serial.c"
                         );
 
  }

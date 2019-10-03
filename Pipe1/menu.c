@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.59";
+const char sw_version [] PROGMEM = "V0.61";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -147,10 +147,15 @@ const __flash Menu_t menu_setup[] =
 
 // --- MAIN --- MIDI --- MIDOUT ---
 const __flash Menu_t menu_midiOut[] =
-	{{MENU_T_VARMIDICHAN | MENU_T_LEFTBOUND,MENU_FLAG_ALLOWINVALD,"III",NULL,{&(midiOutMap[MANUAL_III].channel)},NULL,NULL},
-	{MENU_T_VARMIDICHAN,MENU_FLAG_ALLOWINVALD,"II",NULL,{&(midiOutMap[MANUAL_II].channel)},NULL,NULL},
-	{MENU_T_VARMIDICHAN,MENU_FLAG_ALLOWINVALD,"I",NULL,{&(midiOutMap[MANUAL_I].channel)},NULL,NULL},
-	{MENU_T_VARMIDICHAN  | MENU_T_RIGHTBOUND,MENU_FLAG_ALLOWINVALD,"P",NULL,{&(midiOutMap[MANUAL_P].channel)},NULL,NULL}};
+	{{MENU_T_VARMIDICHAN | MENU_T_LEFTBOUND,MENU_FLAG_ALLOWINVALD,"III",NULL,{&(midiOutMap[MANUAL_III].hw_channel)},NULL,NULL},
+	{MENU_T_VARMIDICHAN,MENU_FLAG_ALLOWINVALD,"II",NULL,{&(midiOutMap[MANUAL_II].hw_channel)},NULL,NULL},
+	{MENU_T_VARMIDICHAN,MENU_FLAG_ALLOWINVALD,"I",NULL,{&(midiOutMap[MANUAL_I].hw_channel)},NULL,NULL},
+	{MENU_T_VARMIDICHAN,MENU_FLAG_ALLOWINVALD,"P",NULL,{&(midiOutMap[MANUAL_P].hw_channel)},NULL,NULL},
+	{MENU_T_VARMIDICHAN,MENU_FLAG_ALLOWINVALD,"III(int)",NULL,{&(midiOutMap[MANUAL_III].sw_channel)},NULL,NULL},
+	{MENU_T_VARMIDICHAN,MENU_FLAG_ALLOWINVALD,"II(int)",NULL,{&(midiOutMap[MANUAL_II].sw_channel)},NULL,NULL},
+	{MENU_T_VARMIDICHAN,MENU_FLAG_ALLOWINVALD,"I(int)",NULL,{&(midiOutMap[MANUAL_I].sw_channel)},NULL,NULL},
+	{MENU_T_VARMIDICHAN  | MENU_T_RIGHTBOUND,MENU_FLAG_ALLOWINVALD,"P(int)",NULL,{&(midiOutMap[MANUAL_P].sw_channel)},NULL,NULL}};
+
 
 uint8_t menuOnEnterTestManual(uint8_t arg);
 uint8_t menuOnExitTestManualMan(uint8_t arg);
@@ -319,7 +324,7 @@ const __flash char shortKeyTextK1A[MENU_LCD_MENUTEXTLEN]  = "Kb1A\x80";
 const __flash char shortKeyTextK2A[MENU_LCD_MENUTEXTLEN]  = "Kb2A\x80";
 const __flash char shortKeyTextK3A[MENU_LCD_MENUTEXTLEN]  = "Kb3A\x80";
 const __flash char shortKeyTextK4A[MENU_LCD_MENUTEXTLEN]  = "Kb4A\x80";
-const __flash char shortKeyTextRegOff[MENU_LCD_MENUTEXTLEN]  = "Reg" LCD_ARROWDOWN;
+const __flash char shortKeyTextRegOff[MENU_LCD_MENUTEXTLEN]  = "Reg" LCD_STRING_ARROWDOWN;
 
 const __flash Menu_t menu_selFunc[] =
 	{{MENU_T_MENU_L,MENU_FLAG_MENU_SOFTKEY,"<none>",NULL,{.pString=shortKeyTextNone},NULL,NULL},
@@ -341,7 +346,7 @@ const __flash Menu_t menu_selFunc[] =
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 2A",NULL,{.pString=shortKeyTextK2A},softKeyK2A,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 3A",NULL,{.pString=shortKeyTextK3A},softKeyK3A,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 4A",NULL,{.pString=shortKeyTextK4A},softKeyK4A,NULL},
-	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Reg.aus",NULL,{.pString=shortKeyTextRegOff},softKeyRegOff,NULL},	
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Reg.aus",NULL,{.pString=shortKeyTextRegOff},softKeyRegOff,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"MIDI Off",NULL,{.pString=shortKeyTextMIDIoff},menu_OnEnterMidiPanic,NULL},
 	{MENU_T_MENU_R,MENU_FLAG_MENU_SOFTKEY,"Setup",menu_setup,{.pString=shortKeyTextSetup},NULL,NULL}};
 
@@ -560,7 +565,7 @@ void menuDisplayLoadMessage(uint8_t regNumber){
 	char* pChar = string_Buf; // utils.c
 	pChar = putChar_Dec(regNumber, pChar);
 	pChar = putString_P(messageLoaded, pChar);
-	module_WaitOutputInput2Cycles(); // wait until new register are transferred to output and read back 
+	module_WaitOutputInput2Cycles(); // wait until new register are transferred to output and read back
 	uint8_t extraRegisters = count_Registers(REGISTER_READ_HWIN_XOR_SWOUT);
 	if (extraRegisters > 0){
 		pChar = putString_P(messageRegisterMan, pChar);
@@ -569,44 +574,30 @@ void menuDisplayLoadMessage(uint8_t regNumber){
 	menu_DisplayMainMessage(string_Buf);
 }
 
-uint8_t softKeyK1A(uint8_t arg){
+uint8_t handle_programKey(uint8_t arg, uint8_t program){
 	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
 		// longpress
-		menuDisplaySaveMessage(register_toProgram(0, TRUE));
+		menuDisplaySaveMessage(register_toProgram(program, TRUE));
 	} else if (arg != 0) {
-		menuDisplayLoadMessage(program_toRegister(0));
+		menuDisplayLoadMessage(program_toRegister(program));
 	}
-	return 	(midi_RegisterMatchProgram(0) == 0) ? MENU_SOFTKEY_FUNC_RETURN_STATUS_ON : MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF;
+	return 	((midi_CountRegisterInProgram(program) > 0) && (midi_RegisterMatchProgram(program) == 0)) ? MENU_SOFTKEY_FUNC_RETURN_STATUS_ON : MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF;
+}
+
+uint8_t softKeyK1A(uint8_t arg){
+	return handle_programKey(arg, 0);
 }
 
 uint8_t softKeyK2A(uint8_t arg){
-	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
-		// longpress
-		menuDisplaySaveMessage(register_toProgram(1, TRUE));
-	} else if (arg != 0) {
-		menuDisplayLoadMessage(program_toRegister(1));
-	}
-	return 	(midi_RegisterMatchProgram(1) == 0) ? MENU_SOFTKEY_FUNC_RETURN_STATUS_ON : MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF;
+	return handle_programKey(arg, 1);
 }
 
 uint8_t softKeyK3A(uint8_t arg){
-	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
-		// longpress
-		menuDisplaySaveMessage(register_toProgram(2, TRUE));
-	} else if (arg != 0) {
-		menuDisplayLoadMessage(program_toRegister(2));
-	}
-	return 	(midi_RegisterMatchProgram(2) == 0) ? MENU_SOFTKEY_FUNC_RETURN_STATUS_ON : MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF;
+	return handle_programKey(arg, 2);
 }
 
 uint8_t softKeyK4A(uint8_t arg){
-	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
-		// longpress
-		menuDisplaySaveMessage(register_toProgram(3, TRUE));
-	} else if (arg != 0) {
-		menuDisplayLoadMessage(program_toRegister(3));
-	}
-	return 	(midi_RegisterMatchProgram(3) == 0) ? MENU_SOFTKEY_FUNC_RETURN_STATUS_ON : MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF;
+	return handle_programKey(arg, 3);
 }
 
 
@@ -683,7 +674,7 @@ uint8_t menu_ModuleTestPattern(uint8_t arg){
 }
 
 const __flash char menuMessageAbort[] = "abort";
-const __flash char menuMessageOK[] = "ok";
+const __flash char menuMessageOK[] = "ok ";
 const __flash char menuMessageE[] = "E:";
 void menu_ModuleTestExecute(){
 	// menu_TestModuleBitCounter: START->0, 0->1...31->END, END
@@ -1088,7 +1079,7 @@ uint8_t menuOnEnterLogDisp(uint8_t arg) {
 			if (showText == FALSE){
 				lcd_puts(log_getShortTextFromIndex(logEntryNr,LOG_CHAR_READ));
 			} else {
-				lcd_puts_P(getErrorText(logEntryNr));
+				lcd_puts_P(log_getErrorText(logEntryNr));
 			}
 			lcd_clrEol();
 			menuCursorSetExtra();
@@ -1157,6 +1148,8 @@ uint8_t menuOnEnterUSBprotokoll(uint8_t arg){
 		while (count-- > 0){
 			serial0SER_USB_sendString(log_getShortTextFromIndex(count,LOG_CHANGENOTIFYNO));
 			serial0SER_USB_sendStringP(cr_lf);
+			serial0SER_USB_sendStringP(log_getErrorText(count));
+			serial0SER_USB_sendStringP(cr_lf);
 		}
 	}
 	return 0;
@@ -1179,15 +1172,18 @@ const char usbHWtitel [] PROGMEM = "Hardware Configuration\r\n";
 const char usbHWmodulInst [] PROGMEM = "Modules assigned: ";
 const char usbHWmodulCheck [] PROGMEM = "Modules checked: ";
 const char usbHWManual [] PROGMEM = "Manual: ";
-const char usbHWRange [] PROGMEM = "Range: ";
+const char usbHWRange [] PROGMEM = "Range ";
+const char usbHWRegister [] PROGMEM = "Register:\r\n";
 const char usbHWempty [] PROGMEM = "empty";
 const char usbHWmodule [] PROGMEM = "Module:";
-const char usbHWBits [] PROGMEM = ",Bits:";
+const char usbHWBits [] PROGMEM = ", Bits:";
+const char usbHWmidichanSW [] PROGMEM = "direct MIDI-Out(int) for manual: ";
 
 uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 	(void) arg;
 	char* buffer;
 	serial0SER_USB_sendStringP(usbHWtitel);
+	serial0SER_USB_sendCRLF();
 	serial0SER_USB_sendStringP(usbHWmodulInst);
 	buffer = putChar_hex(pipe_ModuleAssnRead,string_Buf);
 	*buffer++ = 'r';
@@ -1200,6 +1196,7 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 	putChar_hex(pipe_ModuleTested,string_Buf);
 	serial0SER_USB_sendString(string_Buf);
 	serial0SER_USB_sendCRLF();
+	serial0SER_USB_sendCRLF();
 	for (uint8_t manual = 0; manual < MANUAL_COUNT; manual++){
 		// out manual
 		serial0SER_USB_sendStringP(usbHWManual);
@@ -1210,14 +1207,16 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 			// out range
 			serial0SER_USB_sendStringP(usbHWRange);
 			serial0SER_USBSend('0'+range);
-			serial0SER_USBSend('-');
+			serial0SER_USBSend(':');
 			serial0SER_USBSend(' ');
 			buffer = putChar_hex(manualMap[manual][range].startNote, string_Buf);
-			*buffer++ = ' ';
+			*buffer++ = '.';
 			buffer = putChar_hex(manualMap[manual][range].endNote, buffer);
-			*buffer++ = ' ';
+			*buffer++ = '.';
 			buffer = putChar_hex(manualMap[manual][range].bitStart, buffer);
+			*buffer++ = ' ';
 			*buffer++ = '=';
+			*buffer++ = ' ';
 			serial0SER_USB_sendString(string_Buf);
 			if (manualMap[manual][range].startNote > 0x7F){
 				serial0SER_USB_sendStringP(usbHWempty);
@@ -1226,6 +1225,7 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 				*buffer++ = '-';
 				buffer = putChar_Note(manualMap[manual][range].endNote, buffer);
 				*buffer++ = ' ';
+				*buffer++ = '\0';
 				serial0SER_USB_sendString(string_Buf);
 				serial0SER_USB_sendStringP(usbHWmodule);
 				serial0SER_USBSend('0'+(manualMap[manual][range].bitStart >> 5));
@@ -1237,6 +1237,52 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 			}
 			serial0SER_USB_sendCRLF();
 		}
+		// V 0.61 sw_channel here too, because it relates to HW
+		serial0SER_USB_sendStringP(usbHWmidichanSW);
+		buffer = putChar_MidiChan(midiOutMap[manual].sw_channel,string_Buf);
+		serial0SER_USB_sendString(string_Buf);
+		serial0SER_USB_sendCRLF();
+		serial0SER_USB_sendCRLF();
+	}
+	// Register
+	serial0SER_USB_sendStringP(usbHWRegister);
+	for (uint8_t range = 0; range < REGISTER_SEC_COUNT; range++){
+		// out range
+		serial0SER_USB_sendStringP(usbHWRange);
+		serial0SER_USBSend('0'+range);
+		serial0SER_USBSend(':');
+		serial0SER_USBSend(' ');
+		buffer = putChar_hex(registerMap[range].startReg, string_Buf);
+		*buffer++ = '.';
+		buffer = putChar_hex(registerMap[range].endReg, buffer);
+		*buffer++ = '.';
+		buffer = putChar_hex(registerMap[range].bitStart, buffer);
+		*buffer++ = ' ';
+		*buffer++ = '=';
+		*buffer++ = ' ';
+		*buffer = '\0';
+		serial0SER_USB_sendString(string_Buf);
+		if (registerMap[range].startReg == REGISTER_NONE){
+			serial0SER_USB_sendStringP(usbHWempty);
+		} else {
+			buffer = string_Buf;
+			*buffer++ = 'R';
+			*buffer++ = '.';
+			buffer = putChar_Dec(registerMap[range].startReg+1, buffer);
+			*buffer++ = '-';
+			buffer = putChar_Dec(registerMap[range].endReg+1, buffer);
+			*buffer++ = ' ';
+			*buffer++ = '\0';
+			serial0SER_USB_sendString(string_Buf);
+			serial0SER_USB_sendStringP(usbHWmodule);
+			serial0SER_USBSend('0'+(registerMap[range].bitStart >> 5));
+			serial0SER_USB_sendStringP(usbHWBits);
+			buffer = putChar_Dec2(registerMap[range].bitStart & 0x1F,string_Buf);
+			*buffer++ = '-';
+			buffer = putChar_Dec2((registerMap[range].bitStart & 0x1F) + registerMap[range].endReg - registerMap[range].startReg,buffer);
+			serial0SER_USB_sendString(string_Buf);
+		}
+		serial0SER_USB_sendCRLF();
 	}
 	return 0;
 }
@@ -2151,6 +2197,11 @@ uint8_t menu_ProcessMessage(uint8_t message){
 							menuCheckArrowDown(); // update OnOff
 							keylabel_toLCD();
 							menuCursorSetMenu();
+							// V0.60 also provide onExitFunction here!
+							if (currentMenu->pOnExitFunc != NULL){
+								// exit function supplied in parent?
+								currentMenu->pOnExitFunc (0);
+							}
 						} else {
 							// Data is not readonly and there is a pointer to data
 							nibbleIndex = 0; // indicates that data is to be edited

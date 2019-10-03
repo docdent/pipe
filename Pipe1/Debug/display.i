@@ -10,7 +10,17 @@
 
 
 # 1 ".././display.h" 1
-# 12 ".././display.h"
+# 89 ".././display.h"
+*/
+# 8 ".././display.c" 2
+# 1 ".././lcd_u.h" 1
+
+
+
+
+
+
+
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\inttypes.h" 1 3
 # 37 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\inttypes.h" 3
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\lib\\gcc\\avr\\5.4.0\\include\\stdint.h" 1 3 4
@@ -134,37 +144,9 @@ typedef int32_t int_farptr_t;
 
 
 typedef uint32_t uint_farptr_t;
-# 13 ".././display.h" 2
-# 33 ".././display.h"
+# 9 ".././lcd_u.h" 2
+# 82 ".././lcd_u.h"
 
-# 33 ".././display.h"
-extern void init_disp();
-extern void disp_clear();
-extern void disp_redraw();
-extern void disp_sectionClear(uint8_t sect);
-extern void disp_sectionWrite(uint8_t centered);
-extern void disp_beginSectionUpdate(uint8_t sect);
-extern void disp_endSectionUpdate(uint8_t sect);
-extern void disp_sectionClearSub(uint8_t sect, uint8_t subsect);
-
-
-typedef struct{
- uint8_t CursorStart;
- uint8_t SectionLen;
- uint8_t SubSectCount;
- } SectionInfo_t;
-
-
-typedef struct{
- uint8_t CursorPos;
- uint8_t SectionUpdating;
- uint8_t SectionChanged;
- } SectionStatus_t;
-
-extern uint8_t display_SectionUpdating;
-extern uint8_t sectionBuffer[32];
-# 8 ".././display.c" 2
-# 1 ".././lcd_u.h" 1
 # 82 ".././lcd_u.h"
 extern uint8_t lcd_cursorPos;
 
@@ -494,138 +476,3 @@ typedef int ptrdiff_t;
 # 328 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\lib\\gcc\\avr\\5.4.0\\include\\stddef.h" 3 4
 typedef int wchar_t;
 # 12 ".././display.c" 2
-
-
-# 13 ".././display.c"
-static uint8_t displayBuffer[128];
-uint8_t sectionBuffer[32];
-static uint8_t leftSpaces;
-static uint8_t rightSpaces;
-static uint8_t textLen;
-
-const uint8_t displaySize = 0x40+20+20;
-const __flash SectionInfo_t sectionInfo[20] = {
- {0 +0, 5, 0},
- {0 +20-5, 5, 0},
- {0 +10-3, 5, 0},
- {0 +10+2, 1, 0},
- {0 +10+3, 1, 0},
- {0x40 +0,20, 0},
- {0+20 +10, 10, 0},
- {0+20 +0, 10, 0},
- {0+20 +0, 20, 0},
- {0x40 +0, 20, 0},
- {0xFF, 0, 4},
- {0+20 +0, 7, 0},
- {0+20 +0, 7, 0},
- {0x40+20 +2, 7, 0},
- {0+20 +12, 7, 0},
- {0x40+20 +0, 20, 0},
- {0x40+20 +0, 5, 0},
- {0x40+20 +5, 5, 0},
- {0x40+20 +10, 5, 0},
- {0x40+20 +15, 5, 0},
-};
-
-static SectionStatus_t sectionStatus[20];
-
-void calcSpaces(uint8_t centered, uint8_t sectionLen){
- uint8_t i=0;
- textLen = 0;
- uint8_t* pChar = sectionBuffer;
- while ((i < 32) && (*pChar != 0)){
-  textLen++;
-  pChar++;
-  i++;
- }
- if (centered) {
-  leftSpaces = (sectionLen - textLen) >> 1;
-  rightSpaces = sectionLen - textLen - leftSpaces;
- } else {
-  leftSpaces = 0;
-  rightSpaces = sectionLen - textLen;
- }
-}
-
-void init_disp(){
- for (uint8_t i = 0; i < 20; i++) {
-  sectionStatus[i].CursorPos = 0xFF;
-  sectionStatus[i].SectionChanged = 0x00;
-  sectionStatus[i].SectionUpdating = 0x00;
- }
- disp_clear();
-}
-
-void disp_clear(){
-
-   lcd_clrscr();
-   for (uint8_t i = 0; i < 128; i++){
-    displayBuffer[i] = ' ';
-   }
-}
-
-extern void disp_redraw(){
-
-  lcd_goto(0);
-   for (uint8_t i = 0; i < displaySize; i++){
-    lcd_putc(displayBuffer[i]);
-   }
-}
-
-extern void disp_sectionClear(uint8_t sect);
-extern void disp_sectionWrite(uint8_t centered);
-
-void disp_beginSectionUpdate(uint8_t sect){
- sectionStatus[sect].SectionUpdating = 0xFF;
-}
-
-void disp_endSectionUpdate(uint8_t sect){
- sectionStatus[sect].SectionUpdating = 0x00;
- if (sectionStatus[sect].SectionChanged){
-  if (sectionInfo[sect].CursorStart == 0xFF) {
-
-   const __flash SectionInfo_t* currentSection = &(sectionInfo[sect]) + 1;
-   uint8_t subSecCount = sectionInfo[sect].SubSectCount;
-   while (subSecCount-- != 0){
-    lcd_goto(currentSection->CursorStart);
-    uint8_t * pChar = & displayBuffer[currentSection->CursorStart];
-    for (uint8_t i = 0; i < currentSection->SectionLen; i++){
-     lcd_putc(*pChar++);
-    }
-    currentSection++;
-   }
-  } else {
-
-   lcd_goto(sectionInfo[sect].CursorStart);
-   uint8_t * pChar = & displayBuffer[sectionInfo[sect].CursorStart];
-   for (uint8_t i = 0; i < sectionInfo[sect].SectionLen; i++){
-    lcd_putc(*pChar++);
-   }
-  }
-  sectionStatus[sect].SectionChanged = 0x00;
- }
-}
-
-extern void disp_sectionClearSub(uint8_t sect, uint8_t subsect){
- if (sectionInfo[sect].CursorStart == 0xFF) {
-
-  uint8_t updating = sectionStatus[sect].SectionUpdating;
-  if (updating){
-   sectionStatus[sect].SectionChanged = 0xFF;
-  }
-  const __flash SectionInfo_t* currentSection = &(sectionInfo[sect]) + 1 + subsect;
-  uint8_t cursorPos = currentSection->CursorStart;
-  uint8_t charCount = currentSection->SectionLen;
-  uint8_t* pChar = &(displayBuffer[cursorPos]);
-  if (updating == 0) {
-
-   lcd_goto(cursorPos);
-  }
-  while (charCount-- > 0){
-   *pChar++ = ' ';
-   if (updating == 0){
-    lcd_putc(' ');
-   }
-  }
- }
-}

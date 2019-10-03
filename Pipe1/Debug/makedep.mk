@@ -2,8 +2,6 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-display.c
-
 ee_prom.c
 
 hwtimer.c

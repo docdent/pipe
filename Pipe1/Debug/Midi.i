@@ -544,23 +544,25 @@ typedef struct
 # 10 ".././Midi.c" 2
 
 # 1 ".././lcd_u.h" 1
-# 82 ".././lcd_u.h"
+# 111 ".././lcd_u.h"
 
-# 82 ".././lcd_u.h"
-extern uint8_t lcd_cursorPos;
-
-
+# 111 ".././lcd_u.h"
 extern void lcd_write_nibble(uint8_t data);
 extern void lcd_write_command(uint8_t data);
 extern void lcd_write_character(uint8_t data);
-
+extern uint8_t getCursorFromLCDRAMcursor(uint8_t lcd_cursor);
 extern void lcd_init();
+
+
 extern void lcd_clrscr();
 extern void lcd_home();
 extern void lcd_goto(uint8_t pos);
 extern void lcd_putc(char c);
 extern void lcd_puts(const char *s);
 extern void lcd_puts_P(const char *progmem_s);
+
+extern uint8_t lcd_cursorPos;
+extern uint8_t lcd_buffer[4*20];
 # 12 ".././Midi.c" 2
 # 1 ".././initio.h" 1
 # 14 ".././initio.h"
@@ -711,7 +713,9 @@ typedef union{
 extern uint8_t lcd_cursorIsOn;
 
 extern uint8_t nibbleToChr(uint8_t myNibble);
-# 41 ".././utils.h"
+
+
+
 extern void lcd_initCG();
 extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
 extern void lcd_wordout(uint16_t hexNumber);
@@ -737,10 +741,11 @@ extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
 extern char* putChar_Manual(uint8_t manual, char* pOutput);
+extern char* putChar_MidiChan(uint8_t channel, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 78 ".././utils.h"
+# 73 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -760,13 +765,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 106 ".././utils.h"
+# 101 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 108 ".././utils.h" 3
+# 103 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 108 ".././utils.h"
+# 103 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -902,7 +907,24 @@ extern uint32_t test_PipeModule(uint8_t moduleNr);
 # 1 ".././utils.h" 1
 # 16 ".././Midi.c" 2
 # 1 ".././serial.h" 1
-# 34 ".././serial.h"
+# 32 ".././serial.h"
+extern void init_Serial3SerESP();
+extern void serial3SER_ESPSend(uint8_t data);
+extern void serial3SER_ESP_sendStringP(const char *progmem_s);
+extern void serial3SER_ESP_sendString(char *s);
+extern void serial3SER_ESP_sendCRLF();
+extern uint8_t serial3SER_ESPReadRx();
+
+extern volatile uint8_t* serESPRxInIndex;
+extern volatile uint8_t* serESPRxOutIndex;
+extern volatile uint8_t* serESPTxOutIndex;
+extern volatile uint8_t* serESPTxInIndex;
+extern volatile uint8_t serESPOvflFlag;
+extern volatile uint8_t serESP_Active;
+
+extern uint8_t serESPRxBuffer[128];
+extern uint8_t serESPTxBuffer[512];
+# 80 ".././serial.h"
 extern void init_Serial0SerUSB();
 extern void serial0SER_USBSend(uint8_t data);
 extern void serial0SER_USB_sendStringP(const char *progmem_s);
@@ -921,7 +943,7 @@ extern uint8_t serUsbRxBuffer[64];
 extern uint8_t serUsbTxBuffer[256];
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
-# 77 ".././serial.h"
+# 123 ".././serial.h"
 extern void init_Serial1MIDI();
 extern void serial1MIDISend(uint8_t data);
 extern uint8_t serial1MIDIReadRx();
@@ -961,7 +983,7 @@ extern void test_input();
 # 1 ".././Midi.h" 1
 # 44 ".././Midi.h"
 typedef struct {
- uint8_t channel;
+ uint8_t hw_channel;
  uint8_t note;
 } ChannelNote_t;
 
@@ -997,7 +1019,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 114 ".././Midi.h"
+# 115 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -1016,7 +1038,9 @@ extern MidiThrough_t midiThrough;
 
 
 typedef struct{
- uint8_t channel;
+ uint8_t hw_channel;
+ uint8_t sw_channel;
+
  } MidiOutMap_t;
 extern MidiOutMap_t midiOutMap[4];
 
@@ -1038,7 +1062,7 @@ typedef struct{
 extern ProgramInfo_t programMap[64] ;
 
 extern uint8_t midi_RegisterChanged;
-
+extern uint8_t midi_CountRegisterInProgram(uint8_t program);
 extern uint8_t read_allRegister(uint8_t* resultPtr);
 
 
@@ -1101,7 +1125,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 233 ".././Midi.h"
+# 236 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1714,7 +1738,7 @@ uint8_t log_count();
 LogList_t* log_getLog(uint8_t nr);
 char* log_getShortTextFromIndex(uint8_t nr, char changeNotifyStatus);
 char* log_getShortTextFromPtr(LogList_t* pLogEntry, char changeNotifyStatus);
-const __flash char* getErrorText(uint8_t logNr);
+const __flash char* log_getErrorText(uint8_t logNr);
 
 
 typedef struct{
@@ -2334,6 +2358,25 @@ uint8_t midi_RegisterMatchProgram(uint8_t program){
  return result;
 }
 
+uint8_t midi_CountRegisterInProgram(uint8_t program){
+
+ uint8_t result = 0;
+ uint8_t* progPtr = &(programMap[program].registers[0]);
+ uint8_t tempReg = 0;
+ for (uint8_t i = 0; i < registerCount; i++){
+  if ((i & 0x07) == 0) {
+
+   tempReg = * progPtr++;
+  }
+  if ((tempReg & 0x01) == 1) {
+   result++;
+  }
+  tempReg = tempReg >> 1;
+ }
+ return result;
+
+}
+
 
 
 void init_Midi2Manual(){
@@ -2379,15 +2422,16 @@ void init_Midi2Manual(){
 void init_Manual2Midi(){
 
  for (uint8_t i = 0; i << 4; i++){
-  midiOutMap[i].channel = 0xFF;
+  midiOutMap[i].hw_channel = 0xFF;
+  midiOutMap[i].sw_channel = 0xFF;
  }
  if (eeprom_ReadMidiOutMap() == 0xFF){
   midiEEPromLoadError = 0xFF;
 
-  midiOutMap[0].channel = 0;
-  midiOutMap[1].channel = 1;
-  midiOutMap[2].channel = 2;
-  midiOutMap[3].channel = 3;
+  midiOutMap[0].hw_channel = 0;
+  midiOutMap[1].hw_channel = 1;
+  midiOutMap[2].hw_channel = 2;
+  midiOutMap[3].hw_channel = 3;
   midi_Setting.TxActivceSense = 0x00;
   midi_Setting.VelZero4Off = 0x00;
   midi_Setting.AcceptProgChange = 0xFF;
@@ -2438,9 +2482,10 @@ void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff){
 ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note){
  ChannelNote_t result = {0xFF,0xFF};
  if (manual < 4) {
-  if (midiOutMap[manual].channel != 0xFF) {
-   result.channel = midiOutMap[manual].channel;
+  if (midiOutMap[manual].hw_channel != 0xFF) {
+   result.hw_channel = midiOutMap[manual].hw_channel;
    result.note = note;
+
   }
  }
  return(result);
@@ -2555,6 +2600,16 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
    pipe[bitNr].pipeOut &= ~(1 << modulNr);
   }
  }
+
+ if (midiOutMap[manual].sw_channel != 0xFF){
+
+
+  serial1MIDISend(((onOff == 0x01) || (midi_Setting.VelZero4Off) ? 0x90 : 0x80) | midiOutMap[manual].sw_channel);
+  serial1MIDISend(note);
+  serial1MIDISend(((onOff == 0x00) && (midi_Setting.VelZero4Off)) ? 0 : 64);
+
+
+ }
 }
 
 
@@ -2577,9 +2632,9 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 
 
      chanNote = Manual_to_MidiNote(manualNote.manual, manualNote.note);
-     if (chanNote.channel != 0xFF){
+     if (chanNote.hw_channel != 0xFF){
 
-      serial1MIDISend(((command == 0x20) || (midi_Setting.VelZero4Off) ? 0x90 : 0x80) | chanNote.channel);
+      serial1MIDISend(((command == 0x20) || (midi_Setting.VelZero4Off) ? 0x90 : 0x80) | chanNote.hw_channel);
 
       serial1MIDISend(chanNote.note);
 
@@ -2649,7 +2704,7 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 
 void midiSendAllNotesOff(){
  for (uint8_t i = 0; i < 4; i++){
-  uint8_t chan = midiOutMap[i].channel;
+  uint8_t chan = midiOutMap[i].hw_channel;
   if (chan <= 15) {
    serial1MIDISend(0xB0 | chan);
    serial1MIDISend(0x7B);

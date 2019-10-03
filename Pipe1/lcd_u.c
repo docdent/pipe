@@ -33,6 +33,7 @@
 #include "hw_defs.h"
 
 uint8_t lcd_cursorPos;
+uint8_t lcd_buffer[LCD_LINE_COUNT*LCD_LINE_LEN]; // save written chars for output to other devices - does not LCD RAM BUFFER!
 
 /*============================== 4-bit LCD Functions ======================*/
 
@@ -195,6 +196,10 @@ void lcd_clrscr()
 {
 	lcd_cursorPos =  0;
 	lcd_write_command(LCD_CLEAR);
+	uint8_t* pchar = &(lcd_buffer[0]);
+	for (uint8_t i = 0; i < sizeof(lcd_buffer); i++){
+		*pchar++ = ' ';
+	}
 }
 
 
@@ -209,14 +214,54 @@ void lcd_home()
 	lcd_write_command(LCD_HOME);
 }
 
+uint8_t getCursorFromLCDRAMcursor(uint8_t lcd_cursor){
+	if ((lcd_cursor >= LCD_LINE0) && (lcd_cursor < LCD_EOLINE0)){
+		// line 0
+		return lcd_cursor-LCD_LINE0 + 0;
+	} else if ((lcd_cursor >= LCD_LINE1) && (lcd_cursor < LCD_EOLINE1)){
+		return lcd_cursor-LCD_LINE1 + 20;
+	} else if ((lcd_cursor >= LCD_LINE2) && (lcd_cursor < LCD_EOLINE2)){
+		return lcd_cursor-LCD_LINE2 +40;
+	} else if ((lcd_cursor >= LCD_LINE3) && (lcd_cursor < LCD_EOLINE3)){
+		return lcd_cursor-LCD_LINE3 + 60;
+	}
+	return 0xFF;
+	
+}
+
 
 /*************************************************************************
 Display character
 Input:    character to be displayed
 Returns:  none
 *************************************************************************/
+
 void lcd_putc(char c)
 {
+	// V 0.61: store char in lcd_buffer. convert values > 0x7F to special charactes < 0x20
+	// so data transfer uses bytes below 0x80 only
+	uint8_t cursor = getCursorFromLCDRAMcursor(lcd_cursorPos);
+	if (cursor != 0xFF){
+		uint8_t stored_char = c;
+		if (stored_char == LCD_CHAR_WAIT_SYMBOL){
+			stored_char = LCD_CHARREPL_WAIT_SYMBOL; 
+		} else if (stored_char == LCD_CHAR_STATEONOFF){
+			stored_char = LCD_CHARREPL_STATEONOFF; 
+		} else if (stored_char == LCD_CHAR_NOTESTRAIGHT_SYM){
+			stored_char = LCD_CHARREPL_NOTESTRAIGHT_SYM; 
+		} else if (stored_char == LCD_CHAR_STATEON){
+			stored_char = LCD_CHARREPL_STATEON; 
+		} else if (stored_char == LCD_CHAR_SZ){
+			stored_char = LCD_CHARREPL_SZ; 
+		} else if (stored_char == LCD_CHAR_UMLAUTU){
+			stored_char = LCD_CHARREPL_UMLAUTU; 
+		} else if (stored_char == LCD_CHAR_UMLAUTO){
+			stored_char = LCD_CHARREPL_UMLAUTO; 
+		} else if (stored_char == LCD_CHAR_UMLAUTA){
+			stored_char = LCD_CHARREPL_UMLAUTA; 
+		} 
+		lcd_buffer[cursor] = stored_char;
+	}
 	lcd_cursorPos =  (lcd_cursorPos+1) &0x7F;
 	lcd_write_character(c);
 }

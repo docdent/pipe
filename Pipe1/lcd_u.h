@@ -55,22 +55,49 @@
 
 #define LCD_LINE0	0
 #define LCD_LINE1	0x40
-#define LCD_LINE2	0+20
-#define LCD_LINE3	0x40+20
+#define LCD_LINE2	(0+20)
+#define LCD_LINE3	(0x40+20)
 #define LCD_EOLINE0				20	 // Adress for Line 0 last char
-#define LCD_EOLINE1				0x40+20 // Adress for Line 1 last char
-#define LCD_EOLINE2				20+20
-#define LCD_EOLINE3				0x40+20+20
+#define LCD_EOLINE1				(0x40+20) // Adress for Line 1 last char
+#define LCD_EOLINE2				(20+20)
+#define LCD_EOLINE3				(0x40+20+20)
 
-#define LCD_UMLAUTA "\341"
-#define LCD_UMLAUTO "\357"
-#define LCD_UMLAUTU "\365"
-#define LCD_SZ "\342"
-#define LCD_ARROWUP "\x08"
-#define LCD_ARROWDOWN "\x09"
-#define LCD_ARROWRIGHT "\x7E"
-#define LCD_ARROWLEFT "\x7F"
-#define LCD_STATEONOFF "\x80" // \x80 KEYLABEL_STATEOFF_CHAR -> see utils.h
+#define LCD_BUFFERSIZE 128
+#define LCD_LINE_LEN 20
+#define LCD_LINE_COUNT 4
+#define LCD_LINE_NONE 0xFF
+
+#define LCD_STRING_UMLAUTA "\341"
+#define LCD_STRING_UMLAUTO "\357"
+#define LCD_STRING_UMLAUTU "\365"
+#define LCD_STRING_SZ "\342"
+#define LCD_STRING_ARROWUP "\x08"
+#define LCD_STRING_ARROWDOWN "\x09"
+#define LCD_STRING_ARROWRIGHT "\x7E"
+#define LCD_STRING_ARROWLEFT "\x7F"
+#define LCD_STRING_STATEONOFF "\x80" // \x80 KEYLABEL_STATEOFF_CHAR -> see utils.h
+
+#define LCD_CHARREPL_UMLAUTA 0x10
+#define LCD_CHARREPL_UMLAUTO 0x11
+#define LCD_CHARREPL_UMLAUTU 0x12
+#define LCD_CHARREPL_SZ 0x13
+#define LCD_CHARREPL_WAIT_SYMBOL 0x20 // space
+#define LCD_CHARREPL_STATEONOFF 0x20 // in off state: space
+#define LCD_CHARREPL_NOTESTRAIGHT_SYM 0x14 // small dot in middle
+#define LCD_CHARREPL_STATEON 0x15 // block
+
+#define LCD_CHAR_UMLAUTA 0xE1
+#define LCD_CHAR_UMLAUTO 0xEF
+#define LCD_CHAR_UMLAUTU 0xF5
+#define LCD_CHAR_SZ 0xE2
+#define LCD_CHAR_WAIT_SYMBOL 0xA1 // small bottom line left
+#define LCD_CHAR_NOTESTRAIGHT_SYM 0xA5 // small dot in middle
+#define LCD_CHAR_ARROW_UP 0x08
+#define LCD_CHAR_ARROW_DOWN 0x09
+#define LCD_CHAR_ARROW_RIGHT 0x7E
+#define LCD_CHAR_ARROW_LEFT 0x7F
+#define LCD_CHAR_STATEONOFF 0x80 // also off state cause it shows as space
+#define LCD_CHAR_STATEON 0x0A // also in utils.h, will show as block
 
 #define LCD_WAIT_POWERUP 100 // ms
 #define LCD_WAIT_RESET0 5000 // us
@@ -79,14 +106,15 @@
 #define LCD_WAIT_CMD 64 // us
 #define LCD_WAIT_CLRHOME 2500 // us
 
-extern uint8_t lcd_cursorPos;
 
 // Function Prototypes
 extern void lcd_write_nibble(uint8_t data);
 extern void lcd_write_command(uint8_t data);
 extern void lcd_write_character(uint8_t data);
-
+extern uint8_t getCursorFromLCDRAMcursor(uint8_t lcd_cursor);
 extern void lcd_init();
+
+// following functions affect lcd_cursorPos and lcd_buffer
 extern void lcd_clrscr();
 extern void lcd_home();
 extern void lcd_goto(uint8_t pos);
@@ -94,4 +122,6 @@ extern void lcd_putc(char c);
 extern void lcd_puts(const char *s);
 extern void lcd_puts_P(const char *progmem_s);
 
+extern uint8_t lcd_cursorPos;
+extern uint8_t lcd_buffer[LCD_LINE_COUNT*LCD_LINE_LEN]; // sorted, does not match weird LCD RAM
 #endif /* LCD_U_H_ */

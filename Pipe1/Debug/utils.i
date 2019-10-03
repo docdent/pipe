@@ -685,7 +685,9 @@ typedef union{
 extern uint8_t lcd_cursorIsOn;
 
 extern uint8_t nibbleToChr(uint8_t myNibble);
-# 41 ".././utils.h"
+
+
+
 extern void lcd_initCG();
 extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
 extern void lcd_wordout(uint16_t hexNumber);
@@ -711,10 +713,11 @@ extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
 extern char* putChar_Manual(uint8_t manual, char* pOutput);
+extern char* putChar_MidiChan(uint8_t channel, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 78 ".././utils.h"
+# 73 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -734,13 +737,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 106 ".././utils.h"
+# 101 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 108 ".././utils.h" 3
+# 103 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 108 ".././utils.h"
+# 103 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -748,21 +751,23 @@ extern uint8_t get_StrLen(const char* pString);
 extern uint8_t reverse_Bits(uint8_t val);
 # 13 ".././utils.c" 2
 # 1 ".././lcd_u.h" 1
-# 82 ".././lcd_u.h"
-extern uint8_t lcd_cursorPos;
-
-
+# 111 ".././lcd_u.h"
 extern void lcd_write_nibble(uint8_t data);
 extern void lcd_write_command(uint8_t data);
 extern void lcd_write_character(uint8_t data);
-
+extern uint8_t getCursorFromLCDRAMcursor(uint8_t lcd_cursor);
 extern void lcd_init();
+
+
 extern void lcd_clrscr();
 extern void lcd_home();
 extern void lcd_goto(uint8_t pos);
 extern void lcd_putc(char c);
 extern void lcd_puts(const char *s);
 extern void lcd_puts_P(const char *progmem_s);
+
+extern uint8_t lcd_cursorPos;
+extern uint8_t lcd_buffer[4*20];
 # 14 ".././utils.c" 2
 # 1 ".././hwtimer.h" 1
 # 14 ".././hwtimer.h"
@@ -898,7 +903,7 @@ extern uint32_t test_PipeModule(uint8_t moduleNr);
 # 1 ".././Midi.h" 1
 # 44 ".././Midi.h"
 typedef struct {
- uint8_t channel;
+ uint8_t hw_channel;
  uint8_t note;
 } ChannelNote_t;
 
@@ -934,7 +939,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 114 ".././Midi.h"
+# 115 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -953,7 +958,9 @@ extern MidiThrough_t midiThrough;
 
 
 typedef struct{
- uint8_t channel;
+ uint8_t hw_channel;
+ uint8_t sw_channel;
+
  } MidiOutMap_t;
 extern MidiOutMap_t midiOutMap[4];
 
@@ -975,7 +982,7 @@ typedef struct{
 extern ProgramInfo_t programMap[64] ;
 
 extern uint8_t midi_RegisterChanged;
-
+extern uint8_t midi_CountRegisterInProgram(uint8_t program);
 extern uint8_t read_allRegister(uint8_t* resultPtr);
 
 
@@ -1038,7 +1045,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 233 ".././Midi.h"
+# 236 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1224,6 +1231,24 @@ char* putChar_hex(uint8_t val, char* pOutput){
  return pOutput;
 }
 
+char* putChar_MidiChan(uint8_t channel, char* pOutput){
+ if (channel > 15){
+  *pOutput++ = 'n';
+  *pOutput++ = 'o';
+ } else {
+  channel++;
+  if (channel > 9){
+   *pOutput++ = '1';
+   channel =- 10;
+  } else {
+   *pOutput++ = ' ';
+  }
+  *pOutput++ = '0'+channel;
+ }
+ *pOutput = 0;
+ return pOutput;
+}
+
 char* putChar_long(uint16_t val, char* pOutput){
  pOutput = pOutput + 4;
  *pOutput = 0;
@@ -1335,7 +1360,7 @@ void lcd_wordout(uint16_t hexNumber){
 uint8_t lcd_noteOut(uint8_t noteNr){
 
  uint8_t octave = 0;
- char char1;
+ char char1 = ' ';
  char char2 = '#';
  char char3;
  if (noteNr > 127){
@@ -1458,8 +1483,8 @@ void lcd_blank(uint8_t count){
 void lcd_clrEol(){
  uint8_t i = 0;
 
- while ((lcd_cursorPos != 20) && (lcd_cursorPos != 0x40+20)
-  && (lcd_cursorPos != 20+20) && (lcd_cursorPos != 0x40+20+20) && (i++ < 20)){
+ while ((lcd_cursorPos != 20) && (lcd_cursorPos != (0x40+20))
+  && (lcd_cursorPos != (20+20)) && (lcd_cursorPos != (0x40+20+20)) && (i++ < 20)){
   lcd_putc(' ');
  }
 }
@@ -1547,7 +1572,7 @@ void keylabel_clr(uint8_t keyNr){
 
 void keylabel_toLCD(){
  uint8_t oldCursor = lcd_cursorPos;
- lcd_goto(0x40+20);
+ lcd_goto((0x40+20));
  char *pChar = &labelBuffer[0];
  for (uint8_t i = 0; i < (4 * 5); i++){
   lcd_putc(*pChar++);

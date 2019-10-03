@@ -540,23 +540,25 @@ typedef struct
 
 
 # 1 ".././lcd_u.h" 1
-# 82 ".././lcd_u.h"
+# 111 ".././lcd_u.h"
 
-# 82 ".././lcd_u.h"
-extern uint8_t lcd_cursorPos;
-
-
+# 111 ".././lcd_u.h"
 extern void lcd_write_nibble(uint8_t data);
 extern void lcd_write_command(uint8_t data);
 extern void lcd_write_character(uint8_t data);
-
+extern uint8_t getCursorFromLCDRAMcursor(uint8_t lcd_cursor);
 extern void lcd_init();
+
+
 extern void lcd_clrscr();
 extern void lcd_home();
 extern void lcd_goto(uint8_t pos);
 extern void lcd_putc(char c);
 extern void lcd_puts(const char *s);
 extern void lcd_puts_P(const char *progmem_s);
+
+extern uint8_t lcd_cursorPos;
+extern uint8_t lcd_buffer[4*20];
 # 18 ".././main.c" 2
 # 1 ".././initio.h" 1
 # 14 ".././initio.h"
@@ -707,7 +709,9 @@ typedef union{
 extern uint8_t lcd_cursorIsOn;
 
 extern uint8_t nibbleToChr(uint8_t myNibble);
-# 41 ".././utils.h"
+
+
+
 extern void lcd_initCG();
 extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
 extern void lcd_wordout(uint16_t hexNumber);
@@ -733,10 +737,11 @@ extern char* putChar_hex(uint8_t val, char* pOutput);
 extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
 extern char* putChar_Manual(uint8_t manual, char* pOutput);
+extern char* putChar_MidiChan(uint8_t channel, char* pOutput);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 78 ".././utils.h"
+# 73 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -756,13 +761,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 106 ".././utils.h"
+# 101 ".././utils.h"
 extern char string_Buf[40];
 
 extern const char cr_lf [] 
-# 108 ".././utils.h" 3
+# 103 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 108 ".././utils.h"
+# 103 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -898,7 +903,24 @@ extern uint32_t test_PipeModule(uint8_t moduleNr);
 # 1 ".././utils.h" 1
 # 22 ".././main.c" 2
 # 1 ".././serial.h" 1
-# 34 ".././serial.h"
+# 32 ".././serial.h"
+extern void init_Serial3SerESP();
+extern void serial3SER_ESPSend(uint8_t data);
+extern void serial3SER_ESP_sendStringP(const char *progmem_s);
+extern void serial3SER_ESP_sendString(char *s);
+extern void serial3SER_ESP_sendCRLF();
+extern uint8_t serial3SER_ESPReadRx();
+
+extern volatile uint8_t* serESPRxInIndex;
+extern volatile uint8_t* serESPRxOutIndex;
+extern volatile uint8_t* serESPTxOutIndex;
+extern volatile uint8_t* serESPTxInIndex;
+extern volatile uint8_t serESPOvflFlag;
+extern volatile uint8_t serESP_Active;
+
+extern uint8_t serESPRxBuffer[128];
+extern uint8_t serESPTxBuffer[512];
+# 80 ".././serial.h"
 extern void init_Serial0SerUSB();
 extern void serial0SER_USBSend(uint8_t data);
 extern void serial0SER_USB_sendStringP(const char *progmem_s);
@@ -917,7 +939,7 @@ extern uint8_t serUsbRxBuffer[64];
 extern uint8_t serUsbTxBuffer[256];
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
-# 77 ".././serial.h"
+# 123 ".././serial.h"
 extern void init_Serial1MIDI();
 extern void serial1MIDISend(uint8_t data);
 extern uint8_t serial1MIDIReadRx();
@@ -957,7 +979,7 @@ extern void test_input();
 # 1 ".././Midi.h" 1
 # 44 ".././Midi.h"
 typedef struct {
- uint8_t channel;
+ uint8_t hw_channel;
  uint8_t note;
 } ChannelNote_t;
 
@@ -993,7 +1015,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 114 ".././Midi.h"
+# 115 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -1012,7 +1034,9 @@ extern MidiThrough_t midiThrough;
 
 
 typedef struct{
- uint8_t channel;
+ uint8_t hw_channel;
+ uint8_t sw_channel;
+
  } MidiOutMap_t;
 extern MidiOutMap_t midiOutMap[4];
 
@@ -1034,7 +1058,7 @@ typedef struct{
 extern ProgramInfo_t programMap[64] ;
 
 extern uint8_t midi_RegisterChanged;
-
+extern uint8_t midi_CountRegisterInProgram(uint8_t program);
 extern uint8_t read_allRegister(uint8_t* resultPtr);
 
 
@@ -1097,7 +1121,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 233 ".././Midi.h"
+# 236 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1712,7 +1736,7 @@ uint8_t log_count();
 LogList_t* log_getLog(uint8_t nr);
 char* log_getShortTextFromIndex(uint8_t nr, char changeNotifyStatus);
 char* log_getShortTextFromPtr(LogList_t* pLogEntry, char changeNotifyStatus);
-const __flash char* getErrorText(uint8_t logNr);
+const __flash char* log_getErrorText(uint8_t logNr);
 
 
 typedef struct{
@@ -1742,6 +1766,7 @@ const char prog_name []
 const __flash char releaseKeyString[] = "Tasten/Reg. l" "\357" "sen";
 const __flash char panicString[] = "T" "\357" "ne aus";
 uint8_t menuNotActive;
+uint8_t messageFromESP;
 
 int main(void)
 {
@@ -1775,14 +1800,15 @@ int main(void)
  lcd_clrscr ();
  lcd_goto(0x40 +3);
  lcd_puts_P(prog_name);
- lcd_goto(0+20 +7);
+ lcd_goto((0+20)+7);
  lcd_puts_P(sw_version);
  
-# 70 ".././main.c" 3
+# 71 ".././main.c" 3
 __asm__ __volatile__ ("sei" ::: "memory")
-# 70 ".././main.c"
+# 71 ".././main.c"
      ;
  _delay_ms(1200);
+ init_Serial3SerESP();
  lcd_clrscr ();
 
 
@@ -1793,8 +1819,19 @@ __asm__ __volatile__ ("sei" ::: "memory")
  menuNotActive = 0xFF;
 
  uint8_t updateStatus = 0xFF;
+ messageFromESP = 0xFE;
     while (1)
     {
+
+  if (serESPRxInIndex != serESPRxOutIndex) {
+   uint8_t esp_message = serial3SER_ESPReadRx();
+   messageFromESP = esp_message;
+   serial0SER_USBSend(esp_message);
+   if ((esp_message > 0x80) && (esp_message <= 0x80 +6)){
+
+    message_push(esp_message-0x80);
+   }
+  }
 
   if (message_status() != 0x00) {
    uint8_t keyMessage = message_get();
@@ -1814,13 +1851,13 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
 
      menu_Init(
-# 102 ".././main.c" 3 4
+# 115 ".././main.c" 3 4
               ((void *)0)
-# 102 ".././main.c"
+# 115 ".././main.c"
                   , 
-# 102 ".././main.c" 3 4
+# 115 ".././main.c" 3 4
                     ((void *)0)
-# 102 ".././main.c"
+# 115 ".././main.c"
                         );
      menu_InitLCD();
      menuNotActive = 0x00;
@@ -1884,7 +1921,7 @@ __asm__ __volatile__ ("sei" ::: "memory")
    if (menuNotActive == 0xFF) {
 
     uint8_t saveCursor = lcd_cursorPos;
-    lcd_goto(0+20);
+    lcd_goto((0+20));
     if (pipe_PowerStatus == 0x01){
 
      lcd_puts_P(releaseKeyString);
@@ -1894,6 +1931,24 @@ __asm__ __volatile__ ("sei" ::: "memory")
     lcd_goto(saveCursor);
    }
   }
+
+
+  if (((messageFromESP > 0x80) && (messageFromESP <= 0x80 +6))
+   || (messageFromESP == 0xFE)) {
+
+   if (lcd_cursorIsOn == 0xFF){
+    serial3SER_ESPSend(getCursorFromLCDRAMcursor(lcd_cursorPos));
+   } else {
+    serial3SER_ESPSend(0x7F);
+   }
+   serial3SER_ESPSend(0x81);
+   uint8_t* pChar = &(lcd_buffer[0]);
+   for (uint8_t i = 0; i < sizeof(lcd_buffer); i++){
+    serial3SER_ESPSend(*pChar++);
+   }
+   serial3SER_ESPSend(0x80);
+  }
+  messageFromESP = 0xFF;
 
 
   midi_CheckTxActiveSense();
@@ -1922,9 +1977,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
    lcd_goto(oldcursor);
    midiLastInNote = 0xFF;
    
-# 202 ".././main.c" 3
+# 233 ".././main.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 202 ".././main.c"
+# 233 ".././main.c"
   {swTimer[4].counter = 1000 / 20; swTimer[4].prescaler = (1000 % 20) / 4;};
   } else if (midiLastProgram != 0xFF) {
 
@@ -1934,9 +1989,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
    lcd_putc(0x7E);
    midiLastProgram = 0xFF;
    
-# 210 ".././main.c" 3
+# 241 ".././main.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 210 ".././main.c"
+# 241 ".././main.c"
   {swTimer[4].counter = 1000 / 20; swTimer[4].prescaler = (1000 % 20) / 4;};
   } else if ((swTimer[4].counter == 0x00) ) {
 
@@ -1956,23 +2011,24 @@ __asm__ __volatile__ ("sei" ::: "memory")
    lcd_goto(oldcursor);
    midiLastOutNote = 0xFF;
    
-# 228 ".././main.c" 3
+# 259 ".././main.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 228 ".././main.c"
+# 259 ".././main.c"
   {swTimer[5].counter = 1000 / 20; swTimer[5].prescaler = (1000 % 20) / 4;};
   } else if (midi_RegisterChanged != 0xFF) {
 
    lcd_goto((0 +20-5));
    lcd_putc('R');
    lcd_dec2out(midi_RegisterChanged & ~0x80);
-   lcd_putc((midi_RegisterChanged & 0x80) == 0 ? 0x09 : 0x08);
+
+   lcd_putc((midi_RegisterChanged & 0x80) == 0 ? 0x08 : 0x09);
    lcd_putc(' ');
    lcd_goto(oldcursor);
    midi_RegisterChanged = 0xFF;
    
-# 238 ".././main.c" 3
+# 270 ".././main.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 238 ".././main.c"
+# 270 ".././main.c"
   {swTimer[5].counter = 1000 / 20; swTimer[5].prescaler = (1000 % 20) / 4;};
   } else if ((swTimer[5].counter == 0x00)) {
 
@@ -2031,16 +2087,16 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
    if ((swTimer[4].counter == 0xFF)) {
     
-# 295 ".././main.c" 3
+# 327 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 295 ".././main.c"
+# 327 ".././main.c"
    {swTimer[4].counter = 2500 / 20; swTimer[4].prescaler = (2500 % 20) / 4;};
    }
    if ((swTimer[5].counter == 0xFF)) {
     
-# 298 ".././main.c" 3
+# 330 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 298 ".././main.c"
+# 330 ".././main.c"
    {swTimer[5].counter = 2500 / 20; swTimer[5].prescaler = (2500 % 20) / 4;};
    }
   }

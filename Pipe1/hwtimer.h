@@ -194,7 +194,7 @@ extern uint8_t pipe_ModuleAssnWrite; // 1 for each module can be writte (if ==0 
 #define POWERSTATE_OFF_DUE_TO_ERROR 0x80
 extern uint8_t pipe_PowerStatus;
 
-#define POWERSTAT_CHAR (pipe_PowerStatus & 0x10 ? ' ' : LCDCHAR_ARROW_DOWN)
+#define POWERSTAT_CHAR (pipe_PowerStatus & 0x10 ? ' ' : LCD_CHAR_ARROW_DOWN)
 //-------------------- FUNCIOTNS ---------------------
 extern uint8_t module_TestAllInputs();
 extern void module_WaitOutputInput2Cycles();

@@ -9,10 +9,56 @@
 #ifndef SERIAL_H_
 #define SERIAL_H_
 
+//================================= S E R I A L _ E S P ===========================
+//--------- INTERN DEFs ----------
+#define SER_ESP_BAUD 115200
+#define SER_ESP_BAUDRATE ((F_CPU+SER_ESP_BAUD*8)/(SER_ESP_BAUD*16)-1)
+
+#define SER_ESP_RX_BUFFER_SIZE 128
+#define SER_ESP_TX_BUFFER_SIZE 512
+#define SER_ESP_MAX_STRINGLEN 255
+
+#define SER_ESP_WAIT // if defined: sending waits for send buffer to be free
+
+#define SER_ESP_OVFLOW (serESPOvflFlag == SER_OVFL_YES)
+
+//------------ external defs ------------------
+#define SER_ESP_RX_BUFFER_EMPTY (serESPRxInIndex == serESPRxOutIndex)
+#define SER_ESP_TX_BUFFER_EMPTY (serESPTxInIndex == serESPTxOutIndex)
+#define SER_ESP_RX_BUFFER_NONEMPTY (serESPRxInIndex != serESPRxOutIndex)
+#define SER_ESP_TX_BUFFER_NONEMPTY (serESPTxInIndex != serESPTxOutIndex)
+#define SER_ESP_UNDEFINED 0
+
+extern void init_Serial3SerESP();
+extern void serial3SER_ESPSend(uint8_t data);
+extern void serial3SER_ESP_sendStringP(const char *progmem_s);
+extern void serial3SER_ESP_sendString(char *s);
+extern void serial3SER_ESP_sendCRLF();
+extern uint8_t serial3SER_ESPReadRx();
+
+extern volatile uint8_t* serESPRxInIndex;
+extern volatile uint8_t* serESPRxOutIndex;
+extern volatile uint8_t* serESPTxOutIndex;
+extern volatile uint8_t* serESPTxInIndex;
+extern volatile uint8_t serESPOvflFlag;
+extern volatile uint8_t serESP_Active;
+
+extern uint8_t serESPRxBuffer[SER_ESP_RX_BUFFER_SIZE];
+extern uint8_t serESPTxBuffer[SER_ESP_TX_BUFFER_SIZE];
+
+#define SER_ESP_MSGOFFSET 0x80 // message offset, so message from ESP is 0x81, 0x82...
+// 0x81 ... 0x80+ MESSAGE_KEY_MAX are key messages from ESP to MEGAS
+
+#define SER_ESP_OUTMSG_LCD_TRANSFER 0x80 // sent to ESP after 80 bytes LCD-Content (values < 0x80!) had been sent;
+#define SER_ESP_OUTMSG_LCD_SETCURSOR 0x81 // sent to ESP before transfer of LCD content 0=line0,0 79=line3,19, 0x7F=invalid
+#define SER_ESP_SEND_LCD 0xFE
+#define SER_ESP_MESSAGE_NONE 0xFF
+
+
 //================================= S E R I A L U S B ===========================
 //--------- INTERN DEFs ----------
-#define SER_USB_BAUD 19200
-#define SER_USB_BAUDRATE ((F_CPU)/(SER_USB_BAUD*16UL)-1)
+#define SER_USB_BAUD 115200
+#define SER_USB_BAUDRATE ((F_CPU+SER_USB_BAUD*8)/(SER_USB_BAUD*16)-1)
 #define SER_USB_PORT PORTE
 #define SER_USB_PINP PINE
 #define SER_USB_DDR DDRE
@@ -28,7 +74,7 @@
 #define SER_USB_TX_BUFFER_SIZE 256
 #define SER_USB_TX_BUFFER_MASK 0xFF
 
-#define SER_USB_WAIT // = when sending wait for empty buffer instead of ovfl
+#undef SER_USB_WAIT // = when sending wait for empty buffer instead of ovfl
 
 //------------ external defs ------------------
 extern void init_Serial0SerUSB();
@@ -97,9 +143,9 @@ extern volatile uint8_t midiTxOvflCount;
 //--------- MIDI Defs -----------
 // alle Commands excepo 0xF0..0x0FF include Channel in lower nibble
 // 2 Data bytes following
-#define MIDI_NOTEOFF 0x80 
-#define MIDI_NOTEON 0x90 
-#define MIDI_POLYAFTT 0xA0 
+#define MIDI_NOTEOFF 0x80
+#define MIDI_NOTEON 0x90
+#define MIDI_POLYAFTT 0xA0
 #define MIDI_CTRLCHG 0xB0 // 2 possible, but may be 1 for first data <120
 #define MIDI_PITCHBEND 0xE0
 #define MIDI_SONGPOS 0xF2
