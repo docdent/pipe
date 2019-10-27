@@ -888,9 +888,14 @@ extern Pipe_t pipe[32];
 extern volatile uint8_t pipeProcessing;
 
 extern uint8_t pipe_ModuleTested;
-extern uint8_t pipe_ModuleAssnRead;
-extern uint8_t pipe_ModuleAssnWrite;
-# 195 ".././hwtimer.h"
+
+typedef struct {
+ uint8_t AssnRead;
+ uint8_t AssnWrite;
+} Pipe_Module_t;
+
+extern Pipe_Module_t pipe_Module;
+# 200 ".././hwtimer.h"
 extern uint8_t pipe_PowerStatus;
 
 
@@ -953,11 +958,13 @@ extern volatile uint8_t midiRxOutIndex;
 extern volatile uint8_t midiTxOutIndex;
 extern volatile uint8_t midiTxInIndex;
 extern uint8_t midiRxBuffer[32];
-extern uint8_t midiTxBuffer[32];
+extern uint8_t midiTxBuffer[256];
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
 extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
+
+extern volatile uint8_t midiTxLastCmd;
 # 17 ".././Midi.c" 2
 # 1 ".././test.h" 1
 # 15 ".././test.h"
@@ -1520,12 +1527,7 @@ extern void menu_ClearAllDisp();
 extern void menu_ModuleTestExecute();
 extern uint8_t menu_OnEnterMidiPanic(uint8_t arg);
 # 17 ".././ee_prom.h" 2
-
-
-
-
-
-
+# 31 ".././ee_prom.h"
 extern uint8_t eeprom_ReadManualMap();
 extern uint8_t eeprom_ReadMidiInMap();
 extern uint8_t eeprom_ReadMidiOutMap();
@@ -1549,7 +1551,24 @@ extern void eeprom_UpdateMidiThrough();
 extern void eeprom_Backup();
 extern void eeprom_Restore();
 extern void eeprom_UpdateALL();
-# 61 ".././ee_prom.h"
+# 83 ".././ee_prom.h"
+typedef struct{
+ uint8_t label;
+ uint8_t version;
+ uint16_t sizeData;
+ uint16_t crcData;
+ uint8_t data;
+} ee_dataBlockBasic;
+
+typedef struct{
+ uint8_t label;
+ uint8_t version;
+ uint16_t size;
+ uint8_t* pMemory;
+} EeVarList_t;
+
+extern const __flash EeVarList_t ee_VarList[];
+
 typedef struct{
  uint8_t charStart;
  uint8_t charManMap;
@@ -1598,11 +1617,11 @@ typedef struct{
 } EECompl_t;
 
 extern 
-# 108 ".././ee_prom.h" 3
+# 147 ".././ee_prom.h" 3
       __attribute__((section(".eeprom"))) 
-# 108 ".././ee_prom.h"
+# 147 ".././ee_prom.h"
             EECompl_t ee;
-# 120 ".././ee_prom.h"
+# 159 ".././ee_prom.h"
 extern uint8_t ee_initError;
 # 20 ".././Midi.c" 2
 # 1 ".././log.h" 1
@@ -2589,15 +2608,22 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
  ModulBitError_t moduleInfo;
  moduleInfo = manualNote_to_moduleBit(manual, note);
 
+ uint8_t modulNrMask = 1 << ((moduleInfo.moduleBit >> 5));
+ uint8_t bitNr = (moduleInfo.moduleBit & 0x1f);
  if (moduleInfo.error == 0x00) {
-  uint8_t bitNr = (moduleInfo.moduleBit & 0x1f);
-  uint8_t modulNr = (moduleInfo.moduleBit >> 5);
   if (onOff == 0x00) {
 
-   pipe[bitNr].pipeOut |= (1 << modulNr);
+   pipe[bitNr].pipeOut |= modulNrMask;
   } else {
 
-   pipe[bitNr].pipeOut &= ~(1 << modulNr);
+   pipe[bitNr].pipeOut &= ~(modulNrMask);
+  }
+
+  if ((modulNrMask & pipe_Module.AssnWrite) == 0){
+   PipeMessage_t myMessage;
+   myMessage.message8[0] = modulNrMask;
+   myMessage.message8[1] = ((onOff == 0x01) ? 0x20 : 0x00 )| bitNr;
+   pipeMsgPush(myMessage);
   }
  }
 

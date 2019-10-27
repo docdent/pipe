@@ -791,9 +791,14 @@ extern Pipe_t pipe[32];
 extern volatile uint8_t pipeProcessing;
 
 extern uint8_t pipe_ModuleTested;
-extern uint8_t pipe_ModuleAssnRead;
-extern uint8_t pipe_ModuleAssnWrite;
-# 195 ".././hwtimer.h"
+
+typedef struct {
+ uint8_t AssnRead;
+ uint8_t AssnWrite;
+} Pipe_Module_t;
+
+extern Pipe_Module_t pipe_Module;
+# 200 ".././hwtimer.h"
 extern uint8_t pipe_PowerStatus;
 
 
@@ -856,11 +861,13 @@ extern volatile uint8_t midiRxOutIndex;
 extern volatile uint8_t midiTxOutIndex;
 extern volatile uint8_t midiTxInIndex;
 extern uint8_t midiRxBuffer[32];
-extern uint8_t midiTxBuffer[32];
+extern uint8_t midiTxBuffer[256];
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
 extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
+
+extern volatile uint8_t midiTxLastCmd;
 # 13 ".././ee_prom.c" 2
 # 1 ".././Midi.h" 1
 # 44 ".././Midi.h"
@@ -1154,12 +1161,7 @@ extern uint8_t menu_OnEnterMidiPanic(uint8_t arg);
 # 16 ".././ee_prom.h"
 # 1 ".././menu.h" 1
 # 17 ".././ee_prom.h" 2
-
-
-
-
-
-
+# 31 ".././ee_prom.h"
 extern uint8_t eeprom_ReadManualMap();
 extern uint8_t eeprom_ReadMidiInMap();
 extern uint8_t eeprom_ReadMidiOutMap();
@@ -1183,7 +1185,24 @@ extern void eeprom_UpdateMidiThrough();
 extern void eeprom_Backup();
 extern void eeprom_Restore();
 extern void eeprom_UpdateALL();
-# 61 ".././ee_prom.h"
+# 83 ".././ee_prom.h"
+typedef struct{
+ uint8_t label;
+ uint8_t version;
+ uint16_t sizeData;
+ uint16_t crcData;
+ uint8_t data;
+} ee_dataBlockBasic;
+
+typedef struct{
+ uint8_t label;
+ uint8_t version;
+ uint16_t size;
+ uint8_t* pMemory;
+} EeVarList_t;
+
+extern const __flash EeVarList_t ee_VarList[];
+
 typedef struct{
  uint8_t charStart;
  uint8_t charManMap;
@@ -1232,11 +1251,11 @@ typedef struct{
 } EECompl_t;
 
 extern 
-# 108 ".././ee_prom.h" 3
+# 147 ".././ee_prom.h" 3
       __attribute__((section(".eeprom"))) 
-# 108 ".././ee_prom.h"
+# 147 ".././ee_prom.h"
             EECompl_t ee;
-# 120 ".././ee_prom.h"
+# 159 ".././ee_prom.h"
 extern uint8_t ee_initError;
 # 16 ".././ee_prom.c" 2
 # 31 ".././ee_prom.c"
@@ -1245,7 +1264,17 @@ EECompl_t
          __attribute__((section(".eeprom"))) 
 # 31 ".././ee_prom.c"
                ee;
-
+const __flash EeVarList_t ee_VarList[] = {
+ {'M', 0, sizeof(manualMap), (uint8_t*) manualMap},
+ {'I', 0, sizeof(midiInMap), (uint8_t*) midiInMap},
+ {'O', 0, sizeof(midiOutMap), (uint8_t*) midiOutMap},
+ {'i', 0, sizeof(pipe_Module), (uint8_t*) &pipe_Module},
+ {'U', 0, sizeof(serusb_Active), (uint8_t*) &serusb_Active},
+ {'R', 0, sizeof(registerMap), (uint8_t*) registerMap},
+ {'P', 0, sizeof(programMap), (uint8_t*) programMap},
+ {'K', 0, sizeof(soft_KeyMenuIndex), (uint8_t*) soft_KeyMenuIndex},
+ {'T', 0, sizeof(midiThrough), (uint8_t*) &midiThrough}
+};
 
 
 uint8_t ee_initError = 0x00;
@@ -1284,6 +1313,86 @@ uint16_t crc16_eeprom_startVal(const uint8_t* pEeprom, uint16_t count, uint16_t 
  return (result);
 }
 
+uint8_t eePromReadLabeledBlock(uint8_t label, uint8_t version, uint16_t blockSize, uint8_t* pMemory){
+
+ uint8_t* pEeBlock = (uint8_t*) &ee;
+
+ if (eeprom_read_byte(pEeBlock) != 2){
+  return 0xFE;
+ }
+ pEeBlock++;
+ while (pEeBlock < (uint8_t*) 4096){
+
+  if (eeprom_read_byte(pEeBlock) == label){
+
+   pEeBlock++;
+   if (eeprom_read_byte(pEeBlock) != version){
+    return 0xFD;
+   }
+   pEeBlock++;
+   uint16_t dataSize = eeprom_read_word((uint16_t*) pEeBlock);
+   if (dataSize != blockSize){
+    return 0xFC;
+   }
+
+   pEeBlock = pEeBlock+2;
+   uint16_t crc = crc16_eeprom(pEeBlock, blockSize);
+   if (eeprom_read_word((uint16_t*) pEeBlock) != crc) {
+    return 0xFB;
+   }
+   pEeBlock = pEeBlock+2;
+   eeprom_read_block(pMemory,pEeBlock,blockSize);
+   return 0x00;
+  } else if (eeprom_read_byte(pEeBlock) == 'e'){
+   return 0xFA;
+  }
+
+
+  pEeBlock += eeprom_read_word((uint16_t*) pEeBlock+2)+6;
+ }
+ return 0xF9;
+}
+
+void eeProm_FormatBlock(){
+ uint8_t* pEEProm = (uint8_t*) &ee;
+ eeprom_update_byte(pEEProm++,2);
+ for (uint8_t i = 0; i <= 8; i++){
+  eeprom_update_byte(pEEProm,ee_VarList[i].label);
+  pEEProm += 2;
+  eeprom_update_byte(pEEProm,ee_VarList[i].size);
+  pEEProm += 2+ee_VarList[i].size;
+ }
+ eeprom_update_byte(pEEProm++,'e');
+}
+
+uint8_t eeProm_WriteBlock(uint8_t labelNr){
+ uint8_t* pEeBlock = (uint8_t*) &ee;
+ if (labelNr > 8){
+  return 0xF8;
+ }
+ if (eeprom_read_byte(pEeBlock) != 2){
+  return 0xFE;
+ }
+ pEeBlock++;
+ while (pEeBlock < (uint8_t*) 4096){
+
+  if (eeprom_read_byte(pEeBlock) == ee_VarList[labelNr].label){
+
+   pEeBlock += 2;
+   uint16_t dataSize = eeprom_read_word((uint16_t*) pEeBlock);
+   if (dataSize != ee_VarList[labelNr].size){
+    return 0xFC;
+   }
+
+   eeprom_update_byte(pEeBlock-1,ee_VarList[labelNr].version);
+   eeprom_update_word((uint16_t*) pEeBlock+2,crc16_ram(ee_VarList[labelNr].pMemory,ee_VarList[labelNr].size));
+   eeprom_update_block(ee_VarList[labelNr].pMemory,pEeBlock+4,ee_VarList[labelNr].size);
+  } else if (eeprom_read_byte(pEeBlock) == 'e'){
+   return 0xFA;
+  }
+ }
+ return 0xF9;
+}
 
 uint8_t eeprom_ReadManualMap(){
  if ((eeprom_read_word(&(ee.eeData.ee.manualMap_crc)) == crc16_eeprom((uint8_t*) &(ee.eeData.ee.manualMap), sizeof (ee.eeData.ee.manualMap))
@@ -1326,8 +1435,8 @@ uint8_t eeprom_ReadModules(){
  if ((eeprom_read_word(&ee.eeData.ee.moduleInstalled_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.moduleAssignRead, sizeof (ee.eeData.ee.moduleAssignRead))
   && eeprom_read_byte(&ee.eeData.ee.charModInst) == 'i')) {
 
-  pipe_ModuleAssnRead = eeprom_read_byte(&ee.eeData.ee.moduleAssignRead);
-  pipe_ModuleAssnWrite = eeprom_read_byte(&ee.eeData.ee.moduleAssignWrite);
+  pipe_Module.AssnRead = eeprom_read_byte(&ee.eeData.ee.moduleAssignRead);
+  pipe_Module.AssnWrite = eeprom_read_byte(&ee.eeData.ee.moduleAssignWrite);
   return (0x00);
  } else {
   ee_initError |= 0x08;;
@@ -1434,11 +1543,11 @@ void eeprom_UpdateMidiOutMap(){
 }
 
 void eeprom_UpdateModules(){
- uint16_t crc = crc16_ram(&pipe_ModuleAssnRead, sizeof(pipe_ModuleAssnRead));
+ uint16_t crc = crc16_ram(&pipe_Module.AssnRead, sizeof(pipe_Module.AssnRead));
  lcd_waitSymbolOn();
  eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charModInst), 'i');
- eeprom_update_byte(&(ee.eeData.ee.moduleAssignRead), pipe_ModuleAssnRead);
- eeprom_update_byte(&(ee.eeData.ee.moduleAssignWrite), pipe_ModuleAssnWrite);
+ eeprom_update_byte(&(ee.eeData.ee.moduleAssignRead), pipe_Module.AssnRead);
+ eeprom_update_byte(&(ee.eeData.ee.moduleAssignWrite), pipe_Module.AssnWrite);
  eeprom_update_word(&(ee.eeData.ee.moduleInstalled_crc), crc);
  eepromWriteSignature();
  lcd_waitSymbolOff();

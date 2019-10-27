@@ -883,9 +883,14 @@ extern Pipe_t pipe[32];
 extern volatile uint8_t pipeProcessing;
 
 extern uint8_t pipe_ModuleTested;
-extern uint8_t pipe_ModuleAssnRead;
-extern uint8_t pipe_ModuleAssnWrite;
-# 195 ".././hwtimer.h"
+
+typedef struct {
+ uint8_t AssnRead;
+ uint8_t AssnWrite;
+} Pipe_Module_t;
+
+extern Pipe_Module_t pipe_Module;
+# 200 ".././hwtimer.h"
 extern uint8_t pipe_PowerStatus;
 
 

@@ -31,8 +31,9 @@ uint8_t keyWants[MESSAGE_KEY_COUNT];
 // PIPE Variables
 Pipe_t pipe[PIPE_SHIFTBIT_COUNT];
 uint8_t pipe_ModuleTested; // 1 if module reads back output for loop correctly, 0 if not
-uint8_t pipe_ModuleAssnRead; // 1 for each module is to be read for messages (if 0 module will still read but make messages)
-uint8_t pipe_ModuleAssnWrite; // 1 for each module can be writte (if ==0 module will allways be written 1 (MOSFET off))
+Pipe_Module_t pipe_Module;
+// pipe_Module.AssnRead  1 for each module is to be read for messages (if 0 module will still read but make messages)
+// pipe_Module.AssnWrite 1 for each module can be writte (if ==0 module will allways be written 1 (MOSFET off))
 volatile uint8_t pipeProcessing;
 uint8_t pipe_PowerStatus;
 
@@ -102,8 +103,8 @@ void init_Pipe(){
 void init_PipeModules(){
 	if (eeprom_ReadModules() == EE_LOAD_ERROR) {
 		log_putError(LOG_CAT_EE, LOG_CATEE_MODULES, 0);
-		pipe_ModuleAssnRead = PIPE_DEF_MODULE_ASSIGEND; // use default
-		pipe_ModuleAssnWrite = PIPE_DEF_MODULE_ASSIGEND; // use default
+		pipe_Module.AssnRead = PIPE_DEF_MODULE_ASSIGEND; // use default
+		pipe_Module.AssnWrite = PIPE_DEF_MODULE_ASSIGEND; // use default
 	}
 	// now test return of modules in serial IO
 	Pipe_t* pPipe = &pipe[PIPE_SHIFTBIT_COUNT-1];
@@ -186,9 +187,9 @@ void init_PipeModules(){
 	PIPE_LATCH2PIPE_H
 	// conclusion: which module is working?
 	// report error if working modules do not match modules assigend  by user
-	if ((pipe_ModuleTested ^ (pipe_ModuleAssnWrite | pipe_ModuleAssnRead)) != 0) {
+	if ((pipe_ModuleTested ^ (pipe_Module.AssnWrite | pipe_Module.AssnRead)) != 0) {
 		// Modules that are not working
-		log_putError(LOG_CAT_MODULES,LOG_CATMODULES_NOTWORKING,pipe_ModuleAssnRead<<8 | pipe_ModuleTested);
+		log_putError(LOG_CAT_MODULES,LOG_CATMODULES_NOTWORKING,pipe_Module.AssnRead<<8 | pipe_ModuleTested);
 	}
 }
 
@@ -269,7 +270,7 @@ uint8_t module_TestAllInputs(){
 		result |= pPipe->pipeIn;
 		pPipe++;
 	}
-	return result & pipe_ModuleAssnRead; // modules unassgined to read will be ignored (return bit=0)
+	return result & pipe_Module.AssnRead; // modules unassgined to read will be ignored (return bit=0)
 }
 
 void module_WaitOutputInput2Cycles(){
@@ -493,7 +494,7 @@ void softKey_WantLong(uint8_t wantLong){
 static inline void timerPipeProcess(){
 	Pipe_t *curPipe;
 	curPipe = &pipe[0];
-	uint8_t local_pipe_ModuleAssnRead = pipe_ModuleAssnRead; // 1= module message processeced
+	uint8_t local_pipe_ModuleAssnRead = pipe_Module.AssnRead; // 1= module message processeced
 	for (uint8_t shiftBitNr = 0; shiftBitNr < PIPE_SHIFTBIT_COUNT; shiftBitNr++) {
 		// check output error
 		PipeMessage_t myMessage;
@@ -553,7 +554,7 @@ static inline void timerPipeIO(){
 	PIPECTRL_PORT |=  PIPE_CTRL_MASK; // -CLK -L2P -L2C off (1=off)
 	PIPE_LATCH2CPU_L //  in hw_defs.h: // Start with -L2C \_
 	curPipe = &pipe[PIPE_SHIFTBIT_COUNT-1]; // point to last Pipe cause topmost bit is transferred first
-	uint8_t local_pipe_ModuleAssnWrite = ~pipe_ModuleAssnWrite; // 0= module may be written
+	uint8_t local_pipe_ModuleAssnWrite = ~pipe_Module.AssnWrite; // 0= module may be written
 	uint8_t i = PIPE_SHIFTBIT_COUNT;
 	_delay_us(0.5);
 	PIPE_LATCH2CPU_H // -LATCH2CPU _/ Data from Pipe are in shift register, MSB is ready to be read

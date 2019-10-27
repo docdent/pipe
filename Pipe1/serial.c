@@ -37,6 +37,7 @@ volatile uint8_t serusbOvflFlag;
 
 volatile uint16_t midiTxBytesCount;
 volatile uint16_t midiRxBytesCount;
+volatile uint8_t midiTxLastCmd;
 
 volatile uint8_t midiRxOvfl;
 volatile uint8_t midiTxOvfl;
@@ -69,9 +70,21 @@ void init_Serial1MIDI() {
 	midiTxOvfl = SER_OVFL_NO;
 	midiRxOvflCount = 0;
 	midiTxOvflCount = 0;
+	MIDI_TXT_RESET_LASTCMD
 }
 
 void serial1MIDISend(uint8_t data){
+	// V 0.63 save last sent midi command
+	if (data >= MIDI_LOWEST_CMD){
+		if(data == midiTxLastCmd){
+			return;
+		}
+		if (data < MIDI_POLYAFTT){	// currently save last command  only for noteon/off
+			midiTxLastCmd = data;
+		} else { // otherwise do not save this command but reset command so that all other commands are sent allways
+			MIDI_TXT_RESET_LASTCMD
+		}
+	}
 	UCSR1B &= ~(1 << UDRIE1);	// Interrupt abschalten für "Senderegister leer", damit Sendewarteschlange bearbeitet werden kann
 	midiTxBuffer[midiTxInIndex] = data;
 	midiTxInIndex = (midiTxInIndex+1) & MIDI_TX_BUFFER_MASK;

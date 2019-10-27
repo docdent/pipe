@@ -588,9 +588,14 @@ extern Pipe_t pipe[32];
 extern volatile uint8_t pipeProcessing;
 
 extern uint8_t pipe_ModuleTested;
-extern uint8_t pipe_ModuleAssnRead;
-extern uint8_t pipe_ModuleAssnWrite;
-# 195 ".././hwtimer.h"
+
+typedef struct {
+ uint8_t AssnRead;
+ uint8_t AssnWrite;
+} Pipe_Module_t;
+
+extern Pipe_Module_t pipe_Module;
+# 200 ".././hwtimer.h"
 extern uint8_t pipe_PowerStatus;
 
 
@@ -653,11 +658,13 @@ extern volatile uint8_t midiRxOutIndex;
 extern volatile uint8_t midiTxOutIndex;
 extern volatile uint8_t midiTxInIndex;
 extern uint8_t midiRxBuffer[32];
-extern uint8_t midiTxBuffer[32];
+extern uint8_t midiTxBuffer[256];
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
 extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
+
+extern volatile uint8_t midiTxLastCmd;
 # 17 ".././menu.c" 2
 # 1 ".././menu.h" 1
 
@@ -1196,14 +1203,9 @@ void eeprom_update_block (const void *__src, void *__dst, size_t __n);
 
 # 1 ".././menu.h" 1
 # 17 ".././ee_prom.h" 2
+# 31 ".././ee_prom.h"
 
-
-
-
-
-
-
-# 23 ".././ee_prom.h"
+# 31 ".././ee_prom.h"
 extern uint8_t eeprom_ReadManualMap();
 extern uint8_t eeprom_ReadMidiInMap();
 extern uint8_t eeprom_ReadMidiOutMap();
@@ -1227,7 +1229,24 @@ extern void eeprom_UpdateMidiThrough();
 extern void eeprom_Backup();
 extern void eeprom_Restore();
 extern void eeprom_UpdateALL();
-# 61 ".././ee_prom.h"
+# 83 ".././ee_prom.h"
+typedef struct{
+ uint8_t label;
+ uint8_t version;
+ uint16_t sizeData;
+ uint16_t crcData;
+ uint8_t data;
+} ee_dataBlockBasic;
+
+typedef struct{
+ uint8_t label;
+ uint8_t version;
+ uint16_t size;
+ uint8_t* pMemory;
+} EeVarList_t;
+
+extern const __flash EeVarList_t ee_VarList[];
+
 typedef struct{
  uint8_t charStart;
  uint8_t charManMap;
@@ -1276,11 +1295,11 @@ typedef struct{
 } EECompl_t;
 
 extern 
-# 108 ".././ee_prom.h" 3
+# 147 ".././ee_prom.h" 3
       __attribute__((section(".eeprom"))) 
-# 108 ".././ee_prom.h"
+# 147 ".././ee_prom.h"
             EECompl_t ee;
-# 120 ".././ee_prom.h"
+# 159 ".././ee_prom.h"
 extern uint8_t ee_initError;
 # 20 ".././menu.c" 2
 # 1 ".././log.h" 1
@@ -1434,7 +1453,7 @@ const char sw_version []
 # 24 ".././menu.c" 3
                         __attribute__((__progmem__)) 
 # 24 ".././menu.c"
-                                = "V0.61";
+                                = "V0.63";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -1815,20 +1834,20 @@ const __flash Menu_t menu_module[] =
 # 117 ".././menu.c" 3 4
                                                ((void *)0)
 # 117 ".././menu.c"
-                                                   ,{&(pipe_ModuleAssnRead)},
+                                                   ,{&(pipe_Module.AssnRead)},
 # 117 ".././menu.c" 3 4
-                                                                             ((void *)0)
+                                                                              ((void *)0)
 # 117 ".././menu.c"
-                                                                                 ,menuOnExitModules},
+                                                                                  ,menuOnExitModules},
  {10,0,"ModWrite",
 # 118 ".././menu.c" 3 4
                             ((void *)0)
 # 118 ".././menu.c"
-                                ,{&(pipe_ModuleAssnWrite)},
+                                ,{&(pipe_Module.AssnWrite)},
 # 118 ".././menu.c" 3 4
-                                                           ((void *)0)
+                                                            ((void *)0)
 # 118 ".././menu.c"
-                                                               ,menuOnExitModules},
+                                                                ,menuOnExitModules},
  {10,0x08,"ModOK",
 # 119 ".././menu.c" 3 4
                                           ((void *)0)
@@ -3335,7 +3354,7 @@ uint8_t menu_ModuleTestPattern(uint8_t arg){
 }
 
 const __flash char menuMessageAbort[] = "abort";
-const __flash char menuMessageOK[] = "ok";
+const __flash char menuMessageOK[] = "ok ";
 const __flash char menuMessageE[] = "E:";
 void menu_ModuleTestExecute(){
 
@@ -3680,7 +3699,7 @@ uint8_t menuOnEnterStatusMidiOut(uint8_t arg){
  pByte--;
  while (byteCount > 0){
   if (pByte < &(midiTxBuffer[0])){
-   pByte = &(midiTxBuffer[32 -1]);
+   pByte = &(midiTxBuffer[256 -1]);
   }
   lcd_hexout(*pByte--);
   if (--byteCount != 0) {
@@ -3926,10 +3945,10 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
  serial0SER_USB_sendStringP(usbHWtitel);
  serial0SER_USB_sendCRLF();
  serial0SER_USB_sendStringP(usbHWmodulInst);
- buffer = putChar_hex(pipe_ModuleAssnRead,string_Buf);
+ buffer = putChar_hex(pipe_Module.AssnRead,string_Buf);
  *buffer++ = 'r';
  *buffer++ = ' ';
- buffer = putChar_hex(pipe_ModuleAssnWrite,buffer);
+ buffer = putChar_hex(pipe_Module.AssnWrite,buffer);
  *buffer++ = 'w';
  serial0SER_USB_sendString(string_Buf);
  serial0SER_USB_sendCRLF();

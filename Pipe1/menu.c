@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.61";
+const char sw_version [] PROGMEM = "V0.63";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -114,8 +114,8 @@ const __flash Menu_t menu_ModeSel[] =
 uint8_t menuOnExitModules(uint8_t arg);
 uint8_t menuOnExitManual(uint8_t arg);
 const __flash Menu_t menu_module[] =
-	{{MENU_T_VARBIN | MENU_T_LEFTBOUND,0,"ModRead",NULL,{&(pipe_ModuleAssnRead)},NULL,menuOnExitModules},
-	{MENU_T_VARBIN,0,"ModWrite",NULL,{&(pipe_ModuleAssnWrite)},NULL,menuOnExitModules},
+	{{MENU_T_VARBIN | MENU_T_LEFTBOUND,0,"ModRead",NULL,{&(pipe_Module.AssnRead)},NULL,menuOnExitModules},
+	{MENU_T_VARBIN,0,"ModWrite",NULL,{&(pipe_Module.AssnWrite)},NULL,menuOnExitModules},
 	{MENU_T_VARBIN,MENU_FLAG_READONLY,"ModOK",NULL,{&(pipe_ModuleTested)},NULL,NULL},
 	{MENU_T_MENU,0,"ModTest",menu_ModeSel,{NULL},NULL,NULL},
 	{MENU_T_MENU_R,0,"ModAssign",menu_modAssign,{NULL},NULL,menuOnExitManual}};
@@ -160,7 +160,7 @@ const __flash Menu_t menu_midiOut[] =
 uint8_t menuOnEnterTestManual(uint8_t arg);
 uint8_t menuOnExitTestManualMan(uint8_t arg);
 
-// --- MAIN --- NANUAL --- STIMMEN ---
+// --- MAIN --- MANUAL --- STIMMEN ---
 uint8_t menuOnEnterTune(uint8_t arg);
 const __flash Menu_t menu_tune[] =
 	{{MENU_T_MENU_L,MENU_FLAG_FNHANDLEMESSAGE,MENUTEXT_MAN3,NULL,{.tag=MANUAL_III},menuOnEnterTune,NULL},
@@ -1185,10 +1185,10 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 	serial0SER_USB_sendStringP(usbHWtitel);
 	serial0SER_USB_sendCRLF();
 	serial0SER_USB_sendStringP(usbHWmodulInst);
-	buffer = putChar_hex(pipe_ModuleAssnRead,string_Buf);
+	buffer = putChar_hex(pipe_Module.AssnRead,string_Buf);
 	*buffer++ = 'r';
 	*buffer++ = ' ';
-	buffer = putChar_hex(pipe_ModuleAssnWrite,buffer);
+	buffer = putChar_hex(pipe_Module.AssnWrite,buffer);
 	*buffer++ = 'w';
 	serial0SER_USB_sendString(string_Buf);
 	serial0SER_USB_sendCRLF();

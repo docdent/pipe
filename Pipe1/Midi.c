@@ -631,7 +631,7 @@ uint8_t midi_CountRegisterInProgram(uint8_t program){
 		tempReg = tempReg >> 1;
 	}
 	return result;
-	
+
 }
 
 //------------------------------------- M I D I C H A N N E L   T O   M A N U A L ---------------------------------
@@ -846,15 +846,22 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
 	ModulBitError_t moduleInfo;
 	moduleInfo = manualNote_to_moduleBit(manual, note);
 	// returns mmmb bbbb in LowByte
+	uint8_t modulNrMask = 1 << (MODULE_BIT_TO_MODULE(moduleInfo.moduleBit)); // 0000 0001 = Module 0, 1000 0000 = Module 7
+	uint8_t bitNr = MODULE_BIT_TO_BIT(moduleInfo.moduleBit);
 	if (moduleInfo.error == MODULE_NOERROR) {
-		uint8_t bitNr = MODULE_BIT_TO_BIT(moduleInfo.moduleBit);
-		uint8_t modulNr = MODULE_BIT_TO_MODULE(moduleInfo.moduleBit);
 		if (onOff == NOTE_OFF) {
-			// note off -> write 1 to pipe
-			pipe[bitNr].pipeOut |= (1 << modulNr);
+			// note off -> write 1 to pipe mosfet
+			pipe[bitNr].pipeOut |= modulNrMask;
 		} else {
-			// note on -> write 10 to pipe
-			pipe[bitNr].pipeOut &= ~(1 << modulNr);
+			// note on -> write 0 to pipe mosfet
+			pipe[bitNr].pipeOut &= ~(modulNrMask);
+		}
+		// V0.62 direct pipe message if module can't be written
+		if ((modulNrMask & pipe_Module.AssnWrite) == 0){
+			PipeMessage_t myMessage;
+			myMessage.message8[MSG_BYTE_MODULEBITS] = modulNrMask;
+			myMessage.message8[MSG_BYTE_CMD_SHIFTBIT] = ((onOff == NOTE_ON) ? MESSAGE_PIPE_ON_HI : MESSAGE_PIPE_OFF_HI )| bitNr;
+			pipeMsgPush(myMessage);
 		}
 	}
 	// V0.61 midi sw_channel output
@@ -865,7 +872,7 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
 		serial1MIDISend(note);
 		serial1MIDISend(((onOff == NOTE_OFF) && (midi_Setting.VelZero4Off)) ? 0 : MIDI_DEFAULT_VELOCITY);
 		// caution: sw_channel should be used only if no HW output implemented for manual. If used midi through should not be set for
-		// corresponding channel/manual 
+		// corresponding channel/manual
 	}
 }
 

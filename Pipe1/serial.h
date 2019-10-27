@@ -116,8 +116,8 @@ extern volatile uint16_t midiRxBytesCount; // total bytes received
 
 #define MIDI_RX_BUFFER_SIZE 32
 #define MIDI_RX_BUFFER_MASK 0x1F
-#define MIDI_TX_BUFFER_SIZE 32
-#define MIDI_TX_BUFFER_MASK 0x1F
+#define MIDI_TX_BUFFER_SIZE 256
+#define MIDI_TX_BUFFER_MASK 0xFF
 
 //----------- external defs -------------
 extern void init_Serial1MIDI();
@@ -135,13 +135,19 @@ extern volatile uint16_t midiRxBytesCount;
 extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
 
+extern volatile uint8_t midiTxLastCmd;
+#define MIDI_TX_LASTCMD_NONE 0x00 // valid commands are 0x80...0xFF only
+#define MIDI_TXT_RESET_LASTCMD midiTxLastCmd = MIDI_TX_LASTCMD_NONE;
+
 #define MIDI_RX_BUFFER_EMPTY (midiRxInIndex == midiRxOutIndex)
 #define MIDI_TX_BUFFER_EMPTY (midiTxOutIndex == midiTxInIndex)
 #define MIDI_RX_BUFFER_NONEMPTY (midiRxInIndex != midiRxOutIndex)
 #define MIDI_TX_BUFFER_NONEMPTY (midiTxOutIndex != midiTxInIndex)
 
+
 //--------- MIDI Defs -----------
 // alle Commands excepo 0xF0..0x0FF include Channel in lower nibble
+#define MIDI_LOWEST_CMD 0x80
 // 2 Data bytes following
 #define MIDI_NOTEOFF 0x80
 #define MIDI_NOTEON 0x90

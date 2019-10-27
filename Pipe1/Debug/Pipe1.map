@@ -45,6 +45,7 @@ midiRxOvfl          0x1               serial.o
 pNibbleInfo         0x2               menu.o
 midiTxOutIndex      0x1               serial.o
 menuStack           0x20              menu.o
+midiTxLastCmd       0x1               serial.o
 pipeMsgInIndex      0x1               message.o
 serusbTxOutIndex    0x1               serial.o
 serESPRxInIndex     0x2               serial.o
@@ -55,7 +56,7 @@ pipe_PowerStatus    0x1               hwtimer.o
 pipeProcessing      0x1               hwtimer.o
 midiRxBuffer        0x20              serial.o
 msecCtr             0x1               hwtimer.o
-midiTxBuffer        0x20              serial.o
+midiTxBuffer        0x100             serial.o
 lcd_cursorIsOn      0x1               utils.o
 log_List            0x190             log.o
 editByte            0x1               utils.o
@@ -93,14 +94,10 @@ lcdData             0xa               ee_prom.o
 msgInIndex          0x1               message.o
 adcKeys             0x6               hwtimer.o
 serESP_Active       0x1               serial.o
-pipe_ModuleAssnWrite
-                    0x1               hwtimer.o
 menuTestModuleBit   0x1               menu.o
 messages            0x20              message.o
 midiInMap           0x100             Midi.o
 menuModVal          0x4               menu.o
-pipe_ModuleAssnRead
-                    0x1               hwtimer.o
 DataAdressOffset    0x2               menu.o
 midiRxOvflCount     0x1               serial.o
 midiOutMap          0x8               Midi.o
@@ -132,6 +129,7 @@ nibble              0x8               menu.o
 menuNotActive       0x1               main.o
 midiTxOvflCount     0x1               serial.o
 menuMidiChan        0x1               menu.o
+pipe_Module         0x2               hwtimer.o
 serESPRxBuffer      0x80              serial.o
 serESPTxBuffer      0x200             serial.o
 menuVMenuSoftKey    0x2               menu.o
@@ -149,6 +147,14 @@ Discarded input sections
  .text          0x00000000        0x0 ee_prom.o
  .data          0x00000000        0x0 ee_prom.o
  .bss           0x00000000        0x0 ee_prom.o
+ .text.eePromReadLabeledBlock
+                0x00000000       0xc8 ee_prom.o
+ .text.eeProm_FormatBlock
+                0x00000000       0x84 ee_prom.o
+ .text.eeProm_WriteBlock
+                0x00000000       0xfa ee_prom.o
+ .progmem.data.ee_VarList
+                0x00000000       0x36 ee_prom.o
  .text          0x00000000        0x0 hwtimer.o
  .data          0x00000000        0x0 hwtimer.o
  .bss           0x00000000        0x0 hwtimer.o
@@ -439,7 +445,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x708e
+.text           0x00000000     0x70bc
  *(.vectors)
  .vectors       0x00000000       0xe4 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6/crtatmega2560.o
                 0x00000000                __vector_default
@@ -532,235 +538,234 @@ END GROUP
                 0x00000387        0x3 menu.o
                 0x00000387                menuMessageE
  .progmem.data.menuMessageOK
-                0x0000038a        0x3 menu.o
+                0x0000038a        0x4 menu.o
                 0x0000038a                menuMessageOK
  .progmem.data.menuMessageAbort
-                0x0000038d        0x6 menu.o
-                0x0000038d                menuMessageAbort
+                0x0000038e        0x6 menu.o
+                0x0000038e                menuMessageAbort
  .progmem.data.menuMessageMIDIpanic
-                0x00000393        0xf menu.o
-                0x00000393                menuMessageMIDIpanic
+                0x00000394        0xf menu.o
+                0x00000394                menuMessageMIDIpanic
  .progmem.data.messageRegisterMan
-                0x000003a2        0x2 menu.o
-                0x000003a2                messageRegisterMan
+                0x000003a3        0x2 menu.o
+                0x000003a3                messageRegisterMan
  .progmem.data.messageLoaded
-                0x000003a4        0xd menu.o
-                0x000003a4                messageLoaded
+                0x000003a5        0xd menu.o
+                0x000003a5                messageLoaded
  .progmem.data.messageSaved
-                0x000003b1       0x13 menu.o
-                0x000003b1                messageSaved
+                0x000003b2       0x13 menu.o
+                0x000003b2                messageSaved
  .progmem.data.MenuMIDIOutText
-                0x000003c4        0x5 menu.o
-                0x000003c4                MenuMIDIOutText
+                0x000003c5        0x5 menu.o
+                0x000003c5                MenuMIDIOutText
  .progmem.data.MenuMIDIInText
-                0x000003c9        0x4 menu.o
-                0x000003c9                MenuMIDIInText
+                0x000003ca        0x4 menu.o
+                0x000003ca                MenuMIDIInText
  .progmem.data.initMenuText
-                0x000003cd        0xa menu.o
-                0x000003cd                initMenuText
+                0x000003ce        0xa menu.o
+                0x000003ce                initMenuText
  .progmem.data.nibbleInfo
-                0x000003d7       0x87 menu.o
-                0x000003d7                nibbleInfo
+                0x000003d8       0x87 menu.o
+                0x000003d8                nibbleInfo
  .progmem.data.menu_selFunc
-                0x0000045e      0x1b8 menu.o
-                0x0000045e                menu_selFunc
+                0x0000045f      0x1b8 menu.o
+                0x0000045f                menu_selFunc
  .progmem.data.shortKeyTextRegOff
-                0x00000616        0xa menu.o
-                0x00000616                shortKeyTextRegOff
+                0x00000617        0xa menu.o
+                0x00000617                shortKeyTextRegOff
  .progmem.data.shortKeyTextK4A
-                0x00000620        0xa menu.o
-                0x00000620                shortKeyTextK4A
+                0x00000621        0xa menu.o
+                0x00000621                shortKeyTextK4A
  .progmem.data.shortKeyTextK3A
-                0x0000062a        0xa menu.o
-                0x0000062a                shortKeyTextK3A
+                0x0000062b        0xa menu.o
+                0x0000062b                shortKeyTextK3A
  .progmem.data.shortKeyTextK2A
-                0x00000634        0xa menu.o
-                0x00000634                shortKeyTextK2A
+                0x00000635        0xa menu.o
+                0x00000635                shortKeyTextK2A
  .progmem.data.shortKeyTextK1A
-                0x0000063e        0xa menu.o
-                0x0000063e                shortKeyTextK1A
+                0x0000063f        0xa menu.o
+                0x0000063f                shortKeyTextK1A
  .progmem.data.shortKeyTextCpl1P
-                0x00000648        0xa menu.o
-                0x00000648                shortKeyTextCpl1P
+                0x00000649        0xa menu.o
+                0x00000649                shortKeyTextCpl1P
  .progmem.data.shortKeyTextCpl2P
-                0x00000652        0xa menu.o
-                0x00000652                shortKeyTextCpl2P
+                0x00000653        0xa menu.o
+                0x00000653                shortKeyTextCpl2P
  .progmem.data.shortKeyTextCpl21
-                0x0000065c        0xa menu.o
-                0x0000065c                shortKeyTextCpl21
+                0x0000065d        0xa menu.o
+                0x0000065d                shortKeyTextCpl21
  .progmem.data.shortKeyTextCpl3P
-                0x00000666        0xa menu.o
-                0x00000666                shortKeyTextCpl3P
+                0x00000667        0xa menu.o
+                0x00000667                shortKeyTextCpl3P
  .progmem.data.shortKeyTextCpl31
-                0x00000670        0xa menu.o
-                0x00000670                shortKeyTextCpl31
+                0x00000671        0xa menu.o
+                0x00000671                shortKeyTextCpl31
  .progmem.data.shortKeyTextCpl32
-                0x0000067a        0xa menu.o
-                0x0000067a                shortKeyTextCpl32
+                0x0000067b        0xa menu.o
+                0x0000067b                shortKeyTextCpl32
  .progmem.data.shortKeyTextCplP1
-                0x00000684        0xa menu.o
-                0x00000684                shortKeyTextCplP1
+                0x00000685        0xa menu.o
+                0x00000685                shortKeyTextCplP1
  .progmem.data.shortKeyTextCplP2
-                0x0000068e        0xa menu.o
-                0x0000068e                shortKeyTextCplP2
+                0x0000068f        0xa menu.o
+                0x0000068f                shortKeyTextCplP2
  .progmem.data.shortKeyTextCpl12
-                0x00000698        0xa menu.o
-                0x00000698                shortKeyTextCpl12
+                0x00000699        0xa menu.o
+                0x00000699                shortKeyTextCpl12
  .progmem.data.shortKeyTextCplP3
-                0x000006a2        0xa menu.o
-                0x000006a2                shortKeyTextCplP3
+                0x000006a3        0xa menu.o
+                0x000006a3                shortKeyTextCplP3
  .progmem.data.shortKeyTextCpl13
-                0x000006ac        0xa menu.o
-                0x000006ac                shortKeyTextCpl13
+                0x000006ad        0xa menu.o
+                0x000006ad                shortKeyTextCpl13
  .progmem.data.shortKeyTextCpl23
-                0x000006b6        0xa menu.o
-                0x000006b6                shortKeyTextCpl23
+                0x000006b7        0xa menu.o
+                0x000006b7                shortKeyTextCpl23
  .progmem.data.shortKeyTextMIDIoff
-                0x000006c0        0xa menu.o
-                0x000006c0                shortKeyTextMIDIoff
+                0x000006c1        0xa menu.o
+                0x000006c1                shortKeyTextMIDIoff
  .progmem.data.shortKeyTextSetup
-                0x000006ca        0xa menu.o
-                0x000006ca                shortKeyTextSetup
+                0x000006cb        0xa menu.o
+                0x000006cb                shortKeyTextSetup
  .progmem.data.shortKeyTextStim
-                0x000006d4        0xa menu.o
-                0x000006d4                shortKeyTextStim
+                0x000006d5        0xa menu.o
+                0x000006d5                shortKeyTextStim
  .progmem.data.shortKeyTextMenu
-                0x000006de        0xa menu.o
-                0x000006de                shortKeyTextMenu
+                0x000006df        0xa menu.o
+                0x000006df                shortKeyTextMenu
  .progmem.data.shortKeyTextNone
-                0x000006e8        0xa menu.o
-                0x000006e8                shortKeyTextNone
+                0x000006e9        0xa menu.o
+                0x000006e9                shortKeyTextNone
  .progmem.data.menu_main
-                0x000006f2       0x78 menu.o
-                0x000006f2                menu_main
+                0x000006f3       0x78 menu.o
+                0x000006f3                menu_main
  .progmem.data.menu_manual
-                0x0000076a       0x28 menu.o
-                0x0000076a                menu_manual
+                0x0000076b       0x28 menu.o
+                0x0000076b                menu_manual
  .progmem.data.menu_register
-                0x00000792       0xdc menu.o
-                0x00000792                menu_register
+                0x00000793       0xdc menu.o
+                0x00000793                menu_register
  .progmem.data.menu_coupler
-                0x0000086e       0xf0 menu.o
-                0x0000086e                menu_coupler
+                0x0000086f       0xf0 menu.o
+                0x0000086f                menu_coupler
  .progmem.data.menu_midi
-                0x0000095e       0xa0 menu.o
-                0x0000095e                menu_midi
+                0x0000095f       0xa0 menu.o
+                0x0000095f                menu_midi
  .progmem.data.menu_midiIn
-                0x000009fe      0x140 menu.o
-                0x000009fe                menu_midiIn
+                0x000009ff      0x140 menu.o
+                0x000009ff                menu_midiIn
  .progmem.data.menu_midiInSec
-                0x00000b3e       0x50 menu.o
-                0x00000b3e                menu_midiInSec
+                0x00000b3f       0x50 menu.o
+                0x00000b3f                menu_midiInSec
  .progmem.data.menu_midiInVar
-                0x00000b8e       0x50 menu.o
-                0x00000b8e                menu_midiInVar
+                0x00000b8f       0x50 menu.o
+                0x00000b8f                menu_midiInVar
  .progmem.data.menu_key
-                0x00000bde       0x50 menu.o
-                0x00000bde                menu_key
+                0x00000bdf       0x50 menu.o
+                0x00000bdf                menu_key
  .progmem.data.menu_tune
-                0x00000c2e       0x50 menu.o
-                0x00000c2e                menu_tune
+                0x00000c2f       0x50 menu.o
+                0x00000c2f                menu_tune
  .progmem.data.menu_midiOut
-                0x00000c7e       0xa0 menu.o
-                0x00000c7e                menu_midiOut
+                0x00000c7f       0xa0 menu.o
+                0x00000c7f                menu_midiOut
  .progmem.data.menu_setup
-                0x00000d1e       0x50 menu.o
-                0x00000d1e                menu_setup
+                0x00000d1f       0x50 menu.o
+                0x00000d1f                menu_setup
  .progmem.data.menu_eeprom
-                0x00000d6e       0x3c menu.o
-                0x00000d6e                menu_eeprom
+                0x00000d6f       0x3c menu.o
+                0x00000d6f                menu_eeprom
  .progmem.data.menu_Power
-                0x00000daa       0x3c menu.o
-                0x00000daa                menu_Power
+                0x00000dab       0x3c menu.o
+                0x00000dab                menu_Power
  .progmem.data.menu_module
-                0x00000de6       0x64 menu.o
-                0x00000de6                menu_module
+                0x00000de7       0x64 menu.o
+                0x00000de7                menu_module
  .progmem.data.menu_ModeSel
-                0x00000e4a       0xa0 menu.o
-                0x00000e4a                menu_ModeSel
+                0x00000e4b       0xa0 menu.o
+                0x00000e4b                menu_ModeSel
  .progmem.data.menu_ModTestSelcted
-                0x00000eea       0x50 menu.o
-                0x00000eea                menu_ModTestSelcted
+                0x00000eeb       0x50 menu.o
+                0x00000eeb                menu_ModTestSelcted
  .progmem.data.menu_USBser
-                0x00000f3a       0x3c menu.o
-                0x00000f3a                menu_USBser
+                0x00000f3b       0x3c menu.o
+                0x00000f3b                menu_USBser
  .progmem.data.menu_modAssign
-                0x00000f76       0x64 menu.o
-                0x00000f76                menu_modAssign
+                0x00000f77       0x64 menu.o
+                0x00000f77                menu_modAssign
  .progmem.data.menu_modSection8
-                0x00000fda       0xa0 menu.o
-                0x00000fda                menu_modSection8
+                0x00000fdb       0xa0 menu.o
+                0x00000fdb                menu_modSection8
  .progmem.data.menu_modSection
-                0x0000107a       0x50 menu.o
-                0x0000107a                menu_modSection
+                0x0000107b       0x50 menu.o
+                0x0000107b                menu_modSection
  .progmem.data.menu_modDefineReg
-                0x000010ca       0x3c menu.o
-                0x000010ca                menu_modDefineReg
+                0x000010cb       0x3c menu.o
+                0x000010cb                menu_modDefineReg
  .progmem.data.menu_modDefine
-                0x00001106       0x3c menu.o
-                0x00001106                menu_modDefine
+                0x00001107       0x3c menu.o
+                0x00001107                menu_modDefine
  .progmem.data.menu_status
-                0x00001142       0x3c menu.o
-                0x00001142                menu_status
+                0x00001143       0x3c menu.o
+                0x00001143                menu_status
  .progmem.data.sw_version
-                0x0000117e        0x6 menu.o
-                0x0000117e                sw_version
+                0x0000117f        0x6 menu.o
+                0x0000117f                sw_version
  .progmem.data.cplInfo
-                0x00001184       0x18 Midi.o
-                0x00001184                cplInfo
+                0x00001185       0x18 Midi.o
+                0x00001185                cplInfo
  .progmem.data.keylabel_1
-                0x0000119c        0x2 utils.o
-                0x0000119c                keylabel_1
+                0x0000119d        0x2 utils.o
+                0x0000119d                keylabel_1
  .progmem.data.keylabel_0
-                0x0000119e        0x2 utils.o
-                0x0000119e                keylabel_0
+                0x0000119f        0x2 utils.o
+                0x0000119f                keylabel_0
  .progmem.data.keylabel_text
-                0x000011a0        0x6 utils.o
-                0x000011a0                keylabel_text
+                0x000011a1        0x6 utils.o
+                0x000011a1                keylabel_text
  .progmem.data.keylabel_exit
-                0x000011a6        0x5 utils.o
-                0x000011a6                keylabel_exit
+                0x000011a7        0x5 utils.o
+                0x000011a7                keylabel_exit
  .progmem.data.keylabel_off
-                0x000011ab        0x5 utils.o
-                0x000011ab                keylabel_off
+                0x000011ac        0x5 utils.o
+                0x000011ac                keylabel_off
  .progmem.data.keylabel_on
-                0x000011b0        0x5 utils.o
-                0x000011b0                keylabel_on
+                0x000011b1        0x5 utils.o
+                0x000011b1                keylabel_on
  .progmem.data.keylabel_onoff
-                0x000011b5        0x5 utils.o
-                0x000011b5                keylabel_onoff
+                0x000011b6        0x5 utils.o
+                0x000011b6                keylabel_onoff
  .progmem.data.keylabel_minus
-                0x000011ba        0x2 utils.o
-                0x000011ba                keylabel_minus
+                0x000011bb        0x2 utils.o
+                0x000011bb                keylabel_minus
  .progmem.data.keylabel_plus
-                0x000011bc        0x2 utils.o
-                0x000011bc                keylabel_plus
+                0x000011bd        0x2 utils.o
+                0x000011bd                keylabel_plus
  .progmem.data.keylabel_left
-                0x000011be        0x2 utils.o
-                0x000011be                keylabel_left
+                0x000011bf        0x2 utils.o
+                0x000011bf                keylabel_left
  .progmem.data.keylabel_right
-                0x000011c0        0x2 utils.o
-                0x000011c0                keylabel_right
+                0x000011c1        0x2 utils.o
+                0x000011c1                keylabel_right
  .progmem.data.keylabel_down
-                0x000011c2        0x2 utils.o
-                0x000011c2                keylabel_down
+                0x000011c3        0x2 utils.o
+                0x000011c3                keylabel_down
  .progmem.data.keylabel_up
-                0x000011c4        0x2 utils.o
-                0x000011c4                keylabel_up
+                0x000011c5        0x2 utils.o
+                0x000011c5                keylabel_up
  .progmem.data.cgPattern_Block
-                0x000011c6        0x8 utils.o
-                0x000011c6                cgPattern_Block
+                0x000011c7        0x8 utils.o
+                0x000011c7                cgPattern_Block
  .progmem.data.cgPattern_Down
-                0x000011ce        0x8 utils.o
-                0x000011ce                cgPattern_Down
+                0x000011cf        0x8 utils.o
+                0x000011cf                cgPattern_Down
  .progmem.data.cgPattern_Up
-                0x000011d6        0x8 utils.o
-                0x000011d6                cgPattern_Up
+                0x000011d7        0x8 utils.o
+                0x000011d7                cgPattern_Up
  .progmem.data.cr_lf
-                0x000011de        0x3 utils.o
-                0x000011de                cr_lf
+                0x000011df        0x3 utils.o
+                0x000011df                cr_lf
                 0x000011e2                . = ALIGN (0x2)
- *fill*         0x000011e1        0x1 
  *(.jumptables)
  *(.jumptables*)
  *(.lowtext)
@@ -907,759 +912,759 @@ END GROUP
                 0x00001726       0x60 ee_prom.o
                 0x00001726                eeprom_UpdateMidiOutMap
  .text.eeprom_UpdateModules
-                0x00001786       0x4c ee_prom.o
+                0x00001786       0x54 ee_prom.o
                 0x00001786                eeprom_UpdateModules
  .text.eeprom_UpdateUSB
-                0x000017d2       0x40 ee_prom.o
-                0x000017d2                eeprom_UpdateUSB
+                0x000017da       0x40 ee_prom.o
+                0x000017da                eeprom_UpdateUSB
  .text.eeprom_UpdateMidiThrough
-                0x00001812       0x44 ee_prom.o
-                0x00001812                eeprom_UpdateMidiThrough
+                0x0000181a       0x44 ee_prom.o
+                0x0000181a                eeprom_UpdateMidiThrough
  .text.eeprom_UpdateReg
-                0x00001856       0x5c ee_prom.o
-                0x00001856                eeprom_UpdateReg
+                0x0000185e       0x5c ee_prom.o
+                0x0000185e                eeprom_UpdateReg
  .text.eeprom_UpdateProg
-                0x000018b2       0x44 ee_prom.o
-                0x000018b2                eeprom_UpdateProg
+                0x000018ba       0x44 ee_prom.o
+                0x000018ba                eeprom_UpdateProg
  .text.eeprom_UpdateSoftkeys
-                0x000018f6       0x44 ee_prom.o
-                0x000018f6                eeprom_UpdateSoftkeys
+                0x000018fe       0x44 ee_prom.o
+                0x000018fe                eeprom_UpdateSoftkeys
  .text.eeprom_UpdateALL
-                0x0000193a       0x14 ee_prom.o
-                0x0000193a                eeprom_UpdateALL
+                0x00001942       0x14 ee_prom.o
+                0x00001942                eeprom_UpdateALL
  .text.eepromCopy
-                0x0000194e       0x52 ee_prom.o
-                0x0000194e                eepromCopy
+                0x00001956       0x52 ee_prom.o
+                0x00001956                eepromCopy
  .text.eeprom_Backup
-                0x000019a0       0x18 ee_prom.o
-                0x000019a0                eeprom_Backup
+                0x000019a8       0x18 ee_prom.o
+                0x000019a8                eeprom_Backup
  .text.eeprom_Restore
-                0x000019b8       0x18 ee_prom.o
-                0x000019b8                eeprom_Restore
+                0x000019c0       0x18 ee_prom.o
+                0x000019c0                eeprom_Restore
  .text.init_Timers
-                0x000019d0       0x30 hwtimer.o
-                0x000019d0                init_Timers
+                0x000019d8       0x30 hwtimer.o
+                0x000019d8                init_Timers
  .text.init_HwTimer
-                0x00001a00       0x1e hwtimer.o
-                0x00001a00                init_HwTimer
+                0x00001a08       0x1e hwtimer.o
+                0x00001a08                init_HwTimer
  .text.init_ADC
-                0x00001a1e       0x54 hwtimer.o
-                0x00001a1e                init_ADC
+                0x00001a26       0x54 hwtimer.o
+                0x00001a26                init_ADC
  .text.init_Pipe
-                0x00001a72       0x50 hwtimer.o
-                0x00001a72                init_Pipe
+                0x00001a7a       0x50 hwtimer.o
+                0x00001a7a                init_Pipe
  .text.init_PipeModules
-                0x00001ac2      0x17e hwtimer.o
-                0x00001ac2                init_PipeModules
+                0x00001aca      0x17e hwtimer.o
+                0x00001aca                init_PipeModules
  .text.test_PipeModule
-                0x00001c40       0xe8 hwtimer.o
-                0x00001c40                test_PipeModule
+                0x00001c48       0xe8 hwtimer.o
+                0x00001c48                test_PipeModule
  .text.module_TestAllInputs
-                0x00001d28       0x22 hwtimer.o
-                0x00001d28                module_TestAllInputs
+                0x00001d30       0x22 hwtimer.o
+                0x00001d30                module_TestAllInputs
  .text.module_WaitOutputInput2Cycles
-                0x00001d4a       0x1a hwtimer.o
-                0x00001d4a                module_WaitOutputInput2Cycles
+                0x00001d52       0x1a hwtimer.o
+                0x00001d52                module_WaitOutputInput2Cycles
  .text.module_StartPowerOn
-                0x00001d64       0x20 hwtimer.o
-                0x00001d64                module_StartPowerOn
+                0x00001d6c       0x20 hwtimer.o
+                0x00001d6c                module_StartPowerOn
  .text.module_PowerControl
-                0x00001d84       0x8c hwtimer.o
-                0x00001d84                module_PowerControl
+                0x00001d8c       0x8c hwtimer.o
+                0x00001d8c                module_PowerControl
  .text.softKey_WantLong
-                0x00001e10       0x24 hwtimer.o
-                0x00001e10                softKey_WantLong
+                0x00001e18       0x24 hwtimer.o
+                0x00001e18                softKey_WantLong
  .text.__vector_21
-                0x00001e34      0x494 hwtimer.o
-                0x00001e34                __vector_21
+                0x00001e3c      0x494 hwtimer.o
+                0x00001e3c                __vector_21
  .text.init_iopins
-                0x000022c8       0x3a initio.o
-                0x000022c8                init_iopins
+                0x000022d0       0x3a initio.o
+                0x000022d0                init_iopins
  .text.lcd_write_nibble
-                0x00002302       0x7a lcd_u.o
-                0x00002302                lcd_write_nibble
+                0x0000230a       0x7a lcd_u.o
+                0x0000230a                lcd_write_nibble
  .text.lcd_write_character
-                0x0000237c       0x30 lcd_u.o
-                0x0000237c                lcd_write_character
+                0x00002384       0x30 lcd_u.o
+                0x00002384                lcd_write_character
  .text.lcd_write_command
-                0x000023ac       0x44 lcd_u.o
-                0x000023ac                lcd_write_command
+                0x000023b4       0x44 lcd_u.o
+                0x000023b4                lcd_write_command
  .text.lcd_init
-                0x000023f0       0xa0 lcd_u.o
-                0x000023f0                lcd_init
+                0x000023f8       0xa0 lcd_u.o
+                0x000023f8                lcd_init
  .text.lcd_goto
-                0x00002490        0xa lcd_u.o
-                0x00002490                lcd_goto
+                0x00002498        0xa lcd_u.o
+                0x00002498                lcd_goto
  .text.lcd_clrscr
-                0x0000249a       0x1e lcd_u.o
-                0x0000249a                lcd_clrscr
+                0x000024a2       0x1e lcd_u.o
+                0x000024a2                lcd_clrscr
  .text.getCursorFromLCDRAMcursor
-                0x000024b8       0x2c lcd_u.o
-                0x000024b8                getCursorFromLCDRAMcursor
+                0x000024c0       0x2c lcd_u.o
+                0x000024c0                getCursorFromLCDRAMcursor
  .text.lcd_putc
-                0x000024e4       0x70 lcd_u.o
-                0x000024e4                lcd_putc
+                0x000024ec       0x70 lcd_u.o
+                0x000024ec                lcd_putc
  .text.lcd_puts
-                0x00002554       0x20 lcd_u.o
-                0x00002554                lcd_puts
+                0x0000255c       0x20 lcd_u.o
+                0x0000255c                lcd_puts
  .text.lcd_puts_P
-                0x00002574       0x20 lcd_u.o
-                0x00002574                lcd_puts_P
+                0x0000257c       0x20 lcd_u.o
+                0x0000257c                lcd_puts_P
  .text.init_log
-                0x00002594       0x16 log.o
-                0x00002594                init_log
+                0x0000259c       0x16 log.o
+                0x0000259c                init_log
  .text.log_count
-                0x000025aa       0x3e log.o
-                0x000025aa                log_count
+                0x000025b2       0x3e log.o
+                0x000025b2                log_count
  .text.log_getLog
-                0x000025e8       0x50 log.o
-                0x000025e8                log_getLog
+                0x000025f0       0x50 log.o
+                0x000025f0                log_getLog
  .text.log_getErrorText
-                0x00002638       0x88 log.o
-                0x00002638                log_getErrorText
+                0x00002640       0x88 log.o
+                0x00002640                log_getErrorText
  .text.logCheckUnreadErrorLogs
-                0x000026c0       0x40 log.o
-                0x000026c0                logCheckUnreadErrorLogs
+                0x000026c8       0x40 log.o
+                0x000026c8                logCheckUnreadErrorLogs
  .text.log_getShortTextFromPtr
-                0x00002700      0x118 log.o
-                0x00002700                log_getShortTextFromPtr
- .text.log_put  0x00002818       0xc8 log.o
-                0x00002818                log_put
+                0x00002708      0x118 log.o
+                0x00002708                log_getShortTextFromPtr
+ .text.log_put  0x00002820       0xc8 log.o
+                0x00002820                log_put
  .text.log_putError
-                0x000028e0        0xc log.o
-                0x000028e0                log_putError
+                0x000028e8        0xc log.o
+                0x000028e8                log_putError
  .text.log_getShortTextFromIndex
-                0x000028ec       0x20 log.o
-                0x000028ec                log_getShortTextFromIndex
- .text.main     0x0000290c      0x4f8 main.o
-                0x0000290c                main
+                0x000028f4       0x20 log.o
+                0x000028f4                log_getShortTextFromIndex
+ .text.main     0x00002914      0x4f8 main.o
+                0x00002914                main
  .text.menu_enterWriteModule
-                0x00002e04       0x78 menu.o
-                0x00002e04                menu_enterWriteModule
+                0x00002e0c       0x78 menu.o
+                0x00002e0c                menu_enterWriteModule
  .text.menu_exitWriteModule
-                0x00002e7c       0x5a menu.o
-                0x00002e7c                menu_exitWriteModule
+                0x00002e84       0x5a menu.o
+                0x00002e84                menu_exitWriteModule
  .text.menuOnEnterModSel
-                0x00002ed6       0x16 menu.o
-                0x00002ed6                menuOnEnterModSel
+                0x00002ede       0x16 menu.o
+                0x00002ede                menuOnEnterModSel
  .text.menuOnEnterMidiInCh
-                0x00002eec       0x16 menu.o
-                0x00002eec                menuOnEnterMidiInCh
+                0x00002ef4       0x16 menu.o
+                0x00002ef4                menuOnEnterMidiInCh
  .text.menuOnEnterMidiInSec
-                0x00002f02       0x3c menu.o
-                0x00002f02                menuOnEnterMidiInSec
+                0x00002f0a       0x3c menu.o
+                0x00002f0a                menuOnEnterMidiInSec
  .text.menuOnEnterModManual
-                0x00002f3e       0x16 menu.o
-                0x00002f3e                menuOnEnterModManual
+                0x00002f46       0x16 menu.o
+                0x00002f46                menuOnEnterModManual
  .text.menuOnEnterModSec
-                0x00002f54       0x4a menu.o
-                0x00002f54                menuOnEnterModSec
+                0x00002f5c       0x4a menu.o
+                0x00002f5c                menuOnEnterModSec
  .text.menuOnEnterModSecReg
-                0x00002f9e       0x2c menu.o
-                0x00002f9e                menuOnEnterModSecReg
+                0x00002fa6       0x2c menu.o
+                0x00002fa6                menuOnEnterModSecReg
  .text.menuOnEnterKey
-                0x00002fca       0x2e menu.o
-                0x00002fca                menuOnEnterKey
+                0x00002fd2       0x2e menu.o
+                0x00002fd2                menuOnEnterKey
  .text.menuOnExitMidiThrough
-                0x00002ff8        0x8 menu.o
-                0x00002ff8                menuOnExitMidiThrough
+                0x00003000        0x8 menu.o
+                0x00003000                menuOnExitMidiThrough
  .text.menuOnExitRegisterEdit
-                0x00003000       0x50 menu.o
-                0x00003000                menuOnExitRegisterEdit
+                0x00003008       0x50 menu.o
+                0x00003008                menuOnExitRegisterEdit
  .text.softKeyRegOff
-                0x00003050        0xa menu.o
-                0x00003050                softKeyRegOff
+                0x00003058        0xa menu.o
+                0x00003058                softKeyRegOff
  .text.menuOnExitCoupler
-                0x0000305a       0x26 menu.o
-                0x0000305a                menuOnExitCoupler
+                0x00003062       0x26 menu.o
+                0x00003062                menuOnExitCoupler
  .text.menuOnExitSaveProgram
-                0x00003080       0x16 menu.o
-                0x00003080                menuOnExitSaveProgram
+                0x00003088       0x16 menu.o
+                0x00003088                menuOnExitSaveProgram
  .text.menuOnExitKeys
-                0x00003096        0x8 menu.o
-                0x00003096                menuOnExitKeys
+                0x0000309e        0x8 menu.o
+                0x0000309e                menuOnExitKeys
  .text.menu_readModule
-                0x0000309e       0x68 menu.o
-                0x0000309e                menu_readModule
+                0x000030a6       0x68 menu.o
+                0x000030a6                menu_readModule
  .text.menu_testModule
-                0x00003106       0x24 menu.o
-                0x00003106                menu_testModule
+                0x0000310e       0x24 menu.o
+                0x0000310e                menu_testModule
  .text.menuOnEnterTune
-                0x0000312a      0x238 menu.o
-                0x0000312a                menuOnEnterTune
+                0x00003132      0x238 menu.o
+                0x00003132                menuOnEnterTune
  .text.menuOnExitMidiActiveSense
-                0x00003362        0x8 menu.o
-                0x00003362                menuOnExitMidiActiveSense
- .text.menuOnExitMidiOut
                 0x0000336a        0x8 menu.o
-                0x0000336a                menuOnExitMidiOut
- .text.menuOnExitMidiIn
+                0x0000336a                menuOnExitMidiActiveSense
+ .text.menuOnExitMidiOut
                 0x00003372        0x8 menu.o
-                0x00003372                menuOnExitMidiIn
+                0x00003372                menuOnExitMidiOut
+ .text.menuOnExitMidiIn
+                0x0000337a        0x8 menu.o
+                0x0000337a                menuOnExitMidiIn
  .text.menuOnExitManual
-                0x0000337a       0x14 menu.o
-                0x0000337a                menuOnExitManual
+                0x00003382       0x14 menu.o
+                0x00003382                menuOnExitManual
  .text.menuOnExitModules
-                0x0000338e        0x8 menu.o
-                0x0000338e                menuOnExitModules
+                0x00003396        0x8 menu.o
+                0x00003396                menuOnExitModules
  .text.menuOnEnterUSBprotokoll
-                0x00003396       0x4c menu.o
-                0x00003396                menuOnEnterUSBprotokoll
+                0x0000339e       0x4c menu.o
+                0x0000339e                menuOnEnterUSBprotokoll
  .text.menuOnExitUSBactive
-                0x000033e2       0x28 menu.o
-                0x000033e2                menuOnExitUSBactive
+                0x000033ea       0x28 menu.o
+                0x000033ea                menuOnExitUSBactive
  .text.menuOnEnterUSBsendHW
-                0x0000340a      0x388 menu.o
-                0x0000340a                menuOnEnterUSBsendHW
+                0x00003412      0x388 menu.o
+                0x00003412                menuOnEnterUSBsendHW
  .text.reverseRegisterBits
-                0x00003792       0x28 menu.o
-                0x00003792                reverseRegisterBits
+                0x0000379a       0x28 menu.o
+                0x0000379a                reverseRegisterBits
  .text.menuOnUpdateRegister
-                0x000037ba        0xe menu.o
-                0x000037ba                menuOnUpdateRegister
+                0x000037c2        0xe menu.o
+                0x000037c2                menuOnUpdateRegister
  .text.menuOnEnterResetReg
-                0x000037c8        0xc menu.o
-                0x000037c8                menuOnEnterResetReg
+                0x000037d0        0xc menu.o
+                0x000037d0                menuOnEnterResetReg
  .text.menuOnExitLoadProgran
-                0x000037d4       0x18 menu.o
-                0x000037d4                menuOnExitLoadProgran
+                0x000037dc       0x18 menu.o
+                0x000037dc                menuOnExitLoadProgran
  .text.softkeyCoupler
-                0x000037ec       0x56 menu.o
-                0x000037ec                softkeyCoupler
+                0x000037f4       0x56 menu.o
+                0x000037f4                softkeyCoupler
  .text.softKeyCoupler2from3
-                0x00003842        0x6 menu.o
-                0x00003842                softKeyCoupler2from3
+                0x0000384a        0x6 menu.o
+                0x0000384a                softKeyCoupler2from3
  .text.softKeyCoupler1from3
-                0x00003848        0x6 menu.o
-                0x00003848                softKeyCoupler1from3
+                0x00003850        0x6 menu.o
+                0x00003850                softKeyCoupler1from3
  .text.softKeyCouplerPfrom3
-                0x0000384e        0x6 menu.o
-                0x0000384e                softKeyCouplerPfrom3
+                0x00003856        0x6 menu.o
+                0x00003856                softKeyCouplerPfrom3
  .text.softKeyCoupler1from2
-                0x00003854        0x6 menu.o
-                0x00003854                softKeyCoupler1from2
+                0x0000385c        0x6 menu.o
+                0x0000385c                softKeyCoupler1from2
  .text.softKeyCouplerPfrom2
-                0x0000385a        0x6 menu.o
-                0x0000385a                softKeyCouplerPfrom2
+                0x00003862        0x6 menu.o
+                0x00003862                softKeyCouplerPfrom2
  .text.softKeyCouplerPfrom1
-                0x00003860        0x6 menu.o
-                0x00003860                softKeyCouplerPfrom1
+                0x00003868        0x6 menu.o
+                0x00003868                softKeyCouplerPfrom1
  .text.softKeyCoupler3from2
-                0x00003866        0x6 menu.o
-                0x00003866                softKeyCoupler3from2
+                0x0000386e        0x6 menu.o
+                0x0000386e                softKeyCoupler3from2
  .text.softKeyCoupler3from1
-                0x0000386c        0x6 menu.o
-                0x0000386c                softKeyCoupler3from1
+                0x00003874        0x6 menu.o
+                0x00003874                softKeyCoupler3from1
  .text.softKeyCoupler3fromP
-                0x00003872        0x6 menu.o
-                0x00003872                softKeyCoupler3fromP
+                0x0000387a        0x6 menu.o
+                0x0000387a                softKeyCoupler3fromP
  .text.softKeyCoupler2from1
-                0x00003878        0x6 menu.o
-                0x00003878                softKeyCoupler2from1
+                0x00003880        0x6 menu.o
+                0x00003880                softKeyCoupler2from1
  .text.softKeyCoupler2fromP
-                0x0000387e        0x6 menu.o
-                0x0000387e                softKeyCoupler2fromP
+                0x00003886        0x6 menu.o
+                0x00003886                softKeyCoupler2fromP
  .text.softKeyCoupler1fromP
-                0x00003884        0x6 menu.o
-                0x00003884                softKeyCoupler1fromP
+                0x0000388c        0x6 menu.o
+                0x0000388c                softKeyCoupler1fromP
  .text.menu_Init
-                0x0000388a       0x46 menu.o
-                0x0000388a                menu_Init
+                0x00003892       0x46 menu.o
+                0x00003892                menu_Init
  .text.softkeyLeft
-                0x000038d0        0xc menu.o
-                0x000038d0                softkeyLeft
+                0x000038d8        0xc menu.o
+                0x000038d8                softkeyLeft
  .text.softkeyRight
-                0x000038dc        0xc menu.o
-                0x000038dc                softkeyRight
+                0x000038e4        0xc menu.o
+                0x000038e4                softkeyRight
  .text.softkeyDown
-                0x000038e8        0xc menu.o
-                0x000038e8                softkeyDown
+                0x000038f0        0xc menu.o
+                0x000038f0                softkeyDown
  .text.softkeyOn
-                0x000038f4        0xc menu.o
-                0x000038f4                softkeyOn
+                0x000038fc        0xc menu.o
+                0x000038fc                softkeyOn
  .text.softkeyOff
-                0x00003900        0xc menu.o
-                0x00003900                softkeyOff
+                0x00003908        0xc menu.o
+                0x00003908                softkeyOff
  .text.softkeyUp
-                0x0000390c        0xc menu.o
-                0x0000390c                softkeyUp
+                0x00003914        0xc menu.o
+                0x00003914                softkeyUp
  .text.softkeyPlus
-                0x00003918       0x24 menu.o
-                0x00003918                softkeyPlus
+                0x00003920       0x24 menu.o
+                0x00003920                softkeyPlus
  .text.softkeyMinus
-                0x0000393c       0x24 menu.o
-                0x0000393c                softkeyMinus
+                0x00003944       0x24 menu.o
+                0x00003944                softkeyMinus
  .text.dataToNibbles
-                0x00003960      0x1e6 menu.o
-                0x00003960                dataToNibbles
+                0x00003968      0x1e6 menu.o
+                0x00003968                dataToNibbles
  .text.nibbleToLCDstring
-                0x00003b46      0x29c menu.o
-                0x00003b46                nibbleToLCDstring
+                0x00003b4e      0x29c menu.o
+                0x00003b4e                nibbleToLCDstring
  .text.LCDStringOut
-                0x00003de2       0x36 menu.o
-                0x00003de2                LCDStringOut
+                0x00003dea       0x36 menu.o
+                0x00003dea                LCDStringOut
  .text.nibbleCheckOvfl
-                0x00003e18       0x12 menu.o
-                0x00003e18                nibbleCheckOvfl
+                0x00003e20       0x12 menu.o
+                0x00003e20                nibbleCheckOvfl
  .text.nibbleChange
-                0x00003e2a      0x35e menu.o
-                0x00003e2a                nibbleChange
+                0x00003e32      0x35e menu.o
+                0x00003e32                nibbleChange
  .text.nibbleToData
-                0x00004188      0x1ca menu.o
-                0x00004188                nibbleToData
+                0x00004190      0x1ca menu.o
+                0x00004190                nibbleToData
  .text.menuTextOut
-                0x00004352       0x36 menu.o
-                0x00004352                menuTextOut
+                0x0000435a       0x36 menu.o
+                0x0000435a                menuTextOut
  .text.menuParentMenuToLCD
-                0x00004388       0x34 menu.o
-                0x00004388                menuParentMenuToLCD
+                0x00004390       0x34 menu.o
+                0x00004390                menuParentMenuToLCD
  .text.menuDisplayValue
-                0x000043bc       0x1a menu.o
-                0x000043bc                menuDisplayValue
+                0x000043c4       0x1a menu.o
+                0x000043c4                menuDisplayValue
  .text.menuCursorSetDataNibble
-                0x000043d6       0x5a menu.o
-                0x000043d6                menuCursorSetDataNibble
+                0x000043de       0x5a menu.o
+                0x000043de                menuCursorSetDataNibble
  .text.menuCursorSetExtra
-                0x00004430        0x8 menu.o
-                0x00004430                menuCursorSetExtra
+                0x00004438        0x8 menu.o
+                0x00004438                menuCursorSetExtra
  .text.menuOnEnterStatusMidiIn
-                0x00004438       0x7c menu.o
-                0x00004438                menuOnEnterStatusMidiIn
+                0x00004440       0x7c menu.o
+                0x00004440                menuOnEnterStatusMidiIn
  .text.menuOnEnterStatusMidiOut
-                0x000044b4       0x7c menu.o
-                0x000044b4                menuOnEnterStatusMidiOut
+                0x000044bc       0x7c menu.o
+                0x000044bc                menuOnEnterStatusMidiOut
  .text.menuOnEnterLogDisp
-                0x00004530      0x14a menu.o
-                0x00004530                menuOnEnterLogDisp
+                0x00004538      0x14a menu.o
+                0x00004538                menuOnEnterLogDisp
  .text.menuCursorSetMenu
-                0x0000467a        0x8 menu.o
-                0x0000467a                menuCursorSetMenu
+                0x00004682        0x8 menu.o
+                0x00004682                menuCursorSetMenu
  .text.menuClearExtraDisp
-                0x00004682        0xa menu.o
-                0x00004682                menuClearExtraDisp
+                0x0000468a        0xa menu.o
+                0x0000468a                menuClearExtraDisp
  .text.menu_ClearDataDisp
-                0x0000468c        0xe menu.o
-                0x0000468c                menu_ClearDataDisp
+                0x00004694        0xe menu.o
+                0x00004694                menu_ClearDataDisp
  .text.menuClearMenuDisp
-                0x0000469a       0x16 menu.o
-                0x0000469a                menuClearMenuDisp
+                0x000046a2       0x16 menu.o
+                0x000046a2                menuClearMenuDisp
  .text.menu_ClearAllDisp
-                0x000046b0        0x8 menu.o
-                0x000046b0                menu_ClearAllDisp
+                0x000046b8        0x8 menu.o
+                0x000046b8                menu_ClearAllDisp
  .text.menuCheckArrowDown
-                0x000046b8       0x3e menu.o
-                0x000046b8                menuCheckArrowDown
+                0x000046c0       0x3e menu.o
+                0x000046c0                menuCheckArrowDown
  .text.menuCurrMenuToLCD
-                0x000046f6       0x5c menu.o
-                0x000046f6                menuCurrMenuToLCD
+                0x000046fe       0x5c menu.o
+                0x000046fe                menuCurrMenuToLCD
  .text.menuItemChanged
-                0x00004752       0xc2 menu.o
-                0x00004752                menuItemChanged
+                0x0000475a       0xc2 menu.o
+                0x0000475a                menuItemChanged
  .text.menu_InitLCD
-                0x00004814        0xe menu.o
-                0x00004814                menu_InitLCD
+                0x0000481c        0xe menu.o
+                0x0000481c                menu_InitLCD
  .text.menu_ProcessMessage
-                0x00004822      0x47e menu.o
-                0x00004822                menu_ProcessMessage
+                0x0000482a      0x47e menu.o
+                0x0000482a                menu_ProcessMessage
  .text.displayMenuMessage_P
-                0x00004ca0       0x82 menu.o
-                0x00004ca0                displayMenuMessage_P
+                0x00004ca8       0x82 menu.o
+                0x00004ca8                displayMenuMessage_P
  .text.menu_OnEnterMidiPanic
-                0x00004d22       0x10 menu.o
-                0x00004d22                menu_OnEnterMidiPanic
+                0x00004d2a       0x10 menu.o
+                0x00004d2a                menu_OnEnterMidiPanic
  .text.menu_ModuleTestExecute
-                0x00004d32      0x1ac menu.o
-                0x00004d32                menu_ModuleTestExecute
+                0x00004d3a      0x1ac menu.o
+                0x00004d3a                menu_ModuleTestExecute
  .text.menu_ModuleTestPattern
-                0x00004ede       0x32 menu.o
-                0x00004ede                menu_ModuleTestPattern
+                0x00004ee6       0x32 menu.o
+                0x00004ee6                menu_ModuleTestPattern
  .text.menuLCDwriteOK
-                0x00004f10        0x8 menu.o
-                0x00004f10                menuLCDwriteOK
+                0x00004f18        0x8 menu.o
+                0x00004f18                menuLCDwriteOK
  .text.menuOnEnterEEBackup
-                0x00004f18       0x18 menu.o
-                0x00004f18                menuOnEnterEEBackup
+                0x00004f20       0x18 menu.o
+                0x00004f20                menuOnEnterEEBackup
  .text.menuOnEnterEERestore
-                0x00004f30       0x18 menu.o
-                0x00004f30                menuOnEnterEERestore
+                0x00004f38       0x18 menu.o
+                0x00004f38                menuOnEnterEERestore
  .text.menuOnEnterEEUpdate
-                0x00004f48       0x16 menu.o
-                0x00004f48                menuOnEnterEEUpdate
+                0x00004f50       0x16 menu.o
+                0x00004f50                menuOnEnterEEUpdate
  .text.menudeleteMainMessage
-                0x00004f5e       0x1c menu.o
-                0x00004f5e                menudeleteMainMessage
+                0x00004f66       0x1c menu.o
+                0x00004f66                menudeleteMainMessage
  .text.menu_deleteMessage
-                0x00004f7a       0x22 menu.o
-                0x00004f7a                menu_deleteMessage
+                0x00004f82       0x22 menu.o
+                0x00004f82                menu_deleteMessage
  .text.menu_DisplayMainMessage_P
-                0x00004f9c       0x6c menu.o
-                0x00004f9c                menu_DisplayMainMessage_P
+                0x00004fa4       0x6c menu.o
+                0x00004fa4                menu_DisplayMainMessage_P
  .text.menu_DisplayMainMessage
-                0x00005008       0x6c menu.o
-                0x00005008                menu_DisplayMainMessage
+                0x00005010       0x6c menu.o
+                0x00005010                menu_DisplayMainMessage
  .text.menuDisplaySaveMessage
-                0x00005074       0x1a menu.o
-                0x00005074                menuDisplaySaveMessage
+                0x0000507c       0x1a menu.o
+                0x0000507c                menuDisplaySaveMessage
  .text.menuDisplayLoadMessage
-                0x0000508e       0x48 menu.o
-                0x0000508e                menuDisplayLoadMessage
+                0x00005096       0x48 menu.o
+                0x00005096                menuDisplayLoadMessage
  .text.handle_programKey
-                0x000050d6       0x3a menu.o
-                0x000050d6                handle_programKey
+                0x000050de       0x3a menu.o
+                0x000050de                handle_programKey
  .text.softKeyK1A
-                0x00005110        0x6 menu.o
-                0x00005110                softKeyK1A
+                0x00005118        0x6 menu.o
+                0x00005118                softKeyK1A
  .text.softKeyK2A
-                0x00005116        0x6 menu.o
-                0x00005116                softKeyK2A
+                0x0000511e        0x6 menu.o
+                0x0000511e                softKeyK2A
  .text.softKeyK3A
-                0x0000511c        0x6 menu.o
-                0x0000511c                softKeyK3A
+                0x00005124        0x6 menu.o
+                0x00005124                softKeyK3A
  .text.softKeyK4A
-                0x00005122        0x6 menu.o
-                0x00005122                softKeyK4A
+                0x0000512a        0x6 menu.o
+                0x0000512a                softKeyK4A
  .text.getSoftKeyIndex
-                0x00005128       0x24 menu.o
-                0x00005128                getSoftKeyIndex
+                0x00005130       0x24 menu.o
+                0x00005130                getSoftKeyIndex
  .text.init_SoftKeys
-                0x0000514c       0x92 menu.o
-                0x0000514c                init_SoftKeys
+                0x00005154       0x92 menu.o
+                0x00005154                init_SoftKeys
  .text.softKey_Set
-                0x000051de       0x58 menu.o
-                0x000051de                softKey_Set
+                0x000051e6       0x58 menu.o
+                0x000051e6                softKey_Set
  .text.menuOnExitKey
-                0x00005236       0x20 menu.o
-                0x00005236                menuOnExitKey
+                0x0000523e       0x20 menu.o
+                0x0000523e                menuOnExitKey
  .text.softKeys_toLCD
-                0x00005256       0x7e menu.o
-                0x00005256                softKeys_toLCD
+                0x0000525e       0x7e menu.o
+                0x0000525e                softKeys_toLCD
  .text.softKey_MessageKey_ToSoftKeyNr
-                0x000052d4       0x2a menu.o
-                0x000052d4                softKey_MessageKey_ToSoftKeyNr
+                0x000052dc       0x2a menu.o
+                0x000052dc                softKey_MessageKey_ToSoftKeyNr
  .text.softKey_Execute
-                0x000052fe       0x98 menu.o
-                0x000052fe                softKey_Execute
+                0x00005306       0x98 menu.o
+                0x00005306                softKey_Execute
  .text.menu_showPowerState
-                0x00005396       0x28 menu.o
-                0x00005396                menu_showPowerState
+                0x0000539e       0x28 menu.o
+                0x0000539e                menu_showPowerState
  .text.menuOnEnterPwrOn
-                0x000053be       0x12 menu.o
-                0x000053be                menuOnEnterPwrOn
+                0x000053c6       0x12 menu.o
+                0x000053c6                menuOnEnterPwrOn
  .text.menuOnEnterPwrOff
-                0x000053d0       0x10 menu.o
-                0x000053d0                menuOnEnterPwrOff
+                0x000053d8       0x10 menu.o
+                0x000053d8                menuOnEnterPwrOff
  .text.menuOnEnterPwrRest
-                0x000053e0       0x2a menu.o
-                0x000053e0                menuOnEnterPwrRest
+                0x000053e8       0x2a menu.o
+                0x000053e8                menuOnEnterPwrRest
  .text.init_message
-                0x0000540a        0xe message.o
-                0x0000540a                init_message
+                0x00005412        0xe message.o
+                0x00005412                init_message
  .text.message_push
-                0x00005418       0x28 message.o
-                0x00005418                message_push
+                0x00005420       0x28 message.o
+                0x00005420                message_push
  .text.message_get
-                0x00005440       0x32 message.o
-                0x00005440                message_get
+                0x00005448       0x32 message.o
+                0x00005448                message_get
  .text.message_status
-                0x00005472       0x26 message.o
-                0x00005472                message_status
+                0x0000547a       0x26 message.o
+                0x0000547a                message_status
  .text.pipeMsgPush
-                0x00005498       0x44 message.o
-                0x00005498                pipeMsgPush
+                0x000054a0       0x44 message.o
+                0x000054a0                pipeMsgPush
  .text.pipeMsgGet
-                0x000054dc       0x2a message.o
-                0x000054dc                pipeMsgGet
+                0x000054e4       0x2a message.o
+                0x000054e4                pipeMsgGet
  .text.pipeMsgStatus
-                0x00005506       0x14 message.o
-                0x00005506                pipeMsgStatus
+                0x0000550e       0x14 message.o
+                0x0000550e                pipeMsgStatus
  .text.midi_CouplerReset
-                0x0000551a       0x14 Midi.o
-                0x0000551a                midi_CouplerReset
+                0x00005522       0x14 Midi.o
+                0x00005522                midi_CouplerReset
  .text.init_Midi
-                0x0000552e        0x4 Midi.o
-                0x0000552e                init_Midi
+                0x00005536        0x4 Midi.o
+                0x00005536                init_Midi
  .text.set_Coupler
-                0x00005532       0x42 Midi.o
-                0x00005532                set_Coupler
+                0x0000553a       0x42 Midi.o
+                0x0000553a                set_Coupler
  .text.getAllCouplers
-                0x00005574       0x30 Midi.o
-                0x00005574                getAllCouplers
+                0x0000557c       0x30 Midi.o
+                0x0000557c                getAllCouplers
  .text.setAllCouplers
-                0x000055a4       0x32 Midi.o
-                0x000055a4                setAllCouplers
+                0x000055ac       0x32 Midi.o
+                0x000055ac                setAllCouplers
  .text.midiAllReset
-                0x000055d6        0xc Midi.o
-                0x000055d6                midiAllReset
+                0x000055de        0xc Midi.o
+                0x000055de                midiAllReset
  .text.registers_CalcCount
-                0x000055e2       0x34 Midi.o
-                0x000055e2                registers_CalcCount
+                0x000055ea       0x34 Midi.o
+                0x000055ea                registers_CalcCount
  .text.init_Registers
-                0x00005616       0xb8 Midi.o
-                0x00005616                init_Registers
+                0x0000561e       0xb8 Midi.o
+                0x0000561e                init_Registers
  .text.regNr_to_moduleBit
-                0x000056ce       0x36 Midi.o
-                0x000056ce                regNr_to_moduleBit
+                0x000056d6       0x36 Midi.o
+                0x000056d6                regNr_to_moduleBit
  .text.moduleBit_to_registerNr
-                0x00005704       0x38 Midi.o
-                0x00005704                moduleBit_to_registerNr
+                0x0000570c       0x38 Midi.o
+                0x0000570c                moduleBit_to_registerNr
  .text.read_Register
-                0x0000573c       0x8a Midi.o
-                0x0000573c                read_Register
+                0x00005744       0x8a Midi.o
+                0x00005744                read_Register
  .text.get_RegisterStatus
-                0x000057c6       0x6a Midi.o
-                0x000057c6                get_RegisterStatus
+                0x000057ce       0x6a Midi.o
+                0x000057ce                get_RegisterStatus
  .text.count_Registers
-                0x00005830       0x28 Midi.o
-                0x00005830                count_Registers
+                0x00005838       0x28 Midi.o
+                0x00005838                count_Registers
  .text.read_allRegister
-                0x00005858       0x58 Midi.o
-                0x00005858                read_allRegister
+                0x00005860       0x58 Midi.o
+                0x00005860                read_allRegister
  .text.register_onOff
-                0x000058b0       0x7c Midi.o
-                0x000058b0                register_onOff
+                0x000058b8       0x7c Midi.o
+                0x000058b8                register_onOff
  .text.program_toRegister
-                0x0000592c       0xb0 Midi.o
-                0x0000592c                program_toRegister
+                0x00005934       0xb0 Midi.o
+                0x00005934                program_toRegister
  .text.midi_ProgramChange
-                0x000059dc       0x6e Midi.o
-                0x000059dc                midi_ProgramChange
+                0x000059e4       0x6e Midi.o
+                0x000059e4                midi_ProgramChange
  .text.midi_resetRegisters
-                0x00005a4a       0x1a Midi.o
-                0x00005a4a                midi_resetRegisters
+                0x00005a52       0x1a Midi.o
+                0x00005a52                midi_resetRegisters
  .text.register_toProgram
-                0x00005a64       0x6a Midi.o
-                0x00005a64                register_toProgram
+                0x00005a6c       0x6a Midi.o
+                0x00005a6c                register_toProgram
  .text.midi_RegisterMatchProgram
-                0x00005ace       0x76 Midi.o
-                0x00005ace                midi_RegisterMatchProgram
+                0x00005ad6       0x76 Midi.o
+                0x00005ad6                midi_RegisterMatchProgram
  .text.midi_CountRegisterInProgram
-                0x00005b44       0x40 Midi.o
-                0x00005b44                midi_CountRegisterInProgram
+                0x00005b4c       0x40 Midi.o
+                0x00005b4c                midi_CountRegisterInProgram
  .text.init_Midi2Manual
-                0x00005b84       0x80 Midi.o
-                0x00005b84                init_Midi2Manual
+                0x00005b8c       0x80 Midi.o
+                0x00005b8c                init_Midi2Manual
  .text.init_Manual2Midi
-                0x00005c04       0x54 Midi.o
-                0x00005c04                init_Manual2Midi
+                0x00005c0c       0x54 Midi.o
+                0x00005c0c                init_Manual2Midi
  .text.Manual_to_MidiNote
-                0x00005c58       0x20 Midi.o
-                0x00005c58                Manual_to_MidiNote
+                0x00005c60       0x20 Midi.o
+                0x00005c60                Manual_to_MidiNote
  .text.Midi_updateManualRange
-                0x00005c78       0xae Midi.o
-                0x00005c78                Midi_updateManualRange
+                0x00005c80       0xae Midi.o
+                0x00005c80                Midi_updateManualRange
  .text.init_Manual2Module
-                0x00005d26       0x74 Midi.o
-                0x00005d26                init_Manual2Module
+                0x00005d2e       0x74 Midi.o
+                0x00005d2e                init_Manual2Module
  .text.manualNote_to_moduleBit
-                0x00005d9a       0x40 Midi.o
-                0x00005d9a                manualNote_to_moduleBit
+                0x00005da2       0x40 Midi.o
+                0x00005da2                manualNote_to_moduleBit
  .text.moduleBit_to_manualNote
-                0x00005dda       0x46 Midi.o
-                0x00005dda                moduleBit_to_manualNote
+                0x00005de2       0x46 Midi.o
+                0x00005de2                moduleBit_to_manualNote
  .text.manual_NoteOnOff
-                0x00005e20       0xc8 Midi.o
-                0x00005e20                manual_NoteOnOff
+                0x00005e28       0xd4 Midi.o
+                0x00005e28                manual_NoteOnOff
  .text.midiAllNotesOff
-                0x00005ee8       0xa8 Midi.o
-                0x00005ee8                midiAllNotesOff
+                0x00005efc       0xa8 Midi.o
+                0x00005efc                midiAllNotesOff
  .text.midi_ManualOff
-                0x00005f90       0x58 Midi.o
-                0x00005f90                midi_ManualOff
+                0x00005fa4       0x58 Midi.o
+                0x00005fa4                midi_ManualOff
  .text.midi_AllManualsOff
-                0x00005fe8       0x14 Midi.o
-                0x00005fe8                midi_AllManualsOff
+                0x00005ffc       0x14 Midi.o
+                0x00005ffc                midi_AllManualsOff
  .text.midi_CheckRxActiveSense
-                0x00005ffc       0x18 Midi.o
-                0x00005ffc                midi_CheckRxActiveSense
+                0x00006010       0x18 Midi.o
+                0x00006010                midi_CheckRxActiveSense
  .text.midiNote_to_Manual
-                0x00006014       0xfa Midi.o
-                0x00006014                midiNote_to_Manual
+                0x00006028       0xfa Midi.o
+                0x00006028                midiNote_to_Manual
  .text.midiIn_Process
-                0x0000610e      0x128 Midi.o
-                0x0000610e                midiIn_Process
+                0x00006122      0x128 Midi.o
+                0x00006122                midiIn_Process
  .text.midiKeyPress_Process
-                0x00006236      0x1ac Midi.o
-                0x00006236                midiKeyPress_Process
+                0x0000624a      0x1ac Midi.o
+                0x0000624a                midiKeyPress_Process
  .text.midiSendAllNotesOff
-                0x000063e2       0x2e Midi.o
-                0x000063e2                midiSendAllNotesOff
+                0x000063f6       0x2e Midi.o
+                0x000063f6                midiSendAllNotesOff
  .text.midi_SendActiveSense
-                0x00006410        0x6 Midi.o
-                0x00006410                midi_SendActiveSense
+                0x00006424        0x6 Midi.o
+                0x00006424                midi_SendActiveSense
  .text.midi_CheckTxActiveSense
-                0x00006416       0x36 Midi.o
-                0x00006416                midi_CheckTxActiveSense
+                0x0000642a       0x36 Midi.o
+                0x0000642a                midi_CheckTxActiveSense
  .text.init_Serial1MIDI
-                0x0000644c       0x40 serial.o
-                0x0000644c                init_Serial1MIDI
+                0x00006460       0x44 serial.o
+                0x00006460                init_Serial1MIDI
  .text.serial1MIDISend
-                0x0000648c       0x54 serial.o
-                0x0000648c                serial1MIDISend
+                0x000064a4       0x6c serial.o
+                0x000064a4                serial1MIDISend
  .text.serial1MIDIReadRx
-                0x000064e0       0x2a serial.o
-                0x000064e0                serial1MIDIReadRx
+                0x00006510       0x2a serial.o
+                0x00006510                serial1MIDIReadRx
  .text.__vector_36
-                0x0000650a       0x80 serial.o
-                0x0000650a                __vector_36
+                0x0000653a       0x80 serial.o
+                0x0000653a                __vector_36
  .text.__vector_37
-                0x0000658a       0x72 serial.o
-                0x0000658a                __vector_37
+                0x000065ba       0x70 serial.o
+                0x000065ba                __vector_37
  .text.serial0SER_USBSend
-                0x000065fc       0x3a serial.o
-                0x000065fc                serial0SER_USBSend
+                0x0000662a       0x3a serial.o
+                0x0000662a                serial0SER_USBSend
  .text.serial0SER_USB_sendStringP
-                0x00006636       0x24 serial.o
-                0x00006636                serial0SER_USB_sendStringP
+                0x00006664       0x24 serial.o
+                0x00006664                serial0SER_USB_sendStringP
  .text.serial0SER_USB_sendCRLF
-                0x0000665a        0x8 serial.o
-                0x0000665a                serial0SER_USB_sendCRLF
+                0x00006688        0x8 serial.o
+                0x00006688                serial0SER_USB_sendCRLF
  .text.init_Serial0SerUSB
-                0x00006662       0x64 serial.o
-                0x00006662                init_Serial0SerUSB
+                0x00006690       0x64 serial.o
+                0x00006690                init_Serial0SerUSB
  .text.serial0SER_USB_sendString
-                0x000066c6       0x2c serial.o
-                0x000066c6                serial0SER_USB_sendString
+                0x000066f4       0x2c serial.o
+                0x000066f4                serial0SER_USB_sendString
  .text.__vector_25
-                0x000066f2       0x56 serial.o
-                0x000066f2                __vector_25
+                0x00006720       0x56 serial.o
+                0x00006720                __vector_25
  .text.__vector_26
-                0x00006748       0x60 serial.o
-                0x00006748                __vector_26
+                0x00006776       0x60 serial.o
+                0x00006776                __vector_26
  .text.init_Serial3SerESP
-                0x000067a8       0x52 serial.o
-                0x000067a8                init_Serial3SerESP
+                0x000067d6       0x52 serial.o
+                0x000067d6                init_Serial3SerESP
  .text.serial3SER_ESPSend
-                0x000067fa       0x6c serial.o
-                0x000067fa                serial3SER_ESPSend
+                0x00006828       0x6c serial.o
+                0x00006828                serial3SER_ESPSend
  .text.serial3SER_ESPReadRx
-                0x00006866       0x3a serial.o
-                0x00006866                serial3SER_ESPReadRx
+                0x00006894       0x3a serial.o
+                0x00006894                serial3SER_ESPReadRx
  .text.__vector_54
-                0x000068a0       0x8c serial.o
-                0x000068a0                __vector_54
+                0x000068ce       0x8c serial.o
+                0x000068ce                __vector_54
  .text.__vector_55
-                0x0000692c       0x72 serial.o
-                0x0000692c                __vector_55
+                0x0000695a       0x72 serial.o
+                0x0000695a                __vector_55
  .text.nibbleToChr
-                0x0000699e        0xc utils.o
-                0x0000699e                nibbleToChr
+                0x000069cc        0xc utils.o
+                0x000069cc                nibbleToChr
  .text.lcd_setCG
-                0x000069aa       0x48 utils.o
-                0x000069aa                lcd_setCG
+                0x000069d8       0x48 utils.o
+                0x000069d8                lcd_setCG
  .text.lcd_initCG
-                0x000069f2       0x1a utils.o
-                0x000069f2                lcd_initCG
+                0x00006a20       0x1a utils.o
+                0x00006a20                lcd_initCG
  .text.lcd_hexout
-                0x00006a0c       0x2e utils.o
-                0x00006a0c                lcd_hexout
+                0x00006a3a       0x2e utils.o
+                0x00006a3a                lcd_hexout
  .text.lcd_longout
-                0x00006a3a       0x4a utils.o
-                0x00006a3a                lcd_longout
+                0x00006a68       0x4a utils.o
+                0x00006a68                lcd_longout
  .text.lcd_dec2out
-                0x00006a84       0x34 utils.o
-                0x00006a84                lcd_dec2out
+                0x00006ab2       0x34 utils.o
+                0x00006ab2                lcd_dec2out
  .text.putChar_Dec2
-                0x00006ab8       0x38 utils.o
-                0x00006ab8                putChar_Dec2
+                0x00006ae6       0x38 utils.o
+                0x00006ae6                putChar_Dec2
  .text.putChar_Dec
-                0x00006af0       0x4e utils.o
-                0x00006af0                putChar_Dec
+                0x00006b1e       0x4e utils.o
+                0x00006b1e                putChar_Dec
  .text.putChar_hex
-                0x00006b3e       0x30 utils.o
-                0x00006b3e                putChar_hex
+                0x00006b6c       0x30 utils.o
+                0x00006b6c                putChar_hex
  .text.putChar_MidiChan
-                0x00006b6e       0x44 utils.o
-                0x00006b6e                putChar_MidiChan
+                0x00006b9c       0x44 utils.o
+                0x00006b9c                putChar_MidiChan
  .text.putChar_long
-                0x00006bb2       0x3a utils.o
-                0x00006bb2                putChar_long
+                0x00006be0       0x3a utils.o
+                0x00006be0                putChar_long
  .text.putChar_Note
-                0x00006bec       0xb8 utils.o
-                0x00006bec                putChar_Note
+                0x00006c1a       0xb8 utils.o
+                0x00006c1a                putChar_Note
  .text.putChar_Manual
-                0x00006ca4       0x32 utils.o
-                0x00006ca4                putChar_Manual
+                0x00006cd2       0x32 utils.o
+                0x00006cd2                putChar_Manual
  .text.putString_P
-                0x00006cd6       0x2c utils.o
-                0x00006cd6                putString_P
+                0x00006d04       0x2c utils.o
+                0x00006d04                putString_P
  .text.lcd_wordout
-                0x00006d02       0x10 utils.o
-                0x00006d02                lcd_wordout
+                0x00006d30       0x10 utils.o
+                0x00006d30                lcd_wordout
  .text.lcd_noteOut
-                0x00006d12       0xa2 utils.o
-                0x00006d12                lcd_noteOut
+                0x00006d40       0xa2 utils.o
+                0x00006d40                lcd_noteOut
  .text.lcd_ChannelOut
-                0x00006db4       0x22 utils.o
-                0x00006db4                lcd_ChannelOut
+                0x00006de2       0x22 utils.o
+                0x00006de2                lcd_ChannelOut
  .text.lcd_ManualOutDec
-                0x00006dd6       0x24 utils.o
-                0x00006dd6                lcd_ManualOutDec
+                0x00006e04       0x24 utils.o
+                0x00006e04                lcd_ManualOutDec
  .text.lcd_blank
-                0x00006dfa       0x18 utils.o
-                0x00006dfa                lcd_blank
+                0x00006e28       0x18 utils.o
+                0x00006e28                lcd_blank
  .text.lcd_clrEol
-                0x00006e12       0x2e utils.o
-                0x00006e12                lcd_clrEol
+                0x00006e40       0x2e utils.o
+                0x00006e40                lcd_clrEol
  .text.lcd_cursosblink
-                0x00006e40        0xe utils.o
-                0x00006e40                lcd_cursosblink
+                0x00006e6e        0xe utils.o
+                0x00006e6e                lcd_cursosblink
  .text.lcd_cursoroff
-                0x00006e4e        0xc utils.o
-                0x00006e4e                lcd_cursoroff
+                0x00006e7c        0xc utils.o
+                0x00006e7c                lcd_cursoroff
  .text.lcd_waitSymbolOn
-                0x00006e5a       0x1c utils.o
-                0x00006e5a                lcd_waitSymbolOn
+                0x00006e88       0x1c utils.o
+                0x00006e88                lcd_waitSymbolOn
  .text.lcd_waitSymbolOff
-                0x00006e76       0x1c utils.o
-                0x00006e76                lcd_waitSymbolOff
+                0x00006ea4       0x1c utils.o
+                0x00006ea4                lcd_waitSymbolOff
  .text.keylabel_set
-                0x00006e92       0x76 utils.o
-                0x00006e92                keylabel_set
+                0x00006ec0       0x76 utils.o
+                0x00006ec0                keylabel_set
  .text.keylabel_clr
-                0x00006f08       0x28 utils.o
-                0x00006f08                keylabel_clr
+                0x00006f36       0x28 utils.o
+                0x00006f36                keylabel_clr
  .text.keylabel_toLCD
-                0x00006f30       0x3e utils.o
-                0x00006f30                keylabel_toLCD
+                0x00006f5e       0x3e utils.o
+                0x00006f5e                keylabel_toLCD
  .text.keylabel_statcheck
-                0x00006f6e       0x46 utils.o
-                0x00006f6e                keylabel_statcheck
+                0x00006f9c       0x46 utils.o
+                0x00006f9c                keylabel_statcheck
  .text.get_StrLenP
-                0x00006fb4       0x14 utils.o
-                0x00006fb4                get_StrLenP
+                0x00006fe2       0x14 utils.o
+                0x00006fe2                get_StrLenP
  .text.get_StrLen
-                0x00006fc8       0x14 utils.o
-                0x00006fc8                get_StrLen
+                0x00006ff6       0x14 utils.o
+                0x00006ff6                get_StrLen
  .text.reverse_Bits
-                0x00006fdc       0x1a utils.o
-                0x00006fdc                reverse_Bits
- .text.libgcc   0x00006ff6       0x10 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_tablejump2.o)
-                0x00006ff6                __tablejump2__
+                0x0000700a       0x1a utils.o
+                0x0000700a                reverse_Bits
+ .text.libgcc   0x00007024       0x10 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_tablejump2.o)
+                0x00007024                __tablejump2__
  .text.avr-libc
-                0x00007006       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_block.o)
-                0x00007006                eeprom_read_block
-                0x0000700a                eeprom_read_blraw
+                0x00007034       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_block.o)
+                0x00007034                eeprom_read_block
+                0x00007038                eeprom_read_blraw
  .text.avr-libc
-                0x00007026       0x10 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_byte.o)
-                0x00007026                eeprom_read_byte
+                0x00007054       0x10 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_byte.o)
+                0x00007054                eeprom_read_byte
  .text.avr-libc
-                0x00007036        0xa C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_word.o)
-                0x00007036                eeprom_read_word
+                0x00007064        0xa C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_word.o)
+                0x00007064                eeprom_read_word
  .text.avr-libc
-                0x00007040       0x1e C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_block.o)
-                0x00007040                eeprom_update_block
+                0x0000706e       0x1e C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_block.o)
+                0x0000706e                eeprom_update_block
  .text.avr-libc
-                0x0000705e       0x24 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_byte.o)
-                0x0000705e                eeprom_update_byte
-                0x00007060                eeprom_update_r18
+                0x0000708c       0x24 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_byte.o)
+                0x0000708c                eeprom_update_byte
+                0x0000708e                eeprom_update_r18
  .text.avr-libc
-                0x00007082        0x8 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_word.o)
-                0x00007082                eeprom_update_word
-                0x0000708a                . = ALIGN (0x2)
+                0x000070b0        0x8 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_word.o)
+                0x000070b0                eeprom_update_word
+                0x000070b8                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000708a        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
-                0x0000708a                _exit
-                0x0000708a                exit
+ .fini9         0x000070b8        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
+                0x000070b8                _exit
+                0x000070b8                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -1678,11 +1683,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000708a        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
+ .fini0         0x000070b8        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
  *(.fini0)
-                0x0000708e                _etext = .
+                0x000070bc                _etext = .
 
-.data           0x00800200        0x8 load address 0x0000708e
+.data           0x00800200        0x8 load address 0x000070bc
                 0x00800200                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -1716,7 +1721,7 @@ END GROUP
                 0x00800208                _edata = .
                 0x00800208                PROVIDE (__data_end, .)
 
-.bss            0x00800208      0xe2d
+.bss            0x00800208      0xf0e
                 0x00800208                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
@@ -1724,15 +1729,15 @@ END GROUP
                 0x00800208        0x1 ee_prom.o
                 0x00800208                ee_initError
  .bss.adcNr     0x00800209        0x1 hwtimer.o
- .bss.showText.2955
+ .bss.showText.2973
                 0x0080020a        0x1 menu.o
- .bss.logEntryNr.2954
+ .bss.logEntryNr.2972
                 0x0080020b        0x1 menu.o
- .bss.notOnOff.2913
+ .bss.notOnOff.2931
                 0x0080020c        0x1 menu.o
- .bss.maxManNote.2912
+ .bss.maxManNote.2930
                 0x0080020d        0x1 menu.o
- .bss.minManNote.2911
+ .bss.minManNote.2929
                 0x0080020e        0x1 menu.o
  .bss.midiEEPromLoadError
                 0x0080020f        0x1 Midi.o
@@ -1754,9 +1759,8 @@ END GROUP
                 0x00800248                pipe_ModuleTested
                 0x00800249                pipe
                 0x00800349                adcKeys
-                0x0080034f                pipe_ModuleAssnWrite
-                0x00800350                pipe_ModuleAssnRead
-                0x00800351                keyWants
+                0x0080034f                keyWants
+                0x00800355                pipe_Module
                 0x00800357                time_UpTimeUpdated
  COMMON         0x00800358       0x51 lcd_u.o
                 0x00800358                lcd_buffer
@@ -1830,49 +1834,50 @@ END GROUP
                 0x00800962                programMap
                 0x00800be2                midiDataByte
                 0x00800bea                midiLastCommand
- COMMON         0x00800beb      0x41c serial.o
+ COMMON         0x00800beb      0x4fd serial.o
                 0x00800beb                midiTxInIndex
                 0x00800bec                serESPOvflFlag
                 0x00800bed                serESPRxOutIndex
                 0x00800bef                midiRxOvfl
                 0x00800bf0                midiTxOutIndex
-                0x00800bf1                serusbTxOutIndex
-                0x00800bf2                serESPRxInIndex
-                0x00800bf4                midiTxOvfl
-                0x00800bf5                midiRxBuffer
-                0x00800c15                midiTxBuffer
-                0x00800c35                serESPTxOutIndex
-                0x00800c37                midiRxInIndex
-                0x00800c38                serESPTxInIndex
-                0x00800c3a                serusb_Active
-                0x00800c3b                serusbTxInIndex
-                0x00800c3c                serusbRxOutIndex
-                0x00800c3d                serUsbRxBuffer
-                0x00800c7d                serESP_Active
-                0x00800c7e                midiRxOvflCount
-                0x00800c7f                midiTxBytesCount
-                0x00800c81                serUsbTxBuffer
-                0x00800d81                serusbOvflFlag
-                0x00800d82                midiRxOutIndex
-                0x00800d83                midiTxOvflCount
-                0x00800d84                serESPRxBuffer
-                0x00800e04                serESPTxBuffer
-                0x00801004                midiRxBytesCount
-                0x00801006                serusbRxInIndex
- COMMON         0x00801007       0x2e utils.o
-                0x00801007                lcd_cursorIsOn
-                0x00801008                editByte
-                0x00801009                editLong
-                0x0080100d                string_Buf
-                0x00801035                PROVIDE (__bss_end, .)
-                0x0000708e                __data_load_start = LOADADDR (.data)
-                0x00007096                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00800bf1                midiTxLastCmd
+                0x00800bf2                serusbTxOutIndex
+                0x00800bf3                serESPRxInIndex
+                0x00800bf5                midiTxOvfl
+                0x00800bf6                midiRxBuffer
+                0x00800c16                midiTxBuffer
+                0x00800d16                serESPTxOutIndex
+                0x00800d18                midiRxInIndex
+                0x00800d19                serESPTxInIndex
+                0x00800d1b                serusb_Active
+                0x00800d1c                serusbTxInIndex
+                0x00800d1d                serusbRxOutIndex
+                0x00800d1e                serUsbRxBuffer
+                0x00800d5e                serESP_Active
+                0x00800d5f                midiRxOvflCount
+                0x00800d60                midiTxBytesCount
+                0x00800d62                serUsbTxBuffer
+                0x00800e62                serusbOvflFlag
+                0x00800e63                midiRxOutIndex
+                0x00800e64                midiTxOvflCount
+                0x00800e65                serESPRxBuffer
+                0x00800ee5                serESPTxBuffer
+                0x008010e5                midiRxBytesCount
+                0x008010e7                serusbRxInIndex
+ COMMON         0x008010e8       0x2e utils.o
+                0x008010e8                lcd_cursorIsOn
+                0x008010e9                editByte
+                0x008010ea                editLong
+                0x008010ee                string_Buf
+                0x00801116                PROVIDE (__bss_end, .)
+                0x000070bc                __data_load_start = LOADADDR (.data)
+                0x000070c4                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00801035        0x0
+.noinit         0x00801116        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00801035                _end = .
+                0x00801116                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000     0x1000
@@ -1949,161 +1954,161 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0xa78
+.debug_aranges  0x00000000      0xa90
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0xf0 ee_prom.o
+                0x00000000      0x108 ee_prom.o
  .debug_aranges
-                0x000000f0       0x80 hwtimer.o
+                0x00000108       0x80 hwtimer.o
  .debug_aranges
-                0x00000170       0x20 initio.o
+                0x00000188       0x20 initio.o
  .debug_aranges
-                0x00000190       0x70 lcd_u.o
+                0x000001a8       0x70 lcd_u.o
  .debug_aranges
-                0x00000200       0x70 log.o
+                0x00000218       0x70 log.o
  .debug_aranges
-                0x00000270       0x20 main.o
+                0x00000288       0x20 main.o
  .debug_aranges
-                0x00000290      0x380 menu.o
+                0x000002a8      0x380 menu.o
  .debug_aranges
-                0x00000610       0x60 message.o
+                0x00000628       0x60 message.o
  .debug_aranges
-                0x00000670      0x158 Midi.o
+                0x00000688      0x158 Midi.o
  .debug_aranges
-                0x000007c8       0xc0 serial.o
+                0x000007e0       0xc0 serial.o
  .debug_aranges
-                0x00000888      0x130 utils.o
+                0x000008a0      0x130 utils.o
  .debug_aranges
-                0x000009b8       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_block.o)
+                0x000009d0       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_block.o)
  .debug_aranges
-                0x000009d8       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_byte.o)
+                0x000009f0       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_byte.o)
  .debug_aranges
-                0x000009f8       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_word.o)
+                0x00000a10       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_word.o)
  .debug_aranges
-                0x00000a18       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_block.o)
+                0x00000a30       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_block.o)
  .debug_aranges
-                0x00000a38       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_byte.o)
+                0x00000a50       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_byte.o)
  .debug_aranges
-                0x00000a58       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_word.o)
+                0x00000a70       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_word.o)
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0xd837
+.debug_info     0x00000000     0xdcad
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0xbbc C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6/crtatmega2560.o
- .debug_info    0x00000bbc     0x1894 ee_prom.o
- .debug_info    0x00002450      0xf0f hwtimer.o
- .debug_info    0x0000335f       0x83 initio.o
- .debug_info    0x000033e2      0x761 lcd_u.o
- .debug_info    0x00003b43      0x720 log.o
- .debug_info    0x00004263     0x10f3 main.o
- .debug_info    0x00005356     0x4846 menu.o
- .debug_info    0x00009b9c      0x43b message.o
- .debug_info    0x00009fd7     0x1b13 Midi.o
- .debug_info    0x0000baea      0x937 serial.o
- .debug_info    0x0000c421     0x1009 utils.o
- .debug_info    0x0000d42a       0xad C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_block.o)
- .debug_info    0x0000d4d7       0xac C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_byte.o)
- .debug_info    0x0000d583       0xac C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_word.o)
- .debug_info    0x0000d62f       0xae C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_block.o)
- .debug_info    0x0000d6dd       0xad C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_byte.o)
- .debug_info    0x0000d78a       0xad C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_word.o)
+ .debug_info    0x00000bbc     0x1c47 ee_prom.o
+ .debug_info    0x00002803      0xf2d hwtimer.o
+ .debug_info    0x00003730       0x83 initio.o
+ .debug_info    0x000037b3      0x761 lcd_u.o
+ .debug_info    0x00003f14      0x720 log.o
+ .debug_info    0x00004634     0x10f3 main.o
+ .debug_info    0x00005727     0x4879 menu.o
+ .debug_info    0x00009fa0      0x43b message.o
+ .debug_info    0x0000a3db     0x1b72 Midi.o
+ .debug_info    0x0000bf4d      0x94a serial.o
+ .debug_info    0x0000c897     0x1009 utils.o
+ .debug_info    0x0000d8a0       0xad C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_block.o)
+ .debug_info    0x0000d94d       0xac C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_byte.o)
+ .debug_info    0x0000d9f9       0xac C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_word.o)
+ .debug_info    0x0000daa5       0xae C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_block.o)
+ .debug_info    0x0000db53       0xad C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_byte.o)
+ .debug_info    0x0000dc00       0xad C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_word.o)
 
-.debug_abbrev   0x00000000     0x25bb
+.debug_abbrev   0x00000000     0x25e1
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0xb1a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6/crtatmega2560.o
- .debug_abbrev  0x00000b1a      0x29f ee_prom.o
- .debug_abbrev  0x00000db9      0x364 hwtimer.o
- .debug_abbrev  0x0000111d       0x51 initio.o
- .debug_abbrev  0x0000116e      0x23e lcd_u.o
- .debug_abbrev  0x000013ac      0x1d6 log.o
- .debug_abbrev  0x00001582      0x230 main.o
- .debug_abbrev  0x000017b2      0x323 menu.o
- .debug_abbrev  0x00001ad5      0x1c2 message.o
- .debug_abbrev  0x00001c97      0x31b Midi.o
- .debug_abbrev  0x00001fb2      0x2dc serial.o
- .debug_abbrev  0x0000228e      0x2b5 utils.o
- .debug_abbrev  0x00002543       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_block.o)
- .debug_abbrev  0x00002557       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_byte.o)
- .debug_abbrev  0x0000256b       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_word.o)
- .debug_abbrev  0x0000257f       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_block.o)
- .debug_abbrev  0x00002593       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_byte.o)
- .debug_abbrev  0x000025a7       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_word.o)
+ .debug_abbrev  0x00000b1a      0x2af ee_prom.o
+ .debug_abbrev  0x00000dc9      0x364 hwtimer.o
+ .debug_abbrev  0x0000112d       0x51 initio.o
+ .debug_abbrev  0x0000117e      0x23e lcd_u.o
+ .debug_abbrev  0x000013bc      0x1d6 log.o
+ .debug_abbrev  0x00001592      0x230 main.o
+ .debug_abbrev  0x000017c2      0x323 menu.o
+ .debug_abbrev  0x00001ae5      0x1c2 message.o
+ .debug_abbrev  0x00001ca7      0x31b Midi.o
+ .debug_abbrev  0x00001fc2      0x2f2 serial.o
+ .debug_abbrev  0x000022b4      0x2b5 utils.o
+ .debug_abbrev  0x00002569       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_block.o)
+ .debug_abbrev  0x0000257d       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_byte.o)
+ .debug_abbrev  0x00002591       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_word.o)
+ .debug_abbrev  0x000025a5       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_block.o)
+ .debug_abbrev  0x000025b9       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_byte.o)
+ .debug_abbrev  0x000025cd       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_word.o)
 
-.debug_line     0x00000000     0x80cd
+.debug_line     0x00000000     0x8279
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x1f9 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6/crtatmega2560.o
- .debug_line    0x000001f9      0x824 ee_prom.o
- .debug_line    0x00000a1d      0xcb5 hwtimer.o
- .debug_line    0x000016d2       0xf5 initio.o
- .debug_line    0x000017c7      0x471 lcd_u.o
- .debug_line    0x00001c38      0x41d log.o
- .debug_line    0x00002055      0x81f main.o
- .debug_line    0x00002874     0x2a97 menu.o
- .debug_line    0x0000530b      0x347 message.o
- .debug_line    0x00005652     0x1377 Midi.o
- .debug_line    0x000069c9      0x735 serial.o
- .debug_line    0x000070fe      0xc86 utils.o
- .debug_line    0x00007d84       0xab C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_block.o)
- .debug_line    0x00007e2f       0x7a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_byte.o)
- .debug_line    0x00007ea9       0x67 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_word.o)
- .debug_line    0x00007f10       0xa5 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_block.o)
- .debug_line    0x00007fb5       0xb6 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_byte.o)
- .debug_line    0x0000806b       0x62 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_word.o)
+ .debug_line    0x000001f9      0x997 ee_prom.o
+ .debug_line    0x00000b90      0xcb4 hwtimer.o
+ .debug_line    0x00001844       0xf5 initio.o
+ .debug_line    0x00001939      0x471 lcd_u.o
+ .debug_line    0x00001daa      0x41d log.o
+ .debug_line    0x000021c7      0x81f main.o
+ .debug_line    0x000029e6     0x2a97 menu.o
+ .debug_line    0x0000547d      0x347 message.o
+ .debug_line    0x000057c4     0x138d Midi.o
+ .debug_line    0x00006b51      0x759 serial.o
+ .debug_line    0x000072aa      0xc86 utils.o
+ .debug_line    0x00007f30       0xab C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_block.o)
+ .debug_line    0x00007fdb       0x7a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_byte.o)
+ .debug_line    0x00008055       0x67 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eerd_word.o)
+ .debug_line    0x000080bc       0xa5 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_block.o)
+ .debug_line    0x00008161       0xb6 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_byte.o)
+ .debug_line    0x00008217       0x62 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6\libatmega2560.a(eeupd_word.o)
 
-.debug_frame    0x00000000     0x1910
+.debug_frame    0x00000000     0x19d0
  *(.debug_frame)
- .debug_frame   0x00000000      0x304 ee_prom.o
- .debug_frame   0x00000304      0x148 hwtimer.o
- .debug_frame   0x0000044c       0x24 initio.o
- .debug_frame   0x00000470       0xf8 lcd_u.o
- .debug_frame   0x00000568       0xec log.o
- .debug_frame   0x00000654       0x24 main.o
- .debug_frame   0x00000678      0x8ac menu.o
- .debug_frame   0x00000f24       0xa4 message.o
- .debug_frame   0x00000fc8      0x3e8 Midi.o
- .debug_frame   0x000013b0      0x27c serial.o
- .debug_frame   0x0000162c      0x2e4 utils.o
+ .debug_frame   0x00000000      0x3c4 ee_prom.o
+ .debug_frame   0x000003c4      0x148 hwtimer.o
+ .debug_frame   0x0000050c       0x24 initio.o
+ .debug_frame   0x00000530       0xf8 lcd_u.o
+ .debug_frame   0x00000628       0xec log.o
+ .debug_frame   0x00000714       0x24 main.o
+ .debug_frame   0x00000738      0x8ac menu.o
+ .debug_frame   0x00000fe4       0xa4 message.o
+ .debug_frame   0x00001088      0x3e8 Midi.o
+ .debug_frame   0x00001470      0x27c serial.o
+ .debug_frame   0x000016ec      0x2e4 utils.o
 
-.debug_str      0x00000000     0x30e2
+.debug_str      0x00000000     0x3197
  *(.debug_str)
  .debug_str     0x00000000      0x3e6 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega2560/avr6/crtatmega2560.o
- .debug_str     0x000003e6      0x718 ee_prom.o
-                                0x7a3 (size before relaxing)
- .debug_str     0x00000afe      0x425 hwtimer.o
-                                0x5f2 (size before relaxing)
- .debug_str     0x00000f23       0x1a initio.o
+ .debug_str     0x000003e6      0x7b3 ee_prom.o
+                                0x830 (size before relaxing)
+ .debug_str     0x00000b99      0x425 hwtimer.o
+                                0x5f6 (size before relaxing)
+ .debug_str     0x00000fbe       0x1a initio.o
                                 0x179 (size before relaxing)
- .debug_str     0x00000f3d      0x102 lcd_u.o
+ .debug_str     0x00000fd8      0x102 lcd_u.o
                                 0x2cf (size before relaxing)
- .debug_str     0x0000103f      0x1ec log.o
+ .debug_str     0x000010da      0x1ec log.o
                                 0x399 (size before relaxing)
- .debug_str     0x0000122b      0x50e main.o
+ .debug_str     0x000012c6      0x50e main.o
                                 0x894 (size before relaxing)
- .debug_str     0x00001739     0x1299 menu.o
-                               0x1a82 (size before relaxing)
- .debug_str     0x000029d2       0x9a message.o
+ .debug_str     0x000017d4     0x1299 menu.o
+                               0x1a86 (size before relaxing)
+ .debug_str     0x00002a6d       0x9a message.o
                                 0x2d7 (size before relaxing)
- .debug_str     0x00002a6c      0x342 Midi.o
-                                0xa6f (size before relaxing)
- .debug_str     0x00002dae      0x1bf serial.o
-                                0x571 (size before relaxing)
- .debug_str     0x00002f6d      0x175 utils.o
+ .debug_str     0x00002b07      0x34e Midi.o
+                                0xabe (size before relaxing)
+ .debug_str     0x00002e55      0x1cd serial.o
+                                0x57f (size before relaxing)
+ .debug_str     0x00003022      0x175 utils.o
                                 0x649 (size before relaxing)
 
-.debug_loc      0x00000000     0x87b0
+.debug_loc      0x00000000     0x8c22
  *(.debug_loc)
- .debug_loc     0x00000000      0xb66 ee_prom.o
- .debug_loc     0x00000b66      0xbd5 hwtimer.o
- .debug_loc     0x0000173b      0x66b lcd_u.o
- .debug_loc     0x00001da6      0x669 log.o
- .debug_loc     0x0000240f      0x443 main.o
- .debug_loc     0x00002852     0x27e5 menu.o
- .debug_loc     0x00005037      0x18f message.o
- .debug_loc     0x000051c6     0x17aa Midi.o
- .debug_loc     0x00006970      0x993 serial.o
- .debug_loc     0x00007303     0x14ad utils.o
+ .debug_loc     0x00000000      0xfee ee_prom.o
+ .debug_loc     0x00000fee      0xbd5 hwtimer.o
+ .debug_loc     0x00001bc3      0x66b lcd_u.o
+ .debug_loc     0x0000222e      0x669 log.o
+ .debug_loc     0x00002897      0x443 main.o
+ .debug_loc     0x00002cda     0x27e5 menu.o
+ .debug_loc     0x000054bf      0x18f message.o
+ .debug_loc     0x0000564e     0x1794 Midi.o
+ .debug_loc     0x00006de2      0x993 serial.o
+ .debug_loc     0x00007775     0x14ad utils.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -2123,19 +2128,19 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0xda0
+.debug_ranges   0x00000000      0xe00
  *(.debug_ranges)
- .debug_ranges  0x00000000       0xe0 ee_prom.o
- .debug_ranges  0x000000e0       0xe8 hwtimer.o
- .debug_ranges  0x000001c8       0x10 initio.o
- .debug_ranges  0x000001d8       0x78 lcd_u.o
- .debug_ranges  0x00000250       0x90 log.o
- .debug_ranges  0x000002e0       0x28 main.o
- .debug_ranges  0x00000308      0x480 menu.o
- .debug_ranges  0x00000788       0x50 message.o
- .debug_ranges  0x000007d8      0x350 Midi.o
- .debug_ranges  0x00000b28       0xc8 serial.o
- .debug_ranges  0x00000bf0      0x1b0 utils.o
+ .debug_ranges  0x00000000      0x140 ee_prom.o
+ .debug_ranges  0x00000140       0xe8 hwtimer.o
+ .debug_ranges  0x00000228       0x10 initio.o
+ .debug_ranges  0x00000238       0x78 lcd_u.o
+ .debug_ranges  0x000002b0       0x90 log.o
+ .debug_ranges  0x00000340       0x28 main.o
+ .debug_ranges  0x00000368      0x480 menu.o
+ .debug_ranges  0x000007e8       0x50 message.o
+ .debug_ranges  0x00000838      0x350 Midi.o
+ .debug_ranges  0x00000b88       0xc8 serial.o
+ .debug_ranges  0x00000c50      0x1b0 utils.o
 
 .debug_macro
  *(.debug_macro)

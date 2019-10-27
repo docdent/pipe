@@ -19,6 +19,14 @@
 
 #define EE_LOAD_OK 0x00
 #define EE_LOAD_ERROR 0xFF
+#define EE_LOAD_ERROR_EE_STARTINVALID 0xFE
+#define EE_LOAD_ERROR_EE_VERSONINVALID 0xFD
+#define EE_LOAD_ERROR_EE_SIZEINVALID 0xFC
+#define EE_LOAD_ERROR_EE_CRCINVALID 0xFB
+#define EE_LOAD_ERROR_EE_LABELNOTFOUND 0xFA // but structure ended with EE_CHAR_END
+#define EE_LOAD_ERROR_EE_ENDREACHED 0xF9 // structure did not end properly
+#define EE_WRITE_ERROR_EE_OUTOFRANGE 0xF8 
+#define EE_SIZE 4096
 
 extern uint8_t eeprom_ReadManualMap();
 extern uint8_t eeprom_ReadMidiInMap();
@@ -45,6 +53,7 @@ extern void eeprom_Restore();
 extern void eeprom_UpdateALL();
 
 #define EE_CHAR_START 0
+#define EE_CHAR_START2 2
 #define EE_CHAR_BACKUPSTART 1
 #define EE_CHAR_MANUALMAP 'M'
 #define EE_CHAR_MIDIINMAP 'I'
@@ -57,6 +66,36 @@ extern void eeprom_UpdateALL();
 #define EE_CHAR_PROG 'P'
 #define EE_CHAR_SOFTKEYS 'K'
 #define EE_CHAR_MIDITHROUGH 'T'
+#define EE_NR_MANUALMAP 0
+#define EE_NR_MIDIINMAP 1
+#define EE_NR_MIDIOUTMAP 2
+#define EE_NR_MODULEINSTALLED 3
+#define EE_NR_USB 4
+#define EE_NR_REG 5
+#define EE_NR_PROG 6
+#define EE_NR_SOFTKEYS 7
+#define EE_NR_MIDITHROUGH 8
+#define EE_NR_MAX 8
+
+
+
+// startcode; (label, version, size16(data), crc(data), data),  (label, version, size16(data), crc(data), data)... endcode
+typedef struct{
+	uint8_t label;
+	uint8_t version;
+	uint16_t sizeData;
+	uint16_t crcData;
+	uint8_t data; // [0...sizeData-1]
+} ee_dataBlockBasic; // caution: struct is supposed as is and hard coded in functions!
+
+typedef struct{
+	uint8_t label;
+	uint8_t version; 
+	uint16_t size;
+	uint8_t* pMemory;
+} EeVarList_t;
+
+extern const __flash EeVarList_t ee_VarList[];
 
 typedef struct{
 	uint8_t charStart;

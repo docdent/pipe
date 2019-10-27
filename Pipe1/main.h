@@ -50,15 +50,20 @@ serial.c Interface zu ESP8266 via USART3
 menu.c bugfix: call onExitFunction when DataType is OnOff
 menu.c Output HW Config including registers
 0.61
+MIDI out for manual additionally to PipeOut
+coupler working for MIDI out manuals
+0.62
+EEPROM memory structure
+0.63
+MIDI Tx save command and do not transfer note on/off again
+MIDI Tx Buffer set to 256
 
 TODO
-MIDI out for manual additionally to PipeOut
 Show pressed keys
 Save USB Status
 Make USB Baudrate selectable
 Coupler more accurate when more  than 1 source manual
 Show Set of Registers
-EEPROM memory structure
 Program Change like viscount
 Combination in selecteable Bank
 Failsafe for keys from time to time

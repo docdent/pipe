@@ -182,8 +182,13 @@ extern Pipe_t pipe[PIPE_SHIFTBIT_COUNT];
 extern volatile uint8_t pipeProcessing;
 
 extern uint8_t pipe_ModuleTested; // 1 if module reads back output for loop correctly, 0 if not
-extern uint8_t pipe_ModuleAssnRead; // 1 for each module is to be read for messages (if 0 module will still read but make messages)
-extern uint8_t pipe_ModuleAssnWrite; // 1 for each module can be writte (if ==0 module will allways be written 1 (MOSFET off))
+
+typedef struct {
+	uint8_t AssnRead; // 1 for each module is to be read for messages (if 0 module will still read but make messages)
+	uint8_t AssnWrite; // 1 for each module can be writte (if ==0 module will allways be written 1 (MOSFET off))
+} Pipe_Module_t;
+
+extern Pipe_Module_t pipe_Module;
 
 // -------------------- POWER -----------------------
 #define POWERSTATE_FORCE_OFF 0x00 // power on has not started or manually off
