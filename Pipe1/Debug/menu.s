@@ -14,19 +14,19 @@ __zero_reg__ = 1
 menu_enterWriteModule:
 .LFB47:
 	.file 1 ".././menu.c"
-	.loc 1 742 0
+	.loc 1 743 0
 	.cfi_startproc
 .LVL0:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 744 0
+	.loc 1 745 0
 	sts menuModVal,__zero_reg__
 	sts menuModVal+1,__zero_reg__
 	sts menuModVal+2,__zero_reg__
 	sts menuModVal+3,__zero_reg__
-	.loc 1 745 0
+	.loc 1 746 0
 	ldi r24,lo8(1)
 	ldi r25,0
 .LVL1:
@@ -41,19 +41,19 @@ menu_enterWriteModule:
 	mov r20,r24
 .LVL2:
 .LBB44:
-	.loc 1 747 0
+	.loc 1 748 0
 	ldi r19,0
 .LBE44:
-	.loc 1 746 0
+	.loc 1 747 0
 	ldi r30,lo8(pipe+248)
 	ldi r31,hi8(pipe+248)
 .LVL3:
 .LBB45:
-	.loc 1 747 0
+	.loc 1 748 0
 	rjmp .L2
 .LVL4:
 .L4:
-	.loc 1 748 0
+	.loc 1 749 0
 	lds r24,menuModVal
 	lds r25,menuModVal+1
 	lds r26,menuModVal+2
@@ -66,29 +66,29 @@ menu_enterWriteModule:
 	sts menuModVal+1,r25
 	sts menuModVal+2,r26
 	sts menuModVal+3,r27
-	.loc 1 749 0
+	.loc 1 750 0
 	ldd r18,Z+1
 	and r18,r20
 	breq .L3
-	.loc 1 750 0
+	.loc 1 751 0
 	ori r24,1
 	sts menuModVal,r24
 	sts menuModVal+1,r25
 	sts menuModVal+2,r26
 	sts menuModVal+3,r27
 .L3:
-	.loc 1 752 0 discriminator 2
+	.loc 1 753 0 discriminator 2
 	sbiw r30,8
 .LVL5:
-	.loc 1 747 0 discriminator 2
+	.loc 1 748 0 discriminator 2
 	subi r19,lo8(-(1))
 .LVL6:
 .L2:
-	.loc 1 747 0 is_stmt 0 discriminator 1
+	.loc 1 748 0 is_stmt 0 discriminator 1
 	cpi r19,lo8(32)
 	brlo .L4
 .LBE45:
-	.loc 1 755 0 is_stmt 1
+	.loc 1 756 0 is_stmt 1
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -99,24 +99,24 @@ menu_enterWriteModule:
 	.type	menu_exitWriteModule, @function
 menu_exitWriteModule:
 .LFB48:
-	.loc 1 757 0
+	.loc 1 758 0
 	.cfi_startproc
 .LVL7:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 758 0
+	.loc 1 759 0
 	lds r20,menuModVal
 	lds r21,menuModVal+1
 	lds r22,menuModVal+2
 	lds r23,menuModVal+3
 .LVL8:
-	.loc 1 759 0
+	.loc 1 760 0
 	cpi r24,lo8(5)
 	brne .L6
 .LBB46:
-	.loc 1 760 0
+	.loc 1 761 0
 	ldi r26,lo8(1)
 	ldi r27,0
 	lds r0,menuVmodule
@@ -130,55 +130,55 @@ menu_exitWriteModule:
 	mov r19,r26
 .LVL9:
 .LBB47:
-	.loc 1 762 0
+	.loc 1 763 0
 	ldi r25,0
 .LBE47:
-	.loc 1 761 0
+	.loc 1 762 0
 	ldi r30,lo8(pipe+248)
 	ldi r31,hi8(pipe+248)
 .LVL10:
 .LBB48:
-	.loc 1 762 0
+	.loc 1 763 0
 	rjmp .L7
 .LVL11:
 .L10:
-	.loc 1 763 0
+	.loc 1 764 0
 	tst r23
 	brge .L8
-	.loc 1 764 0
+	.loc 1 765 0
 	ldd r24,Z+1
 	or r24,r19
 	std Z+1,r24
 	rjmp .L9
 .L8:
-	.loc 1 766 0
+	.loc 1 767 0
 	ldd r18,Z+1
 	mov r24,r26
 	com r24
 	and r24,r18
 	std Z+1,r24
 .L9:
-	.loc 1 768 0 discriminator 2
+	.loc 1 769 0 discriminator 2
 	lsl r20
 	rol r21
 	rol r22
 	rol r23
 .LVL12:
-	.loc 1 769 0 discriminator 2
+	.loc 1 770 0 discriminator 2
 	sbiw r30,8
 .LVL13:
-	.loc 1 762 0 discriminator 2
+	.loc 1 763 0 discriminator 2
 	subi r25,lo8(-(1))
 .LVL14:
 .L7:
-	.loc 1 762 0 is_stmt 0 discriminator 1
+	.loc 1 763 0 is_stmt 0 discriminator 1
 	cpi r25,lo8(32)
 	brlo .L10
 .LVL15:
 .L6:
 .LBE48:
 .LBE46:
-	.loc 1 773 0 is_stmt 1
+	.loc 1 774 0 is_stmt 1
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -189,14 +189,14 @@ menu_exitWriteModule:
 	.type	menuOnEnterModSel, @function
 menuOnEnterModSel:
 .LFB51:
-	.loc 1 801 0
+	.loc 1 802 0
 	.cfi_startproc
 .LVL16:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 803 0
+	.loc 1 804 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,14
@@ -204,7 +204,7 @@ menuOnEnterModSel:
 	lpm r25,Z+
 .LVL17:
 	sts menuVmodule,r24
-	.loc 1 805 0
+	.loc 1 806 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -215,14 +215,14 @@ menuOnEnterModSel:
 	.type	menuOnEnterMidiInCh, @function
 menuOnEnterMidiInCh:
 .LFB52:
-	.loc 1 807 0
+	.loc 1 808 0
 	.cfi_startproc
 .LVL18:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 809 0
+	.loc 1 810 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,14
@@ -230,7 +230,7 @@ menuOnEnterMidiInCh:
 	lpm r25,Z+
 .LVL19:
 	sts menuVmidiChan,r24
-	.loc 1 811 0
+	.loc 1 812 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -241,21 +241,21 @@ menuOnEnterMidiInCh:
 	.type	menuOnEnterMidiInSec, @function
 menuOnEnterMidiInSec:
 .LFB53:
-	.loc 1 813 0
+	.loc 1 814 0
 	.cfi_startproc
 .LVL20:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 815 0
+	.loc 1 816 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,14
 	lpm r18,Z+
 	lpm r19,Z+
 	sts menuVsection,r18
-	.loc 1 816 0
+	.loc 1 817 0
 	lds r24,menuVmidiChan
 .LVL21:
 	andi r24,lo8(15)
@@ -273,7 +273,7 @@ menuOnEnterMidiInSec:
 	rol r25
 	sts DataAdressOffset+1,r25
 	sts DataAdressOffset,r24
-	.loc 1 818 0
+	.loc 1 819 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -284,14 +284,14 @@ menuOnEnterMidiInSec:
 	.type	menuOnEnterModManual, @function
 menuOnEnterModManual:
 .LFB54:
-	.loc 1 820 0
+	.loc 1 821 0
 	.cfi_startproc
 .LVL22:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 822 0
+	.loc 1 823 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,14
@@ -299,7 +299,7 @@ menuOnEnterModManual:
 	lpm r25,Z+
 .LVL23:
 	sts menuVmanual,r24
-	.loc 1 824 0
+	.loc 1 825 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -310,14 +310,14 @@ menuOnEnterModManual:
 	.type	menuOnEnterModSec, @function
 menuOnEnterModSec:
 .LFB55:
-	.loc 1 826 0
+	.loc 1 827 0
 	.cfi_startproc
 .LVL24:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 828 0
+	.loc 1 829 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,14
@@ -325,7 +325,7 @@ menuOnEnterModSec:
 	lpm r25,Z+
 .LVL25:
 	sts menuVsection,r24
-	.loc 1 829 0
+	.loc 1 830 0
 	lds r18,menuVmanual
 	andi r18,lo8(15)
 	ldi r19,0
@@ -349,7 +349,7 @@ menuOnEnterModSec:
 	adc r25,r19
 	sts DataAdressOffset+1,r25
 	sts DataAdressOffset,r24
-	.loc 1 831 0
+	.loc 1 832 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -360,14 +360,14 @@ menuOnEnterModSec:
 	.type	menuOnEnterModSecReg, @function
 menuOnEnterModSecReg:
 .LFB56:
-	.loc 1 833 0
+	.loc 1 834 0
 	.cfi_startproc
 .LVL26:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 835 0
+	.loc 1 836 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,14
@@ -375,7 +375,7 @@ menuOnEnterModSecReg:
 	lpm r25,Z+
 .LVL27:
 	sts menuVsection,r24
-	.loc 1 836 0
+	.loc 1 837 0
 	andi r24,lo8(7)
 	ldi r25,0
 	movw r18,r24
@@ -385,7 +385,7 @@ menuOnEnterModSecReg:
 	adc r25,r19
 	sts DataAdressOffset+1,r25
 	sts DataAdressOffset,r24
-	.loc 1 838 0
+	.loc 1 839 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -396,24 +396,24 @@ menuOnEnterModSecReg:
 	.type	menuOnEnterKey, @function
 menuOnEnterKey:
 .LFB57:
-	.loc 1 841 0
+	.loc 1 842 0
 	.cfi_startproc
 .LVL28:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 844 0
+	.loc 1 845 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,14
 	lpm r24,Z+
 	lpm r25,Z+
 .LVL29:
-	.loc 1 845 0
+	.loc 1 846 0
 	cpi r24,lo8(4)
 	brsh .L18
-	.loc 1 846 0
+	.loc 1 847 0
 	movw r30,r24
 	clr r31
 	lsl r30
@@ -427,7 +427,7 @@ menuOnEnterKey:
 	sts menuVMenuSoftKey,r24
 .LVL31:
 .L18:
-	.loc 1 849 0
+	.loc 1 850 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -438,17 +438,17 @@ menuOnEnterKey:
 	.type	menuOnExitMidiThrough, @function
 menuOnExitMidiThrough:
 .LFB11:
-	.loc 1 425 0
+	.loc 1 426 0
 	.cfi_startproc
 .LVL32:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 427 0
+	.loc 1 428 0
 	call eeprom_UpdateMidiThrough
 .LVL33:
-	.loc 1 429 0
+	.loc 1 430 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -459,7 +459,7 @@ menuOnExitMidiThrough:
 	.type	menuOnExitRegisterEdit, @function
 menuOnExitRegisterEdit:
 .LFB14:
-	.loc 1 444 0
+	.loc 1 445 0
 	.cfi_startproc
 .LVL34:
 	push r17
@@ -478,11 +478,11 @@ menuOnExitRegisterEdit:
 /* frame size = 0 */
 /* stack size = 3 */
 .L__stack_usage = 3
-	.loc 1 445 0
+	.loc 1 446 0
 	cpi r24,lo8(6)
 	breq .L21
 .LBB49:
-	.loc 1 447 0
+	.loc 1 448 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,14
@@ -497,16 +497,16 @@ menuOnExitRegisterEdit:
 	lsl r24
 	lsl r24
 .LVL36:
-	.loc 1 448 0
+	.loc 1 449 0
 	ld r29,Z
 .LVL37:
 .LBB50:
-	.loc 1 449 0
+	.loc 1 450 0
 	ldi r28,0
 	rjmp .L22
 .LVL38:
 .L23:
-	.loc 1 450 0 discriminator 3
+	.loc 1 451 0 discriminator 3
 	ldi r17,lo8(1)
 	add r17,r24
 .LVL39:
@@ -516,24 +516,24 @@ menuOnExitRegisterEdit:
 	rol r22
 	call register_onOff
 .LVL40:
-	.loc 1 451 0 discriminator 3
+	.loc 1 452 0 discriminator 3
 	lsl r29
 .LVL41:
-	.loc 1 449 0 discriminator 3
+	.loc 1 450 0 discriminator 3
 	subi r28,lo8(-(1))
 .LVL42:
-	.loc 1 450 0 discriminator 3
+	.loc 1 451 0 discriminator 3
 	mov r24,r17
 .LVL43:
 .L22:
-	.loc 1 449 0 discriminator 1
+	.loc 1 450 0 discriminator 1
 	cpi r28,lo8(8)
 	brlo .L23
 .LVL44:
 .L21:
 .LBE50:
 .LBE49:
-	.loc 1 455 0
+	.loc 1 456 0
 	ldi r24,0
 /* epilogue start */
 	pop r29
@@ -548,20 +548,20 @@ menuOnExitRegisterEdit:
 	.type	softKeyRegOff, @function
 softKeyRegOff:
 .LFB37:
-	.loc 1 604 0
+	.loc 1 605 0
 	.cfi_startproc
 .LVL45:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 605 0
-	cpse r24,__zero_reg__
 	.loc 1 606 0
+	cpse r24,__zero_reg__
+	.loc 1 607 0
 	call midi_resetRegisters
 .LVL46:
 .L25:
-	.loc 1 609 0
+	.loc 1 610 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -572,14 +572,14 @@ softKeyRegOff:
 	.type	menuOnExitCoupler, @function
 menuOnExitCoupler:
 .LFB16:
-	.loc 1 464 0
+	.loc 1 465 0
 	.cfi_startproc
 .LVL47:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 466 0
+	.loc 1 467 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,14
@@ -589,18 +589,18 @@ menuOnExitCoupler:
 	subi r24,lo8(midi_Couplers)
 	sbci r25,hi8(midi_Couplers)
 .LVL49:
-	.loc 1 467 0
+	.loc 1 468 0
 	movw r30,r24
 	clr r31
 	subi r30,lo8(-(midi_Couplers))
 	sbci r31,hi8(-(midi_Couplers))
 	ld r18,Z
 	cpse r18,__zero_reg__
-	.loc 1 469 0
+	.loc 1 470 0
 	call set_Coupler
 .LVL50:
 .L27:
-	.loc 1 472 0
+	.loc 1 473 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -611,27 +611,27 @@ menuOnExitCoupler:
 	.type	menuOnExitSaveProgram, @function
 menuOnExitSaveProgram:
 .LFB38:
-	.loc 1 612 0
+	.loc 1 613 0
 	.cfi_startproc
 .LVL51:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 613 0
+	.loc 1 614 0
 	cpi r24,lo8(6)
 	breq .L29
-	.loc 1 613 0 is_stmt 0 discriminator 1
+	.loc 1 614 0 is_stmt 0 discriminator 1
 	lds r24,menuVKombination
 .LVL52:
 	cpi r24,lo8(64)
 	brsh .L29
-	.loc 1 614 0 is_stmt 1
+	.loc 1 615 0 is_stmt 1
 	ldi r22,lo8(-1)
 	call register_toProgram
 .LVL53:
 .L29:
-	.loc 1 617 0
+	.loc 1 618 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -642,17 +642,17 @@ menuOnExitSaveProgram:
 	.type	menuOnExitKeys, @function
 menuOnExitKeys:
 .LFB43:
-	.loc 1 651 0
+	.loc 1 652 0
 	.cfi_startproc
 .LVL54:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 653 0
+	.loc 1 654 0
 	call eeprom_UpdateSoftkeys
 .LVL55:
-	.loc 1 655 0
+	.loc 1 656 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -663,7 +663,7 @@ menuOnExitKeys:
 	.type	menu_readModule, @function
 menu_readModule:
 .LFB49:
-	.loc 1 775 0
+	.loc 1 776 0
 	.cfi_startproc
 .LVL56:
 	push r12
@@ -687,7 +687,7 @@ menu_readModule:
 /* stack size = 4 */
 .L__stack_usage = 4
 .LVL57:
-	.loc 1 778 0
+	.loc 1 779 0
 	ldi r24,lo8(1)
 	ldi r25,0
 .LVL58:
@@ -702,61 +702,61 @@ menu_readModule:
 	mov r18,r24
 .LVL59:
 .LBB51:
-	.loc 1 780 0
+	.loc 1 781 0
 	ldi r25,0
 .LBE51:
-	.loc 1 779 0
+	.loc 1 780 0
 	ldi r30,lo8(pipe+248)
 	ldi r31,hi8(pipe+248)
 .LVL60:
-	.loc 1 777 0
+	.loc 1 778 0
 	mov r12,__zero_reg__
 	mov r13,__zero_reg__
 	movw r14,r12
 .LBB52:
-	.loc 1 780 0
+	.loc 1 781 0
 	rjmp .L32
 .LVL61:
 .L34:
-	.loc 1 781 0
+	.loc 1 782 0
 	lsl r12
 	rol r13
 	rol r14
 	rol r15
 .LVL62:
-	.loc 1 782 0
+	.loc 1 783 0
 	ldd r24,Z+6
 	and r24,r18
 	breq .L33
-	.loc 1 783 0
+	.loc 1 784 0
 	set
 	bld r12,0
 .LVL63:
 .L33:
-	.loc 1 785 0 discriminator 2
+	.loc 1 786 0 discriminator 2
 	sbiw r30,8
 .LVL64:
-	.loc 1 780 0 discriminator 2
+	.loc 1 781 0 discriminator 2
 	subi r25,lo8(-(1))
 .LVL65:
 .L32:
-	.loc 1 780 0 is_stmt 0 discriminator 1
+	.loc 1 781 0 is_stmt 0 discriminator 1
 	cpi r25,lo8(32)
 	brlo .L34
 .LBE52:
-	.loc 1 787 0 is_stmt 1
+	.loc 1 788 0 is_stmt 1
 	ldi r24,lo8(30)
 	call lcd_goto
 .LVL66:
-	.loc 1 788 0
+	.loc 1 789 0
 	sts editLong,r12
 	sts editLong+1,r13
 	sts editLong+2,r14
 	sts editLong+3,r15
-	.loc 1 789 0
+	.loc 1 790 0
 	call lcd_longout
 .LVL67:
-	.loc 1 791 0
+	.loc 1 792 0
 	ldi r24,0
 /* epilogue start */
 	pop r15
@@ -773,19 +773,19 @@ menu_readModule:
 	.type	menu_testModule, @function
 menu_testModule:
 .LFB50:
-	.loc 1 793 0
+	.loc 1 794 0
 	.cfi_startproc
 .LVL69:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 795 0
+	.loc 1 796 0
 	ldi r24,lo8(30)
 .LVL70:
 	call lcd_goto
 .LVL71:
-	.loc 1 796 0
+	.loc 1 797 0
 	lds r24,menuVmodule
 	call test_PipeModule
 .LVL72:
@@ -793,10 +793,10 @@ menu_testModule:
 	sts editLong+1,r23
 	sts editLong+2,r24
 	sts editLong+3,r25
-	.loc 1 797 0
+	.loc 1 798 0
 	call lcd_longout
 .LVL73:
-	.loc 1 799 0
+	.loc 1 800 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -807,7 +807,7 @@ menu_testModule:
 	.type	menuOnEnterTune, @function
 menuOnEnterTune:
 .LFB59:
-	.loc 1 861 0
+	.loc 1 862 0
 	.cfi_startproc
 .LVL74:
 	push r28
@@ -819,15 +819,15 @@ menuOnEnterTune:
 /* stack size = 1 */
 .L__stack_usage = 1
 .LVL75:
-	.loc 1 868 0
+	.loc 1 869 0
 	cpi r24,lo8(-1)
 	breq .+2
 	rjmp .L37
-	.loc 1 870 0
-	sts minManNote.2929,r24
 	.loc 1 871 0
-	sts maxManNote.2930,__zero_reg__
+	sts minManNote.2952,r24
 	.loc 1 872 0
+	sts maxManNote.2953,__zero_reg__
+	.loc 1 873 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,14
@@ -835,19 +835,19 @@ menuOnEnterTune:
 	lpm r25,Z+
 .LVL76:
 	sts menuVmanual,r24
-	.loc 1 873 0
+	.loc 1 874 0
 	cpi r24,lo8(4)
 	brlo .L38
-	.loc 1 874 0
+	.loc 1 875 0
 	sts menuVmanual,__zero_reg__
 .L38:
-	.loc 1 861 0 discriminator 1
+	.loc 1 862 0 discriminator 1
 	ldi r18,0
 	rjmp .L39
 .LVL77:
 .L42:
 .LBB53:
-	.loc 1 877 0
+	.loc 1 878 0
 	lds r24,menuVmanual
 	ldi r25,0
 	mov r30,r18
@@ -872,13 +872,13 @@ menuOnEnterTune:
 	subi r26,lo8(-(manualMap))
 	sbci r27,hi8(-(manualMap))
 	ld r19,X
-	lds r20,minManNote.2929
+	lds r20,minManNote.2952
 	cp r19,r20
 	brsh .L40
-	.loc 1 878 0
-	sts minManNote.2929,r19
+	.loc 1 879 0
+	sts minManNote.2952,r19
 .L40:
-	.loc 1 880 0
+	.loc 1 881 0
 	movw r20,r30
 	lsl r20
 	rol r21
@@ -898,211 +898,211 @@ menuOnEnterTune:
 	subi r30,lo8(-(manualMap))
 	sbci r31,hi8(-(manualMap))
 	ldd r24,Z+1
-	lds r25,maxManNote.2930
+	lds r25,maxManNote.2953
 	cp r25,r24
 	brsh .L41
-	.loc 1 881 0
-	sts maxManNote.2930,r24
+	.loc 1 882 0
+	sts maxManNote.2953,r24
 .L41:
-	.loc 1 876 0 discriminator 2
+	.loc 1 877 0 discriminator 2
 	subi r18,lo8(-(1))
 .LVL78:
 .L39:
-	.loc 1 876 0 is_stmt 0 discriminator 1
+	.loc 1 877 0 is_stmt 0 discriminator 1
 	cpi r18,lo8(4)
 	brlo .L42
 .LBE53:
-	.loc 1 884 0 is_stmt 1
-	lds r24,minManNote.2929
+	.loc 1 885 0 is_stmt 1
+	lds r24,minManNote.2952
 	tst r24
 	brge .L43
-	.loc 1 886 0
+	.loc 1 887 0
 	ldi r24,lo8(30)
 	call lcd_goto
 .LVL79:
-	.loc 1 887 0
+	.loc 1 888 0
 	ldi r24,lo8(stringNotAssigen)
 	ldi r25,hi8(stringNotAssigen)
 	call lcd_puts_P
 .LVL80:
-	.loc 1 888 0
+	.loc 1 889 0
 	ldi r24,lo8(-1)
 	sts menuNote,r24
 	rjmp .L44
 .LVL81:
 .L43:
-	.loc 1 890 0
-	sts menuNote,r24
 	.loc 1 891 0
-	sts notOnOff.2931,__zero_reg__
+	sts menuNote,r24
+	.loc 1 892 0
+	sts notOnOff.2954,__zero_reg__
 .LVL82:
 .L44:
-	.loc 1 893 0
+	.loc 1 894 0
 	ldi r22,lo8(keylabel_exit)
 	ldi r23,hi8(keylabel_exit)
 	ldi r24,0
 	call keylabel_set
 .LVL83:
-	.loc 1 894 0
+	.loc 1 895 0
 	ldi r22,lo8(keylabel_onoff)
 	ldi r23,hi8(keylabel_onoff)
 	ldi r24,lo8(1)
 	call keylabel_set
 .LVL84:
-	.loc 1 895 0
+	.loc 1 896 0
 	ldi r22,lo8(keylabel_minus)
 	ldi r23,hi8(keylabel_minus)
 	ldi r24,lo8(2)
 	call keylabel_set
 .LVL85:
-	.loc 1 896 0
+	.loc 1 897 0
 	ldi r22,lo8(keylabel_plus)
 	ldi r23,hi8(keylabel_plus)
 	ldi r24,lo8(3)
 	call keylabel_set
 .LVL86:
-	.loc 1 897 0
+	.loc 1 898 0
 	call keylabel_toLCD
 .LVL87:
-	.loc 1 866 0
+	.loc 1 867 0
 	ldi r28,lo8(-1)
 	rjmp .L45
 .LVL88:
 .L37:
-	.loc 1 898 0
+	.loc 1 899 0
 	lds r22,menuNote
 	cpi r22,lo8(-1)
 	brne .+2
 	rjmp .L58
-	.loc 1 900 0
+	.loc 1 901 0
 	cpi r24,lo8(1)
 	brne .L46
-	.loc 1 901 0
-	lds r24,maxManNote.2930
+	.loc 1 902 0
+	lds r24,maxManNote.2953
 .LVL89:
 	cp r22,r24
 	brlo .+2
 	rjmp .L59
-	.loc 1 902 0
+	.loc 1 903 0
 	ldi r20,0
 	lds r24,menuVmanual
 	call manual_NoteOnOff
 .LVL90:
-	.loc 1 903 0
+	.loc 1 904 0
 	lds r22,menuNote
 	subi r22,lo8(-(1))
 	sts menuNote,r22
-	.loc 1 904 0
-	lds r24,notOnOff.2931
+	.loc 1 905 0
+	lds r24,notOnOff.2954
 	cpi r24,lo8(1)
 	breq .+2
 	rjmp .L60
-	.loc 1 905 0
+	.loc 1 906 0
 	ldi r20,lo8(1)
 	lds r24,menuVmanual
 	call manual_NoteOnOff
 .LVL91:
-	.loc 1 866 0
+	.loc 1 867 0
 	ldi r28,lo8(-1)
 	rjmp .L45
 .LVL92:
 .L46:
-	.loc 1 908 0
+	.loc 1 909 0
 	cpi r24,lo8(4)
 	brne .L47
-	.loc 1 909 0
-	lds r24,minManNote.2929
+	.loc 1 910 0
+	lds r24,minManNote.2952
 .LVL93:
 	cp r24,r22
 	brlo .+2
 	rjmp .L61
-	.loc 1 910 0
+	.loc 1 911 0
 	ldi r20,0
 	lds r24,menuVmanual
 	call manual_NoteOnOff
 .LVL94:
-	.loc 1 911 0
+	.loc 1 912 0
 	lds r22,menuNote
 	subi r22,lo8(-(-1))
 	sts menuNote,r22
-	.loc 1 912 0
-	lds r24,notOnOff.2931
+	.loc 1 913 0
+	lds r24,notOnOff.2954
 	cpi r24,lo8(1)
 	brne .L62
-	.loc 1 913 0
+	.loc 1 914 0
 	ldi r20,lo8(1)
 	lds r24,menuVmanual
 	call manual_NoteOnOff
 .LVL95:
-	.loc 1 866 0
+	.loc 1 867 0
 	ldi r28,lo8(-1)
 	rjmp .L45
 .LVL96:
 .L47:
-	.loc 1 916 0
+	.loc 1 917 0
 	cpi r24,lo8(3)
 	brne .L48
-	.loc 1 917 0
-	lds r24,notOnOff.2931
+	.loc 1 918 0
+	lds r24,notOnOff.2954
 .LVL97:
 	cpse r24,__zero_reg__
 	rjmp .L49
-	.loc 1 918 0
+	.loc 1 919 0
 	ldi r24,lo8(1)
-	sts notOnOff.2931,r24
+	sts notOnOff.2954,r24
 	rjmp .L50
 .L49:
-	.loc 1 920 0
-	sts notOnOff.2931,__zero_reg__
+	.loc 1 921 0
+	sts notOnOff.2954,__zero_reg__
 .L50:
-	.loc 1 922 0
-	lds r20,notOnOff.2931
+	.loc 1 923 0
+	lds r20,notOnOff.2954
 	lds r24,menuVmanual
 	call manual_NoteOnOff
 .LVL98:
-	.loc 1 866 0
+	.loc 1 867 0
 	ldi r28,lo8(-1)
 	rjmp .L45
 .LVL99:
 .L48:
-	.loc 1 923 0
+	.loc 1 924 0
 	cpi r24,lo8(2)
 	breq .L51
-	.loc 1 923 0 is_stmt 0 discriminator 1
+	.loc 1 924 0 is_stmt 0 discriminator 1
 	cpi r24,lo8(6)
 	brne .L52
 .L51:
-	.loc 1 924 0 is_stmt 1
+	.loc 1 925 0 is_stmt 1
 	ldi r20,0
 	lds r24,menuVmanual
 .LVL100:
 	call manual_NoteOnOff
 .LVL101:
-	.loc 1 925 0
+	.loc 1 926 0
 	ldi r28,0
 	rjmp .L45
 .LVL102:
 .L52:
-	.loc 1 926 0
+	.loc 1 927 0
 	cpi r24,lo8(5)
 	brne .L63
-	.loc 1 927 0
+	.loc 1 928 0
 	ldi r20,0
 	lds r24,menuVmanual
 .LVL103:
 	call manual_NoteOnOff
 .LVL104:
-	.loc 1 928 0
+	.loc 1 929 0
 	ldi r28,0
 	rjmp .L45
 .LVL105:
 .L58:
-	.loc 1 899 0
+	.loc 1 900 0
 	ldi r28,0
 	rjmp .L45
 .LVL106:
 .L59:
-	.loc 1 866 0
+	.loc 1 867 0
 	ldi r28,lo8(-1)
 	rjmp .L45
 .L60:
@@ -1119,59 +1119,59 @@ menuOnEnterTune:
 	ldi r28,lo8(-1)
 .LVL108:
 .L45:
-	.loc 1 930 0
+	.loc 1 931 0
 	cpi r28,lo8(-1)
 	brne .L53
-	.loc 1 932 0
+	.loc 1 933 0
 	lds r24,menuNote
 	cpi r24,lo8(-1)
 	breq .L54
-	.loc 1 934 0
+	.loc 1 935 0
 	ldi r24,lo8(30)
 	call lcd_goto
 .LVL109:
-	.loc 1 935 0
+	.loc 1 936 0
 	lds r24,menuNote
 	call lcd_noteOut
 .LVL110:
-	.loc 1 936 0
+	.loc 1 937 0
 	ldi r24,lo8(32)
 	call lcd_putc
 .LVL111:
-	.loc 1 937 0
-	lds r24,notOnOff.2931
+	.loc 1 938 0
+	lds r24,notOnOff.2954
 	cpse r24,__zero_reg__
 	rjmp .L55
-	.loc 1 938 0
+	.loc 1 939 0
 	ldi r24,lo8(97)
 	call lcd_putc
 .LVL112:
-	.loc 1 939 0
+	.loc 1 940 0
 	ldi r24,lo8(117)
 	call lcd_putc
 .LVL113:
-	.loc 1 940 0
+	.loc 1 941 0
 	ldi r24,lo8(115)
 	call lcd_putc
 .LVL114:
 	rjmp .L56
 .L55:
-	.loc 1 942 0
+	.loc 1 943 0
 	ldi r24,lo8(101)
 	call lcd_putc
 .LVL115:
-	.loc 1 943 0
+	.loc 1 944 0
 	ldi r24,lo8(105)
 	call lcd_putc
 .LVL116:
-	.loc 1 944 0
+	.loc 1 945 0
 	ldi r24,lo8(110)
 	call lcd_putc
 .LVL117:
 .L56:
-	.loc 1 946 0
+	.loc 1 947 0
 	ldi r22,lo8(1)
-	lds r24,notOnOff.2931
+	lds r24,notOnOff.2954
 	cpse r24,__zero_reg__
 	rjmp .L57
 	ldi r22,0
@@ -1180,16 +1180,16 @@ menuOnEnterTune:
 	call keylabel_statcheck
 .LVL118:
 	cpse r24,__zero_reg__
-	.loc 1 947 0
+	.loc 1 948 0
 	call keylabel_toLCD
 .LVL119:
 .L54:
-	.loc 1 950 0
+	.loc 1 951 0
 	ldi r24,lo8(30)
 	call lcd_goto
 .LVL120:
 .L53:
-	.loc 1 953 0
+	.loc 1 954 0
 	mov r24,r28
 /* epilogue start */
 	pop r28
@@ -1203,17 +1203,17 @@ menuOnEnterTune:
 	.type	menuOnExitMidiActiveSense, @function
 menuOnExitMidiActiveSense:
 .LFB60:
-	.loc 1 955 0
+	.loc 1 956 0
 	.cfi_startproc
 .LVL122:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 957 0
+	.loc 1 958 0
 	call eeprom_UpdateMidiOutMap
 .LVL123:
-	.loc 1 959 0
+	.loc 1 960 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -1224,17 +1224,17 @@ menuOnExitMidiActiveSense:
 	.type	menuOnExitMidiOut, @function
 menuOnExitMidiOut:
 .LFB64:
-	.loc 1 1022 0
+	.loc 1 1023 0
 	.cfi_startproc
 .LVL124:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1024 0
+	.loc 1 1025 0
 	call eeprom_UpdateMidiOutMap
 .LVL125:
-	.loc 1 1026 0
+	.loc 1 1027 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -1245,17 +1245,17 @@ menuOnExitMidiOut:
 	.type	menuOnExitMidiIn, @function
 menuOnExitMidiIn:
 .LFB63:
-	.loc 1 1016 0
+	.loc 1 1017 0
 	.cfi_startproc
 .LVL126:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1018 0
+	.loc 1 1019 0
 	call eeprom_UpdateMidiInMap
 .LVL127:
-	.loc 1 1020 0
+	.loc 1 1021 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -1266,26 +1266,26 @@ menuOnExitMidiIn:
 	.type	menuOnExitManual, @function
 menuOnExitManual:
 .LFB65:
-	.loc 1 1028 0
+	.loc 1 1029 0
 	.cfi_startproc
 .LVL128:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1030 0
+	.loc 1 1031 0
 	call eeprom_UpdateManualMap
 .LVL129:
-	.loc 1 1031 0
+	.loc 1 1032 0
 	call registers_CalcCount
 .LVL130:
-	.loc 1 1032 0
+	.loc 1 1033 0
 	call eeprom_UpdateReg
 .LVL131:
-	.loc 1 1033 0
+	.loc 1 1034 0
 	call Midi_updateManualRange
 .LVL132:
-	.loc 1 1035 0
+	.loc 1 1036 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -1296,17 +1296,17 @@ menuOnExitManual:
 	.type	menuOnExitModules, @function
 menuOnExitModules:
 .LFB66:
-	.loc 1 1037 0
+	.loc 1 1038 0
 	.cfi_startproc
 .LVL133:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1039 0
+	.loc 1 1040 0
 	call eeprom_UpdateModules
 .LVL134:
-	.loc 1 1041 0
+	.loc 1 1042 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -1317,7 +1317,7 @@ menuOnExitModules:
 	.type	menuOnEnterUSBprotokoll, @function
 menuOnEnterUSBprotokoll:
 .LFB72:
-	.loc 1 1141 0
+	.loc 1 1142 0
 	.cfi_startproc
 .LVL135:
 	push r28
@@ -1328,19 +1328,19 @@ menuOnEnterUSBprotokoll:
 /* frame size = 0 */
 /* stack size = 1 */
 .L__stack_usage = 1
-	.loc 1 1143 0
+	.loc 1 1144 0
 	ldi r24,lo8(usbLog)
 	ldi r25,hi8(usbLog)
 .LVL136:
 	call serial0SER_USB_sendStringP
 .LVL137:
-	.loc 1 1144 0
+	.loc 1 1145 0
 	call log_count
 .LVL138:
-	.loc 1 1145 0
+	.loc 1 1146 0
 	cpse r24,__zero_reg__
 	rjmp .L70
-	.loc 1 1146 0
+	.loc 1 1147 0
 	ldi r24,lo8(usbEmpty)
 	ldi r25,hi8(usbEmpty)
 .LVL139:
@@ -1349,30 +1349,30 @@ menuOnEnterUSBprotokoll:
 	rjmp .L71
 .LVL141:
 .L72:
-	.loc 1 1149 0
+	.loc 1 1150 0
 	ldi r22,lo8(-1)
 	mov r24,r28
 	call log_getShortTextFromIndex
 .LVL142:
 	call serial0SER_USB_sendString
 .LVL143:
-	.loc 1 1150 0
+	.loc 1 1151 0
 	ldi r24,lo8(cr_lf)
 	ldi r25,hi8(cr_lf)
 	call serial0SER_USB_sendStringP
 .LVL144:
-	.loc 1 1151 0
+	.loc 1 1152 0
 	mov r24,r28
 	call log_getErrorText
 .LVL145:
 	call serial0SER_USB_sendStringP
 .LVL146:
-	.loc 1 1152 0
+	.loc 1 1153 0
 	ldi r24,lo8(cr_lf)
 	ldi r25,hi8(cr_lf)
 	call serial0SER_USB_sendStringP
 .LVL147:
-	.loc 1 1148 0
+	.loc 1 1149 0
 	mov r24,r28
 .LVL148:
 .L70:
@@ -1383,7 +1383,7 @@ menuOnEnterUSBprotokoll:
 	rjmp .L72
 .LVL150:
 .L71:
-	.loc 1 1156 0
+	.loc 1 1157 0
 	ldi r24,0
 /* epilogue start */
 	pop r28
@@ -1396,37 +1396,37 @@ menuOnEnterUSBprotokoll:
 	.type	menuOnExitUSBactive, @function
 menuOnExitUSBactive:
 .LFB73:
-	.loc 1 1160 0
+	.loc 1 1161 0
 	.cfi_startproc
 .LVL151:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1162 0
+	.loc 1 1163 0
 	call eeprom_UpdateUSB
 .LVL152:
-	.loc 1 1163 0
-	lds r24,serusb_Active
+	.loc 1 1164 0
+	lds r24,serUSB_Active
 	cpi r24,lo8(-1)
 	brne .L74
-	.loc 1 1164 0
+	.loc 1 1165 0
 	ldi r24,lo8(HelloMsg)
 	ldi r25,hi8(HelloMsg)
 	call serial0SER_USB_sendStringP
 .LVL153:
-	.loc 1 1165 0
+	.loc 1 1166 0
 	ldi r24,lo8(sw_version)
 	ldi r25,hi8(sw_version)
 	call serial0SER_USB_sendStringP
 .LVL154:
-	.loc 1 1166 0
+	.loc 1 1167 0
 	ldi r24,lo8(cr_lf)
 	ldi r25,hi8(cr_lf)
 	call serial0SER_USB_sendStringP
 .LVL155:
 .L74:
-	.loc 1 1169 0
+	.loc 1 1170 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -1437,7 +1437,7 @@ menuOnExitUSBactive:
 	.type	menuOnEnterUSBsendHW, @function
 menuOnEnterUSBsendHW:
 .LFB74:
-	.loc 1 1182 0
+	.loc 1 1183 0
 	.cfi_startproc
 .LVL156:
 	push r9
@@ -1488,21 +1488,21 @@ menuOnEnterUSBsendHW:
 /* frame size = 0 */
 /* stack size = 11 */
 .L__stack_usage = 11
-	.loc 1 1185 0
+	.loc 1 1186 0
 	ldi r24,lo8(usbHWtitel)
 	ldi r25,hi8(usbHWtitel)
 .LVL157:
 	call serial0SER_USB_sendStringP
 .LVL158:
-	.loc 1 1186 0
+	.loc 1 1187 0
 	call serial0SER_USB_sendCRLF
 .LVL159:
-	.loc 1 1187 0
+	.loc 1 1188 0
 	ldi r24,lo8(usbHWmodulInst)
 	ldi r25,hi8(usbHWmodulInst)
 	call serial0SER_USB_sendStringP
 .LVL160:
-	.loc 1 1188 0
+	.loc 1 1189 0
 	ldi r28,lo8(pipe_Module)
 	ldi r29,hi8(pipe_Module)
 	ldi r22,lo8(string_Buf)
@@ -1510,106 +1510,106 @@ menuOnEnterUSBsendHW:
 	ld r24,Y
 	call putChar_hex
 .LVL161:
-	.loc 1 1189 0
+	.loc 1 1190 0
 	ldi r18,lo8(114)
 	movw r30,r24
 	st Z,r18
-	.loc 1 1190 0
+	.loc 1 1191 0
 	movw r22,r24
 	subi r22,-2
 	sbci r23,-1
 .LVL162:
 	ldi r18,lo8(32)
 	std Z+1,r18
-	.loc 1 1191 0
+	.loc 1 1192 0
 	ldd r24,Y+1
 	call putChar_hex
 .LVL163:
-	.loc 1 1192 0
+	.loc 1 1193 0
 	ldi r18,lo8(119)
 	movw r30,r24
 	st Z,r18
-	.loc 1 1193 0
+	.loc 1 1194 0
 	ldi r24,lo8(string_Buf)
 	ldi r25,hi8(string_Buf)
 .LVL164:
 	call serial0SER_USB_sendString
 .LVL165:
-	.loc 1 1194 0
+	.loc 1 1195 0
 	call serial0SER_USB_sendCRLF
 .LVL166:
-	.loc 1 1195 0
+	.loc 1 1196 0
 	ldi r24,lo8(usbHWmodulCheck)
 	ldi r25,hi8(usbHWmodulCheck)
 	call serial0SER_USB_sendStringP
 .LVL167:
-	.loc 1 1196 0
+	.loc 1 1197 0
 	ldi r22,lo8(string_Buf)
 	ldi r23,hi8(string_Buf)
 	lds r24,pipe_ModuleTested
 	call putChar_hex
 .LVL168:
-	.loc 1 1197 0
+	.loc 1 1198 0
 	ldi r24,lo8(string_Buf)
 	ldi r25,hi8(string_Buf)
 	call serial0SER_USB_sendString
 .LVL169:
-	.loc 1 1198 0
+	.loc 1 1199 0
 	call serial0SER_USB_sendCRLF
 .LVL170:
-	.loc 1 1199 0
+	.loc 1 1200 0
 	call serial0SER_USB_sendCRLF
 .LVL171:
 .LBB54:
-	.loc 1 1200 0
+	.loc 1 1201 0
 	mov r14,__zero_reg__
 	rjmp .L76
 .LVL172:
 .L81:
-	.loc 1 1202 0
+	.loc 1 1203 0
 	ldi r24,lo8(usbHWManual)
 	ldi r25,hi8(usbHWManual)
 	call serial0SER_USB_sendStringP
 .LVL173:
-	.loc 1 1203 0
+	.loc 1 1204 0
 	ldi r22,lo8(string_Buf)
 	ldi r23,hi8(string_Buf)
 	mov r24,r14
 	call putChar_Manual
 .LVL174:
-	.loc 1 1204 0
+	.loc 1 1205 0
 	ldi r24,lo8(string_Buf)
 	ldi r25,hi8(string_Buf)
 	call serial0SER_USB_sendString
 .LVL175:
-	.loc 1 1205 0
+	.loc 1 1206 0
 	call serial0SER_USB_sendCRLF
 .LVL176:
 .LBB55:
-	.loc 1 1206 0
+	.loc 1 1207 0
 	mov r15,__zero_reg__
 	rjmp .L77
 .LVL177:
 .L80:
-	.loc 1 1208 0
+	.loc 1 1209 0
 	ldi r24,lo8(usbHWRange)
 	ldi r25,hi8(usbHWRange)
 	call serial0SER_USB_sendStringP
 .LVL178:
-	.loc 1 1209 0
+	.loc 1 1210 0
 	ldi r24,lo8(48)
 	add r24,r15
 	call serial0SER_USBSend
 .LVL179:
-	.loc 1 1210 0
+	.loc 1 1211 0
 	ldi r24,lo8(58)
 	call serial0SER_USBSend
 .LVL180:
-	.loc 1 1211 0
+	.loc 1 1212 0
 	ldi r24,lo8(32)
 	call serial0SER_USBSend
 .LVL181:
-	.loc 1 1212 0
+	.loc 1 1213 0
 	mov r16,r14
 	ldi r17,0
 	mov r12,r15
@@ -1638,7 +1638,7 @@ menuOnEnterUSBsendHW:
 	ld r24,Y
 	call putChar_hex
 .LVL182:
-	.loc 1 1213 0
+	.loc 1 1214 0
 	movw r22,r24
 	subi r22,-1
 	sbci r23,-1
@@ -1649,57 +1649,57 @@ menuOnEnterUSBsendHW:
 	mov r31,__tmp_reg__
 	movw r30,r24
 	st Z,r11
-	.loc 1 1214 0
+	.loc 1 1215 0
 	ldd r24,Y+1
 	call putChar_hex
 .LVL184:
-	.loc 1 1215 0
+	.loc 1 1216 0
 	movw r22,r24
 	subi r22,-1
 	sbci r23,-1
 .LVL185:
 	movw r30,r24
 	st Z,r11
-	.loc 1 1216 0
+	.loc 1 1217 0
 	ldd r24,Y+2
 	call putChar_hex
 .LVL186:
 	movw r30,r24
 .LVL187:
-	.loc 1 1217 0
+	.loc 1 1218 0
 	ldi r24,lo8(32)
 .LVL188:
 	st Z,r24
 .LVL189:
-	.loc 1 1218 0
+	.loc 1 1219 0
 	ldi r25,lo8(61)
 	std Z+1,r25
 .LVL190:
-	.loc 1 1219 0
-	std Z+2,r24
 	.loc 1 1220 0
+	std Z+2,r24
+	.loc 1 1221 0
 	ldi r24,lo8(string_Buf)
 	ldi r25,hi8(string_Buf)
 	call serial0SER_USB_sendString
 .LVL191:
-	.loc 1 1221 0
+	.loc 1 1222 0
 	ld r24,Y
 	tst r24
 	brge .L78
 .LVL192:
-	.loc 1 1222 0
+	.loc 1 1223 0
 	ldi r24,lo8(usbHWempty)
 	ldi r25,hi8(usbHWempty)
 	call serial0SER_USB_sendStringP
 .LVL193:
 	rjmp .L79
 .L78:
-	.loc 1 1224 0
+	.loc 1 1225 0
 	ldi r22,lo8(string_Buf)
 	ldi r23,hi8(string_Buf)
 	call putChar_Note
 .LVL194:
-	.loc 1 1225 0
+	.loc 1 1226 0
 	movw r22,r24
 	subi r22,-1
 	sbci r23,-1
@@ -1710,7 +1710,7 @@ menuOnEnterUSBsendHW:
 	mov r31,__tmp_reg__
 	movw r30,r24
 	st Z,r9
-	.loc 1 1226 0
+	.loc 1 1227 0
 	movw r30,r12
 	lsl r30
 	rol r31
@@ -1734,25 +1734,25 @@ menuOnEnterUSBsendHW:
 	ldd r24,Y+1
 	call putChar_Note
 .LVL197:
-	.loc 1 1227 0
+	.loc 1 1228 0
 	ldi r18,lo8(32)
 	movw r30,r24
 	st Z,r18
 .LVL198:
-	.loc 1 1228 0
-	std Z+1,__zero_reg__
 	.loc 1 1229 0
+	std Z+1,__zero_reg__
+	.loc 1 1230 0
 	ldi r24,lo8(string_Buf)
 	ldi r25,hi8(string_Buf)
 .LVL199:
 	call serial0SER_USB_sendString
 .LVL200:
-	.loc 1 1230 0
+	.loc 1 1231 0
 	ldi r24,lo8(usbHWmodule)
 	ldi r25,hi8(usbHWmodule)
 	call serial0SER_USB_sendStringP
 .LVL201:
-	.loc 1 1231 0
+	.loc 1 1232 0
 	ldd r24,Y+2
 	swap r24
 	lsr r24
@@ -1760,26 +1760,26 @@ menuOnEnterUSBsendHW:
 	subi r24,lo8(-(48))
 	call serial0SER_USBSend
 .LVL202:
-	.loc 1 1232 0
+	.loc 1 1233 0
 	ldi r24,lo8(usbHWBits)
 	ldi r25,hi8(usbHWBits)
 	call serial0SER_USB_sendStringP
 .LVL203:
-	.loc 1 1233 0
+	.loc 1 1234 0
 	ldd r24,Y+2
 	ldi r22,lo8(string_Buf)
 	ldi r23,hi8(string_Buf)
 	andi r24,lo8(31)
 	call putChar_Dec2
 .LVL204:
-	.loc 1 1234 0
+	.loc 1 1235 0
 	movw r22,r24
 	subi r22,-1
 	sbci r23,-1
 .LVL205:
 	movw r30,r24
 	st Z,r9
-	.loc 1 1235 0
+	.loc 1 1236 0
 	ldd r24,Y+2
 	ldd r25,Y+1
 	ld r18,Y
@@ -1788,31 +1788,31 @@ menuOnEnterUSBsendHW:
 	sub r24,r18
 	call putChar_Dec2
 .LVL206:
-	.loc 1 1236 0
+	.loc 1 1237 0
 	ldi r24,lo8(string_Buf)
 	ldi r25,hi8(string_Buf)
 	call serial0SER_USB_sendString
 .LVL207:
 .L79:
-	.loc 1 1238 0 discriminator 2
+	.loc 1 1239 0 discriminator 2
 	call serial0SER_USB_sendCRLF
 .LVL208:
-	.loc 1 1206 0 discriminator 2
+	.loc 1 1207 0 discriminator 2
 	inc r15
 .LVL209:
 .L77:
-	.loc 1 1206 0 is_stmt 0 discriminator 1
+	.loc 1 1207 0 is_stmt 0 discriminator 1
 	ldi r31,lo8(3)
 	cp r31,r15
 	brlo .+2
 	rjmp .L80
 .LBE55:
-	.loc 1 1241 0 is_stmt 1 discriminator 2
+	.loc 1 1242 0 is_stmt 1 discriminator 2
 	ldi r24,lo8(usbHWmidichanSW)
 	ldi r25,hi8(usbHWmidichanSW)
 	call serial0SER_USB_sendStringP
 .LVL210:
-	.loc 1 1242 0 discriminator 2
+	.loc 1 1243 0 discriminator 2
 	mov r30,r14
 	ldi r31,0
 	lsl r30
@@ -1824,57 +1824,57 @@ menuOnEnterUSBsendHW:
 	ldd r24,Z+1
 	call putChar_MidiChan
 .LVL211:
-	.loc 1 1243 0 discriminator 2
+	.loc 1 1244 0 discriminator 2
 	ldi r24,lo8(string_Buf)
 	ldi r25,hi8(string_Buf)
 	call serial0SER_USB_sendString
 .LVL212:
-	.loc 1 1244 0 discriminator 2
-	call serial0SER_USB_sendCRLF
-.LVL213:
 	.loc 1 1245 0 discriminator 2
 	call serial0SER_USB_sendCRLF
+.LVL213:
+	.loc 1 1246 0 discriminator 2
+	call serial0SER_USB_sendCRLF
 .LVL214:
-	.loc 1 1200 0 discriminator 2
+	.loc 1 1201 0 discriminator 2
 	inc r14
 .LVL215:
 .L76:
-	.loc 1 1200 0 is_stmt 0 discriminator 1
+	.loc 1 1201 0 is_stmt 0 discriminator 1
 	ldi r24,lo8(3)
 	cp r24,r14
 	brlo .+2
 	rjmp .L81
 .LBE54:
-	.loc 1 1248 0 is_stmt 1
+	.loc 1 1249 0 is_stmt 1
 	ldi r24,lo8(usbHWRegister)
 	ldi r25,hi8(usbHWRegister)
 	call serial0SER_USB_sendStringP
 .LVL216:
 .LBB56:
-	.loc 1 1249 0
+	.loc 1 1250 0
 	mov r15,__zero_reg__
 	rjmp .L82
 .LVL217:
 .L85:
-	.loc 1 1251 0
+	.loc 1 1252 0
 	ldi r24,lo8(usbHWRange)
 	ldi r25,hi8(usbHWRange)
 	call serial0SER_USB_sendStringP
 .LVL218:
-	.loc 1 1252 0
+	.loc 1 1253 0
 	ldi r24,lo8(48)
 	add r24,r15
 	call serial0SER_USBSend
 .LVL219:
-	.loc 1 1253 0
+	.loc 1 1254 0
 	ldi r24,lo8(58)
 	call serial0SER_USBSend
 .LVL220:
-	.loc 1 1254 0
+	.loc 1 1255 0
 	ldi r24,lo8(32)
 	call serial0SER_USBSend
 .LVL221:
-	.loc 1 1255 0
+	.loc 1 1256 0
 	mov r28,r15
 	ldi r29,0
 	movw r16,r28
@@ -1890,7 +1890,7 @@ menuOnEnterUSBsendHW:
 	ld r24,Z
 	call putChar_hex
 .LVL222:
-	.loc 1 1256 0
+	.loc 1 1257 0
 	movw r22,r24
 	subi r22,-1
 	sbci r23,-1
@@ -1901,49 +1901,49 @@ menuOnEnterUSBsendHW:
 	mov r31,__tmp_reg__
 	movw r30,r24
 	st Z,r14
-	.loc 1 1257 0
+	.loc 1 1258 0
 	movw r30,r16
 	ldd r24,Z+1
 	call putChar_hex
 .LVL224:
-	.loc 1 1258 0
+	.loc 1 1259 0
 	movw r22,r24
 	subi r22,-1
 	sbci r23,-1
 .LVL225:
 	movw r30,r24
 	st Z,r14
-	.loc 1 1259 0
+	.loc 1 1260 0
 	movw r30,r16
 	ldd r24,Z+2
 	call putChar_hex
 .LVL226:
 	movw r30,r24
 .LVL227:
-	.loc 1 1260 0
+	.loc 1 1261 0
 	ldi r24,lo8(32)
 .LVL228:
 	st Z,r24
 .LVL229:
-	.loc 1 1261 0
+	.loc 1 1262 0
 	ldi r25,lo8(61)
 	std Z+1,r25
 .LVL230:
-	.loc 1 1262 0
-	std Z+2,r24
 	.loc 1 1263 0
-	std Z+3,__zero_reg__
+	std Z+2,r24
 	.loc 1 1264 0
+	std Z+3,__zero_reg__
+	.loc 1 1265 0
 	ldi r24,lo8(string_Buf)
 	ldi r25,hi8(string_Buf)
 	call serial0SER_USB_sendString
 .LVL231:
-	.loc 1 1265 0
+	.loc 1 1266 0
 	movw r30,r16
 	ld r24,Z
 	cpi r24,lo8(-1)
 	brne .L83
-	.loc 1 1266 0
+	.loc 1 1267 0
 	ldi r24,lo8(usbHWempty)
 	ldi r25,hi8(usbHWempty)
 	call serial0SER_USB_sendStringP
@@ -1951,23 +1951,23 @@ menuOnEnterUSBsendHW:
 	rjmp .L84
 .L83:
 .LVL233:
-	.loc 1 1269 0
+	.loc 1 1270 0
 	ldi r30,lo8(string_Buf)
 	ldi r31,hi8(string_Buf)
 	ldi r25,lo8(82)
 	st Z,r25
 .LVL234:
-	.loc 1 1270 0
+	.loc 1 1271 0
 	ldi r25,lo8(46)
 	std Z+1,r25
-	.loc 1 1271 0
+	.loc 1 1272 0
 	ldi r22,lo8(string_Buf+2)
 	ldi r23,hi8(string_Buf+2)
 .LVL235:
 	subi r24,lo8(-(1))
 	call putChar_Dec
 .LVL236:
-	.loc 1 1272 0
+	.loc 1 1273 0
 	movw r22,r24
 	subi r22,-1
 	sbci r23,-1
@@ -1975,7 +1975,7 @@ menuOnEnterUSBsendHW:
 	ldi r17,lo8(45)
 	movw r30,r24
 	st Z,r17
-	.loc 1 1273 0
+	.loc 1 1274 0
 	movw r24,r28
 	lsl r24
 	rol r25
@@ -1987,25 +1987,25 @@ menuOnEnterUSBsendHW:
 	subi r24,lo8(-(1))
 	call putChar_Dec
 .LVL238:
-	.loc 1 1274 0
+	.loc 1 1275 0
 	ldi r18,lo8(32)
 	movw r30,r24
 	st Z,r18
 .LVL239:
-	.loc 1 1275 0
-	std Z+1,__zero_reg__
 	.loc 1 1276 0
+	std Z+1,__zero_reg__
+	.loc 1 1277 0
 	ldi r24,lo8(string_Buf)
 	ldi r25,hi8(string_Buf)
 .LVL240:
 	call serial0SER_USB_sendString
 .LVL241:
-	.loc 1 1277 0
+	.loc 1 1278 0
 	ldi r24,lo8(usbHWmodule)
 	ldi r25,hi8(usbHWmodule)
 	call serial0SER_USB_sendStringP
 .LVL242:
-	.loc 1 1278 0
+	.loc 1 1279 0
 	ldd r24,Y+2
 	swap r24
 	lsr r24
@@ -2013,26 +2013,26 @@ menuOnEnterUSBsendHW:
 	subi r24,lo8(-(48))
 	call serial0SER_USBSend
 .LVL243:
-	.loc 1 1279 0
+	.loc 1 1280 0
 	ldi r24,lo8(usbHWBits)
 	ldi r25,hi8(usbHWBits)
 	call serial0SER_USB_sendStringP
 .LVL244:
-	.loc 1 1280 0
+	.loc 1 1281 0
 	ldd r24,Y+2
 	ldi r22,lo8(string_Buf)
 	ldi r23,hi8(string_Buf)
 	andi r24,lo8(31)
 	call putChar_Dec2
 .LVL245:
-	.loc 1 1281 0
+	.loc 1 1282 0
 	movw r22,r24
 	subi r22,-1
 	sbci r23,-1
 .LVL246:
 	movw r30,r24
 	st Z,r17
-	.loc 1 1282 0
+	.loc 1 1283 0
 	ldd r24,Y+2
 	ldd r25,Y+1
 	ld r18,Y
@@ -2041,26 +2041,26 @@ menuOnEnterUSBsendHW:
 	sub r24,r18
 	call putChar_Dec2
 .LVL247:
-	.loc 1 1283 0
+	.loc 1 1284 0
 	ldi r24,lo8(string_Buf)
 	ldi r25,hi8(string_Buf)
 	call serial0SER_USB_sendString
 .LVL248:
 .L84:
-	.loc 1 1285 0 discriminator 2
+	.loc 1 1286 0 discriminator 2
 	call serial0SER_USB_sendCRLF
 .LVL249:
-	.loc 1 1249 0 discriminator 2
+	.loc 1 1250 0 discriminator 2
 	inc r15
 .LVL250:
 .L82:
-	.loc 1 1249 0 is_stmt 0 discriminator 1
+	.loc 1 1250 0 is_stmt 0 discriminator 1
 	ldi r31,lo8(7)
 	cp r31,r15
 	brlo .+2
 	rjmp .L85
 .LBE56:
-	.loc 1 1288 0 is_stmt 1
+	.loc 1 1289 0 is_stmt 1
 	ldi r24,0
 /* epilogue start */
 	pop r29
@@ -2084,7 +2084,7 @@ menuOnEnterUSBsendHW:
 	.type	reverseRegisterBits, @function
 reverseRegisterBits:
 .LFB12:
-	.loc 1 431 0
+	.loc 1 432 0
 	.cfi_startproc
 	push r17
 .LCFI20:
@@ -2104,12 +2104,12 @@ reverseRegisterBits:
 .L__stack_usage = 3
 .LVL252:
 .LBB57:
-	.loc 1 432 0
+	.loc 1 433 0
 	ldi r17,0
 	rjmp .L87
 .LVL253:
 .L88:
-	.loc 1 433 0 discriminator 3
+	.loc 1 434 0 discriminator 3
 	mov r28,r17
 	ldi r29,0
 	subi r28,lo8(-(menuVRegisters))
@@ -2118,16 +2118,16 @@ reverseRegisterBits:
 	call reverse_Bits
 .LVL254:
 	st Y,r24
-	.loc 1 432 0 discriminator 3
+	.loc 1 433 0 discriminator 3
 	subi r17,lo8(-(1))
 .LVL255:
 .L87:
-	.loc 1 432 0 is_stmt 0 discriminator 1
+	.loc 1 433 0 is_stmt 0 discriminator 1
 	cpi r17,lo8(8)
 	brlo .L88
 /* epilogue start */
 .LBE57:
-	.loc 1 435 0 is_stmt 1
+	.loc 1 436 0 is_stmt 1
 	pop r29
 	pop r28
 	pop r17
@@ -2141,23 +2141,23 @@ reverseRegisterBits:
 	.type	menuOnUpdateRegister, @function
 menuOnUpdateRegister:
 .LFB13:
-	.loc 1 437 0
+	.loc 1 438 0
 	.cfi_startproc
 .LVL257:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 439 0
+	.loc 1 440 0
 	ldi r24,lo8(menuVRegisters)
 	ldi r25,hi8(menuVRegisters)
 .LVL258:
 	call read_allRegister
 .LVL259:
-	.loc 1 440 0
+	.loc 1 441 0
 	call reverseRegisterBits
 .LVL260:
-	.loc 1 442 0
+	.loc 1 443 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -2168,21 +2168,21 @@ menuOnUpdateRegister:
 	.type	menuOnEnterResetReg, @function
 menuOnEnterResetReg:
 .LFB15:
-	.loc 1 457 0
+	.loc 1 458 0
 	.cfi_startproc
 .LVL261:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 459 0
+	.loc 1 460 0
 	call midi_resetRegisters
 .LVL262:
-	.loc 1 460 0
+	.loc 1 461 0
 	ldi r24,0
 	call menuOnUpdateRegister
 .LVL263:
-	.loc 1 462 0
+	.loc 1 463 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -2193,30 +2193,30 @@ menuOnEnterResetReg:
 	.type	menuOnExitLoadProgran, @function
 menuOnExitLoadProgran:
 .LFB39:
-	.loc 1 618 0
+	.loc 1 619 0
 	.cfi_startproc
 .LVL264:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 619 0
+	.loc 1 620 0
 	cpi r24,lo8(6)
 	breq .L92
-	.loc 1 619 0 is_stmt 0 discriminator 1
+	.loc 1 620 0 is_stmt 0 discriminator 1
 	lds r24,menuVKombination
 .LVL265:
 	cpi r24,lo8(64)
 	brsh .L92
-	.loc 1 620 0 is_stmt 1
+	.loc 1 621 0 is_stmt 1
 	call program_toRegister
 .LVL266:
 .L92:
-	.loc 1 622 0
+	.loc 1 623 0
 	ldi r24,0
 	call menuOnUpdateRegister
 .LVL267:
-	.loc 1 624 0
+	.loc 1 625 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -2227,7 +2227,7 @@ menuOnExitLoadProgran:
 	.type	softkeyCoupler, @function
 softkeyCoupler:
 .LFB17:
-	.loc 1 474 0
+	.loc 1 475 0
 	.cfi_startproc
 .LVL268:
 	push r28
@@ -2239,10 +2239,10 @@ softkeyCoupler:
 /* stack size = 1 */
 .L__stack_usage = 1
 	mov r28,r22
-	.loc 1 476 0
+	.loc 1 477 0
 	tst r24
 	breq .L94
-	.loc 1 477 0
+	.loc 1 478 0
 	mov r30,r22
 	ldi r31,0
 	movw r26,r30
@@ -2253,26 +2253,26 @@ softkeyCoupler:
 	cpse r24,__zero_reg__
 	rjmp .L95
 .LBB58:
-	.loc 1 478 0
+	.loc 1 479 0
 	mov r24,r22
 	call set_Coupler
 .LVL270:
-	.loc 1 479 0
+	.loc 1 480 0
 	tst r24
 	breq .L94
-	.loc 1 480 0
+	.loc 1 481 0
 	call midi_ManualOff
 .LVL271:
 	rjmp .L94
 .LVL272:
 .L95:
 .LBE58:
-	.loc 1 483 0
+	.loc 1 484 0
 	movw r26,r30
 	subi r26,lo8(-(midi_Couplers))
 	sbci r27,hi8(-(midi_Couplers))
 	st X,__zero_reg__
-	.loc 1 484 0
+	.loc 1 485 0
 	lsl r30
 	rol r31
 	subi r30,lo8(-(cplInfo))
@@ -2281,7 +2281,7 @@ softkeyCoupler:
 	call midi_ManualOff
 .LVL273:
 .L94:
-	.loc 1 487 0
+	.loc 1 488 0
 	mov r30,r28
 	ldi r31,0
 	subi r30,lo8(-(midi_Couplers))
@@ -2295,7 +2295,7 @@ softkeyCoupler:
 	ldi r24,lo8(-127)
 .L96:
 /* epilogue start */
-	.loc 1 488 0 discriminator 4
+	.loc 1 489 0 discriminator 4
 	pop r28
 .LVL274:
 	ret
@@ -2307,18 +2307,18 @@ softkeyCoupler:
 	.type	softKeyCoupler2from3, @function
 softKeyCoupler2from3:
 .LFB18:
-	.loc 1 490 0
+	.loc 1 491 0
 	.cfi_startproc
 .LVL275:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 492 0
+	.loc 1 493 0
 	ldi r22,0
 	call softkeyCoupler
 .LVL276:
-	.loc 1 494 0
+	.loc 1 495 0
 	ret
 	.cfi_endproc
 .LFE18:
@@ -2328,18 +2328,18 @@ softKeyCoupler2from3:
 	.type	softKeyCoupler1from3, @function
 softKeyCoupler1from3:
 .LFB19:
-	.loc 1 496 0
+	.loc 1 497 0
 	.cfi_startproc
 .LVL277:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 497 0
+	.loc 1 498 0
 	ldi r22,lo8(1)
 	call softkeyCoupler
 .LVL278:
-	.loc 1 499 0
+	.loc 1 500 0
 	ret
 	.cfi_endproc
 .LFE19:
@@ -2349,18 +2349,18 @@ softKeyCoupler1from3:
 	.type	softKeyCouplerPfrom3, @function
 softKeyCouplerPfrom3:
 .LFB20:
-	.loc 1 501 0
+	.loc 1 502 0
 	.cfi_startproc
 .LVL279:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 502 0
+	.loc 1 503 0
 	ldi r22,lo8(3)
 	call softkeyCoupler
 .LVL280:
-	.loc 1 504 0
+	.loc 1 505 0
 	ret
 	.cfi_endproc
 .LFE20:
@@ -2370,18 +2370,18 @@ softKeyCouplerPfrom3:
 	.type	softKeyCoupler1from2, @function
 softKeyCoupler1from2:
 .LFB21:
-	.loc 1 506 0
+	.loc 1 507 0
 	.cfi_startproc
 .LVL281:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 507 0
+	.loc 1 508 0
 	ldi r22,lo8(2)
 	call softkeyCoupler
 .LVL282:
-	.loc 1 509 0
+	.loc 1 510 0
 	ret
 	.cfi_endproc
 .LFE21:
@@ -2391,18 +2391,18 @@ softKeyCoupler1from2:
 	.type	softKeyCouplerPfrom2, @function
 softKeyCouplerPfrom2:
 .LFB22:
-	.loc 1 511 0
+	.loc 1 512 0
 	.cfi_startproc
 .LVL283:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 512 0
+	.loc 1 513 0
 	ldi r22,lo8(4)
 	call softkeyCoupler
 .LVL284:
-	.loc 1 514 0
+	.loc 1 515 0
 	ret
 	.cfi_endproc
 .LFE22:
@@ -2412,18 +2412,18 @@ softKeyCouplerPfrom2:
 	.type	softKeyCouplerPfrom1, @function
 softKeyCouplerPfrom1:
 .LFB23:
-	.loc 1 516 0
+	.loc 1 517 0
 	.cfi_startproc
 .LVL285:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 517 0
+	.loc 1 518 0
 	ldi r22,lo8(5)
 	call softkeyCoupler
 .LVL286:
-	.loc 1 519 0
+	.loc 1 520 0
 	ret
 	.cfi_endproc
 .LFE23:
@@ -2433,18 +2433,18 @@ softKeyCouplerPfrom1:
 	.type	softKeyCoupler3from2, @function
 softKeyCoupler3from2:
 .LFB24:
-	.loc 1 521 0
+	.loc 1 522 0
 	.cfi_startproc
 .LVL287:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 523 0
+	.loc 1 524 0
 	ldi r22,lo8(6)
 	call softkeyCoupler
 .LVL288:
-	.loc 1 525 0
+	.loc 1 526 0
 	ret
 	.cfi_endproc
 .LFE24:
@@ -2454,18 +2454,18 @@ softKeyCoupler3from2:
 	.type	softKeyCoupler3from1, @function
 softKeyCoupler3from1:
 .LFB25:
-	.loc 1 527 0
+	.loc 1 528 0
 	.cfi_startproc
 .LVL289:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 528 0
+	.loc 1 529 0
 	ldi r22,lo8(7)
 	call softkeyCoupler
 .LVL290:
-	.loc 1 530 0
+	.loc 1 531 0
 	ret
 	.cfi_endproc
 .LFE25:
@@ -2475,18 +2475,18 @@ softKeyCoupler3from1:
 	.type	softKeyCoupler3fromP, @function
 softKeyCoupler3fromP:
 .LFB26:
-	.loc 1 532 0
+	.loc 1 533 0
 	.cfi_startproc
 .LVL291:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 533 0
+	.loc 1 534 0
 	ldi r22,lo8(9)
 	call softkeyCoupler
 .LVL292:
-	.loc 1 535 0
+	.loc 1 536 0
 	ret
 	.cfi_endproc
 .LFE26:
@@ -2496,18 +2496,18 @@ softKeyCoupler3fromP:
 	.type	softKeyCoupler2from1, @function
 softKeyCoupler2from1:
 .LFB27:
-	.loc 1 537 0
+	.loc 1 538 0
 	.cfi_startproc
 .LVL293:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 538 0
+	.loc 1 539 0
 	ldi r22,lo8(8)
 	call softkeyCoupler
 .LVL294:
-	.loc 1 540 0
+	.loc 1 541 0
 	ret
 	.cfi_endproc
 .LFE27:
@@ -2517,18 +2517,18 @@ softKeyCoupler2from1:
 	.type	softKeyCoupler2fromP, @function
 softKeyCoupler2fromP:
 .LFB28:
-	.loc 1 542 0
+	.loc 1 543 0
 	.cfi_startproc
 .LVL295:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 543 0
+	.loc 1 544 0
 	ldi r22,lo8(10)
 	call softkeyCoupler
 .LVL296:
-	.loc 1 545 0
+	.loc 1 546 0
 	ret
 	.cfi_endproc
 .LFE28:
@@ -2538,18 +2538,18 @@ softKeyCoupler2fromP:
 	.type	softKeyCoupler1fromP, @function
 softKeyCoupler1fromP:
 .LFB29:
-	.loc 1 547 0
+	.loc 1 548 0
 	.cfi_startproc
 .LVL297:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 548 0
+	.loc 1 549 0
 	ldi r22,lo8(11)
 	call softkeyCoupler
 .LVL298:
-	.loc 1 550 0
+	.loc 1 551 0
 	ret
 	.cfi_endproc
 .LFE29:
@@ -2559,25 +2559,25 @@ softKeyCoupler1fromP:
 	.type	menu_Init, @function
 menu_Init:
 .LFB75:
-	.loc 1 1293 0
+	.loc 1 1294 0
 	.cfi_startproc
 .LVL299:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1294 0
-	sts menuStackIndex,__zero_reg__
 	.loc 1 1295 0
+	sts menuStackIndex,__zero_reg__
+	.loc 1 1296 0
 	sbiw r24,0
 	brne .L111
-	.loc 1 1296 0
+	.loc 1 1297 0
 	ldi r24,lo8(menu_main)
 	ldi r25,hi8(menu_main)
 .LVL300:
 	sts currentMenu+1,r25
 	sts currentMenu,r24
-	.loc 1 1297 0
+	.loc 1 1298 0
 	ldi r24,lo8(initMenuText)
 	ldi r25,hi8(initMenuText)
 	sts pMenuTopTitle+1,r25
@@ -2585,18 +2585,18 @@ menu_Init:
 	rjmp .L112
 .LVL301:
 .L111:
-	.loc 1 1299 0
+	.loc 1 1300 0
 	sts currentMenu+1,r25
 	sts currentMenu,r24
-	.loc 1 1300 0
+	.loc 1 1301 0
 	sts pMenuTopTitle+1,r23
 	sts pMenuTopTitle,r22
 .LVL302:
 .L112:
-	.loc 1 1302 0
+	.loc 1 1303 0
 	ldi r24,lo8(-1)
 	sts nibbleIndex,r24
-	.loc 1 1303 0
+	.loc 1 1304 0
 	ldi r24,lo8(nibbleInfo)
 	ldi r25,hi8(nibbleInfo)
 	sts pNibbleInfo+1,r25
@@ -2610,13 +2610,13 @@ menu_Init:
 	.type	softkeyLeft, @function
 softkeyLeft:
 .LFB77:
-	.loc 1 1318 0
+	.loc 1 1319 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1319 0
+	.loc 1 1320 0
 	ldi r22,lo8(keylabel_left)
 	ldi r23,hi8(keylabel_left)
 	ldi r24,lo8(2)
@@ -2631,13 +2631,13 @@ softkeyLeft:
 	.type	softkeyRight, @function
 softkeyRight:
 .LFB78:
-	.loc 1 1322 0
+	.loc 1 1323 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1323 0
+	.loc 1 1324 0
 	ldi r22,lo8(keylabel_right)
 	ldi r23,hi8(keylabel_right)
 	ldi r24,lo8(3)
@@ -2652,13 +2652,13 @@ softkeyRight:
 	.type	softkeyDown, @function
 softkeyDown:
 .LFB79:
-	.loc 1 1326 0
+	.loc 1 1327 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1327 0
+	.loc 1 1328 0
 	ldi r22,lo8(keylabel_down)
 	ldi r23,hi8(keylabel_down)
 	ldi r24,lo8(1)
@@ -2673,13 +2673,13 @@ softkeyDown:
 	.type	softkeyOn, @function
 softkeyOn:
 .LFB80:
-	.loc 1 1330 0
+	.loc 1 1331 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1331 0
+	.loc 1 1332 0
 	ldi r22,lo8(keylabel_on)
 	ldi r23,hi8(keylabel_on)
 	ldi r24,lo8(1)
@@ -2694,13 +2694,13 @@ softkeyOn:
 	.type	softkeyOff, @function
 softkeyOff:
 .LFB81:
-	.loc 1 1333 0
+	.loc 1 1334 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1334 0
+	.loc 1 1335 0
 	ldi r22,lo8(keylabel_off)
 	ldi r23,hi8(keylabel_off)
 	ldi r24,lo8(1)
@@ -2715,13 +2715,13 @@ softkeyOff:
 	.type	softkeyUp, @function
 softkeyUp:
 .LFB82:
-	.loc 1 1337 0
+	.loc 1 1338 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1338 0
+	.loc 1 1339 0
 	ldi r22,lo8(keylabel_up)
 	ldi r23,hi8(keylabel_up)
 	ldi r24,0
@@ -2736,21 +2736,21 @@ softkeyUp:
 	.type	softkeyPlus, @function
 softkeyPlus:
 .LFB83:
-	.loc 1 1341 0
+	.loc 1 1342 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1342 0
+	.loc 1 1343 0
 	lds r24,dataType
 	cpi r24,lo8(10)
 	breq .L120
-	.loc 1 1342 0 is_stmt 0 discriminator 1
+	.loc 1 1343 0 is_stmt 0 discriminator 1
 	cpi r24,lo8(14)
 	brne .L121
 .L120:
-	.loc 1 1343 0 is_stmt 1
+	.loc 1 1344 0 is_stmt 1
 	ldi r22,lo8(keylabel_1)
 	ldi r23,hi8(keylabel_1)
 	ldi r24,0
@@ -2758,7 +2758,7 @@ softkeyPlus:
 .LVL309:
 	ret
 .L121:
-	.loc 1 1345 0
+	.loc 1 1346 0
 	ldi r22,lo8(keylabel_plus)
 	ldi r23,hi8(keylabel_plus)
 	ldi r24,0
@@ -2773,21 +2773,21 @@ softkeyPlus:
 	.type	softkeyMinus, @function
 softkeyMinus:
 .LFB84:
-	.loc 1 1349 0
+	.loc 1 1350 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1350 0
+	.loc 1 1351 0
 	lds r24,dataType
 	cpi r24,lo8(10)
 	breq .L124
-	.loc 1 1350 0 is_stmt 0 discriminator 1
+	.loc 1 1351 0 is_stmt 0 discriminator 1
 	cpi r24,lo8(14)
 	brne .L125
 .L124:
-	.loc 1 1351 0 is_stmt 1
+	.loc 1 1352 0 is_stmt 1
 	ldi r22,lo8(keylabel_0)
 	ldi r23,hi8(keylabel_0)
 	ldi r24,lo8(1)
@@ -2795,7 +2795,7 @@ softkeyMinus:
 .LVL311:
 	ret
 .L125:
-	.loc 1 1353 0
+	.loc 1 1354 0
 	ldi r22,lo8(keylabel_minus)
 	ldi r23,hi8(keylabel_minus)
 	ldi r24,lo8(1)
@@ -2810,7 +2810,7 @@ softkeyMinus:
 	.type	dataToNibbles, @function
 dataToNibbles:
 .LFB85:
-	.loc 1 1359 0
+	.loc 1 1360 0
 	.cfi_startproc
 	push r28
 .LCFI24:
@@ -2824,7 +2824,7 @@ dataToNibbles:
 /* frame size = 0 */
 /* stack size = 2 */
 .L__stack_usage = 2
-	.loc 1 1361 0
+	.loc 1 1362 0
 	lds r30,dataType
 	mov r24,r30
 	ldi r25,0
@@ -2858,7 +2858,7 @@ dataToNibbles:
 	.section	.text.dataToNibbles
 .L129:
 .LBB59:
-	.loc 1 1363 0
+	.loc 1 1364 0
 	lds r24,dataEntry
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
@@ -2866,63 +2866,63 @@ dataToNibbles:
 	swap r25
 	andi r25,lo8(15)
 	st Z,r25
-	.loc 1 1364 0
+	.loc 1 1365 0
 	andi r24,lo8(15)
 	std Z+1,r24
-	.loc 1 1366 0
+	.loc 1 1367 0
 	rjmp .L127
 .L131:
-	.loc 1 1369 0
+	.loc 1 1370 0
 	lds r24,dataEntry
 	cpi r24,lo8(16)
 	brlo .L142
-	.loc 1 1370 0
+	.loc 1 1371 0
 	ldi r24,lo8(-1)
 	sts nibble,r24
 	rjmp .L127
 .L142:
-	.loc 1 1372 0
+	.loc 1 1373 0
 	subi r24,lo8(-(1))
 	sts nibble,r24
 	rjmp .L127
 .L132:
-	.loc 1 1377 0
+	.loc 1 1378 0
 	lds r24,dataEntry
 	tst r24
 	brge .L143
-	.loc 1 1378 0
+	.loc 1 1379 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	st Z,__zero_reg__
-	.loc 1 1379 0
+	.loc 1 1380 0
 	ldi r24,lo8(-1)
 	std Z+1,r24
 	rjmp .L127
 .L143:
-	.loc 1 1381 0
-	sts nibble+1,__zero_reg__
 	.loc 1 1382 0
+	sts nibble+1,__zero_reg__
+	.loc 1 1383 0
 	rjmp .L144
 .L145:
-	.loc 1 1383 0
+	.loc 1 1384 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ldd r25,Z+1
 	subi r25,lo8(-(1))
 	std Z+1,r25
-	.loc 1 1384 0
+	.loc 1 1385 0
 	subi r24,lo8(-(-12))
 	sts dataEntry,r24
 .L144:
-	.loc 1 1382 0
+	.loc 1 1383 0
 	lds r24,dataEntry
 	cpi r24,lo8(12)
 	brsh .L145
-	.loc 1 1386 0
+	.loc 1 1387 0
 	sts nibble,r24
 	rjmp .L127
 .L133:
-	.loc 1 1391 0
+	.loc 1 1392 0
 	lds r24,dataEntry
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
@@ -2931,112 +2931,112 @@ dataToNibbles:
 	lsr r25
 	andi r25,lo8(7)
 	st Z,r25
-	.loc 1 1392 0
+	.loc 1 1393 0
 	andi r24,lo8(31)
 	sts dataEntry,r24
-	.loc 1 1393 0
-	std Z+1,__zero_reg__
 	.loc 1 1394 0
+	std Z+1,__zero_reg__
+	.loc 1 1395 0
 	rjmp .L146
 .L147:
-	.loc 1 1395 0
+	.loc 1 1396 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ldd r25,Z+1
 	subi r25,lo8(-(1))
 	std Z+1,r25
-	.loc 1 1396 0
+	.loc 1 1397 0
 	subi r24,lo8(-(-10))
 	sts dataEntry,r24
 .L146:
-	.loc 1 1394 0
+	.loc 1 1395 0
 	lds r24,dataEntry
 	cpi r24,lo8(10)
 	brsh .L147
-	.loc 1 1398 0
-	sts nibble+2,r24
 	.loc 1 1399 0
+	sts nibble+2,r24
+	.loc 1 1400 0
 	rjmp .L127
 .L134:
-	.loc 1 1402 0
+	.loc 1 1403 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	st Z,__zero_reg__
-	.loc 1 1403 0
-	std Z+1,__zero_reg__
 	.loc 1 1404 0
+	std Z+1,__zero_reg__
+	.loc 1 1405 0
 	rjmp .L148
 .L149:
-	.loc 1 1405 0
+	.loc 1 1406 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r25,Z
 	subi r25,lo8(-(1))
 	st Z,r25
-	.loc 1 1406 0
+	.loc 1 1407 0
 	subi r24,lo8(-(-100))
 	sts dataEntry,r24
 .L148:
-	.loc 1 1404 0
+	.loc 1 1405 0
 	lds r24,dataEntry
 	cpi r24,lo8(100)
 	brsh .L149
 	rjmp .L150
 .L151:
-	.loc 1 1409 0
+	.loc 1 1410 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ldd r25,Z+1
 	subi r25,lo8(-(1))
 	std Z+1,r25
-	.loc 1 1410 0
+	.loc 1 1411 0
 	subi r24,lo8(-(-10))
 	sts dataEntry,r24
 .L150:
-	.loc 1 1408 0
+	.loc 1 1409 0
 	lds r24,dataEntry
 	cpi r24,lo8(10)
 	brsh .L151
-	.loc 1 1412 0
-	sts nibble+2,r24
 	.loc 1 1413 0
+	sts nibble+2,r24
+	.loc 1 1414 0
 	rjmp .L127
 .L135:
-	.loc 1 1416 0
+	.loc 1 1417 0
 	lds r24,dataEntry
 	cpi r24,lo8(4)
 	brlo .L152
-	.loc 1 1417 0
+	.loc 1 1418 0
 	ldi r24,lo8(-1)
 	sts nibble,r24
 	rjmp .L127
 .L152:
-	.loc 1 1419 0
+	.loc 1 1420 0
 	sts nibble,r24
 	rjmp .L127
 .L136:
-	.loc 1 1424 0
+	.loc 1 1425 0
 	lds r24,dataEntry
 	cpi r24,lo8(4)
 	brlo .L153
-	.loc 1 1425 0
+	.loc 1 1426 0
 	ldi r24,lo8(3)
 	sts nibble,r24
 	rjmp .L127
 .L153:
-	.loc 1 1427 0
+	.loc 1 1428 0
 	sts nibble,r24
 	rjmp .L127
 .L137:
-	.loc 1 1432 0
+	.loc 1 1433 0
 	lds r24,dataEntry
 	sts nibble,r24
-	.loc 1 1433 0
+	.loc 1 1434 0
 	rjmp .L127
 .LVL313:
 .L154:
 .LBB60:
-	.loc 1 1437 0 discriminator 3
+	.loc 1 1438 0 discriminator 3
 	mov r30,r25
 	ldi r31,0
 	lds r24,dataEntry
@@ -3047,10 +3047,10 @@ dataToNibbles:
 	subi r30,lo8(-(nibble))
 	sbci r31,hi8(-(nibble))
 	st Z,r18
-	.loc 1 1438 0 discriminator 3
+	.loc 1 1439 0 discriminator 3
 	lsl r24
 	sts dataEntry,r24
-	.loc 1 1436 0 discriminator 3
+	.loc 1 1437 0 discriminator 3
 	subi r25,lo8(-(1))
 .LVL314:
 	rjmp .L138
@@ -3058,20 +3058,20 @@ dataToNibbles:
 .L158:
 .LBE60:
 .LBE59:
-	.loc 1 1361 0
+	.loc 1 1362 0
 	ldi r25,0
 .L138:
 .LVL316:
 .LBB62:
 .LBB61:
-	.loc 1 1436 0 discriminator 1
+	.loc 1 1437 0 discriminator 1
 	cpi r25,lo8(8)
 	brlo .L154
 	rjmp .L127
 .LVL317:
 .L155:
 .LBE61:
-	.loc 1 1446 0
+	.loc 1 1447 0
 	subi r24,lo8(-(-2))
 .LVL318:
 	ldi r31,0
@@ -3081,7 +3081,7 @@ dataToNibbles:
 	sbci r31,hi8(-(nibble))
 	andi r25,lo8(15)
 	st Z,r25
-	.loc 1 1447 0
+	.loc 1 1448 0
 	mov r30,r24
 	ldi r31,0
 .LVL319:
@@ -3096,14 +3096,14 @@ dataToNibbles:
 .LVL320:
 .L159:
 .LBE62:
-	.loc 1 1361 0
+	.loc 1 1362 0
 	ldi r28,lo8(dataEntry32)
 	ldi r29,hi8(dataEntry32)
 	ldi r24,lo8(8)
 .L139:
 .LVL321:
 .LBB63:
-	.loc 1 1445 0
+	.loc 1 1446 0
 	ldi r30,lo8(-1)
 	add r30,r24
 .LVL322:
@@ -3112,7 +3112,7 @@ dataToNibbles:
 	rjmp .L127
 .LVL323:
 .L140:
-	.loc 1 1451 0
+	.loc 1 1452 0
 	lds r24,dataEntry
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
@@ -3120,44 +3120,44 @@ dataToNibbles:
 	andi r25,lo8(7)
 	subi r25,lo8(-(1))
 	st Z,r25
-	.loc 1 1452 0
+	.loc 1 1453 0
 	lsr r24
 	lsr r24
 	lsr r24
 	subi r24,lo8(-(1))
 	std Z+1,r24
-	.loc 1 1453 0
+	.loc 1 1454 0
 	rjmp .L127
 .L141:
-	.loc 1 1456 0
+	.loc 1 1457 0
 	lds r24,dataEntry
 	subi r24,lo8(-(1))
 	sts dataEntry,r24
-	.loc 1 1457 0
-	sts nibble,__zero_reg__
 	.loc 1 1458 0
+	sts nibble,__zero_reg__
+	.loc 1 1459 0
 	rjmp .L156
 .L157:
-	.loc 1 1459 0
+	.loc 1 1460 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r25,Z
 	subi r25,lo8(-(1))
 	st Z,r25
-	.loc 1 1460 0
+	.loc 1 1461 0
 	subi r24,lo8(-(-10))
 	sts dataEntry,r24
 .L156:
-	.loc 1 1458 0
+	.loc 1 1459 0
 	lds r24,dataEntry
 	cpi r24,lo8(10)
 	brsh .L157
-	.loc 1 1462 0
+	.loc 1 1463 0
 	sts nibble+1,r24
 .L127:
 /* epilogue start */
 .LBE63:
-	.loc 1 1465 0
+	.loc 1 1466 0
 	pop r29
 	pop r28
 	ret
@@ -3169,7 +3169,7 @@ dataToNibbles:
 	.type	nibbleToLCDstring, @function
 nibbleToLCDstring:
 .LFB86:
-	.loc 1 1467 0
+	.loc 1 1468 0
 	.cfi_startproc
 	push r16
 .LCFI26:
@@ -3191,7 +3191,7 @@ nibbleToLCDstring:
 /* frame size = 0 */
 /* stack size = 4 */
 .L__stack_usage = 4
-	.loc 1 1468 0
+	.loc 1 1469 0
 	lds r30,dataType
 	mov r24,r30
 	ldi r25,0
@@ -3224,7 +3224,7 @@ nibbleToLCDstring:
 	.word gs(.L197)
 	.section	.text.nibbleToLCDstring
 .L162:
-	.loc 1 1470 0
+	.loc 1 1471 0
 	ldi r16,lo8(nibble)
 	ldi r17,hi8(nibble)
 	movw r30,r16
@@ -3234,121 +3234,121 @@ nibbleToLCDstring:
 	ldi r28,lo8(lcdData)
 	ldi r29,hi8(lcdData)
 	st Y,r24
-	.loc 1 1471 0
+	.loc 1 1472 0
 	movw r30,r16
 	ldd r24,Z+1
 	call nibbleToChr
 .LVL325:
 	std Y+1,r24
-	.loc 1 1472 0
-	std Y+2,__zero_reg__
 	.loc 1 1473 0
+	std Y+2,__zero_reg__
+	.loc 1 1474 0
 	rjmp .L160
 .L164:
-	.loc 1 1475 0
+	.loc 1 1476 0
 	ldi r30,lo8(lcdData)
 	ldi r31,hi8(lcdData)
 	ldi r24,lo8(67)
 	st Z,r24
-	.loc 1 1476 0
+	.loc 1 1477 0
 	ldi r24,lo8(104)
 	std Z+1,r24
-	.loc 1 1477 0
+	.loc 1 1478 0
 	lds r24,nibble
 	cpi r24,lo8(-1)
 	brne .L175
-	.loc 1 1478 0
+	.loc 1 1479 0
 	ldi r24,lo8(32)
 	std Z+2,r24
-	.loc 1 1479 0
+	.loc 1 1480 0
 	ldi r24,lo8(45)
 	std Z+3,r24
 	rjmp .L176
 .L175:
-	.loc 1 1481 0
+	.loc 1 1482 0
 	cpi r24,lo8(10)
 	brlo .L177
-	.loc 1 1482 0
+	.loc 1 1483 0
 	ldi r28,lo8(lcdData)
 	ldi r29,hi8(lcdData)
 	ldi r25,lo8(49)
 	std Y+2,r25
-	.loc 1 1483 0
+	.loc 1 1484 0
 	subi r24,lo8(-(-10))
 	call nibbleToChr
 .LVL326:
 	std Y+3,r24
 	rjmp .L176
 .L177:
-	.loc 1 1485 0
+	.loc 1 1486 0
 	ldi r28,lo8(lcdData)
 	ldi r29,hi8(lcdData)
 	ldi r25,lo8(32)
 	std Y+2,r25
-	.loc 1 1486 0
+	.loc 1 1487 0
 	call nibbleToChr
 .LVL327:
 	std Y+3,r24
 .L176:
-	.loc 1 1489 0
-	sts lcdData+4,__zero_reg__
 	.loc 1 1490 0
+	sts lcdData+4,__zero_reg__
+	.loc 1 1491 0
 	rjmp .L160
 .L165:
-	.loc 1 1492 0
+	.loc 1 1493 0
 	lds r24,nibble
 	cpi r24,lo8(-1)
 	breq .L178
-	.loc 1 1492 0 is_stmt 0 discriminator 1
+	.loc 1 1493 0 is_stmt 0 discriminator 1
 	lds r25,nibble+1
 	cpi r25,lo8(-1)
 	brne .L179
 .L178:
-	.loc 1 1493 0 is_stmt 1
+	.loc 1 1494 0 is_stmt 1
 	ldi r30,lo8(lcdData)
 	ldi r31,hi8(lcdData)
 	ldi r24,lo8(110)
 	st Z,r24
-	.loc 1 1494 0
+	.loc 1 1495 0
 	ldi r25,lo8(111)
 	std Z+1,r25
-	.loc 1 1495 0
-	std Z+2,r24
 	.loc 1 1496 0
+	std Z+2,r24
+	.loc 1 1497 0
 	ldi r24,lo8(101)
 	std Z+3,r24
-	.loc 1 1497 0
+	.loc 1 1498 0
 	std Z+4,__zero_reg__
 	rjmp .L160
 .L179:
-	.loc 1 1499 0
+	.loc 1 1500 0
 	ldi r25,lo8(95)
 	sts lcdData+1,r25
-	.loc 1 1500 0
+	.loc 1 1501 0
 	cpi r24,lo8(11)
 	brne .L180
-	.loc 1 1501 0
+	.loc 1 1502 0
 	ldi r24,lo8(72)
 	sts lcdData,r24
 	rjmp .L181
 .L180:
-	.loc 1 1502 0
+	.loc 1 1503 0
 	cpi r24,lo8(5)
 	brsh .L182
-	.loc 1 1504 0
+	.loc 1 1505 0
 	mov r25,r24
 	lsr r25
 	subi r25,lo8(-(67))
 	sts lcdData,r25
-	.loc 1 1505 0
+	.loc 1 1506 0
 	sbrs r24,0
 	rjmp .L181
-	.loc 1 1506 0
+	.loc 1 1507 0
 	ldi r24,lo8(35)
 	sts lcdData+1,r24
 	rjmp .L181
 .L182:
-	.loc 1 1510 0
+	.loc 1 1511 0
 	mov r18,r24
 	ldi r19,0
 	subi r18,5
@@ -3357,53 +3357,53 @@ nibbleToLCDstring:
 	ror r18
 	subi r18,lo8(-(70))
 	sts lcdData,r18
-	.loc 1 1511 0
+	.loc 1 1512 0
 	sbrc r24,0
 	rjmp .L183
-	.loc 1 1512 0
+	.loc 1 1513 0
 	ldi r24,lo8(35)
 	sts lcdData+1,r24
 .L183:
-	.loc 1 1514 0
+	.loc 1 1515 0
 	cpi r18,lo8(72)
 	brne .L181
-	.loc 1 1515 0
+	.loc 1 1516 0
 	ldi r24,lo8(65)
 	sts lcdData,r24
 .L181:
-	.loc 1 1518 0
+	.loc 1 1519 0
 	lds r24,nibble+1
 	cpse r24,__zero_reg__
 	rjmp .L184
-	.loc 1 1519 0
+	.loc 1 1520 0
 	ldi r24,lo8(109)
 	sts lcdData+2,r24
 	rjmp .L185
 .L184:
-	.loc 1 1520 0
+	.loc 1 1521 0
 	cpi r24,lo8(12)
 	brsh .L186
-	.loc 1 1521 0
+	.loc 1 1522 0
 	subi r24,lo8(-(-1))
 	call nibbleToChr
 .LVL328:
 	sts lcdData+2,r24
 	rjmp .L185
 .L186:
-	.loc 1 1523 0
+	.loc 1 1524 0
 	ldi r24,lo8(45)
 	sts lcdData+2,r24
 .L185:
-	.loc 1 1525 0
+	.loc 1 1526 0
 	sts lcdData+3,__zero_reg__
 	rjmp .L160
 .L166:
-	.loc 1 1529 0
+	.loc 1 1530 0
 	ldi r28,lo8(lcdData)
 	ldi r29,hi8(lcdData)
 	ldi r24,lo8(77)
 	st Y,r24
-	.loc 1 1530 0
+	.loc 1 1531 0
 	ldi r16,lo8(nibble)
 	ldi r17,hi8(nibble)
 	movw r30,r16
@@ -3411,27 +3411,27 @@ nibbleToLCDstring:
 	call nibbleToChr
 .LVL329:
 	std Y+1,r24
-	.loc 1 1531 0
+	.loc 1 1532 0
 	ldi r24,lo8(66)
 	std Y+2,r24
-	.loc 1 1532 0
+	.loc 1 1533 0
 	movw r30,r16
 	ldd r24,Z+1
 	call nibbleToChr
 .LVL330:
 	std Y+3,r24
-	.loc 1 1533 0
+	.loc 1 1534 0
 	movw r30,r16
 	ldd r24,Z+2
 	call nibbleToChr
 .LVL331:
 	std Y+4,r24
-	.loc 1 1534 0
-	std Y+5,__zero_reg__
 	.loc 1 1535 0
+	std Y+5,__zero_reg__
+	.loc 1 1536 0
 	rjmp .L160
 .L167:
-	.loc 1 1537 0
+	.loc 1 1538 0
 	ldi r16,lo8(nibble)
 	ldi r17,hi8(nibble)
 	movw r30,r16
@@ -3441,106 +3441,106 @@ nibbleToLCDstring:
 	ldi r28,lo8(lcdData)
 	ldi r29,hi8(lcdData)
 	st Y,r24
-	.loc 1 1538 0
+	.loc 1 1539 0
 	movw r30,r16
 	ldd r24,Z+1
 	call nibbleToChr
 .LVL333:
 	std Y+1,r24
-	.loc 1 1539 0
+	.loc 1 1540 0
 	movw r30,r16
 	ldd r24,Z+2
 	call nibbleToChr
 .LVL334:
 	std Y+2,r24
-	.loc 1 1540 0
-	std Y+3,__zero_reg__
 	.loc 1 1541 0
+	std Y+3,__zero_reg__
+	.loc 1 1542 0
 	rjmp .L160
 .L168:
-	.loc 1 1567 0
+	.loc 1 1568 0
 	lds r24,nibble
 	cpi r24,lo8(3)
 	brsh .L187
-	.loc 1 1568 0
+	.loc 1 1569 0
 	ldi r30,lo8(lcdData)
 	ldi r31,hi8(lcdData)
 	ldi r25,lo8(51)
 	sub r25,r24
 	st Z,r25
-	.loc 1 1569 0
+	.loc 1 1570 0
 	std Z+1,__zero_reg__
 	rjmp .L160
 .L187:
-	.loc 1 1570 0
+	.loc 1 1571 0
 	cpi r24,lo8(3)
 	brne .L188
-	.loc 1 1571 0
+	.loc 1 1572 0
 	ldi r30,lo8(lcdData)
 	ldi r31,hi8(lcdData)
 	ldi r24,lo8(80)
 	st Z,r24
-	.loc 1 1572 0
+	.loc 1 1573 0
 	std Z+1,__zero_reg__
 	rjmp .L160
 .L188:
-	.loc 1 1575 0
+	.loc 1 1576 0
 	ldi r30,lo8(lcdData)
 	ldi r31,hi8(lcdData)
 	ldi r24,lo8(45)
 	st Z,r24
-	.loc 1 1576 0
+	.loc 1 1577 0
 	std Z+1,__zero_reg__
 	rjmp .L160
 .L169:
-	.loc 1 1581 0
+	.loc 1 1582 0
 	lds r24,nibble
 	ldi r30,lo8(lcdData)
 	ldi r31,hi8(lcdData)
 	subi r24,lo8(-(48))
 	st Z,r24
-	.loc 1 1582 0
-	std Z+1,__zero_reg__
 	.loc 1 1583 0
+	std Z+1,__zero_reg__
+	.loc 1 1584 0
 	rjmp .L160
 .L170:
-	.loc 1 1585 0
+	.loc 1 1586 0
 	lds r24,nibble
 	cpse r24,__zero_reg__
 	rjmp .L189
-	.loc 1 1586 0
+	.loc 1 1587 0
 	ldi r30,lo8(lcdData)
 	ldi r31,hi8(lcdData)
 	ldi r24,lo8(65)
 	st Z,r24
-	.loc 1 1587 0
+	.loc 1 1588 0
 	ldi r24,lo8(117)
 	std Z+1,r24
-	.loc 1 1588 0
+	.loc 1 1589 0
 	ldi r24,lo8(115)
 	std Z+2,r24
 	rjmp .L190
 .L189:
-	.loc 1 1590 0
+	.loc 1 1591 0
 	ldi r30,lo8(lcdData)
 	ldi r31,hi8(lcdData)
 	ldi r24,lo8(69)
 	st Z,r24
-	.loc 1 1591 0
+	.loc 1 1592 0
 	ldi r24,lo8(105)
 	std Z+1,r24
-	.loc 1 1592 0
+	.loc 1 1593 0
 	ldi r24,lo8(110)
 	std Z+2,r24
 .L190:
-	.loc 1 1594 0
-	sts lcdData+3,__zero_reg__
 	.loc 1 1595 0
+	sts lcdData+3,__zero_reg__
+	.loc 1 1596 0
 	rjmp .L160
 .LVL335:
 .L191:
 .LBB64:
-	.loc 1 1599 0 discriminator 3
+	.loc 1 1600 0 discriminator 3
 	mov r28,r17
 	ldi r29,0
 	movw r30,r28
@@ -3552,19 +3552,19 @@ nibbleToLCDstring:
 	subi r28,lo8(-(lcdData))
 	sbci r29,hi8(-(lcdData))
 	st Y,r24
-	.loc 1 1598 0 discriminator 3
+	.loc 1 1599 0 discriminator 3
 	subi r17,lo8(-(1))
 .LVL337:
 	rjmp .L171
 .LVL338:
 .L196:
 .LBE64:
-	.loc 1 1468 0
+	.loc 1 1469 0
 	ldi r17,0
 .L171:
 .LVL339:
 .LBB65:
-	.loc 1 1598 0 discriminator 1
+	.loc 1 1599 0 discriminator 1
 	cpi r17,lo8(8)
 	brlo .L191
 	rjmp .L160
@@ -3572,7 +3572,7 @@ nibbleToLCDstring:
 .L193:
 .LBE65:
 .LBB66:
-	.loc 1 1604 0
+	.loc 1 1605 0
 	mov r24,r18
 	ldi r25,0
 	movw r30,r24
@@ -3586,31 +3586,31 @@ nibbleToLCDstring:
 .L198:
 	ldi r19,lo8(73)
 .L192:
-	.loc 1 1604 0 is_stmt 0 discriminator 4
+	.loc 1 1605 0 is_stmt 0 discriminator 4
 	movw r30,r24
 	subi r30,lo8(-(lcdData))
 	sbci r31,hi8(-(lcdData))
 	st Z,r19
-	.loc 1 1603 0 is_stmt 1 discriminator 4
+	.loc 1 1604 0 is_stmt 1 discriminator 4
 	subi r18,lo8(-(1))
 .LVL341:
 	rjmp .L174
 .LVL342:
 .L197:
 .LBE66:
-	.loc 1 1468 0
+	.loc 1 1469 0
 	ldi r18,0
 .L174:
 .LVL343:
 .LBB67:
-	.loc 1 1603 0 discriminator 2
+	.loc 1 1604 0 discriminator 2
 	cpi r18,lo8(8)
 	brlo .L193
 	rjmp .L160
 .LVL344:
 .L172:
 .LBE67:
-	.loc 1 1608 0
+	.loc 1 1609 0
 	ldi r26,lo8(nibble)
 	ldi r27,hi8(nibble)
 	ld r24,X
@@ -3618,17 +3618,17 @@ nibbleToLCDstring:
 	ldi r31,hi8(lcdData)
 	subi r24,lo8(-(48))
 	st Z,r24
-	.loc 1 1609 0
+	.loc 1 1610 0
 	adiw r26,1
 	ld r24,X
 	subi r24,lo8(-(64))
 	std Z+1,r24
-	.loc 1 1610 0
-	std Z+2,__zero_reg__
 	.loc 1 1611 0
+	std Z+2,__zero_reg__
+	.loc 1 1612 0
 	rjmp .L160
 .L173:
-	.loc 1 1613 0
+	.loc 1 1614 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r25,Z
@@ -3636,29 +3636,29 @@ nibbleToLCDstring:
 	mov r18,r25
 	or r18,r24
 	brne .L194
-	.loc 1 1615 0
+	.loc 1 1616 0
 	ldi r30,lo8(lcdData)
 	ldi r31,hi8(lcdData)
 	ldi r24,lo8(45)
 	st Z,r24
-	.loc 1 1616 0
+	.loc 1 1617 0
 	std Z+1,r24
 	rjmp .L195
 .L194:
-	.loc 1 1618 0
+	.loc 1 1619 0
 	ldi r30,lo8(lcdData)
 	ldi r31,hi8(lcdData)
 	subi r25,lo8(-(48))
 	st Z,r25
-	.loc 1 1619 0
+	.loc 1 1620 0
 	subi r24,lo8(-(48))
 	std Z+1,r24
 .L195:
-	.loc 1 1621 0
+	.loc 1 1622 0
 	sts lcdData+2,__zero_reg__
 .L160:
 /* epilogue start */
-	.loc 1 1624 0
+	.loc 1 1625 0
 	pop r29
 	pop r28
 	pop r17
@@ -3672,7 +3672,7 @@ nibbleToLCDstring:
 	.type	LCDStringOut, @function
 LCDStringOut:
 .LFB87:
-	.loc 1 1626 0
+	.loc 1 1627 0
 	.cfi_startproc
 	push r16
 .LCFI30:
@@ -3690,51 +3690,51 @@ LCDStringOut:
 /* frame size = 0 */
 /* stack size = 3 */
 .L__stack_usage = 3
-	.loc 1 1627 0
+	.loc 1 1628 0
 	ldi r24,lo8(30)
 	call lcd_goto
 .LVL345:
 .LBB68:
-	.loc 1 1630 0
+	.loc 1 1631 0
 	ldi r28,0
 .LBE68:
-	.loc 1 1628 0
+	.loc 1 1629 0
 	ldi r16,lo8(lcdData)
 	ldi r17,hi8(lcdData)
 .LBB69:
-	.loc 1 1630 0
+	.loc 1 1631 0
 	rjmp .L200
 .LVL346:
 .L202:
-	.loc 1 1631 0
+	.loc 1 1632 0
 	movw r30,r16
 	ld r24,Z
 .LVL347:
 	tst r24
 	breq .L203
-	.loc 1 1634 0
+	.loc 1 1635 0
 	subi r16,-1
 	sbci r17,-1
 .LVL348:
 	rjmp .L201
 .L203:
-	.loc 1 1632 0
+	.loc 1 1633 0
 	ldi r24,lo8(32)
 .LVL349:
 .L201:
-	.loc 1 1636 0 discriminator 2
+	.loc 1 1637 0 discriminator 2
 	call lcd_putc
 .LVL350:
-	.loc 1 1630 0 discriminator 2
+	.loc 1 1631 0 discriminator 2
 	subi r28,lo8(-(1))
 .LVL351:
 .L200:
-	.loc 1 1630 0 is_stmt 0 discriminator 1
+	.loc 1 1631 0 is_stmt 0 discriminator 1
 	cpi r28,lo8(10)
 	brlo .L202
 /* epilogue start */
 .LBE69:
-	.loc 1 1638 0 is_stmt 1
+	.loc 1 1639 0 is_stmt 1
 	pop r28
 .LVL352:
 	pop r17
@@ -3749,32 +3749,32 @@ LCDStringOut:
 	.type	nibbleCheckOvfl, @function
 nibbleCheckOvfl:
 .LFB88:
-	.loc 1 1640 0
+	.loc 1 1641 0
 	.cfi_startproc
 .LVL354:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1642 0
+	.loc 1 1643 0
 	cpi r24,lo8(10)
 	brge .L206
-	.loc 1 1644 0
+	.loc 1 1645 0
 	tst r24
 	brlt .L207
-	.loc 1 1647 0
+	.loc 1 1648 0
 	ret
 .L206:
-	.loc 1 1643 0
+	.loc 1 1644 0
 	ldi r24,0
 .LVL355:
 	ret
 .LVL356:
 .L207:
-	.loc 1 1645 0
+	.loc 1 1646 0
 	ldi r24,lo8(9)
 .LVL357:
-	.loc 1 1648 0
+	.loc 1 1649 0
 	ret
 	.cfi_endproc
 .LFE88:
@@ -3784,7 +3784,7 @@ nibbleCheckOvfl:
 	.type	nibbleChange, @function
 nibbleChange:
 .LFB89:
-	.loc 1 1650 0
+	.loc 1 1651 0
 	.cfi_startproc
 .LVL358:
 	push r16
@@ -3808,7 +3808,7 @@ nibbleChange:
 /* stack size = 4 */
 .L__stack_usage = 4
 	mov r28,r24
-	.loc 1 1653 0
+	.loc 1 1654 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,1
@@ -3817,7 +3817,7 @@ nibbleChange:
 	mov r18,r24
 	andi r18,lo8(16)
 .LVL360:
-	.loc 1 1654 0
+	.loc 1 1655 0
 	lds r30,dataType
 	mov r24,r30
 	ldi r25,0
@@ -3851,7 +3851,7 @@ nibbleChange:
 	.section	.text.nibbleChange
 .L210:
 .LBB70:
-	.loc 1 1657 0
+	.loc 1 1658 0
 	ldi r29,0
 	subi r28,lo8(-(nibble))
 	sbci r29,hi8(-(nibble))
@@ -3861,39 +3861,39 @@ nibbleChange:
 .LVL362:
 	andi r22,lo8(15)
 	st Y,r22
-	.loc 1 1658 0
+	.loc 1 1659 0
 	rjmp .L208
 .LVL363:
 .L212:
-	.loc 1 1660 0
+	.loc 1 1661 0
 	cpse r18,__zero_reg__
 	rjmp .L222
-	.loc 1 1662 0
+	.loc 1 1663 0
 	cpi r22,lo8(1)
 	brne .L223
-	.loc 1 1662 0 is_stmt 0 discriminator 1
+	.loc 1 1663 0 is_stmt 0 discriminator 1
 	lds r24,nibble
 	cpi r24,lo8(16)
 	brlo .L223
-	.loc 1 1663 0 is_stmt 1
+	.loc 1 1664 0 is_stmt 1
 	ldi r24,lo8(1)
 	sts nibble,r24
 	rjmp .L208
 .L223:
-	.loc 1 1664 0
+	.loc 1 1665 0
 	cpi r22,lo8(-1)
 	brne .L224
-	.loc 1 1664 0 is_stmt 0 discriminator 1
+	.loc 1 1665 0 is_stmt 0 discriminator 1
 	lds r24,nibble
 	subi r24,lo8(-(-2))
 	cpi r24,lo8(15)
 	brlo .L224
-	.loc 1 1666 0 is_stmt 1
+	.loc 1 1667 0 is_stmt 1
 	ldi r24,lo8(16)
 	sts nibble,r24
 	rjmp .L208
 .L224:
-	.loc 1 1668 0
+	.loc 1 1669 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r24,Z
@@ -3903,55 +3903,55 @@ nibbleChange:
 	rjmp .L208
 .LVL365:
 .L222:
-	.loc 1 1672 0
+	.loc 1 1673 0
 	cpi r22,lo8(1)
 	brne .L225
-	.loc 1 1672 0 is_stmt 0 discriminator 1
+	.loc 1 1673 0 is_stmt 0 discriminator 1
 	lds r24,nibble
 	cpi r24,lo8(16)
 	brne .L225
-	.loc 1 1673 0 is_stmt 1
+	.loc 1 1674 0 is_stmt 1
 	ldi r24,lo8(-1)
 	sts nibble,r24
 	rjmp .L208
 .L225:
-	.loc 1 1674 0
+	.loc 1 1675 0
 	cpi r22,lo8(1)
 	brne .L226
-	.loc 1 1674 0 is_stmt 0 discriminator 1
+	.loc 1 1675 0 is_stmt 0 discriminator 1
 	lds r24,nibble
 	cpi r24,lo8(-1)
 	brne .L226
-	.loc 1 1675 0 is_stmt 1
+	.loc 1 1676 0 is_stmt 1
 	ldi r24,lo8(1)
 	sts nibble,r24
 	rjmp .L208
 .L226:
-	.loc 1 1676 0
+	.loc 1 1677 0
 	cpi r22,lo8(-1)
 	brne .L227
-	.loc 1 1676 0 is_stmt 0 discriminator 1
+	.loc 1 1677 0 is_stmt 0 discriminator 1
 	lds r24,nibble
 	cpi r24,lo8(-1)
 	brne .L227
-	.loc 1 1677 0 is_stmt 1
+	.loc 1 1678 0 is_stmt 1
 	ldi r24,lo8(16)
 	sts nibble,r24
 	rjmp .L208
 .L227:
-	.loc 1 1678 0
+	.loc 1 1679 0
 	cpi r22,lo8(-1)
 	brne .L228
-	.loc 1 1678 0 is_stmt 0 discriminator 1
+	.loc 1 1679 0 is_stmt 0 discriminator 1
 	lds r24,nibble
 	cpi r24,lo8(1)
 	brne .L228
-	.loc 1 1679 0 is_stmt 1
+	.loc 1 1680 0 is_stmt 1
 	ldi r24,lo8(-1)
 	sts nibble,r24
 	rjmp .L208
 .L228:
-	.loc 1 1681 0
+	.loc 1 1682 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r24,Z
@@ -3961,175 +3961,175 @@ nibbleChange:
 	rjmp .L208
 .LVL367:
 .L213:
-	.loc 1 1686 0
+	.loc 1 1687 0
 	lds r24,nibble+1
 	cpi r24,lo8(-1)
 	brne .L229
-	.loc 1 1688 0
+	.loc 1 1689 0
 	ldi r28,lo8(1)
 .LVL368:
 .L229:
-	.loc 1 1690 0
+	.loc 1 1691 0
 	cpse r28,__zero_reg__
 	rjmp .L230
 .LBB71:
-	.loc 1 1692 0
+	.loc 1 1693 0
 	lds r24,nibble
 .LVL369:
-	.loc 1 1693 0
+	.loc 1 1694 0
 	cpi r24,lo8(12)
 	brsh .L257
-	.loc 1 1696 0
+	.loc 1 1697 0
 	cpi r24,lo8(11)
 	brne .L232
-	.loc 1 1696 0 is_stmt 0 discriminator 1
+	.loc 1 1697 0 is_stmt 0 discriminator 1
 	cpi r22,lo8(1)
 	breq .L258
 .L232:
-	.loc 1 1698 0 is_stmt 1
+	.loc 1 1699 0 is_stmt 1
 	cpse r24,__zero_reg__
 	rjmp .L233
-	.loc 1 1698 0 is_stmt 0 discriminator 1
+	.loc 1 1699 0 is_stmt 0 discriminator 1
 	cpi r22,lo8(-1)
 	breq .L259
 .L233:
-	.loc 1 1701 0 is_stmt 1
+	.loc 1 1702 0 is_stmt 1
 	add r22,r24
 .LVL370:
 	rjmp .L231
 .LVL371:
 .L257:
-	.loc 1 1695 0
+	.loc 1 1696 0
 	ldi r22,0
 .LVL372:
 	rjmp .L231
 .LVL373:
 .L258:
-	.loc 1 1697 0
+	.loc 1 1698 0
 	ldi r22,0
 .LVL374:
 	rjmp .L231
 .LVL375:
 .L259:
-	.loc 1 1699 0
+	.loc 1 1700 0
 	ldi r22,lo8(11)
 .LVL376:
 .L231:
-	.loc 1 1703 0
+	.loc 1 1704 0
 	sts nibble,r22
 .LBE71:
 	rjmp .L234
 .LVL377:
 .L230:
 .LBB72:
-	.loc 1 1707 0
+	.loc 1 1708 0
 	cpse r18,__zero_reg__
 	rjmp .L235
-	.loc 1 1708 0
+	.loc 1 1709 0
 	cpse r24,__zero_reg__
 	rjmp .L236
-	.loc 1 1708 0 is_stmt 0 discriminator 1
+	.loc 1 1709 0 is_stmt 0 discriminator 1
 	cpi r22,lo8(-1)
 	breq .L260
 .L236:
-	.loc 1 1710 0 is_stmt 1
+	.loc 1 1711 0 is_stmt 1
 	cpi r24,lo8(10)
 	brne .L238
-	.loc 1 1710 0 is_stmt 0 discriminator 1
+	.loc 1 1711 0 is_stmt 0 discriminator 1
 	cpi r22,lo8(1)
 	breq .L261
 .L238:
-	.loc 1 1713 0 is_stmt 1
+	.loc 1 1714 0 is_stmt 1
 	add r22,r24
 .LVL378:
 	rjmp .L237
 .LVL379:
 .L235:
-	.loc 1 1716 0
+	.loc 1 1717 0
 	cpse r24,__zero_reg__
 	rjmp .L239
-	.loc 1 1716 0 is_stmt 0 discriminator 1
+	.loc 1 1717 0 is_stmt 0 discriminator 1
 	cpi r22,lo8(-1)
 	breq .L262
 .L239:
-	.loc 1 1718 0 is_stmt 1
+	.loc 1 1719 0 is_stmt 1
 	cpi r24,lo8(10)
 	brne .L240
-	.loc 1 1718 0 is_stmt 0 discriminator 1
+	.loc 1 1719 0 is_stmt 0 discriminator 1
 	cpi r22,lo8(1)
 	breq .L263
 .L240:
-	.loc 1 1720 0 is_stmt 1
+	.loc 1 1721 0 is_stmt 1
 	cpi r24,lo8(-1)
 	brne .L241
-	.loc 1 1720 0 is_stmt 0 discriminator 1
+	.loc 1 1721 0 is_stmt 0 discriminator 1
 	cpi r22,lo8(1)
 	breq .L264
 .L241:
-	.loc 1 1722 0 is_stmt 1
+	.loc 1 1723 0 is_stmt 1
 	cpi r24,lo8(-1)
 	brne .L242
-	.loc 1 1722 0 is_stmt 0 discriminator 1
+	.loc 1 1723 0 is_stmt 0 discriminator 1
 	cpi r22,lo8(-1)
 	breq .L265
 .L242:
-	.loc 1 1725 0 is_stmt 1
+	.loc 1 1726 0 is_stmt 1
 	add r22,r24
 .LVL380:
 	rjmp .L237
 .LVL381:
 .L260:
-	.loc 1 1709 0
+	.loc 1 1710 0
 	ldi r22,lo8(10)
 .LVL382:
 	rjmp .L237
 .LVL383:
 .L261:
-	.loc 1 1711 0
+	.loc 1 1712 0
 	ldi r22,0
 .LVL384:
 	rjmp .L237
 .LVL385:
 .L262:
-	.loc 1 1717 0
+	.loc 1 1718 0
 	ldi r22,lo8(-1)
 .LVL386:
 	rjmp .L237
 .LVL387:
 .L263:
-	.loc 1 1719 0
+	.loc 1 1720 0
 	ldi r22,lo8(-1)
 .LVL388:
 	rjmp .L237
 .LVL389:
 .L264:
-	.loc 1 1721 0
+	.loc 1 1722 0
 	ldi r22,0
 .LVL390:
 	rjmp .L237
 .LVL391:
 .L265:
-	.loc 1 1723 0
+	.loc 1 1724 0
 	ldi r22,lo8(10)
 .LVL392:
 .L237:
-	.loc 1 1728 0
+	.loc 1 1729 0
 	sts nibble+1,r22
 .LVL393:
 .L234:
 .LBE72:
-	.loc 1 1730 0
+	.loc 1 1731 0
 	lds r25,nibble
 	cpi r25,lo8(-1)
 	brne .+2
 	rjmp .L208
-	.loc 1 1730 0 is_stmt 0 discriminator 1
+	.loc 1 1731 0 is_stmt 0 discriminator 1
 	lds r24,nibble+1
 	cpi r24,lo8(-1)
 	brne .+2
 	rjmp .L208
 .LBB73:
-	.loc 1 1732 0 is_stmt 1
+	.loc 1 1733 0 is_stmt 1
 	mov r18,r24
 .LVL394:
 	lsl r18
@@ -4139,25 +4139,25 @@ nibbleChange:
 	lsl r18
 	add r25,r18
 .LVL395:
-	.loc 1 1733 0
+	.loc 1 1734 0
 	brmi .+2
 	rjmp .L208
-	.loc 1 1734 0
+	.loc 1 1735 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ldi r24,lo8(7)
 	st Z,r24
-	.loc 1 1735 0
+	.loc 1 1736 0
 	ldi r24,lo8(10)
 	std Z+1,r24
 	rjmp .L208
 .LVL396:
 .L214:
 .LBE73:
-	.loc 1 1740 0
+	.loc 1 1741 0
 	cpse r28,__zero_reg__
 	rjmp .L243
-	.loc 1 1742 0
+	.loc 1 1743 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r24,Z
@@ -4169,7 +4169,7 @@ nibbleChange:
 .LVL398:
 .L243:
 .LBB74:
-	.loc 1 1744 0
+	.loc 1 1745 0
 	ldi r29,0
 	ldi r16,lo8(nibble)
 	ldi r17,hi8(nibble)
@@ -4181,7 +4181,7 @@ nibbleChange:
 	call nibbleCheckOvfl
 .LVL400:
 	st Y,r24
-	.loc 1 1745 0
+	.loc 1 1746 0
 	movw r30,r16
 	ldd r24,Z+1
 	ldd r25,Z+2
@@ -4192,35 +4192,35 @@ nibbleChange:
 	add r24,r18
 	add r24,r25
 .LVL401:
-	.loc 1 1746 0
+	.loc 1 1747 0
 	cpi r24,lo8(32)
 	brlt .L244
-	.loc 1 1747 0
+	.loc 1 1748 0
 	ldi r24,lo8(3)
 .LVL402:
 	std Z+1,r24
 .LVL403:
-	.loc 1 1748 0
+	.loc 1 1749 0
 	ldi r24,lo8(1)
 	std Z+2,r24
 	rjmp .L208
 .LVL404:
 .L244:
-	.loc 1 1749 0
+	.loc 1 1750 0
 	tst r24
 	brlt .+2
 	rjmp .L208
-	.loc 1 1750 0
+	.loc 1 1751 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	std Z+1,__zero_reg__
-	.loc 1 1751 0
+	.loc 1 1752 0
 	std Z+2,__zero_reg__
 	rjmp .L208
 .LVL405:
 .L215:
 .LBE74:
-	.loc 1 1756 0
+	.loc 1 1757 0
 	ldi r29,0
 	ldi r16,lo8(nibble)
 	ldi r17,hi8(nibble)
@@ -4232,7 +4232,7 @@ nibbleChange:
 	call nibbleCheckOvfl
 .LVL407:
 	st Y,r24
-	.loc 1 1757 0
+	.loc 1 1758 0
 	movw r30,r16
 	ld r18,Z
 	ldd r24,Z+1
@@ -4258,28 +4258,28 @@ nibbleChange:
 	add r24,r18
 	adc r25,__zero_reg__
 .LVL408:
-	.loc 1 1758 0
+	.loc 1 1759 0
 	cpi r24,-1
 	cpc r25,__zero_reg__
 	breq .+2
 	brge .+2
 	rjmp .L208
-	.loc 1 1759 0
+	.loc 1 1760 0
 	ldi r24,lo8(2)
 .LVL409:
 	st Z,r24
-	.loc 1 1760 0
+	.loc 1 1761 0
 	ldi r24,lo8(5)
 	std Z+1,r24
-	.loc 1 1761 0
+	.loc 1 1762 0
 	std Z+2,r24
 	rjmp .L208
 .LVL410:
 .L216:
-	.loc 1 1765 0
+	.loc 1 1766 0
 	tst r18
 	breq .L245
-	.loc 1 1766 0
+	.loc 1 1767 0
 	ldi r29,0
 	movw r30,r28
 	subi r30,lo8(-(nibble))
@@ -4288,19 +4288,19 @@ nibbleChange:
 	add r22,r24
 .LVL411:
 	st Z,r22
-	.loc 1 1768 0
+	.loc 1 1769 0
 	cpi r22,lo8(4)
 	brne .L246
-	.loc 1 1770 0
+	.loc 1 1771 0
 	ldi r24,lo8(-1)
 	st Z,r24
 	rjmp .L208
 .L246:
-	.loc 1 1771 0
+	.loc 1 1772 0
 	cpi r22,lo8(-2)
 	breq .+2
 	rjmp .L208
-	.loc 1 1772 0
+	.loc 1 1773 0
 	subi r28,lo8(-(nibble))
 	sbci r29,hi8(-(nibble))
 .LVL412:
@@ -4309,7 +4309,7 @@ nibbleChange:
 	rjmp .L208
 .LVL413:
 .L245:
-	.loc 1 1775 0
+	.loc 1 1776 0
 	ldi r29,0
 	movw r30,r28
 	subi r30,lo8(-(nibble))
@@ -4317,21 +4317,21 @@ nibbleChange:
 	ld r24,Z
 	cpse r24,__zero_reg__
 	rjmp .L247
-	.loc 1 1775 0 is_stmt 0 discriminator 1
+	.loc 1 1776 0 is_stmt 0 discriminator 1
 	cpi r22,lo8(-1)
 	brne .L247
-	.loc 1 1776 0 is_stmt 1
+	.loc 1 1777 0 is_stmt 1
 	ldi r24,lo8(3)
 	st Z,r24
 	rjmp .L208
 .L247:
-	.loc 1 1777 0
+	.loc 1 1778 0
 	cpi r24,lo8(3)
 	brne .L248
-	.loc 1 1777 0 is_stmt 0 discriminator 1
+	.loc 1 1778 0 is_stmt 0 discriminator 1
 	cpi r22,lo8(1)
 	brne .L248
-	.loc 1 1778 0 is_stmt 1
+	.loc 1 1779 0 is_stmt 1
 	subi r28,lo8(-(nibble))
 	sbci r29,hi8(-(nibble))
 .LVL414:
@@ -4339,7 +4339,7 @@ nibbleChange:
 	rjmp .L208
 .LVL415:
 .L248:
-	.loc 1 1780 0
+	.loc 1 1781 0
 	subi r28,lo8(-(nibble))
 	sbci r29,hi8(-(nibble))
 .LVL416:
@@ -4349,7 +4349,7 @@ nibbleChange:
 	rjmp .L208
 .LVL418:
 .L217:
-	.loc 1 1785 0
+	.loc 1 1786 0
 	ldi r29,0
 	subi r28,lo8(-(nibble))
 	sbci r29,hi8(-(nibble))
@@ -4359,20 +4359,20 @@ nibbleChange:
 .LVL420:
 	andi r22,lo8(3)
 	st Y,r22
-	.loc 1 1786 0
+	.loc 1 1787 0
 	rjmp .L208
 .LVL421:
 .L218:
-	.loc 1 1788 0
+	.loc 1 1789 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r24,Z
 	com r24
 	st Z,r24
-	.loc 1 1789 0
+	.loc 1 1790 0
 	rjmp .L208
 .L219:
-	.loc 1 1792 0
+	.loc 1 1793 0
 	ldi r29,0
 	ldi r24,lo8(1)
 	sbrc r22,1
@@ -4382,14 +4382,14 @@ nibbleChange:
 	sbci r29,hi8(-(nibble))
 .LVL422:
 	st Y,r24
-	.loc 1 1793 0
+	.loc 1 1794 0
 	rjmp .L208
 .LVL423:
 .L220:
-	.loc 1 1795 0
+	.loc 1 1796 0
 	cpi r22,lo8(1)
 	brne .L250
-	.loc 1 1796 0
+	.loc 1 1797 0
 	ldi r29,0
 	subi r28,lo8(-(nibble))
 	sbci r29,hi8(-(nibble))
@@ -4401,7 +4401,7 @@ nibbleChange:
 	rjmp .L208
 .LVL425:
 .L250:
-	.loc 1 1798 0
+	.loc 1 1799 0
 	mov r30,r28
 	ldi r31,0
 	subi r30,lo8(-(nibble))
@@ -4413,7 +4413,7 @@ nibbleChange:
 	st Z,r24
 	rjmp .L208
 .L221:
-	.loc 1 1803 0
+	.loc 1 1804 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r25,Z
@@ -4426,10 +4426,10 @@ nibbleChange:
 	add r25,r18
 	add r24,r25
 .LVL427:
-	.loc 1 1804 0
+	.loc 1 1805 0
 	cpse r28,__zero_reg__
 	rjmp .L251
-	.loc 1 1806 0
+	.loc 1 1807 0
 	lsl r22
 .LVL428:
 	mov r25,r22
@@ -4441,54 +4441,54 @@ nibbleChange:
 	rjmp .L252
 .LVL430:
 .L251:
-	.loc 1 1809 0
+	.loc 1 1810 0
 	add r22,r24
 .LVL431:
 .L252:
-	.loc 1 1811 0
+	.loc 1 1812 0
 	tst r22
 	brlt .L266
-	.loc 1 1813 0
+	.loc 1 1814 0
 	cpi r22,lo8(65)
 	brge .L267
 	rjmp .L253
 .L266:
-	.loc 1 1812 0
+	.loc 1 1813 0
 	ldi r22,0
 .LVL432:
 	rjmp .L253
 .LVL433:
 .L267:
-	.loc 1 1814 0
+	.loc 1 1815 0
 	ldi r22,0
 .LVL434:
 .L253:
-	.loc 1 1816 0
+	.loc 1 1817 0
 	sts nibble,__zero_reg__
 .LVL435:
-	.loc 1 1817 0
+	.loc 1 1818 0
 	rjmp .L254
 .L255:
-	.loc 1 1818 0
+	.loc 1 1819 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r24,Z
 	subi r24,lo8(-(1))
 	st Z,r24
-	.loc 1 1819 0
+	.loc 1 1820 0
 	subi r22,lo8(-(-10))
 .LVL436:
 .L254:
-	.loc 1 1817 0
+	.loc 1 1818 0
 	cpi r22,lo8(10)
 	brge .L255
-	.loc 1 1821 0
+	.loc 1 1822 0
 	sts nibble+1,r22
 .LVL437:
 .L208:
 /* epilogue start */
 .LBE70:
-	.loc 1 1825 0
+	.loc 1 1826 0
 	pop r29
 	pop r28
 	pop r17
@@ -4502,13 +4502,13 @@ nibbleChange:
 	.type	nibbleToData, @function
 nibbleToData:
 .LFB90:
-	.loc 1 1827 0
+	.loc 1 1828 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1831 0
+	.loc 1 1832 0
 	lds r30,dataType
 	mov r24,r30
 	ldi r25,0
@@ -4542,7 +4542,7 @@ nibbleToData:
 	.section	.text.nibbleToData
 .L270:
 .LBB75:
-	.loc 1 1833 0
+	.loc 1 1834 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r24,Z
@@ -4554,38 +4554,38 @@ nibbleToData:
 	andi r25,lo8(15)
 	or r24,r25
 	sts dataEntry,r24
-	.loc 1 1834 0
+	.loc 1 1835 0
 	ret
 .L272:
-	.loc 1 1836 0
+	.loc 1 1837 0
 	lds r25,nibble
 	ldi r24,lo8(-1)
 	add r24,r25
 	cpi r24,lo8(16)
 	brlo .L283
-	.loc 1 1838 0
+	.loc 1 1839 0
 	sts dataEntry,r25
 	ret
 .L283:
-	.loc 1 1840 0
+	.loc 1 1841 0
 	sts dataEntry,r24
 	ret
 .L273:
-	.loc 1 1844 0
+	.loc 1 1845 0
 	lds r25,nibble
 	cpi r25,lo8(-1)
 	breq .L284
-	.loc 1 1844 0 is_stmt 0 discriminator 1
+	.loc 1 1845 0 is_stmt 0 discriminator 1
 	lds r24,nibble+1
 	cpi r24,lo8(-1)
 	brne .L285
 .L284:
-	.loc 1 1845 0 is_stmt 1
+	.loc 1 1846 0 is_stmt 1
 	ldi r24,lo8(-1)
 	sts dataEntry,r24
 	ret
 .L285:
-	.loc 1 1847 0
+	.loc 1 1848 0
 	mov r18,r24
 	lsl r18
 	add r24,r18
@@ -4595,7 +4595,7 @@ nibbleToData:
 	sts dataEntry,r24
 	ret
 .L274:
-	.loc 1 1851 0
+	.loc 1 1852 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r24,Z
@@ -4603,7 +4603,7 @@ nibbleToData:
 	mul r24,r19
 	movw r24,r0
 	clr __zero_reg__
-	.loc 1 1852 0
+	.loc 1 1853 0
 	ldd r18,Z+1
 	ldd r19,Z+2
 	lsl r18
@@ -4613,21 +4613,21 @@ nibbleToData:
 	add r18,r20
 	add r18,r19
 .LVL438:
-	.loc 1 1853 0
+	.loc 1 1854 0
 	cpi r18,lo8(32)
 	brlo .L286
-	.loc 1 1854 0
+	.loc 1 1855 0
 	ori r24,lo8(31)
 	sts dataEntry,r24
 	ret
 .L286:
-	.loc 1 1856 0
+	.loc 1 1857 0
 	or r24,r18
 	sts dataEntry,r24
 	ret
 .LVL439:
 .L275:
-	.loc 1 1860 0
+	.loc 1 1861 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r18,Z
@@ -4653,61 +4653,61 @@ nibbleToData:
 	add r24,r18
 	adc r25,__zero_reg__
 .LVL440:
-	.loc 1 1861 0
+	.loc 1 1862 0
 	cpi r24,-1
 	cpc r25,__zero_reg__
 	breq .L287
 	brlo .L287
-	.loc 1 1862 0
+	.loc 1 1863 0
 	ldi r24,lo8(-1)
 .LVL441:
 	sts dataEntry,r24
 	ret
 .LVL442:
 .L287:
-	.loc 1 1864 0
+	.loc 1 1865 0
 	sts dataEntry,r24
 	ret
 .LVL443:
 .L276:
-	.loc 1 1868 0
+	.loc 1 1869 0
 	lds r24,nibble
 	sts dataEntry,r24
-	.loc 1 1869 0
+	.loc 1 1870 0
 	cpi r24,lo8(4)
 	brsh .+2
 	rjmp .L268
-	.loc 1 1870 0
+	.loc 1 1871 0
 	ldi r24,lo8(-1)
 	sts dataEntry,r24
 	ret
 .L277:
-	.loc 1 1874 0
+	.loc 1 1875 0
 	lds r24,nibble
 	andi r24,lo8(3)
 	sts dataEntry,r24
-	.loc 1 1875 0
+	.loc 1 1876 0
 	ret
 .L278:
-	.loc 1 1877 0
+	.loc 1 1878 0
 	lds r24,nibble
 	sts dataEntry,r24
-	.loc 1 1878 0
+	.loc 1 1879 0
 	ret
 .L279:
-	.loc 1 1881 0
+	.loc 1 1882 0
 	sts dataEntry,__zero_reg__
 .LVL444:
 .LBB76:
-	.loc 1 1882 0
+	.loc 1 1883 0
 	ldi r24,0
 	rjmp .L288
 .LVL445:
 .L289:
-	.loc 1 1883 0 discriminator 3
+	.loc 1 1884 0 discriminator 3
 	lds r25,dataEntry
 	lsl r25
-	.loc 1 1884 0 discriminator 3
+	.loc 1 1885 0 discriminator 3
 	mov r30,r24
 	ldi r31,0
 	subi r30,lo8(-(nibble))
@@ -4715,34 +4715,34 @@ nibbleToData:
 	ld r18,Z
 	add r25,r18
 	sts dataEntry,r25
-	.loc 1 1882 0 discriminator 3
+	.loc 1 1883 0 discriminator 3
 	subi r24,lo8(-(1))
 .LVL446:
 .L288:
-	.loc 1 1882 0 is_stmt 0 discriminator 1
+	.loc 1 1883 0 is_stmt 0 discriminator 1
 	cpi r24,lo8(8)
 	brlo .L289
 	ret
 .LVL447:
 .L280:
 .LBE76:
-	.loc 1 1888 0 is_stmt 1
+	.loc 1 1889 0 is_stmt 1
 	sts dataEntry32,__zero_reg__
 	sts dataEntry32+1,__zero_reg__
 	sts dataEntry32+2,__zero_reg__
 	sts dataEntry32+3,__zero_reg__
 .LVL448:
-	.loc 1 1890 0
+	.loc 1 1891 0
 	ldi r26,lo8(dataEntry32)
 	ldi r27,hi8(dataEntry32)
-	.loc 1 1889 0
+	.loc 1 1890 0
 	ldi r24,lo8(8)
-	.loc 1 1891 0
+	.loc 1 1892 0
 	rjmp .L290
 .LVL449:
 .L291:
 .LBB77:
-	.loc 1 1893 0
+	.loc 1 1894 0
 	subi r24,lo8(-(-2))
 .LVL450:
 	ldi r31,0
@@ -4750,7 +4750,7 @@ nibbleToData:
 	sbci r31,hi8(-(nibble))
 	ld r25,Z
 .LVL451:
-	.loc 1 1894 0
+	.loc 1 1895 0
 	mov r30,r24
 	ldi r31,0
 	subi r30,lo8(-(nibble))
@@ -4761,13 +4761,13 @@ nibbleToData:
 	add r25,r0
 	clr __zero_reg__
 .LVL452:
-	.loc 1 1895 0
+	.loc 1 1896 0
 	st X,r25
 	adiw r26,1
 .LVL453:
 .L290:
 .LBE77:
-	.loc 1 1891 0
+	.loc 1 1892 0
 	ldi r30,lo8(-1)
 	add r30,r24
 .LVL454:
@@ -4776,7 +4776,7 @@ nibbleToData:
 	ret
 .LVL455:
 .L281:
-	.loc 1 1899 0
+	.loc 1 1900 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r18,Z
@@ -4794,10 +4794,10 @@ nibbleToData:
 	add r25,r18
 	or r24,r25
 	sts dataEntry,r24
-	.loc 1 1900 0
+	.loc 1 1901 0
 	ret
 .L282:
-	.loc 1 1902 0
+	.loc 1 1903 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	ld r24,Z
@@ -4821,7 +4821,7 @@ nibbleToData:
 	.type	menuTextOutVar, @function
 menuTextOutVar:
 .LFB91:
-	.loc 1 1907 0
+	.loc 1 1908 0
 	.cfi_startproc
 .LVL456:
 	push r16
@@ -4848,46 +4848,46 @@ menuTextOutVar:
 	mov r29,r22
 .LVL457:
 .LBB78:
-	.loc 1 1909 0
+	.loc 1 1910 0
 	ldi r28,0
 	rjmp .L293
 .LVL458:
 .L295:
 .LBB79:
-	.loc 1 1910 0
+	.loc 1 1911 0
 	movw r30,r16
 	ld r24,Z
 .LVL459:
-	.loc 1 1911 0
+	.loc 1 1912 0
 	tst r24
 	breq .L296
-	.loc 1 1915 0
+	.loc 1 1916 0
 	subi r16,-1
 	sbci r17,-1
 .LVL460:
 	rjmp .L294
 .L296:
-	.loc 1 1912 0
+	.loc 1 1913 0
 	mov r24,r29
 .LVL461:
-	.loc 1 1913 0
+	.loc 1 1914 0
 	ldi r29,lo8(32)
 .LVL462:
 .L294:
-	.loc 1 1917 0 discriminator 2
+	.loc 1 1918 0 discriminator 2
 	call lcd_putc
 .LVL463:
 .LBE79:
-	.loc 1 1909 0 discriminator 2
+	.loc 1 1910 0 discriminator 2
 	subi r28,lo8(-(1))
 .LVL464:
 .L293:
-	.loc 1 1909 0 is_stmt 0 discriminator 1
+	.loc 1 1910 0 is_stmt 0 discriminator 1
 	cpi r28,lo8(10)
 	brlo .L295
 /* epilogue start */
 .LBE78:
-	.loc 1 1919 0 is_stmt 1
+	.loc 1 1920 0 is_stmt 1
 	pop r29
 .LVL465:
 	pop r28
@@ -4904,7 +4904,7 @@ menuTextOutVar:
 	.type	menuTextOut, @function
 menuTextOut:
 .LFB92:
-	.loc 1 1922 0
+	.loc 1 1923 0
 	.cfi_startproc
 .LVL468:
 	push r16
@@ -4931,46 +4931,46 @@ menuTextOut:
 	mov r29,r22
 .LVL469:
 .LBB80:
-	.loc 1 1924 0
+	.loc 1 1925 0
 	ldi r28,0
 	rjmp .L298
 .LVL470:
 .L300:
 .LBB81:
-	.loc 1 1925 0
+	.loc 1 1926 0
 	movw r30,r16
 	lpm r24,Z
 .LVL471:
-	.loc 1 1926 0
+	.loc 1 1927 0
 	tst r24
 	breq .L301
-	.loc 1 1930 0
+	.loc 1 1931 0
 	subi r16,-1
 	sbci r17,-1
 .LVL472:
 	rjmp .L299
 .L301:
-	.loc 1 1927 0
+	.loc 1 1928 0
 	mov r24,r29
 .LVL473:
-	.loc 1 1928 0
+	.loc 1 1929 0
 	ldi r29,lo8(32)
 .LVL474:
 .L299:
-	.loc 1 1932 0 discriminator 2
+	.loc 1 1933 0 discriminator 2
 	call lcd_putc
 .LVL475:
 .LBE81:
-	.loc 1 1924 0 discriminator 2
+	.loc 1 1925 0 discriminator 2
 	subi r28,lo8(-(1))
 .LVL476:
 .L298:
-	.loc 1 1924 0 is_stmt 0 discriminator 1
+	.loc 1 1925 0 is_stmt 0 discriminator 1
 	cpi r28,lo8(10)
 	brlo .L300
 /* epilogue start */
 .LBE80:
-	.loc 1 1934 0 is_stmt 1
+	.loc 1 1935 0 is_stmt 1
 	pop r29
 .LVL477:
 	pop r28
@@ -4987,21 +4987,21 @@ menuTextOut:
 	.type	menuParentMenuToLCD, @function
 menuParentMenuToLCD:
 .LFB93:
-	.loc 1 1936 0
+	.loc 1 1937 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1937 0
+	.loc 1 1938 0
 	ldi r24,lo8(64)
 	call lcd_goto
 .LVL480:
-	.loc 1 1938 0
+	.loc 1 1939 0
 	lds r30,menuStackIndex
 	cpse r30,__zero_reg__
 	rjmp .L303
-	.loc 1 1940 0
+	.loc 1 1941 0
 	ldi r22,lo8(58)
 	lds r24,pMenuTopTitle
 	lds r25,pMenuTopTitle+1
@@ -5010,7 +5010,7 @@ menuParentMenuToLCD:
 	ret
 .L303:
 .LBB82:
-	.loc 1 1943 0
+	.loc 1 1944 0
 	ldi r31,0
 	sbiw r30,1
 	lsl r30
@@ -5020,7 +5020,7 @@ menuParentMenuToLCD:
 	ld r24,Z
 	ldd r25,Z+1
 .LVL482:
-	.loc 1 1944 0
+	.loc 1 1945 0
 	ldi r22,lo8(58)
 	adiw r24,2
 .LVL483:
@@ -5036,13 +5036,13 @@ menuParentMenuToLCD:
 	.type	menuDisplayValue, @function
 menuDisplayValue:
 .LFB95:
-	.loc 1 1976 0
+	.loc 1 1977 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1978 0
+	.loc 1 1979 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	lpm r24,Z
@@ -5050,13 +5050,13 @@ menuDisplayValue:
 	ldi r25,0
 	sbiw r24,2
 	brlt .L305
-	.loc 1 1979 0
+	.loc 1 1980 0
 	call dataToNibbles
 .LVL485:
-	.loc 1 1980 0
+	.loc 1 1981 0
 	call nibbleToLCDstring
 .LVL486:
-	.loc 1 1981 0
+	.loc 1 1982 0
 	call LCDStringOut
 .LVL487:
 .L305:
@@ -5069,13 +5069,13 @@ menuDisplayValue:
 	.type	menuCursorSetDataNibble, @function
 menuCursorSetDataNibble:
 .LFB96:
-	.loc 1 1985 0
+	.loc 1 1986 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1987 0
+	.loc 1 1988 0
 	lds r30,pNibbleInfo
 	lds r31,pNibbleInfo+1
 	lds r24,nibbleIndex
@@ -5086,7 +5086,7 @@ menuCursorSetDataNibble:
 	subi r24,lo8(-(30))
 	call lcd_goto
 .LVL488:
-	.loc 1 1988 0
+	.loc 1 1989 0
 	lds r18,nibbleIndex
 	ldi r19,0
 	lds r30,pNibbleInfo
@@ -5097,37 +5097,37 @@ menuCursorSetDataNibble:
 	cp r18,r24
 	cpc r19,r25
 	brge .L308
-	.loc 1 1989 0
+	.loc 1 1990 0
 	call softkeyRight
 .LVL489:
 	rjmp .L309
 .L308:
-	.loc 1 1991 0
+	.loc 1 1992 0
 	ldi r24,lo8(3)
 	call keylabel_clr
 .LVL490:
 .L309:
-	.loc 1 1993 0
+	.loc 1 1994 0
 	lds r24,nibbleIndex
 	tst r24
 	breq .L310
-	.loc 1 1994 0
+	.loc 1 1995 0
 	call softkeyLeft
 .LVL491:
 	rjmp .L311
 .L310:
-	.loc 1 1996 0
+	.loc 1 1997 0
 	ldi r24,lo8(2)
 	call keylabel_clr
 .LVL492:
 .L311:
-	.loc 1 1998 0
+	.loc 1 1999 0
 	call softkeyPlus
 .LVL493:
-	.loc 1 1999 0
+	.loc 1 2000 0
 	call softkeyMinus
 .LVL494:
-	.loc 1 2000 0
+	.loc 1 2001 0
 	call keylabel_toLCD
 .LVL495:
 	ret
@@ -5139,13 +5139,13 @@ menuCursorSetDataNibble:
 	.type	menuCursorSetExtra, @function
 menuCursorSetExtra:
 .LFB98:
-	.loc 1 2010 0
+	.loc 1 2011 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 2012 0
+	.loc 1 2013 0
 	ldi r24,lo8(20)
 	call lcd_goto
 .LVL496:
@@ -5158,7 +5158,7 @@ menuCursorSetExtra:
 	.type	menuOnEnterStatusMidiIn, @function
 menuOnEnterStatusMidiIn:
 .LFB61:
-	.loc 1 961 0
+	.loc 1 962 0
 	.cfi_startproc
 .LVL497:
 	push r16
@@ -5177,51 +5177,51 @@ menuOnEnterStatusMidiIn:
 /* frame size = 0 */
 /* stack size = 3 */
 .L__stack_usage = 3
-	.loc 1 965 0
+	.loc 1 966 0
 	call menuCursorSetExtra
 .LVL498:
-	.loc 1 966 0
+	.loc 1 967 0
 	ldi r24,lo8(MenuMIDIInText)
 	ldi r25,hi8(MenuMIDIInText)
 	call lcd_puts_P
 .LVL499:
-	.loc 1 967 0
+	.loc 1 968 0
 	lds r24,midiRxBytesCount
 	lds r25,midiRxBytesCount+1
 	call lcd_wordout
 .LVL500:
-	.loc 1 968 0
+	.loc 1 969 0
 	ldi r24,lo8(45)
 	call lcd_putc
 .LVL501:
-	.loc 1 970 0
+	.loc 1 971 0
 	lds r24,midiRxBytesCount
 	lds r25,midiRxBytesCount+1
 	sbiw r24,4
 	brsh .L319
-	.loc 1 971 0
+	.loc 1 972 0
 	lds r24,midiRxBytesCount
 	lds r25,midiRxBytesCount+1
 	mov r28,r24
 .LVL502:
 	rjmp .L314
 .L319:
-	.loc 1 973 0
+	.loc 1 974 0
 	ldi r28,lo8(4)
 .L314:
 .LVL503:
-	.loc 1 975 0
+	.loc 1 976 0
 	lds r16,midiRxInIndex
 	ldi r17,0
 .LVL504:
-	.loc 1 976 0
+	.loc 1 977 0
 	subi r16,lo8(-(midiRxBuffer-1))
 	sbci r17,hi8(-(midiRxBuffer-1))
 .LVL505:
-	.loc 1 977 0
+	.loc 1 978 0
 	rjmp .L315
 .L318:
-	.loc 1 978 0
+	.loc 1 979 0
 	ldi r24,hi8(midiRxBuffer)
 	cpi r16,lo8(midiRxBuffer)
 	cpc r17,r24
@@ -5229,12 +5229,12 @@ menuOnEnterStatusMidiIn:
 	movw r30,r16
 	rjmp .L316
 .L320:
-	.loc 1 979 0
+	.loc 1 980 0
 	ldi r30,lo8(midiRxBuffer+31)
 	ldi r31,hi8(midiRxBuffer+31)
 .L316:
 .LVL506:
-	.loc 1 981 0
+	.loc 1 982 0
 	movw r16,r30
 	subi r16,1
 	sbc r17,__zero_reg__
@@ -5242,19 +5242,19 @@ menuOnEnterStatusMidiIn:
 	ld r24,Z
 	call lcd_hexout
 .LVL508:
-	.loc 1 982 0
+	.loc 1 983 0
 	subi r28,lo8(-(-1))
 .LVL509:
 	breq .L315
-	.loc 1 983 0
+	.loc 1 984 0
 	ldi r24,lo8(32)
 	call lcd_putc
 .LVL510:
 .L315:
-	.loc 1 977 0
+	.loc 1 978 0
 	cpse r28,__zero_reg__
 	rjmp .L318
-	.loc 1 987 0
+	.loc 1 988 0
 	ldi r24,0
 /* epilogue start */
 	pop r28
@@ -5271,7 +5271,7 @@ menuOnEnterStatusMidiIn:
 	.type	menuOnEnterStatusMidiOut, @function
 menuOnEnterStatusMidiOut:
 .LFB62:
-	.loc 1 988 0
+	.loc 1 989 0
 	.cfi_startproc
 .LVL513:
 	push r16
@@ -5290,51 +5290,51 @@ menuOnEnterStatusMidiOut:
 /* frame size = 0 */
 /* stack size = 3 */
 .L__stack_usage = 3
-	.loc 1 992 0
+	.loc 1 993 0
 	call menuCursorSetExtra
 .LVL514:
-	.loc 1 993 0
+	.loc 1 994 0
 	ldi r24,lo8(MenuMIDIOutText)
 	ldi r25,hi8(MenuMIDIOutText)
 	call lcd_puts_P
 .LVL515:
-	.loc 1 994 0
+	.loc 1 995 0
 	lds r24,midiTxBytesCount
 	lds r25,midiTxBytesCount+1
 	call lcd_wordout
 .LVL516:
-	.loc 1 995 0
+	.loc 1 996 0
 	ldi r24,lo8(45)
 	call lcd_putc
 .LVL517:
-	.loc 1 997 0
+	.loc 1 998 0
 	lds r24,midiTxBytesCount
 	lds r25,midiTxBytesCount+1
 	sbiw r24,4
 	brsh .L327
-	.loc 1 998 0
+	.loc 1 999 0
 	lds r24,midiTxBytesCount
 	lds r25,midiTxBytesCount+1
 	mov r28,r24
 .LVL518:
 	rjmp .L322
 .L327:
-	.loc 1 1000 0
+	.loc 1 1001 0
 	ldi r28,lo8(4)
 .L322:
 .LVL519:
-	.loc 1 1002 0
+	.loc 1 1003 0
 	lds r16,midiTxInIndex
 	ldi r17,0
 .LVL520:
-	.loc 1 1003 0
+	.loc 1 1004 0
 	subi r16,lo8(-(midiTxBuffer-1))
 	sbci r17,hi8(-(midiTxBuffer-1))
 .LVL521:
-	.loc 1 1004 0
+	.loc 1 1005 0
 	rjmp .L323
 .L326:
-	.loc 1 1005 0
+	.loc 1 1006 0
 	ldi r24,hi8(midiTxBuffer)
 	cpi r16,lo8(midiTxBuffer)
 	cpc r17,r24
@@ -5342,12 +5342,12 @@ menuOnEnterStatusMidiOut:
 	movw r30,r16
 	rjmp .L324
 .L328:
-	.loc 1 1006 0
+	.loc 1 1007 0
 	ldi r30,lo8(midiTxBuffer+255)
 	ldi r31,hi8(midiTxBuffer+255)
 .L324:
 .LVL522:
-	.loc 1 1008 0
+	.loc 1 1009 0
 	movw r16,r30
 	subi r16,1
 	sbc r17,__zero_reg__
@@ -5355,19 +5355,19 @@ menuOnEnterStatusMidiOut:
 	ld r24,Z
 	call lcd_hexout
 .LVL524:
-	.loc 1 1009 0
+	.loc 1 1010 0
 	subi r28,lo8(-(-1))
 .LVL525:
 	breq .L323
-	.loc 1 1010 0
+	.loc 1 1011 0
 	ldi r24,lo8(32)
 	call lcd_putc
 .LVL526:
 .L323:
-	.loc 1 1004 0
+	.loc 1 1005 0
 	cpse r28,__zero_reg__
 	rjmp .L326
-	.loc 1 1014 0
+	.loc 1 1015 0
 	ldi r24,0
 /* epilogue start */
 	pop r28
@@ -5384,7 +5384,7 @@ menuOnEnterStatusMidiOut:
 	.type	menuOnEnterLogDisp, @function
 menuOnEnterLogDisp:
 .LFB67:
-	.loc 1 1045 0
+	.loc 1 1046 0
 	.cfi_startproc
 .LVL529:
 	push r16
@@ -5404,57 +5404,57 @@ menuOnEnterLogDisp:
 /* stack size = 3 */
 .L__stack_usage = 3
 .LVL530:
-	.loc 1 1051 0
+	.loc 1 1052 0
 	cpi r24,lo8(-1)
 	brne .L330
-	.loc 1 1052 0
+	.loc 1 1053 0
 	call log_count
 .LVL531:
 	subi r24,lo8(-(-1))
-	sts logEntryNr.2972,r24
-	.loc 1 1053 0
-	sts showText.2973,__zero_reg__
+	sts logEntryNr.2995,r24
 	.loc 1 1054 0
+	sts showText.2996,__zero_reg__
+	.loc 1 1055 0
 	ldi r22,lo8(keylabel_exit)
 	ldi r23,hi8(keylabel_exit)
 	ldi r24,0
 	call keylabel_set
 .LVL532:
-	.loc 1 1055 0
+	.loc 1 1056 0
 	ldi r22,lo8(keylabel_text)
 	ldi r23,hi8(keylabel_text)
 	ldi r24,lo8(1)
 	call keylabel_set
 .LVL533:
-	.loc 1 1056 0
+	.loc 1 1057 0
 	call keylabel_toLCD
 .LVL534:
-	.loc 1 1049 0
+	.loc 1 1050 0
 	ldi r28,lo8(-1)
 	rjmp .L331
 .LVL535:
 .L330:
-	.loc 1 1057 0
+	.loc 1 1058 0
 	cpi r24,lo8(4)
 	brne .L332
-	.loc 1 1058 0
-	lds r24,logEntryNr.2972
+	.loc 1 1059 0
+	lds r24,logEntryNr.2995
 .LVL536:
 	tst r24
 	breq .L345
-	.loc 1 1059 0
+	.loc 1 1060 0
 	subi r24,lo8(-(-1))
-	sts logEntryNr.2972,r24
-	.loc 1 1049 0
+	sts logEntryNr.2995,r24
+	.loc 1 1050 0
 	ldi r28,lo8(-1)
 	rjmp .L331
 .LVL537:
 .L332:
-	.loc 1 1061 0
+	.loc 1 1062 0
 	cpi r24,lo8(1)
 	brne .L333
-	.loc 1 1062 0
-	lds r16,logEntryNr.2972
+	.loc 1 1063 0
+	lds r16,logEntryNr.2995
 	ldi r17,0
 	subi r16,-1
 	sbci r17,-1
@@ -5464,33 +5464,33 @@ menuOnEnterLogDisp:
 	cp r16,r24
 	cpc r17,r25
 	brge .L346
-	.loc 1 1063 0
-	lds r24,logEntryNr.2972
+	.loc 1 1064 0
+	lds r24,logEntryNr.2995
 	subi r24,lo8(-(1))
-	sts logEntryNr.2972,r24
-	.loc 1 1049 0
+	sts logEntryNr.2995,r24
+	.loc 1 1050 0
 	ldi r28,lo8(-1)
 	rjmp .L331
 .LVL539:
 .L333:
-	.loc 1 1065 0
+	.loc 1 1066 0
 	cpi r24,lo8(3)
 	breq .L334
-	.loc 1 1065 0 is_stmt 0 discriminator 1
+	.loc 1 1066 0 is_stmt 0 discriminator 1
 	cpi r24,lo8(5)
 	brne .L347
 .L334:
-	.loc 1 1066 0 is_stmt 1
-	lds r24,showText.2973
+	.loc 1 1067 0 is_stmt 1
+	lds r24,showText.2996
 .LVL540:
 	com r24
-	sts showText.2973,r24
-	.loc 1 1049 0
+	sts showText.2996,r24
+	.loc 1 1050 0
 	ldi r28,lo8(-1)
-	.loc 1 1066 0
+	.loc 1 1067 0
 	rjmp .L331
 .L345:
-	.loc 1 1049 0
+	.loc 1 1050 0
 	ldi r28,lo8(-1)
 	rjmp .L331
 .L346:
@@ -5498,71 +5498,71 @@ menuOnEnterLogDisp:
 	rjmp .L331
 .LVL541:
 .L347:
-	.loc 1 1068 0
+	.loc 1 1069 0
 	ldi r28,0
 .LVL542:
 .L331:
-	.loc 1 1070 0
+	.loc 1 1071 0
 	cpi r28,lo8(-1)
 	breq .+2
 	rjmp .L335
-	.loc 1 1072 0
+	.loc 1 1073 0
 	call menuCursorSetExtra
 .LVL543:
-	.loc 1 1073 0
+	.loc 1 1074 0
 	call log_count
 .LVL544:
 	cpse r24,__zero_reg__
 	rjmp .L336
-	.loc 1 1074 0
+	.loc 1 1075 0
 	ldi r24,lo8(logNone)
 	ldi r25,hi8(logNone)
 	call lcd_puts_P
 .LVL545:
-	.loc 1 1075 0
+	.loc 1 1076 0
 	ldi r28,0
 	rjmp .L337
 .LVL546:
 .L336:
-	.loc 1 1077 0
-	lds r24,logEntryNr.2972
+	.loc 1 1078 0
+	lds r24,logEntryNr.2995
 	subi r24,lo8(-(1))
 	call lcd_dec2out
 .LVL547:
-	.loc 1 1078 0
+	.loc 1 1079 0
 	ldi r24,lo8(58)
 	call lcd_putc
 .LVL548:
-	.loc 1 1079 0
-	lds r24,showText.2973
+	.loc 1 1080 0
+	lds r24,showText.2996
 	cpse r24,__zero_reg__
 	rjmp .L338
-	.loc 1 1080 0
+	.loc 1 1081 0
 	ldi r22,lo8(32)
-	lds r24,logEntryNr.2972
+	lds r24,logEntryNr.2995
 	call log_getShortTextFromIndex
 .LVL549:
 	call lcd_puts
 .LVL550:
 	rjmp .L339
 .L338:
-	.loc 1 1082 0
-	lds r24,logEntryNr.2972
+	.loc 1 1083 0
+	lds r24,logEntryNr.2995
 	call log_getErrorText
 .LVL551:
 	call lcd_puts_P
 .LVL552:
 .L339:
-	.loc 1 1084 0
+	.loc 1 1085 0
 	call lcd_clrEol
 .LVL553:
-	.loc 1 1085 0
+	.loc 1 1086 0
 	call menuCursorSetExtra
 .LVL554:
 .L337:
-	.loc 1 1087 0
+	.loc 1 1088 0
 	ldi r22,lo8(1)
-	lds r24,showText.2973
+	lds r24,showText.2996
 	cpi r24,lo8(-1)
 	breq .L340
 	ldi r22,0
@@ -5570,8 +5570,8 @@ menuOnEnterLogDisp:
 	ldi r24,lo8(1)
 	call keylabel_statcheck
 .LVL555:
-	.loc 1 1088 0
-	lds r16,logEntryNr.2972
+	.loc 1 1089 0
+	lds r16,logEntryNr.2995
 	ldi r17,0
 	subi r16,-1
 	sbci r17,-1
@@ -5581,7 +5581,7 @@ menuOnEnterLogDisp:
 	cp r16,r24
 	cpc r17,r25
 	brge .L341
-	.loc 1 1089 0
+	.loc 1 1090 0
 	ldi r22,lo8(keylabel_right)
 	ldi r23,hi8(keylabel_right)
 	ldi r24,lo8(3)
@@ -5589,16 +5589,16 @@ menuOnEnterLogDisp:
 .LVL557:
 	rjmp .L342
 .L341:
-	.loc 1 1091 0
+	.loc 1 1092 0
 	ldi r24,lo8(3)
 	call keylabel_clr
 .LVL558:
 .L342:
-	.loc 1 1093 0
-	lds r24,logEntryNr.2972
+	.loc 1 1094 0
+	lds r24,logEntryNr.2995
 	tst r24
 	breq .L343
-	.loc 1 1094 0
+	.loc 1 1095 0
 	ldi r22,lo8(keylabel_left)
 	ldi r23,hi8(keylabel_left)
 	ldi r24,lo8(2)
@@ -5606,16 +5606,16 @@ menuOnEnterLogDisp:
 .LVL559:
 	rjmp .L344
 .L343:
-	.loc 1 1096 0
+	.loc 1 1097 0
 	ldi r24,lo8(2)
 	call keylabel_clr
 .LVL560:
 .L344:
-	.loc 1 1098 0
+	.loc 1 1099 0
 	call keylabel_toLCD
 .LVL561:
 .L335:
-	.loc 1 1101 0
+	.loc 1 1102 0
 	mov r24,r28
 /* epilogue start */
 	pop r28
@@ -5631,13 +5631,13 @@ menuOnEnterLogDisp:
 	.type	menuCursorSetMenu, @function
 menuCursorSetMenu:
 .LFB99:
-	.loc 1 2015 0
+	.loc 1 2016 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 2017 0
+	.loc 1 2018 0
 	ldi r24,lo8(74)
 	call lcd_goto
 .LVL563:
@@ -5650,16 +5650,16 @@ menuCursorSetMenu:
 	.type	menuClearExtraDisp, @function
 menuClearExtraDisp:
 .LFB101:
-	.loc 1 2024 0
+	.loc 1 2025 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 2025 0
+	.loc 1 2026 0
 	call menuCursorSetExtra
 .LVL564:
-	.loc 1 2026 0
+	.loc 1 2027 0
 	ldi r24,lo8(10)
 	call lcd_blank
 .LVL565:
@@ -5672,7 +5672,7 @@ menuClearExtraDisp:
 	.type	menu_ClearDataDisp, @function
 menu_ClearDataDisp:
 .LFB102:
-	.loc 1 2029 0
+	.loc 1 2030 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
@@ -5680,13 +5680,13 @@ menu_ClearDataDisp:
 .L__stack_usage = 0
 .LBB83:
 .LBB84:
-	.loc 1 2006 0
+	.loc 1 2007 0
 	ldi r24,lo8(30)
 	call lcd_goto
 .LVL566:
 .LBE84:
 .LBE83:
-	.loc 1 2031 0
+	.loc 1 2032 0
 	ldi r24,lo8(10)
 	call lcd_blank
 .LVL567:
@@ -5699,7 +5699,7 @@ menu_ClearDataDisp:
 	.type	menuClearMenuDisp, @function
 menuClearMenuDisp:
 .LFB103:
-	.loc 1 2034 0
+	.loc 1 2035 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
@@ -5707,20 +5707,20 @@ menuClearMenuDisp:
 .L__stack_usage = 0
 .LBB85:
 .LBB86:
-	.loc 1 2021 0
+	.loc 1 2022 0
 	ldi r24,lo8(64)
 	call lcd_goto
 .LVL568:
 .LBE86:
 .LBE85:
-	.loc 1 2036 0
+	.loc 1 2037 0
 	ldi r24,lo8(10)
 	call lcd_blank
 .LVL569:
-	.loc 1 2037 0
+	.loc 1 2038 0
 	call menuCursorSetMenu
 .LVL570:
-	.loc 1 2038 0
+	.loc 1 2039 0
 	ldi r24,lo8(10)
 	call lcd_blank
 .LVL571:
@@ -5733,19 +5733,19 @@ menuClearMenuDisp:
 	.type	menu_ClearAllDisp, @function
 menu_ClearAllDisp:
 .LFB104:
-	.loc 1 2041 0
+	.loc 1 2042 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 2042 0
+	.loc 1 2043 0
 	call menuClearMenuDisp
 .LVL572:
-	.loc 1 2043 0
+	.loc 1 2044 0
 	call menu_ClearDataDisp
 .LVL573:
-	.loc 1 2044 0
+	.loc 1 2045 0
 	call menuClearExtraDisp
 .LVL574:
 	ret
@@ -5757,61 +5757,61 @@ menu_ClearAllDisp:
 	.type	menuCheckArrowDown, @function
 menuCheckArrowDown:
 .LFB105:
-	.loc 1 2047 0
+	.loc 1 2048 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 2048 0
+	.loc 1 2049 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	lpm r24,Z
 	andi r24,lo8(63)
 .LVL575:
-	.loc 1 2050 0
+	.loc 1 2051 0
 	cpi r24,lo8(1)
 	brne .L354
-	.loc 1 2051 0
+	.loc 1 2052 0
 	call softkeyDown
 .LVL576:
 	ret
 .LVL577:
 .L354:
-	.loc 1 2052 0
+	.loc 1 2053 0
 	adiw r30,14
 	lpm r0,Z+
 	lpm r31,Z
 	mov r30,r0
 	sbiw r30,0
 	breq .L356
-	.loc 1 2054 0
+	.loc 1 2055 0
 	cpi r24,lo8(9)
 	brne .L357
-	.loc 1 2056 0
+	.loc 1 2057 0
 	ld r24,Z
 .LVL578:
 	cpse r24,__zero_reg__
 	rjmp .L358
-	.loc 1 2057 0
+	.loc 1 2058 0
 	call softkeyOn
 .LVL579:
 	ret
 .LVL580:
 .L358:
-	.loc 1 2059 0
+	.loc 1 2060 0
 	call softkeyOff
 .LVL581:
 	ret
 .LVL582:
 .L357:
-	.loc 1 2063 0
+	.loc 1 2064 0
 	call softkeyDown
 .LVL583:
 	ret
 .LVL584:
 .L356:
-	.loc 1 2067 0
+	.loc 1 2068 0
 	ldi r24,lo8(1)
 .LVL585:
 	call keylabel_clr
@@ -5825,7 +5825,7 @@ menuCheckArrowDown:
 	.type	menuCurrMenuToLCD, @function
 menuCurrMenuToLCD:
 .LFB94:
-	.loc 1 1948 0
+	.loc 1 1949 0
 	.cfi_startproc
 	push r28
 .LCFI54:
@@ -5835,79 +5835,79 @@ menuCurrMenuToLCD:
 /* frame size = 0 */
 /* stack size = 1 */
 .L__stack_usage = 1
-	.loc 1 1950 0
+	.loc 1 1951 0
 	ldi r24,lo8(73)
 	call lcd_goto
 .LVL587:
-	.loc 1 1951 0
+	.loc 1 1952 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	lpm r28,Z
 	andi r28,lo8(-64)
 .LVL588:
-	.loc 1 1953 0
+	.loc 1 1954 0
 	cpi r28,lo8(-128)
 	brne .L360
-	.loc 1 1954 0
+	.loc 1 1955 0
 	ldi r24,lo8(32)
 	call lcd_putc
 .LVL589:
-	.loc 1 1955 0
+	.loc 1 1956 0
 	ldi r24,lo8(2)
 	call keylabel_clr
 .LVL590:
 	rjmp .L361
 .L360:
-	.loc 1 1957 0
+	.loc 1 1958 0
 	ldi r24,lo8(127)
 	call lcd_putc
 .LVL591:
-	.loc 1 1958 0
+	.loc 1 1959 0
 	call softkeyLeft
 .LVL592:
 .L361:
-	.loc 1 1962 0
+	.loc 1 1963 0
 	cpi r28,lo8(-64)
 	brne .L362
 .LVL593:
-	.loc 1 1964 0
+	.loc 1 1965 0
 	ldi r24,lo8(3)
 	call keylabel_clr
 .LVL594:
-	.loc 1 1963 0
+	.loc 1 1964 0
 	ldi r28,lo8(32)
 .LVL595:
 	rjmp .L363
 .LVL596:
 .L362:
-	.loc 1 1967 0
+	.loc 1 1968 0
 	call softkeyRight
 .LVL597:
-	.loc 1 1966 0
+	.loc 1 1967 0
 	ldi r28,lo8(126)
 .LVL598:
 .L363:
-	.loc 1 1969 0
+	.loc 1 1970 0
 	call softkeyUp
 .LVL599:
-	.loc 1 1970 0
+	.loc 1 1971 0
 	call menuCheckArrowDown
 .LVL600:
-	.loc 1 1971 0
+	.loc 1 1972 0
 	lds r24,currentMenu
 	lds r25,currentMenu+1
 	mov r22,r28
 	adiw r24,2
 	call menuTextOut
 .LVL601:
-	.loc 1 1972 0
+	.loc 1 1973 0
 	call keylabel_toLCD
 .LVL602:
-	.loc 1 1973 0
+	.loc 1 1974 0
 	call menuCursorSetMenu
 .LVL603:
 /* epilogue start */
-	.loc 1 1974 0
+	.loc 1 1975 0
 	pop r28
 .LVL604:
 	ret
@@ -5919,16 +5919,16 @@ menuCurrMenuToLCD:
 	.type	menuItemChanged, @function
 menuItemChanged:
 .LFB106:
-	.loc 1 2072 0
+	.loc 1 2073 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 2075 0
+	.loc 1 2076 0
 	ldi r24,lo8(-1)
 	sts swTimer+14,r24
-	.loc 1 2076 0
+	.loc 1 2077 0
 	lds r24,currentMenu
 	lds r25,currentMenu+1
 	movw r30,r24
@@ -5936,11 +5936,11 @@ menuItemChanged:
 	mov r22,r18
 	andi r22,lo8(63)
 .LVL605:
-	.loc 1 2077 0
+	.loc 1 2078 0
 	cpi r22,lo8(2)
 	brsh .+2
 	rjmp .L365
-	.loc 1 2077 0 is_stmt 0 discriminator 1
+	.loc 1 2078 0 is_stmt 0 discriminator 1
 	movw r18,r24
 	subi r18,-14
 	sbci r19,-1
@@ -5952,7 +5952,7 @@ menuItemChanged:
 	brne .+2
 	rjmp .L365
 .LBB87:
-	.loc 1 2079 0 is_stmt 1
+	.loc 1 2080 0 is_stmt 1
 	mov r30,r22
 	ldi r31,0
 	sbiw r30,1
@@ -5969,38 +5969,38 @@ menuItemChanged:
 	sbci r31,hi8(-(nibbleInfo))
 	sts pNibbleInfo+1,r31
 	sts pNibbleInfo,r30
-	.loc 1 2080 0
+	.loc 1 2081 0
 	lpm r18,Z
 	sts nibbleCount,r18
-	.loc 1 2081 0
+	.loc 1 2082 0
 	movw r30,r24
 	lpm r18,Z+
 	andi r18,lo8(63)
 	sts dataType,r18
-	.loc 1 2082 0
+	.loc 1 2083 0
 	lpm r18,Z
 	tst r18
 	brge .L370
-	.loc 1 2082 0 is_stmt 0 discriminator 1
+	.loc 1 2083 0 is_stmt 0 discriminator 1
 	lds r18,DataAdressOffset
 	lds r19,DataAdressOffset+1
 	rjmp .L366
 .L370:
-	.loc 1 2082 0
+	.loc 1 2083 0
 	ldi r18,0
 	ldi r19,0
 .L366:
-	.loc 1 2082 0 discriminator 4
+	.loc 1 2083 0 discriminator 4
 	add r18,r20
 	adc r19,r21
 .LVL606:
-	.loc 1 2083 0 is_stmt 1 discriminator 4
+	.loc 1 2084 0 is_stmt 1 discriminator 4
 	movw r30,r24
 	lpm r24,Z
 	andi r24,lo8(63)
 	cpi r24,lo8(11)
 	brne .L367
-	.loc 1 2084 0
+	.loc 1 2085 0
 	movw r30,r18
 	ld r24,Z
 	ldd r25,Z+1
@@ -6012,32 +6012,32 @@ menuItemChanged:
 	sts dataEntry32+3,r27
 	rjmp .L368
 .L367:
-	.loc 1 2086 0
+	.loc 1 2087 0
 	movw r30,r18
 	ld r24,Z
 	sts dataEntry,r24
 .L368:
-	.loc 1 2088 0
+	.loc 1 2089 0
 	call menuDisplayValue
 .LVL607:
 .LBE87:
-	.loc 1 2077 0
+	.loc 1 2078 0
 	rjmp .L369
 .LVL608:
 .L365:
-	.loc 1 2090 0
+	.loc 1 2091 0
 	call menu_ClearDataDisp
 .LVL609:
-	.loc 1 2091 0
+	.loc 1 2092 0
 	ldi r24,lo8(nibbleInfo)
 	ldi r25,hi8(nibbleInfo)
 	sts pNibbleInfo+1,r25
 	sts pNibbleInfo,r24
 .L369:
-	.loc 1 2093 0
+	.loc 1 2094 0
 	call menuCheckArrowDown
 .LVL610:
-	.loc 1 2094 0
+	.loc 1 2095 0
 	call menuCursorSetMenu
 .LVL611:
 	ret
@@ -6049,25 +6049,25 @@ menuItemChanged:
 	.type	menu_InitLCD, @function
 menu_InitLCD:
 .LFB76:
-	.loc 1 1306 0
+	.loc 1 1307 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1307 0
+	.loc 1 1308 0
 	call menuClearExtraDisp
 .LVL612:
-	.loc 1 1308 0
+	.loc 1 1309 0
 	call menuItemChanged
 .LVL613:
-	.loc 1 1309 0
+	.loc 1 1310 0
 	call menuParentMenuToLCD
 .LVL614:
-	.loc 1 1310 0
+	.loc 1 1311 0
 	call menuCurrMenuToLCD
 .LVL615:
-	.loc 1 1311 0
+	.loc 1 1312 0
 	call lcd_cursosblink
 .LVL616:
 	ret
@@ -6079,17 +6079,17 @@ menu_InitLCD:
 	.type	menuResetVars, @function
 menuResetVars:
 .LFB107:
-	.loc 1 2097 0
+	.loc 1 2098 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 2099 0
-	sts menuMidiChan,__zero_reg__
 	.loc 1 2100 0
-	sts menuSection,__zero_reg__
+	sts menuMidiChan,__zero_reg__
 	.loc 1 2101 0
+	sts menuSection,__zero_reg__
+	.loc 1 2102 0
 	sts DataAdressOffset+1,__zero_reg__
 	sts DataAdressOffset,__zero_reg__
 	ret
@@ -6101,7 +6101,7 @@ menuResetVars:
 	.type	menu_ProcessMessage, @function
 menu_ProcessMessage:
 .LFB108:
-	.loc 1 2104 0
+	.loc 1 2105 0
 	.cfi_startproc
 .LVL617:
 	push r28
@@ -6114,35 +6114,35 @@ menu_ProcessMessage:
 .L__stack_usage = 1
 	mov r28,r24
 .LVL618:
-	.loc 1 2110 0
+	.loc 1 2111 0
 	call lcd_cursosblink
 .LVL619:
-	.loc 1 2111 0
+	.loc 1 2112 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	lpm r24,Z
 	andi r24,lo8(63)
 	cpi r24,lo8(1)
 	breq .L374
-	.loc 1 2111 0 is_stmt 0 discriminator 1
+	.loc 1 2112 0 is_stmt 0 discriminator 1
 	lds r24,nibbleIndex
 	cpi r24,lo8(-1)
 	breq .+2
 	rjmp .L375
 .L374:
-	.loc 1 2113 0 is_stmt 1
+	.loc 1 2114 0 is_stmt 1
 	adiw r30,1
 	lpm r24,Z
 	sbrs r24,6
 	rjmp .L376
-	.loc 1 2114 0
+	.loc 1 2115 0
 	call menuClearExtraDisp
 .LVL620:
-	.loc 1 2115 0
+	.loc 1 2116 0
 	call menuCursorSetMenu
 .LVL621:
 .L376:
-	.loc 1 2117 0
+	.loc 1 2118 0
 	lds r22,currentMenu
 	lds r23,currentMenu+1
 	movw r24,r22
@@ -6153,7 +6153,7 @@ menu_ProcessMessage:
 	andi r25,lo8(32)
 	sbrs r24,5
 	rjmp .L377
-	.loc 1 2117 0 is_stmt 0 discriminator 1
+	.loc 1 2118 0 is_stmt 0 discriminator 1
 	movw r18,r22
 	subi r18,-16
 	sbci r19,-1
@@ -6163,43 +6163,43 @@ menu_ProcessMessage:
 	cp r18,__zero_reg__
 	cpc r19,__zero_reg__
 	breq .L377
-	.loc 1 2117 0 is_stmt 1 discriminator 2
+	.loc 1 2118 0 is_stmt 1 discriminator 2
 	lds r20,nibbleIndex
 	cpi r20,lo8(-1)
 	breq .L377
-	.loc 1 2120 0
+	.loc 1 2121 0
 	mov r24,r28
 	movw r30,r18
 	eicall
 .LVL622:
 	cpi r24,lo8(-1)
 	brne .L378
-	.loc 1 2122 0
+	.loc 1 2123 0
 	sts nibbleIndex,__zero_reg__
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
 	rjmp .L379
 .L378:
-	.loc 1 2125 0
+	.loc 1 2126 0
 	call menuClearExtraDisp
 .LVL623:
-	.loc 1 2126 0
+	.loc 1 2127 0
 	call menu_ClearDataDisp
 .LVL624:
-	.loc 1 2127 0
+	.loc 1 2128 0
 	call menuCursorSetMenu
 .LVL625:
-	.loc 1 2128 0
+	.loc 1 2129 0
 	ldi r24,lo8(-1)
 	sts nibbleIndex,r24
-	.loc 1 2129 0
+	.loc 1 2130 0
 	call menuCurrMenuToLCD
 .LVL626:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
 	rjmp .L379
 .L377:
-	.loc 1 2133 0
+	.loc 1 2134 0
 	cpi r28,lo8(3)
 	brne .+2
 	rjmp .L380
@@ -6218,60 +6218,60 @@ menu_ProcessMessage:
 	breq .L383
 	rjmp .L412
 .L382:
-	.loc 1 2136 0
+	.loc 1 2137 0
 	movw r30,r22
 	lpm r24,Z
 	andi r24,lo8(-64)
 	cpi r24,lo8(-64)
 	brne .+2
 	rjmp .L413
-	.loc 1 2138 0
+	.loc 1 2139 0
 	adiw r30,20
 	sts currentMenu+1,r31
 	sts currentMenu,r30
-	.loc 1 2139 0
+	.loc 1 2140 0
 	call menuItemChanged
 .LVL627:
-	.loc 1 2140 0
+	.loc 1 2141 0
 	call menuCurrMenuToLCD
 .LVL628:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
 	rjmp .L379
 .L384:
-	.loc 1 2145 0
+	.loc 1 2146 0
 	movw r30,r22
 	lpm r24,Z
 	andi r24,lo8(-64)
 	cpi r24,lo8(-128)
 	brne .+2
 	rjmp .L414
-	.loc 1 2147 0
+	.loc 1 2148 0
 	sbiw r30,20
 	sts currentMenu+1,r31
 	sts currentMenu,r30
-	.loc 1 2148 0
+	.loc 1 2149 0
 	call menuItemChanged
 .LVL629:
-	.loc 1 2149 0
+	.loc 1 2150 0
 	call menuCurrMenuToLCD
 .LVL630:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
 	rjmp .L379
 .L383:
-	.loc 1 2155 0
+	.loc 1 2156 0
 	sbrs r24,4
 	rjmp .L385
-	.loc 1 2157 0
+	.loc 1 2158 0
 	sts menuVMenuSoftKey+1,__zero_reg__
 	sts menuVMenuSoftKey,__zero_reg__
 .L385:
-	.loc 1 2159 0
+	.loc 1 2160 0
 	lds r30,menuStackIndex
 	tst r30
 	breq .L386
-	.loc 1 2161 0
+	.loc 1 2162 0
 	subi r30,lo8(-(-1))
 	sts menuStackIndex,r30
 	ldi r31,0
@@ -6284,63 +6284,63 @@ menu_ProcessMessage:
 	mov r30,__tmp_reg__
 	sts currentMenu+1,r31
 	sts currentMenu,r30
-	.loc 1 2162 0
+	.loc 1 2163 0
 	adiw r30,18
 	lpm r0,Z+
 	lpm r31,Z
 	mov r30,r0
 	sbiw r30,0
 	breq .L387
-	.loc 1 2164 0
+	.loc 1 2165 0
 	ldi r24,0
 	eicall
 .LVL631:
 .L387:
-	.loc 1 2166 0
+	.loc 1 2167 0
 	call menuClearExtraDisp
 .LVL632:
-	.loc 1 2167 0
+	.loc 1 2168 0
 	call menuParentMenuToLCD
 .LVL633:
-	.loc 1 2168 0
+	.loc 1 2169 0
 	call menuCurrMenuToLCD
 .LVL634:
-	.loc 1 2170 0
+	.loc 1 2171 0
 	call menuItemChanged
 .LVL635:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
 	rjmp .L379
 .L386:
 .LVL636:
-	.loc 1 2173 0
+	.loc 1 2174 0
 	ldi r24,0
 	call keylabel_clr
 .LVL637:
-	.loc 1 2174 0
+	.loc 1 2175 0
 	ldi r24,lo8(1)
 	call keylabel_clr
 .LVL638:
-	.loc 1 2175 0
+	.loc 1 2176 0
 	ldi r24,lo8(2)
 	call keylabel_clr
 .LVL639:
-	.loc 1 2176 0
+	.loc 1 2177 0
 	ldi r24,lo8(3)
 	call keylabel_clr
 .LVL640:
-	.loc 1 2177 0
+	.loc 1 2178 0
 	call keylabel_toLCD
 .LVL641:
-	.loc 1 2178 0
+	.loc 1 2179 0
 	call lcd_cursoroff
 .LVL642:
-	.loc 1 2172 0
+	.loc 1 2173 0
 	ldi r24,lo8(-1)
 	rjmp .L379
 .LVL643:
 .L380:
-	.loc 1 2184 0
+	.loc 1 2185 0
 	movw r30,r22
 	lpm r18,Z
 	andi r18,lo8(63)
@@ -6349,22 +6349,22 @@ menu_ProcessMessage:
 	cpc r19,__zero_reg__
 	brge .+2
 	rjmp .L388
-	.loc 1 2186 0
+	.loc 1 2187 0
 	adiw r30,16
 	lpm r0,Z+
 	lpm r31,Z
 	mov r30,r0
 	sbiw r30,0
 	breq .L389
-	.loc 1 2187 0
+	.loc 1 2188 0
 	mov r24,r28
 	eicall
 .LVL644:
-	.loc 1 2188 0
+	.loc 1 2189 0
 	call menuItemChanged
 .LVL645:
 .L389:
-	.loc 1 2190 0
+	.loc 1 2191 0
 	lds r18,currentMenu
 	lds r19,currentMenu+1
 	movw r24,r18
@@ -6373,7 +6373,7 @@ menu_ProcessMessage:
 	lpm r24,Z
 	sbrc r24,3
 	rjmp .L415
-	.loc 1 2190 0 is_stmt 0 discriminator 1
+	.loc 1 2191 0 is_stmt 0 discriminator 1
 	movw r24,r18
 	adiw r24,14
 	movw r30,r24
@@ -6382,21 +6382,21 @@ menu_ProcessMessage:
 	or r24,r25
 	brne .+2
 	rjmp .L416
-	.loc 1 2191 0 is_stmt 1
+	.loc 1 2192 0 is_stmt 1
 	movw r30,r18
 	lpm r24,Z
 	andi r24,lo8(63)
 	cpi r24,lo8(9)
 	brne .L390
-	.loc 1 2193 0
+	.loc 1 2194 0
 	ldi r22,lo8(1)
 	ldi r24,0
 	call nibbleChange
 .LVL646:
-	.loc 1 2194 0
+	.loc 1 2195 0
 	call nibbleToData
 .LVL647:
-	.loc 1 2195 0
+	.loc 1 2196 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,14
@@ -6405,19 +6405,19 @@ menu_ProcessMessage:
 	mov r30,r0
 	lds r24,dataEntry
 	st Z,r24
-	.loc 1 2196 0
+	.loc 1 2197 0
 	call menuDisplayValue
 .LVL648:
-	.loc 1 2197 0
+	.loc 1 2198 0
 	call menuCheckArrowDown
 .LVL649:
-	.loc 1 2198 0
+	.loc 1 2199 0
 	call keylabel_toLCD
 .LVL650:
-	.loc 1 2199 0
+	.loc 1 2200 0
 	call menuCursorSetMenu
 .LVL651:
-	.loc 1 2201 0
+	.loc 1 2202 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,18
@@ -6427,38 +6427,38 @@ menu_ProcessMessage:
 	sbiw r30,0
 	brne .+2
 	rjmp .L417
-	.loc 1 2203 0
+	.loc 1 2204 0
 	ldi r24,0
 	eicall
 .LVL652:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
 	rjmp .L379
 .L390:
-	.loc 1 2207 0
-	sts nibbleIndex,__zero_reg__
 	.loc 1 2208 0
+	sts nibbleIndex,__zero_reg__
+	.loc 1 2209 0
 	call menuCursorSetDataNibble
 .LVL653:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
 	rjmp .L379
 .L388:
-	.loc 1 2213 0
+	.loc 1 2214 0
 	ldi r18,lo8(-1)
 	sts nibbleIndex,r18
-	.loc 1 2214 0
+	.loc 1 2215 0
 	sbrs r24,4
 	rjmp .L391
-	.loc 1 2216 0
+	.loc 1 2217 0
 	sts menuVMenuSoftKey+1,r23
 	sts menuVMenuSoftKey,r22
-	.loc 1 2217 0
+	.loc 1 2218 0
 	lds r30,menuStackIndex
 	tst r30
 	brne .+2
 	rjmp .L418
-	.loc 1 2219 0
+	.loc 1 2220 0
 	subi r30,lo8(-(-1))
 	sts menuStackIndex,r30
 	ldi r31,0
@@ -6471,35 +6471,35 @@ menu_ProcessMessage:
 	mov r30,__tmp_reg__
 	sts currentMenu+1,r31
 	sts currentMenu,r30
-	.loc 1 2220 0
+	.loc 1 2221 0
 	adiw r30,18
 	lpm r0,Z+
 	lpm r31,Z
 	mov r30,r0
 	sbiw r30,0
 	breq .L392
-	.loc 1 2222 0
+	.loc 1 2223 0
 	ldi r24,0
 	eicall
 .LVL654:
 .L392:
-	.loc 1 2224 0
+	.loc 1 2225 0
 	call menuClearExtraDisp
 .LVL655:
-	.loc 1 2225 0
+	.loc 1 2226 0
 	call menuParentMenuToLCD
 .LVL656:
-	.loc 1 2226 0
+	.loc 1 2227 0
 	call menuCurrMenuToLCD
 .LVL657:
-	.loc 1 2228 0
+	.loc 1 2229 0
 	call menuItemChanged
 .LVL658:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
 	rjmp .L379
 .L391:
-	.loc 1 2232 0
+	.loc 1 2233 0
 	movw r30,r22
 	adiw r30,16
 	lpm r0,Z+
@@ -6507,42 +6507,42 @@ menu_ProcessMessage:
 	mov r30,r0
 	sbiw r30,0
 	breq .L393
-	.loc 1 2234 0
+	.loc 1 2235 0
 	tst r25
 	breq .L394
-	.loc 1 2237 0
+	.loc 1 2238 0
 	ldi r24,lo8(-1)
 	eicall
 .LVL659:
 	cpi r24,lo8(-1)
 	brne .L395
-	.loc 1 2238 0
+	.loc 1 2239 0
 	sts nibbleIndex,__zero_reg__
 	rjmp .L393
 .L395:
-	.loc 1 2241 0
+	.loc 1 2242 0
 	call menuClearExtraDisp
 .LVL660:
-	.loc 1 2242 0
+	.loc 1 2243 0
 	call menu_ClearDataDisp
 .LVL661:
-	.loc 1 2243 0
+	.loc 1 2244 0
 	call menuCursorSetMenu
 .LVL662:
-	.loc 1 2244 0
+	.loc 1 2245 0
 	ldi r24,lo8(-1)
 	sts nibbleIndex,r24
 	rjmp .L393
 .L394:
-	.loc 1 2249 0
+	.loc 1 2250 0
 	ldi r24,lo8(5)
 	eicall
 .LVL663:
-	.loc 1 2250 0
+	.loc 1 2251 0
 	call menuCursorSetMenu
 .LVL664:
 .L393:
-	.loc 1 2253 0
+	.loc 1 2254 0
 	lds r18,currentMenu
 	lds r19,currentMenu+1
 	movw r24,r18
@@ -6553,12 +6553,12 @@ menu_ProcessMessage:
 	or r24,r25
 	brne .+2
 	rjmp .L419
-	.loc 1 2255 0
+	.loc 1 2256 0
 	lds r26,menuStackIndex
 	cpi r26,lo8(16)
 	brlo .+2
 	rjmp .L420
-	.loc 1 2256 0
+	.loc 1 2257 0
 	ldi r24,lo8(1)
 	add r24,r26
 	sts menuStackIndex,r24
@@ -6569,24 +6569,24 @@ menu_ProcessMessage:
 	sbci r27,hi8(-(menuStack))
 	st X+,r18
 	st X,r19
-	.loc 1 2257 0
+	.loc 1 2258 0
 	movw r24,r18
 	adiw r24,1
 	movw r30,r24
 	lpm r24,Z
 	sbrs r24,3
 	rjmp .L396
-	.loc 1 2257 0 is_stmt 0 discriminator 1
+	.loc 1 2258 0 is_stmt 0 discriminator 1
 	lds r24,menuVMenuSoftKey
 	lds r25,menuVMenuSoftKey+1
 	sbiw r24,0
 	breq .L396
-	.loc 1 2259 0 is_stmt 1
+	.loc 1 2260 0 is_stmt 1
 	sts currentMenu+1,r25
 	sts currentMenu,r24
 	rjmp .L397
 .L396:
-	.loc 1 2262 0
+	.loc 1 2263 0
 	movw r30,r18
 	adiw r30,12
 	lpm r24,Z+
@@ -6594,23 +6594,23 @@ menu_ProcessMessage:
 	sts currentMenu+1,r25
 	sts currentMenu,r24
 .L397:
-	.loc 1 2264 0
+	.loc 1 2265 0
 	call menuClearExtraDisp
 .LVL665:
-	.loc 1 2265 0
+	.loc 1 2266 0
 	call menuParentMenuToLCD
 .LVL666:
-	.loc 1 2266 0
+	.loc 1 2267 0
 	call menuCurrMenuToLCD
 .LVL667:
-	.loc 1 2268 0
+	.loc 1 2269 0
 	call menuItemChanged
 .LVL668:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
 	rjmp .L379
 .L375:
-	.loc 1 2278 0
+	.loc 1 2279 0
 	cpi r28,lo8(3)
 	brne .+2
 	rjmp .L398
@@ -6630,7 +6630,7 @@ menu_ProcessMessage:
 	rjmp .L404
 	rjmp .L421
 .L400:
-	.loc 1 2281 0
+	.loc 1 2282 0
 	mov r20,r24
 	ldi r21,0
 	lds r30,pNibbleInfo
@@ -6643,49 +6643,49 @@ menu_ProcessMessage:
 	cpc r21,r19
 	brlt .+2
 	rjmp .L422
-	.loc 1 2282 0
+	.loc 1 2283 0
 	subi r24,lo8(-(1))
 	sts nibbleIndex,r24
-	.loc 1 2283 0
+	.loc 1 2284 0
 	call menuCursorSetDataNibble
 .LVL669:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
 	rjmp .L379
 .L403:
-	.loc 1 2288 0
+	.loc 1 2289 0
 	tst r24
 	brne .+2
 	rjmp .L423
-	.loc 1 2289 0
+	.loc 1 2290 0
 	subi r24,lo8(-(-1))
 	sts nibbleIndex,r24
-	.loc 1 2290 0
+	.loc 1 2291 0
 	call menuCursorSetDataNibble
 .LVL670:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
 	rjmp .L379
 .L401:
-	.loc 1 2295 0
+	.loc 1 2296 0
 	ldi r22,lo8(1)
 	call nibbleChange
 .LVL671:
-	.loc 1 2296 0
+	.loc 1 2297 0
 	call nibbleToData
 .LVL672:
-	.loc 1 2297 0
+	.loc 1 2298 0
 	call menuDisplayValue
 .LVL673:
-	.loc 1 2298 0
+	.loc 1 2299 0
 	lds r24,dataType
 	cpi r24,lo8(10)
 	breq .L405
-	.loc 1 2298 0 is_stmt 0 discriminator 1
+	.loc 1 2299 0 is_stmt 0 discriminator 1
 	cpi r24,lo8(14)
 	brne .L406
 .L405:
-	.loc 1 2300 0 is_stmt 1
+	.loc 1 2301 0 is_stmt 1
 	lds r18,nibbleIndex
 	mov r20,r18
 	ldi r21,0
@@ -6697,37 +6697,37 @@ menu_ProcessMessage:
 	cp r20,r24
 	cpc r21,r25
 	brge .L406
-	.loc 1 2301 0
+	.loc 1 2302 0
 	subi r18,lo8(-(1))
 	sts nibbleIndex,r18
 .L406:
-	.loc 1 2304 0
+	.loc 1 2305 0
 	call menuCursorSetDataNibble
 .LVL674:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
-	.loc 1 2305 0
+	.loc 1 2306 0
 	rjmp .L379
 .L398:
-	.loc 1 2308 0
+	.loc 1 2309 0
 	ldi r22,lo8(-1)
 	call nibbleChange
 .LVL675:
-	.loc 1 2309 0
+	.loc 1 2310 0
 	call nibbleToData
 .LVL676:
-	.loc 1 2310 0
+	.loc 1 2311 0
 	call menuDisplayValue
 .LVL677:
-	.loc 1 2311 0
+	.loc 1 2312 0
 	lds r24,dataType
 	cpi r24,lo8(10)
 	breq .L407
-	.loc 1 2311 0 is_stmt 0 discriminator 1
+	.loc 1 2312 0 is_stmt 0 discriminator 1
 	cpi r24,lo8(14)
 	brne .L408
 .L407:
-	.loc 1 2312 0 is_stmt 1
+	.loc 1 2313 0 is_stmt 1
 	lds r18,nibbleIndex
 	mov r20,r18
 	ldi r21,0
@@ -6739,22 +6739,22 @@ menu_ProcessMessage:
 	cp r20,r24
 	cpc r21,r25
 	brge .L408
-	.loc 1 2313 0
+	.loc 1 2314 0
 	subi r18,lo8(-(1))
 	sts nibbleIndex,r18
 .L408:
-	.loc 1 2316 0
+	.loc 1 2317 0
 	call menuCursorSetDataNibble
 .LVL678:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
-	.loc 1 2317 0
+	.loc 1 2318 0
 	rjmp .L379
 .L402:
-	.loc 1 2320 0
+	.loc 1 2321 0
 	call nibbleToData
 .LVL679:
-	.loc 1 2321 0
+	.loc 1 2322 0
 	lds r18,currentMenu
 	lds r19,currentMenu+1
 	movw r24,r18
@@ -6765,32 +6765,32 @@ menu_ProcessMessage:
 	sbiw r26,0
 	breq .L404
 .LBB88:
-	.loc 1 2322 0
+	.loc 1 2323 0
 	sbiw r24,13
 	movw r30,r24
 	lpm r24,Z
 	tst r24
 	brge .L424
-	.loc 1 2322 0 is_stmt 0 discriminator 1
+	.loc 1 2323 0 is_stmt 0 discriminator 1
 	lds r24,DataAdressOffset
 	lds r25,DataAdressOffset+1
 	rjmp .L409
 .L424:
-	.loc 1 2322 0
+	.loc 1 2323 0
 	ldi r24,0
 	ldi r25,0
 .L409:
-	.loc 1 2322 0 discriminator 4
+	.loc 1 2323 0 discriminator 4
 	add r26,r24
 	adc r27,r25
 .LVL680:
-	.loc 1 2323 0 is_stmt 1 discriminator 4
+	.loc 1 2324 0 is_stmt 1 discriminator 4
 	movw r30,r18
 	lpm r24,Z
 	andi r24,lo8(63)
 	cpi r24,lo8(11)
 	brne .L410
-	.loc 1 2324 0
+	.loc 1 2325 0
 	lds r20,dataEntry32
 	lds r21,dataEntry32+1
 	lds r22,dataEntry32+2
@@ -6802,13 +6802,13 @@ menu_ProcessMessage:
 	sbiw r26,3
 	rjmp .L404
 .L410:
-	.loc 1 2326 0
+	.loc 1 2327 0
 	lds r24,dataEntry
 	st X,r24
 .LVL681:
 .L404:
 .LBE88:
-	.loc 1 2330 0
+	.loc 1 2331 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,18
@@ -6817,26 +6817,26 @@ menu_ProcessMessage:
 	mov r30,r0
 	sbiw r30,0
 	breq .L411
-	.loc 1 2331 0
+	.loc 1 2332 0
 	mov r24,r28
 	eicall
 .LVL682:
 .L411:
-	.loc 1 2333 0
+	.loc 1 2334 0
 	ldi r24,lo8(-1)
 	sts nibbleIndex,r24
-	.loc 1 2334 0
+	.loc 1 2335 0
 	call menuCurrMenuToLCD
 .LVL683:
-	.loc 1 2335 0
+	.loc 1 2336 0
 	call menuItemChanged
 .LVL684:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
-	.loc 1 2336 0
+	.loc 1 2337 0
 	rjmp .L379
 .L412:
-	.loc 1 2109 0
+	.loc 1 2110 0
 	ldi r24,0
 	rjmp .L379
 .L413:
@@ -6874,7 +6874,7 @@ menu_ProcessMessage:
 .LVL685:
 .L379:
 /* epilogue start */
-	.loc 1 2340 0
+	.loc 1 2341 0
 	pop r28
 .LVL686:
 	ret
@@ -6886,7 +6886,7 @@ menu_ProcessMessage:
 	.type	displayMenuMessage_P, @function
 displayMenuMessage_P:
 .LFB109:
-	.loc 1 2342 0
+	.loc 1 2343 0
 	.cfi_startproc
 .LVL687:
 	push r16
@@ -6910,10 +6910,10 @@ displayMenuMessage_P:
 /* stack size = 4 */
 .L__stack_usage = 4
 	movw r28,r24
-	.loc 1 2344 0
+	.loc 1 2345 0
 	lds r16,lcd_cursorPos
 .LVL688:
-	.loc 1 2346 0
+	.loc 1 2347 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	lpm r24,Z
@@ -6922,11 +6922,11 @@ displayMenuMessage_P:
 	cpi r24,lo8(1)
 	brne .L426
 .LBB89:
-	.loc 1 2349 0
+	.loc 1 2350 0
 	movw r24,r28
 	call get_StrLenP
 .LVL690:
-	.loc 1 2350 0
+	.loc 1 2351 0
 	ldi r18,lo8(20)
 	ldi r19,0
 	movw r20,r18
@@ -6939,32 +6939,32 @@ displayMenuMessage_P:
 	subi r24,lo8(-(20))
 	call lcd_goto
 .LVL692:
-	.loc 1 2351 0
+	.loc 1 2352 0
 	ldi r24,lo8(3)
 	sts displayMessageArea,r24
 .LBE89:
 	rjmp .L427
 .L426:
-	.loc 1 2354 0
+	.loc 1 2355 0
 	ldi r24,lo8(20)
 	call lcd_goto
 .LVL693:
-	.loc 1 2355 0
+	.loc 1 2356 0
 	sts displayMessageArea,__zero_reg__
 .L427:
-	.loc 1 2357 0
+	.loc 1 2358 0
 	lds r17,lcd_cursorPos
 .LVL694:
-	.loc 1 2358 0
+	.loc 1 2359 0
 	movw r24,r28
 	call lcd_puts_P
 .LVL695:
-	.loc 1 2359 0
+	.loc 1 2360 0
 	mov r24,r16
 	call lcd_goto
 .LVL696:
 .LBB90:
-	.loc 1 2360 0
+	.loc 1 2361 0
 	in r25,__SREG__
 .LVL697:
 .LBB91:
@@ -6978,12 +6978,12 @@ displayMenuMessage_P:
 /* #NOAPP */
 .LBE92:
 .LBE91:
-	.loc 1 2360 0
+	.loc 1 2361 0
 	ldi r24,lo8(1)
 	rjmp .L428
 .LVL698:
 .L429:
-	.loc 1 2360 0 discriminator 3
+	.loc 1 2361 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
 	ldi r24,lo8(100)
@@ -6991,11 +6991,11 @@ displayMenuMessage_P:
 	std Z+14,r24
 	std Z+15,__zero_reg__
 .LVL700:
-	.loc 1 2360 0 discriminator 3
+	.loc 1 2361 0 discriminator 3
 	ldi r24,0
 .LVL701:
 .L428:
-	.loc 1 2360 0 is_stmt 0 discriminator 1
+	.loc 1 2361 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
 	rjmp .L429
 .LVL702:
@@ -7008,7 +7008,7 @@ displayMenuMessage_P:
 .LBE94:
 .LBE93:
 .LBE90:
-	.loc 1 2362 0
+	.loc 1 2363 0
 	mov r24,r17
 .LVL704:
 /* epilogue start */
@@ -7028,26 +7028,26 @@ displayMenuMessage_P:
 	.type	menu_OnEnterMidiPanic, @function
 menu_OnEnterMidiPanic:
 .LFB44:
-	.loc 1 659 0
+	.loc 1 660 0
 	.cfi_startproc
 .LVL708:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 661 0
+	.loc 1 662 0
 	ldi r24,lo8(menuMessageMIDIpanic)
 	ldi r25,hi8(menuMessageMIDIpanic)
 .LVL709:
 	call displayMenuMessage_P
 .LVL710:
-	.loc 1 662 0
+	.loc 1 663 0
 	call midiSendAllNotesOff
 .LVL711:
-	.loc 1 663 0
+	.loc 1 664 0
 	call menuCursorSetMenu
 .LVL712:
-	.loc 1 665 0
+	.loc 1 666 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -7058,76 +7058,76 @@ menu_OnEnterMidiPanic:
 	.type	menu_ModuleTestExecute, @function
 menu_ModuleTestExecute:
 .LFB46:
-	.loc 1 679 0
+	.loc 1 680 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 682 0
+	.loc 1 683 0
 	lds r24,menu_TestModuleBitCounter
 	cpi r24,lo8(-1)
 	breq .L432
-	.loc 1 682 0 is_stmt 0 discriminator 1
+	.loc 1 683 0 is_stmt 0 discriminator 1
 	cpi r24,lo8(-3)
 	brne .L433
 .L432:
 .LBB95:
-	.loc 1 684 0 is_stmt 1
+	.loc 1 685 0 is_stmt 1
 	call lcd_cursoroff
 .LVL713:
-	.loc 1 685 0
+	.loc 1 686 0
 	call menu_ClearDataDisp
 .LVL714:
-	.loc 1 686 0
+	.loc 1 687 0
 	sts msgPipe_Handling,__zero_reg__
 .LVL715:
 .LBB96:
-	.loc 1 689 0
+	.loc 1 690 0
 	ldi r25,0
 .LBE96:
-	.loc 1 687 0
+	.loc 1 688 0
 	ldi r30,lo8(pipe)
 	ldi r31,hi8(pipe)
 .LBB97:
-	.loc 1 689 0
+	.loc 1 690 0
 	rjmp .L434
 .LVL716:
 .L435:
-	.loc 1 690 0 discriminator 3
+	.loc 1 691 0 discriminator 3
 	ldd r18,Z+1
 	lds r24,menu_TestModulePattern
 	or r24,r18
 	std Z+1,r24
-	.loc 1 691 0 discriminator 3
+	.loc 1 692 0 discriminator 3
 	adiw r30,8
 .LVL717:
-	.loc 1 689 0 discriminator 3
+	.loc 1 690 0 discriminator 3
 	subi r25,lo8(-(1))
 .LVL718:
 .L434:
-	.loc 1 689 0 is_stmt 0 discriminator 1
+	.loc 1 690 0 is_stmt 0 discriminator 1
 	cpi r25,lo8(32)
 	brlo .L435
 .LBE97:
-	.loc 1 693 0 is_stmt 1
+	.loc 1 694 0 is_stmt 1
 	lds r24,menu_TestModuleBitCounter
 	cpi r24,lo8(-1)
 	brne .L436
-	.loc 1 694 0
+	.loc 1 695 0
 	sts menu_TestModuleBitCounter,__zero_reg__
 	rjmp .L437
 .L436:
-	.loc 1 696 0
+	.loc 1 697 0
 	ldi r24,lo8(menuMessageAbort)
 	ldi r25,hi8(menuMessageAbort)
 	call displayMenuMessage_P
 .LVL719:
-	.loc 1 697 0
+	.loc 1 698 0
 	ldi r24,lo8(-2)
 	sts menu_TestModuleBitCounter,r24
 .LBB98:
-	.loc 1 698 0
+	.loc 1 699 0
 	in r25,__SREG__
 .LVL720:
 .LBB99:
@@ -7140,12 +7140,12 @@ menu_ModuleTestExecute:
 /* #NOAPP */
 .LBE100:
 .LBE99:
-	.loc 1 698 0
+	.loc 1 699 0
 	ldi r24,lo8(1)
 	rjmp .L438
 .LVL721:
 .L439:
-	.loc 1 698 0 discriminator 3
+	.loc 1 699 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
 	ldi r24,lo8(2)
@@ -7153,11 +7153,11 @@ menu_ModuleTestExecute:
 	std Z+12,r24
 	std Z+13,r24
 .LVL723:
-	.loc 1 698 0 discriminator 3
+	.loc 1 699 0 discriminator 3
 	ldi r24,0
 .LVL724:
 .L438:
-	.loc 1 698 0 is_stmt 0 discriminator 1
+	.loc 1 699 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
 	rjmp .L439
 .LVL725:
@@ -7170,26 +7170,26 @@ menu_ModuleTestExecute:
 .LBE102:
 .LBE101:
 .LBE98:
-	.loc 1 699 0
+	.loc 1 700 0
 	call menuCursorSetMenu
 .LVL727:
 	rjmp .L437
 .L433:
 .LBE95:
-	.loc 1 701 0
+	.loc 1 702 0
 	cpi r24,lo8(-2)
 	brne .L440
-	.loc 1 702 0
+	.loc 1 703 0
 	ldi r24,lo8(-1)
 	sts msgPipe_Handling,r24
-	.loc 1 703 0
+	.loc 1 704 0
 	sts menu_TestModulePattern,__zero_reg__
-	.loc 1 705 0
+	.loc 1 706 0
 	call lcd_cursosblink
 .LVL728:
 	rjmp .L437
 .L440:
-	.loc 1 709 0
+	.loc 1 710 0
 	lds r20,menu_TestModuleErrorList
 	lds r21,menu_TestModuleErrorList+1
 	lds r22,menu_TestModuleErrorList+2
@@ -7202,7 +7202,7 @@ menu_ModuleTestExecute:
 	sts menu_TestModuleErrorList+1,r21
 	sts menu_TestModuleErrorList+2,r22
 	sts menu_TestModuleErrorList+3,r23
-	.loc 1 710 0
+	.loc 1 711 0
 	mov r30,r24
 	ldi r31,0
 	movw r26,r30
@@ -7219,14 +7219,14 @@ menu_ModuleTestExecute:
 	lds r25,menu_TestModulePattern
 	and r18,r25
 	brne .L441
-	.loc 1 712 0
+	.loc 1 713 0
 	ori r23,128
 	sts menu_TestModuleErrorList,r20
 	sts menu_TestModuleErrorList+1,r21
 	sts menu_TestModuleErrorList+2,r22
 	sts menu_TestModuleErrorList+3,r23
 .L441:
-	.loc 1 715 0
+	.loc 1 716 0
 	lsl r30
 	rol r31
 	lsl r30
@@ -7238,15 +7238,15 @@ menu_ModuleTestExecute:
 	ldd r18,Z+1
 	or r25,r18
 	std Z+1,r25
-	.loc 1 716 0
+	.loc 1 717 0
 	subi r24,lo8(-(1))
 	sts menu_TestModuleBitCounter,r24
 .L437:
-	.loc 1 719 0
+	.loc 1 720 0
 	lds r30,menu_TestModuleBitCounter
 	cpi r30,lo8(32)
 	brsh .L442
-	.loc 1 721 0
+	.loc 1 722 0
 	ldi r31,0
 	lsl r30
 	rol r31
@@ -7262,16 +7262,16 @@ menu_ModuleTestExecute:
 	ldd r24,Z+1
 	and r24,r25
 	std Z+1,r24
-	.loc 1 722 0
+	.loc 1 723 0
 	ldi r24,lo8(30)
 	call lcd_goto
 .LVL729:
-	.loc 1 723 0
+	.loc 1 724 0
 	lds r24,menu_TestModuleBitCounter
 	call lcd_dec2out
 .LVL730:
 .LBB103:
-	.loc 1 725 0
+	.loc 1 726 0
 	in r25,__SREG__
 .LVL731:
 .LBB104:
@@ -7284,12 +7284,12 @@ menu_ModuleTestExecute:
 /* #NOAPP */
 .LBE105:
 .LBE104:
-	.loc 1 725 0
+	.loc 1 726 0
 	ldi r24,lo8(1)
 	rjmp .L443
 .LVL732:
 .L444:
-	.loc 1 725 0 discriminator 3
+	.loc 1 726 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
 	ldi r24,lo8(8)
@@ -7297,11 +7297,11 @@ menu_ModuleTestExecute:
 	std Z+12,r24
 	std Z+13,__zero_reg__
 .LVL734:
-	.loc 1 725 0 discriminator 3
+	.loc 1 726 0 discriminator 3
 	ldi r24,0
 .LVL735:
 .L443:
-	.loc 1 725 0 is_stmt 0 discriminator 1
+	.loc 1 726 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
 	rjmp .L444
 .LVL736:
@@ -7317,10 +7317,10 @@ menu_ModuleTestExecute:
 	ret
 .LVL738:
 .L442:
-	.loc 1 726 0
+	.loc 1 727 0
 	cpi r30,lo8(32)
 	brne .L431
-	.loc 1 728 0
+	.loc 1 729 0
 	lds r24,menu_TestModuleErrorList
 	lds r25,menu_TestModuleErrorList+1
 	lds r26,menu_TestModuleErrorList+2
@@ -7329,34 +7329,34 @@ menu_ModuleTestExecute:
 	cpc r26,__zero_reg__
 	cpc r27,__zero_reg__
 	brne .L446
-	.loc 1 729 0
+	.loc 1 730 0
 	ldi r24,lo8(menuMessageOK)
 	ldi r25,hi8(menuMessageOK)
 	call displayMenuMessage_P
 .LVL739:
 	rjmp .L447
 .L446:
-	.loc 1 731 0
+	.loc 1 732 0
 	sts editLong,r24
 	sts editLong+1,r25
 	sts editLong+2,r26
 	sts editLong+3,r27
-	.loc 1 732 0
+	.loc 1 733 0
 	ldi r24,lo8(menuMessageE)
 	ldi r25,hi8(menuMessageE)
 	call displayMenuMessage_P
 .LVL740:
 	call lcd_goto
 .LVL741:
-	.loc 1 733 0
+	.loc 1 734 0
 	call lcd_longout
 .LVL742:
 .L447:
-	.loc 1 735 0
+	.loc 1 736 0
 	ldi r24,lo8(-2)
 	sts menu_TestModuleBitCounter,r24
 .LBB108:
-	.loc 1 736 0
+	.loc 1 737 0
 	in r25,__SREG__
 .LVL743:
 .LBB109:
@@ -7369,12 +7369,12 @@ menu_ModuleTestExecute:
 /* #NOAPP */
 .LBE110:
 .LBE109:
-	.loc 1 736 0
+	.loc 1 737 0
 	ldi r24,lo8(1)
 	rjmp .L448
 .LVL744:
 .L449:
-	.loc 1 736 0 discriminator 3
+	.loc 1 737 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
 	ldi r24,lo8(2)
@@ -7382,11 +7382,11 @@ menu_ModuleTestExecute:
 	std Z+12,r24
 	std Z+13,r24
 .LVL746:
-	.loc 1 736 0 discriminator 3
+	.loc 1 737 0 discriminator 3
 	ldi r24,0
 .LVL747:
 .L448:
-	.loc 1 736 0 is_stmt 0 discriminator 1
+	.loc 1 737 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
 	rjmp .L449
 .LVL748:
@@ -7399,7 +7399,7 @@ menu_ModuleTestExecute:
 .LBE112:
 .LBE111:
 .LBE108:
-	.loc 1 737 0
+	.loc 1 738 0
 	call menuCursorSetMenu
 .LVL750:
 .L431:
@@ -7412,14 +7412,14 @@ menu_ModuleTestExecute:
 	.type	menu_ModuleTestPattern, @function
 menu_ModuleTestPattern:
 .LFB45:
-	.loc 1 667 0
+	.loc 1 668 0
 	.cfi_startproc
 .LVL751:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 669 0
+	.loc 1 670 0
 	ldi r24,lo8(1)
 	ldi r25,0
 .LVL752:
@@ -7432,18 +7432,18 @@ menu_ModuleTestPattern:
 	dec r0
 	brpl 1b
 	sts menu_TestModulePattern,r24
-	.loc 1 670 0
+	.loc 1 671 0
 	ldi r24,lo8(-1)
 	sts menu_TestModuleBitCounter,r24
-	.loc 1 671 0
+	.loc 1 672 0
 	sts menu_TestModuleErrorList,__zero_reg__
 	sts menu_TestModuleErrorList+1,__zero_reg__
 	sts menu_TestModuleErrorList+2,__zero_reg__
 	sts menu_TestModuleErrorList+3,__zero_reg__
-	.loc 1 672 0
+	.loc 1 673 0
 	call menu_ModuleTestExecute
 .LVL753:
-	.loc 1 674 0
+	.loc 1 675 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -7454,13 +7454,13 @@ menu_ModuleTestPattern:
 	.type	menuLCDwriteOK, @function
 menuLCDwriteOK:
 .LFB68:
-	.loc 1 1107 0
+	.loc 1 1108 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1108 0
+	.loc 1 1109 0
 	ldi r24,lo8(menuMessageOK)
 	ldi r25,hi8(menuMessageOK)
 	call displayMenuMessage_P
@@ -7474,30 +7474,30 @@ menuLCDwriteOK:
 	.type	menuOnEnterEEBackup, @function
 menuOnEnterEEBackup:
 .LFB69:
-	.loc 1 1111 0
+	.loc 1 1112 0
 	.cfi_startproc
 .LVL755:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1113 0
+	.loc 1 1114 0
 	ldi r24,lo8(30)
 .LVL756:
 	call lcd_goto
 .LVL757:
-	.loc 1 1114 0
+	.loc 1 1115 0
 	ldi r24,lo8(msg_programming1)
 	ldi r25,hi8(msg_programming1)
 	call lcd_puts_P
 .LVL758:
-	.loc 1 1115 0
+	.loc 1 1116 0
 	call eeprom_Backup
 .LVL759:
-	.loc 1 1116 0
+	.loc 1 1117 0
 	call menuLCDwriteOK
 .LVL760:
-	.loc 1 1118 0
+	.loc 1 1119 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -7508,30 +7508,30 @@ menuOnEnterEEBackup:
 	.type	menuOnEnterEERestore, @function
 menuOnEnterEERestore:
 .LFB70:
-	.loc 1 1120 0
+	.loc 1 1121 0
 	.cfi_startproc
 .LVL761:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1122 0
+	.loc 1 1123 0
 	ldi r24,lo8(30)
 .LVL762:
 	call lcd_goto
 .LVL763:
-	.loc 1 1123 0
+	.loc 1 1124 0
 	ldi r24,lo8(msg_programming1)
 	ldi r25,hi8(msg_programming1)
 	call lcd_puts_P
 .LVL764:
-	.loc 1 1124 0
+	.loc 1 1125 0
 	call eeprom_Restore
 .LVL765:
-	.loc 1 1125 0
+	.loc 1 1126 0
 	call menuLCDwriteOK
 .LVL766:
-	.loc 1 1127 0
+	.loc 1 1128 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -7542,30 +7542,30 @@ menuOnEnterEERestore:
 	.type	menuOnEnterEEUpdate, @function
 menuOnEnterEEUpdate:
 .LFB71:
-	.loc 1 1129 0
+	.loc 1 1130 0
 	.cfi_startproc
 .LVL767:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1131 0
+	.loc 1 1132 0
 	ldi r24,lo8(msg_programming1)
 	ldi r25,hi8(msg_programming1)
 .LVL768:
 	call displayMenuMessage_P
 .LVL769:
-	.loc 1 1132 0
+	.loc 1 1133 0
 	ldi r24,lo8(30)
 	call lcd_goto
 .LVL770:
-	.loc 1 1133 0
+	.loc 1 1134 0
 	call eeprom_UpdateALL
 .LVL771:
-	.loc 1 1134 0
+	.loc 1 1135 0
 	call menuLCDwriteOK
 .LVL772:
-	.loc 1 1136 0
+	.loc 1 1137 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -7576,7 +7576,7 @@ menuOnEnterEEUpdate:
 	.type	menudeleteMainMessage, @function
 menudeleteMainMessage:
 .LFB110:
-	.loc 1 2364 0
+	.loc 1 2365 0
 	.cfi_startproc
 	push r28
 .LCFI60:
@@ -7586,23 +7586,23 @@ menudeleteMainMessage:
 /* frame size = 0 */
 /* stack size = 1 */
 .L__stack_usage = 1
-	.loc 1 2365 0
+	.loc 1 2366 0
 	lds r28,lcd_cursorPos
 .LVL773:
-	.loc 1 2366 0
+	.loc 1 2367 0
 	ldi r24,lo8(64)
 	call lcd_goto
 .LVL774:
-	.loc 1 2367 0
+	.loc 1 2368 0
 	ldi r24,lo8(20)
 	call lcd_blank
 .LVL775:
-	.loc 1 2368 0
+	.loc 1 2369 0
 	mov r24,r28
 	call lcd_goto
 .LVL776:
 /* epilogue start */
-	.loc 1 2369 0
+	.loc 1 2370 0
 	pop r28
 .LVL777:
 	ret
@@ -7614,41 +7614,41 @@ menudeleteMainMessage:
 	.type	menu_deleteMessage, @function
 menu_deleteMessage:
 .LFB111:
-	.loc 1 2371 0
+	.loc 1 2372 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 2372 0
+	.loc 1 2373 0
 	lds r24,displayMessageArea
 	cpi r24,lo8(3)
 	brne .L457
-	.loc 1 2373 0
+	.loc 1 2374 0
 	call menuClearExtraDisp
 .LVL778:
-	.loc 1 2374 0
+	.loc 1 2375 0
 	call menu_ClearDataDisp
 .LVL779:
 	ret
 .L457:
-	.loc 1 2375 0
+	.loc 1 2376 0
 	cpse r24,__zero_reg__
 	rjmp .L459
-	.loc 1 2376 0
+	.loc 1 2377 0
 	call menuClearExtraDisp
 .LVL780:
 	ret
 .L459:
-	.loc 1 2377 0
+	.loc 1 2378 0
 	cpi r24,lo8(1)
 	brne .L460
-	.loc 1 2378 0
+	.loc 1 2379 0
 	call menu_ClearDataDisp
 .LVL781:
 	ret
 .L460:
-	.loc 1 2380 0
+	.loc 1 2381 0
 	call menudeleteMainMessage
 .LVL782:
 	ret
@@ -7660,7 +7660,7 @@ menu_deleteMessage:
 	.type	menu_DisplayMainMessage_P, @function
 menu_DisplayMainMessage_P:
 .LFB112:
-	.loc 1 2384 0
+	.loc 1 2385 0
 	.cfi_startproc
 .LVL783:
 	push r16
@@ -7684,19 +7684,19 @@ menu_DisplayMainMessage_P:
 /* stack size = 4 */
 .L__stack_usage = 4
 	movw r28,r24
-	.loc 1 2385 0
+	.loc 1 2386 0
 	lds r17,lcd_cursorPos
 .LVL784:
-	.loc 1 2386 0
+	.loc 1 2387 0
 	call get_StrLenP
 .LVL785:
 	mov r16,r24
 .LVL786:
-	.loc 1 2387 0
+	.loc 1 2388 0
 	ldi r24,lo8(64)
 	call lcd_goto
 .LVL787:
-	.loc 1 2388 0
+	.loc 1 2389 0
 	ldi r24,lo8(20)
 	ldi r25,0
 	sub r24,r16
@@ -7705,22 +7705,22 @@ menu_DisplayMainMessage_P:
 	ror r24
 	call lcd_blank
 .LVL788:
-	.loc 1 2389 0
+	.loc 1 2390 0
 	movw r24,r28
 	call lcd_puts_P
 .LVL789:
-	.loc 1 2390 0
+	.loc 1 2391 0
 	lds r25,lcd_cursorPos
 	ldi r24,lo8(84)
 	sub r24,r25
 	call lcd_blank
 .LVL790:
-	.loc 1 2391 0
+	.loc 1 2392 0
 	mov r24,r17
 	call lcd_goto
 .LVL791:
 .LBB113:
-	.loc 1 2392 0
+	.loc 1 2393 0
 	in r25,__SREG__
 .LVL792:
 .LBB114:
@@ -7733,12 +7733,12 @@ menu_DisplayMainMessage_P:
 /* #NOAPP */
 .LBE115:
 .LBE114:
-	.loc 1 2392 0
+	.loc 1 2393 0
 	ldi r24,lo8(1)
 	rjmp .L462
 .LVL793:
 .L463:
-	.loc 1 2392 0 discriminator 3
+	.loc 1 2393 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
 	ldi r24,lo8(100)
@@ -7746,11 +7746,11 @@ menu_DisplayMainMessage_P:
 	std Z+14,r24
 	std Z+15,__zero_reg__
 .LVL795:
-	.loc 1 2392 0 discriminator 3
+	.loc 1 2393 0 discriminator 3
 	ldi r24,0
 .LVL796:
 .L462:
-	.loc 1 2392 0 is_stmt 0 discriminator 1
+	.loc 1 2393 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
 	rjmp .L463
 .LVL797:
@@ -7763,12 +7763,12 @@ menu_DisplayMainMessage_P:
 .LBE117:
 .LBE116:
 .LBE113:
-	.loc 1 2393 0
+	.loc 1 2394 0
 	ldi r24,lo8(2)
 .LVL799:
 	sts displayMessageArea,r24
 /* epilogue start */
-	.loc 1 2394 0
+	.loc 1 2395 0
 	pop r29
 	pop r28
 .LVL800:
@@ -7785,7 +7785,7 @@ menu_DisplayMainMessage_P:
 	.type	menu_DisplayMainMessage, @function
 menu_DisplayMainMessage:
 .LFB113:
-	.loc 1 2396 0
+	.loc 1 2397 0
 	.cfi_startproc
 .LVL803:
 	push r16
@@ -7809,19 +7809,19 @@ menu_DisplayMainMessage:
 /* stack size = 4 */
 .L__stack_usage = 4
 	movw r28,r24
-	.loc 1 2397 0
+	.loc 1 2398 0
 	lds r17,lcd_cursorPos
 .LVL804:
-	.loc 1 2398 0
+	.loc 1 2399 0
 	call get_StrLen
 .LVL805:
 	mov r16,r24
 .LVL806:
-	.loc 1 2399 0
+	.loc 1 2400 0
 	ldi r24,lo8(64)
 	call lcd_goto
 .LVL807:
-	.loc 1 2400 0
+	.loc 1 2401 0
 	ldi r24,lo8(20)
 	ldi r25,0
 	sub r24,r16
@@ -7830,22 +7830,22 @@ menu_DisplayMainMessage:
 	ror r24
 	call lcd_blank
 .LVL808:
-	.loc 1 2401 0
+	.loc 1 2402 0
 	movw r24,r28
 	call lcd_puts
 .LVL809:
-	.loc 1 2402 0
+	.loc 1 2403 0
 	lds r25,lcd_cursorPos
 	ldi r24,lo8(84)
 	sub r24,r25
 	call lcd_blank
 .LVL810:
-	.loc 1 2403 0
+	.loc 1 2404 0
 	mov r24,r17
 	call lcd_goto
 .LVL811:
 .LBB118:
-	.loc 1 2404 0
+	.loc 1 2405 0
 	in r25,__SREG__
 .LVL812:
 .LBB119:
@@ -7858,12 +7858,12 @@ menu_DisplayMainMessage:
 /* #NOAPP */
 .LBE120:
 .LBE119:
-	.loc 1 2404 0
+	.loc 1 2405 0
 	ldi r24,lo8(1)
 	rjmp .L465
 .LVL813:
 .L466:
-	.loc 1 2404 0 discriminator 3
+	.loc 1 2405 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
 	ldi r24,lo8(100)
@@ -7871,11 +7871,11 @@ menu_DisplayMainMessage:
 	std Z+14,r24
 	std Z+15,__zero_reg__
 .LVL815:
-	.loc 1 2404 0 discriminator 3
+	.loc 1 2405 0 discriminator 3
 	ldi r24,0
 .LVL816:
 .L465:
-	.loc 1 2404 0 is_stmt 0 discriminator 1
+	.loc 1 2405 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
 	rjmp .L466
 .LVL817:
@@ -7888,12 +7888,12 @@ menu_DisplayMainMessage:
 .LBE122:
 .LBE121:
 .LBE118:
-	.loc 1 2405 0
+	.loc 1 2406 0
 	ldi r24,lo8(2)
 .LVL819:
 	sts displayMessageArea,r24
 /* epilogue start */
-	.loc 1 2406 0
+	.loc 1 2407 0
 	pop r29
 	pop r28
 .LVL820:
@@ -7910,26 +7910,26 @@ menu_DisplayMainMessage:
 	.type	menuDisplaySaveMessage, @function
 menuDisplaySaveMessage:
 .LFB30:
-	.loc 1 557 0
+	.loc 1 558 0
 	.cfi_startproc
 .LVL823:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 559 0
+	.loc 1 560 0
 	ldi r22,lo8(string_Buf)
 	ldi r23,hi8(string_Buf)
 	call putChar_Dec
 .LVL824:
-	.loc 1 560 0
+	.loc 1 561 0
 	movw r22,r24
 	ldi r24,lo8(messageSaved)
 	ldi r25,hi8(messageSaved)
 .LVL825:
 	call putString_P
 .LVL826:
-	.loc 1 561 0
+	.loc 1 562 0
 	ldi r24,lo8(string_Buf)
 	ldi r25,hi8(string_Buf)
 	call menu_DisplayMainMessage
@@ -7943,7 +7943,7 @@ menuDisplaySaveMessage:
 	.type	menuDisplayLoadMessage, @function
 menuDisplayLoadMessage:
 .LFB31:
-	.loc 1 564 0
+	.loc 1 565 0
 	.cfi_startproc
 .LVL828:
 	push r16
@@ -7963,12 +7963,12 @@ menuDisplayLoadMessage:
 /* stack size = 3 */
 .L__stack_usage = 3
 .LVL829:
-	.loc 1 566 0
+	.loc 1 567 0
 	ldi r22,lo8(string_Buf)
 	ldi r23,hi8(string_Buf)
 	call putChar_Dec
 .LVL830:
-	.loc 1 567 0
+	.loc 1 568 0
 	movw r22,r24
 	ldi r24,lo8(messageLoaded)
 	ldi r25,hi8(messageLoaded)
@@ -7977,39 +7977,39 @@ menuDisplayLoadMessage:
 .LVL832:
 	movw r16,r24
 .LVL833:
-	.loc 1 568 0
+	.loc 1 569 0
 	call module_WaitOutputInput2Cycles
 .LVL834:
-	.loc 1 569 0
+	.loc 1 570 0
 	ldi r24,lo8(4)
 	call count_Registers
 .LVL835:
 	mov r28,r24
 .LVL836:
-	.loc 1 570 0
+	.loc 1 571 0
 	tst r24
 	breq .L469
-	.loc 1 571 0
+	.loc 1 572 0
 	movw r22,r16
 	ldi r24,lo8(messageRegisterMan)
 	ldi r25,hi8(messageRegisterMan)
 .LVL837:
 	call putString_P
 .LVL838:
-	.loc 1 572 0
+	.loc 1 573 0
 	movw r22,r24
 	mov r24,r28
 .LVL839:
 	call putChar_Dec
 .LVL840:
 .L469:
-	.loc 1 574 0
+	.loc 1 575 0
 	ldi r24,lo8(string_Buf)
 	ldi r25,hi8(string_Buf)
 	call menu_DisplayMainMessage
 .LVL841:
 /* epilogue start */
-	.loc 1 575 0
+	.loc 1 576 0
 	pop r28
 .LVL842:
 	pop r17
@@ -8023,7 +8023,7 @@ menuDisplayLoadMessage:
 	.type	handle_programKey, @function
 handle_programKey:
 .LFB32:
-	.loc 1 577 0
+	.loc 1 578 0
 	.cfi_startproc
 .LVL843:
 	push r28
@@ -8035,10 +8035,10 @@ handle_programKey:
 /* stack size = 1 */
 .L__stack_usage = 1
 	mov r28,r22
-	.loc 1 578 0
+	.loc 1 579 0
 	tst r24
 	brge .L471
-	.loc 1 580 0
+	.loc 1 581 0
 	ldi r22,lo8(-1)
 .LVL844:
 	mov r24,r28
@@ -8050,10 +8050,10 @@ handle_programKey:
 	rjmp .L472
 .LVL848:
 .L471:
-	.loc 1 581 0
+	.loc 1 582 0
 	tst r24
 	breq .L472
-	.loc 1 582 0
+	.loc 1 583 0
 	mov r24,r22
 .LVL849:
 	call program_toRegister
@@ -8061,19 +8061,19 @@ handle_programKey:
 	call menuDisplayLoadMessage
 .LVL851:
 .L472:
-	.loc 1 584 0
+	.loc 1 585 0
 	mov r24,r28
 	call midi_CountRegisterInProgram
 .LVL852:
 	tst r24
 	breq .L474
-	.loc 1 584 0 is_stmt 0 discriminator 1
+	.loc 1 585 0 is_stmt 0 discriminator 1
 	mov r24,r28
 	call midi_RegisterMatchProgram
 .LVL853:
 	cpse r24,__zero_reg__
 	rjmp .L475
-	.loc 1 584 0
+	.loc 1 585 0
 	ldi r24,lo8(-127)
 	rjmp .L473
 .L474:
@@ -8083,7 +8083,7 @@ handle_programKey:
 	ldi r24,lo8(-126)
 .L473:
 /* epilogue start */
-	.loc 1 585 0 is_stmt 1 discriminator 6
+	.loc 1 586 0 is_stmt 1 discriminator 6
 	pop r28
 .LVL854:
 	ret
@@ -8095,18 +8095,18 @@ handle_programKey:
 	.type	softKeyK1A, @function
 softKeyK1A:
 .LFB33:
-	.loc 1 587 0
+	.loc 1 588 0
 	.cfi_startproc
 .LVL855:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 588 0
+	.loc 1 589 0
 	ldi r22,0
 	call handle_programKey
 .LVL856:
-	.loc 1 589 0
+	.loc 1 590 0
 	ret
 	.cfi_endproc
 .LFE33:
@@ -8116,18 +8116,18 @@ softKeyK1A:
 	.type	softKeyK2A, @function
 softKeyK2A:
 .LFB34:
-	.loc 1 591 0
+	.loc 1 592 0
 	.cfi_startproc
 .LVL857:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 592 0
+	.loc 1 593 0
 	ldi r22,lo8(1)
 	call handle_programKey
 .LVL858:
-	.loc 1 593 0
+	.loc 1 594 0
 	ret
 	.cfi_endproc
 .LFE34:
@@ -8137,18 +8137,18 @@ softKeyK2A:
 	.type	softKeyK3A, @function
 softKeyK3A:
 .LFB35:
-	.loc 1 595 0
+	.loc 1 596 0
 	.cfi_startproc
 .LVL859:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 596 0
+	.loc 1 597 0
 	ldi r22,lo8(2)
 	call handle_programKey
 .LVL860:
-	.loc 1 597 0
+	.loc 1 598 0
 	ret
 	.cfi_endproc
 .LFE35:
@@ -8158,18 +8158,18 @@ softKeyK3A:
 	.type	softKeyK4A, @function
 softKeyK4A:
 .LFB36:
-	.loc 1 599 0
+	.loc 1 600 0
 	.cfi_startproc
 .LVL861:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 600 0
+	.loc 1 601 0
 	ldi r22,lo8(3)
 	call handle_programKey
 .LVL862:
-	.loc 1 601 0
+	.loc 1 602 0
 	ret
 	.cfi_endproc
 .LFE36:
@@ -8179,7 +8179,7 @@ softKeyK4A:
 	.type	SoftKeyFunctionOK, @function
 SoftKeyFunctionOK:
 .LFB114:
-	.loc 1 2412 0
+	.loc 1 2413 0
 	.cfi_startproc
 .LVL863:
 /* prologue: function */
@@ -8189,12 +8189,12 @@ SoftKeyFunctionOK:
 	movw r20,r24
 .LVL864:
 .LBB123:
-	.loc 1 2415 0
+	.loc 1 2416 0
 	ldi r25,0
 	rjmp .L481
 .LVL865:
 .L483:
-	.loc 1 2416 0
+	.loc 1 2417 0
 	ldi r24,lo8(20)
 	mul r25,r24
 	movw r30,r0
@@ -8206,23 +8206,23 @@ SoftKeyFunctionOK:
 	cp r18,r20
 	cpc r19,r21
 	breq .L484
-	.loc 1 2415 0 discriminator 2
+	.loc 1 2416 0 discriminator 2
 	subi r25,lo8(-(1))
 .LVL866:
 .L481:
-	.loc 1 2415 0 is_stmt 0 discriminator 1
+	.loc 1 2416 0 is_stmt 0 discriminator 1
 	cpi r25,lo8(22)
 	brlo .L483
 .LBE123:
-	.loc 1 2420 0 is_stmt 1
+	.loc 1 2421 0 is_stmt 1
 	ldi r24,0
 .LBB124:
 	ret
 .L484:
-	.loc 1 2417 0
+	.loc 1 2418 0
 	ldi r24,lo8(-1)
 .LBE124:
-	.loc 1 2421 0
+	.loc 1 2422 0
 	ret
 	.cfi_endproc
 .LFE114:
@@ -8232,51 +8232,51 @@ SoftKeyFunctionOK:
 	.type	getSoftKeyIndex, @function
 getSoftKeyIndex:
 .LFB115:
-	.loc 1 2424 0
+	.loc 1 2425 0
 	.cfi_startproc
 .LVL867:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 2425 0
+	.loc 1 2426 0
 	ldi r18,0
 .LVL868:
 .L487:
-	.loc 1 2427 0
+	.loc 1 2428 0
 	ldi r19,hi8(menu_selFunc)
 	cpi r24,lo8(menu_selFunc)
 	cpc r25,r19
 	breq .L488
-	.loc 1 2429 0
+	.loc 1 2430 0
 	ldi r19,hi8(menu_selFunc)
 	cpi r24,lo8(menu_selFunc)
 	cpc r25,r19
 	brlo .L489
-	.loc 1 2432 0
+	.loc 1 2433 0
 	sbiw r24,20
 .LVL869:
-	.loc 1 2433 0
+	.loc 1 2434 0
 	subi r18,lo8(-(1))
 .LVL870:
-	.loc 1 2434 0
-	brne .L487
 	.loc 1 2435 0
+	brne .L487
+	.loc 1 2436 0
 	ldi r24,0
 .LVL871:
 	ret
 .LVL872:
 .L488:
-	.loc 1 2428 0
+	.loc 1 2429 0
 	mov r24,r18
 .LVL873:
 	ret
 .LVL874:
 .L489:
-	.loc 1 2430 0
+	.loc 1 2431 0
 	ldi r24,0
 .LVL875:
-	.loc 1 2436 0
+	.loc 1 2437 0
 	ret
 	.cfi_endproc
 .LFE115:
@@ -8286,7 +8286,7 @@ getSoftKeyIndex:
 	.type	init_SoftKeys, @function
 init_SoftKeys:
 .LFB116:
-	.loc 1 2438 0
+	.loc 1 2439 0
 	.cfi_startproc
 	push r28
 .LCFI73:
@@ -8296,7 +8296,7 @@ init_SoftKeys:
 /* frame size = 0 */
 /* stack size = 1 */
 .L__stack_usage = 1
-	.loc 1 2439 0
+	.loc 1 2440 0
 	call eeprom_ReadSoftkeys
 .LVL876:
 	cpi r24,lo8(-1)
@@ -8305,14 +8305,14 @@ init_SoftKeys:
 .LVL877:
 .L493:
 .LBB125:
-	.loc 1 2442 0 discriminator 3
+	.loc 1 2443 0 discriminator 3
 	mov r24,r18
 	ldi r25,0
 	movw r30,r24
 	subi r30,lo8(-(soft_KeyMenuIndex))
 	sbci r31,hi8(-(soft_KeyMenuIndex))
 	st Z,__zero_reg__
-	.loc 1 2443 0 discriminator 3
+	.loc 1 2444 0 discriminator 3
 	lsl r24
 	rol r25
 	movw r30,r24
@@ -8320,7 +8320,7 @@ init_SoftKeys:
 	sbci r31,hi8(-(soft_KeyMenu))
 	std Z+1,__zero_reg__
 	st Z,__zero_reg__
-	.loc 1 2441 0 discriminator 3
+	.loc 1 2442 0 discriminator 3
 	subi r18,lo8(-(1))
 .LVL878:
 	rjmp .L491
@@ -8331,11 +8331,11 @@ init_SoftKeys:
 .L491:
 .LVL880:
 .LBB126:
-	.loc 1 2441 0 is_stmt 0 discriminator 1
+	.loc 1 2442 0 is_stmt 0 discriminator 1
 	cpi r18,lo8(4)
 	brlo .L493
 .LBE126:
-	.loc 1 2446 0 is_stmt 1
+	.loc 1 2447 0 is_stmt 1
 	ldi r20,0
 	ldi r21,0
 	ldi r22,lo8(7)
@@ -8349,7 +8349,7 @@ init_SoftKeys:
 .L497:
 .LBB127:
 .LBB128:
-	.loc 1 2450 0
+	.loc 1 2451 0
 	mov r20,r28
 	ldi r21,0
 	movw r30,r20
@@ -8359,7 +8359,7 @@ init_SoftKeys:
 	cpi r24,lo8(22)
 	brsh .L495
 .LVL883:
-	.loc 1 2452 0
+	.loc 1 2453 0
 	ldi r18,lo8(20)
 	mul r24,r18
 	movw r24,r0
@@ -8377,7 +8377,7 @@ init_SoftKeys:
 	rjmp .L496
 .LVL885:
 .L495:
-	.loc 1 2454 0
+	.loc 1 2455 0
 	movw r30,r20
 	lsl r30
 	rol r31
@@ -8385,7 +8385,7 @@ init_SoftKeys:
 	sbci r31,hi8(-(soft_KeyMenu))
 	std Z+1,__zero_reg__
 	st Z,__zero_reg__
-	.loc 1 2455 0
+	.loc 1 2456 0
 	subi r20,-1
 	sbci r21,-1
 .LVL886:
@@ -8396,16 +8396,16 @@ init_SoftKeys:
 .LVL887:
 .L496:
 .LBE128:
-	.loc 1 2448 0 discriminator 2
+	.loc 1 2449 0 discriminator 2
 	subi r28,lo8(-(1))
 .LVL888:
 .L494:
-	.loc 1 2448 0 is_stmt 0 discriminator 1
+	.loc 1 2449 0 is_stmt 0 discriminator 1
 	cpi r28,lo8(4)
 	brlo .L497
 /* epilogue start */
 .LBE127:
-	.loc 1 2458 0 is_stmt 1
+	.loc 1 2459 0 is_stmt 1
 	pop r28
 .LVL889:
 	ret
@@ -8417,7 +8417,7 @@ init_SoftKeys:
 	.type	softKey_Set, @function
 softKey_Set:
 .LFB117:
-	.loc 1 2460 0
+	.loc 1 2461 0
 	.cfi_startproc
 .LVL890:
 	push r28
@@ -8432,24 +8432,24 @@ softKey_Set:
 /* frame size = 0 */
 /* stack size = 2 */
 .L__stack_usage = 2
-	.loc 1 2461 0
+	.loc 1 2462 0
 	cpi r22,lo8(4)
 	brsh .L499
-	.loc 1 2462 0
+	.loc 1 2463 0
 	sbiw r24,0
 	breq .L501
-	.loc 1 2462 0 discriminator 1
+	.loc 1 2463 0 discriminator 1
 	movw r30,r24
 	lpm r18,Z
 	andi r18,lo8(63)
 	cpi r18,lo8(1)
 	brne .L501
-	.loc 1 2462 0 is_stmt 0 discriminator 2
+	.loc 1 2463 0 is_stmt 0 discriminator 2
 	adiw r30,1
 	lpm r18,Z
 	sbrs r18,4
 	rjmp .L501
-	.loc 1 2463 0 is_stmt 1
+	.loc 1 2464 0 is_stmt 1
 	mov r28,r22
 	ldi r29,0
 	movw r30,r28
@@ -8459,7 +8459,7 @@ softKey_Set:
 	sbci r31,hi8(-(soft_KeyMenu))
 	std Z+1,r25
 	st Z,r24
-	.loc 1 2464 0
+	.loc 1 2465 0
 	call getSoftKeyIndex
 .LVL891:
 	subi r28,lo8(-(soft_KeyMenuIndex))
@@ -8469,7 +8469,7 @@ softKey_Set:
 	rjmp .L499
 .LVL893:
 .L501:
-	.loc 1 2466 0
+	.loc 1 2467 0
 	ldi r23,0
 	movw r30,r22
 	lsl r30
@@ -8478,7 +8478,7 @@ softKey_Set:
 	sbci r31,hi8(-(soft_KeyMenu))
 	std Z+1,__zero_reg__
 	st Z,__zero_reg__
-	.loc 1 2467 0
+	.loc 1 2468 0
 	movw r30,r22
 	subi r30,lo8(-(soft_KeyMenuIndex))
 	sbci r31,hi8(-(soft_KeyMenuIndex))
@@ -8486,7 +8486,7 @@ softKey_Set:
 .LVL894:
 .L499:
 /* epilogue start */
-	.loc 1 2470 0
+	.loc 1 2471 0
 	pop r29
 	pop r28
 	ret
@@ -8498,30 +8498,30 @@ softKey_Set:
 	.type	menuOnExitKey, @function
 menuOnExitKey:
 .LFB58:
-	.loc 1 851 0
+	.loc 1 852 0
 	.cfi_startproc
 .LVL895:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 854 0
+	.loc 1 855 0
 	lds r30,currentMenu
 	lds r31,currentMenu+1
 	adiw r30,14
 	lpm r22,Z+
 	lpm r23,Z+
 .LVL896:
-	.loc 1 855 0
+	.loc 1 856 0
 	lds r24,menuVMenuSoftKey
 	lds r25,menuVMenuSoftKey+1
 .LVL897:
 	call softKey_Set
 .LVL898:
-	.loc 1 856 0
+	.loc 1 857 0
 	call eeprom_UpdateSoftkeys
 .LVL899:
-	.loc 1 858 0
+	.loc 1 859 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -8532,7 +8532,7 @@ menuOnExitKey:
 	.type	softKeys_toLCD, @function
 softKeys_toLCD:
 .LFB118:
-	.loc 1 2472 0
+	.loc 1 2473 0
 	.cfi_startproc
 	push r16
 .LCFI76:
@@ -8552,12 +8552,12 @@ softKeys_toLCD:
 .L__stack_usage = 3
 .LVL900:
 .LBB129:
-	.loc 1 2473 0
+	.loc 1 2474 0
 	ldi r28,0
 	rjmp .L504
 .LVL901:
 .L509:
-	.loc 1 2474 0
+	.loc 1 2475 0
 	mov r16,r28
 	ldi r17,0
 	movw r30,r16
@@ -8571,7 +8571,7 @@ softKeys_toLCD:
 	sbiw r30,0
 	breq .L505
 .LVL902:
-	.loc 1 2474 0 discriminator 1
+	.loc 1 2475 0 discriminator 1
 	adiw r30,14
 	lpm r22,Z+
 	lpm r23,Z+
@@ -8579,17 +8579,17 @@ softKeys_toLCD:
 	cpc r23,__zero_reg__
 	brne .L506
 .L505:
-	.loc 1 2475 0
+	.loc 1 2476 0
 	mov r24,r28
 	call keylabel_clr
 .LVL903:
 	rjmp .L507
 .L506:
-	.loc 1 2477 0
+	.loc 1 2478 0
 	mov r24,r28
 	call keylabel_set
 .LVL904:
-	.loc 1 2478 0
+	.loc 1 2479 0
 	lsl r16
 	rol r17
 .LVL905:
@@ -8605,7 +8605,7 @@ softKeys_toLCD:
 	mov r30,r0
 	sbiw r30,0
 	breq .L507
-	.loc 1 2480 0
+	.loc 1 2481 0
 	ldi r24,0
 	eicall
 .LVL906:
@@ -8616,24 +8616,24 @@ softKeys_toLCD:
 .L510:
 	ldi r22,0
 .L508:
-	.loc 1 2480 0 is_stmt 0 discriminator 4
+	.loc 1 2481 0 is_stmt 0 discriminator 4
 	mov r24,r28
 	call keylabel_statcheck
 .LVL907:
 .L507:
-	.loc 1 2473 0 is_stmt 1 discriminator 2
+	.loc 1 2474 0 is_stmt 1 discriminator 2
 	subi r28,lo8(-(1))
 .LVL908:
 .L504:
-	.loc 1 2473 0 is_stmt 0 discriminator 1
+	.loc 1 2474 0 is_stmt 0 discriminator 1
 	cpi r28,lo8(4)
 	brlo .L509
 .LBE129:
-	.loc 1 2484 0 is_stmt 1
+	.loc 1 2485 0 is_stmt 1
 	call keylabel_toLCD
 .LVL909:
 /* epilogue start */
-	.loc 1 2485 0
+	.loc 1 2486 0
 	pop r28
 .LVL910:
 	pop r17
@@ -8647,14 +8647,14 @@ softKeys_toLCD:
 	.type	softKey_MessageKey_ToSoftKeyNr, @function
 softKey_MessageKey_ToSoftKeyNr:
 .LFB119:
-	.loc 1 2487 0
+	.loc 1 2488 0
 	.cfi_startproc
 .LVL911:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 2488 0
+	.loc 1 2489 0
 	cpi r24,lo8(2)
 	breq .L513
 	brsh .L514
@@ -8668,34 +8668,34 @@ softKey_MessageKey_ToSoftKeyNr:
 	breq .L517
 	rjmp .L512
 .L513:
-	.loc 1 2490 0
+	.loc 1 2491 0
 	ldi r24,0
 .LVL912:
 	ret
 .LVL913:
 .L517:
-	.loc 1 2494 0
+	.loc 1 2495 0
 	ldi r24,lo8(2)
 .LVL914:
 	ret
 .LVL915:
 .L515:
-	.loc 1 2496 0
+	.loc 1 2497 0
 	ldi r24,lo8(3)
 .LVL916:
 	ret
 .LVL917:
 .L512:
-	.loc 1 2498 0
+	.loc 1 2499 0
 	ldi r24,lo8(-1)
 .LVL918:
 	ret
 .LVL919:
 .L518:
-	.loc 1 2492 0
+	.loc 1 2493 0
 	ldi r24,lo8(1)
 .LVL920:
-	.loc 1 2499 0
+	.loc 1 2500 0
 	ret
 	.cfi_endproc
 .LFE119:
@@ -8705,7 +8705,7 @@ softKey_MessageKey_ToSoftKeyNr:
 	.type	softKey_Execute, @function
 softKey_Execute:
 .LFB120:
-	.loc 1 2501 0
+	.loc 1 2502 0
 	.cfi_startproc
 .LVL921:
 	push r16
@@ -8724,11 +8724,11 @@ softKey_Execute:
 /* frame size = 0 */
 /* stack size = 3 */
 .L__stack_usage = 3
-	.loc 1 2503 0
+	.loc 1 2504 0
 	cpi r24,lo8(4)
 	brsh .L524
 .LBB130:
-	.loc 1 2505 0
+	.loc 1 2506 0
 	mov r30,r24
 	ldi r31,0
 	lsl r30
@@ -8738,24 +8738,24 @@ softKey_Execute:
 	ld r16,Z
 	ldd r17,Z+1
 .LVL922:
-	.loc 1 2506 0
+	.loc 1 2507 0
 	cp r16,__zero_reg__
 	cpc r17,__zero_reg__
 	breq .L525
-	.loc 1 2508 0
+	.loc 1 2509 0
 	movw r30,r16
 	lpm r25,Z
 	andi r25,lo8(63)
 	cpi r25,lo8(1)
 	brne .L526
-	.loc 1 2508 0 is_stmt 0 discriminator 1
+	.loc 1 2509 0 is_stmt 0 discriminator 1
 	adiw r30,1
 	lpm r25,Z
 	sbrs r25,4
 	rjmp .L527
 	mov r28,r24
 .LBB131:
-	.loc 1 2509 0 is_stmt 1
+	.loc 1 2510 0 is_stmt 1
 	adiw r30,15
 	lpm r0,Z+
 	lpm r31,Z
@@ -8763,15 +8763,15 @@ softKey_Execute:
 	sbiw r30,0
 	breq .L521
 .LBB132:
-	.loc 1 2512 0
+	.loc 1 2513 0
 	mov r24,r22
 .LVL923:
 	eicall
 .LVL924:
-	.loc 1 2514 0
+	.loc 1 2515 0
 	cpi r24,lo8(-126)
 	brne .L522
-	.loc 1 2515 0
+	.loc 1 2516 0
 	ldi r22,0
 	mov r24,r28
 .LVL925:
@@ -8780,47 +8780,47 @@ softKey_Execute:
 	rjmp .L523
 .LVL927:
 .L522:
-	.loc 1 2516 0
+	.loc 1 2517 0
 	cpi r24,lo8(-127)
 	brne .L523
-	.loc 1 2517 0
+	.loc 1 2518 0
 	ldi r22,lo8(-1)
 	mov r24,r28
 .LVL928:
 	call keylabel_statcheck
 .LVL929:
 .L523:
-	.loc 1 2519 0
+	.loc 1 2520 0
 	call keylabel_toLCD
 .LVL930:
 .L521:
 .LBE132:
-	.loc 1 2522 0
+	.loc 1 2523 0
 	movw r30,r16
 	adiw r30,12
 	lpm r24,Z+
 	lpm r25,Z+
 .LVL931:
-	.loc 1 2523 0
+	.loc 1 2524 0
 	sbiw r24,0
 	breq .L528
-	.loc 1 2525 0
+	.loc 1 2526 0
 	movw r22,r16
 	subi r22,-2
 	sbci r23,-1
 	call menu_Init
 .LVL932:
-	.loc 1 2526 0
+	.loc 1 2527 0
 	call menu_InitLCD
 .LVL933:
-	.loc 1 2527 0
+	.loc 1 2528 0
 	ldi r24,0
 	rjmp .L520
 .LVL934:
 .L524:
 .LBE131:
 .LBE130:
-	.loc 1 2532 0
+	.loc 1 2533 0
 	ldi r24,lo8(-1)
 .LVL935:
 	rjmp .L520
@@ -8845,7 +8845,7 @@ softKey_Execute:
 .LVL943:
 .L520:
 /* epilogue start */
-	.loc 1 2533 0
+	.loc 1 2534 0
 	pop r28
 	pop r17
 	pop r16
@@ -8858,7 +8858,7 @@ softKey_Execute:
 	.type	menu_showPowerState, @function
 menu_showPowerState:
 .LFB121:
-	.loc 1 2537 0
+	.loc 1 2538 0
 	.cfi_startproc
 	push r28
 .LCFI82:
@@ -8868,14 +8868,14 @@ menu_showPowerState:
 /* frame size = 0 */
 /* stack size = 1 */
 .L__stack_usage = 1
-	.loc 1 2538 0
+	.loc 1 2539 0
 	lds r28,lcd_cursorPos
 .LVL944:
-	.loc 1 2539 0
+	.loc 1 2540 0
 	ldi r24,lo8(12)
 	call lcd_goto
 .LVL945:
-	.loc 1 2540 0
+	.loc 1 2541 0
 	lds r24,pipe_PowerStatus
 	sbrs r24,4
 	rjmp .L531
@@ -8884,15 +8884,15 @@ menu_showPowerState:
 .L531:
 	ldi r24,lo8(9)
 .L530:
-	.loc 1 2540 0 is_stmt 0 discriminator 4
+	.loc 1 2541 0 is_stmt 0 discriminator 4
 	call lcd_putc
 .LVL946:
-	.loc 1 2541 0 is_stmt 1 discriminator 4
+	.loc 1 2542 0 is_stmt 1 discriminator 4
 	mov r24,r28
 	call lcd_goto
 .LVL947:
 /* epilogue start */
-	.loc 1 2543 0 discriminator 4
+	.loc 1 2544 0 discriminator 4
 	pop r28
 .LVL948:
 	ret
@@ -8904,25 +8904,25 @@ menu_showPowerState:
 	.type	menuOnEnterPwrOn, @function
 menuOnEnterPwrOn:
 .LFB40:
-	.loc 1 626 0
+	.loc 1 627 0
 	.cfi_startproc
 .LVL949:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 628 0
+	.loc 1 629 0
 	in r24,0x5
 .LVL950:
 	ori r24,lo8(64)
 	out 0x5,r24
-	.loc 1 629 0
+	.loc 1 630 0
 	ldi r24,lo8(19)
 	sts pipe_PowerStatus,r24
-	.loc 1 630 0
+	.loc 1 631 0
 	call menu_showPowerState
 .LVL951:
-	.loc 1 632 0
+	.loc 1 633 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -8933,24 +8933,24 @@ menuOnEnterPwrOn:
 	.type	menuOnEnterPwrOff, @function
 menuOnEnterPwrOff:
 .LFB41:
-	.loc 1 634 0
+	.loc 1 635 0
 	.cfi_startproc
 .LVL952:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 636 0
+	.loc 1 637 0
 	in r24,0x5
 .LVL953:
 	andi r24,lo8(-65)
 	out 0x5,r24
-	.loc 1 637 0
-	sts pipe_PowerStatus,__zero_reg__
 	.loc 1 638 0
+	sts pipe_PowerStatus,__zero_reg__
+	.loc 1 639 0
 	call menu_showPowerState
 .LVL954:
-	.loc 1 640 0
+	.loc 1 641 0
 	ldi r24,0
 	ret
 	.cfi_endproc
@@ -8961,26 +8961,26 @@ menuOnEnterPwrOff:
 	.type	menuOnEnterPwrRest, @function
 menuOnEnterPwrRest:
 .LFB42:
-	.loc 1 642 0
+	.loc 1 643 0
 	.cfi_startproc
 .LVL955:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 643 0
+	.loc 1 644 0
 	in r24,0x5
 .LVL956:
 	andi r24,lo8(-65)
 	out 0x5,r24
-	.loc 1 645 0
+	.loc 1 646 0
 	ldi r24,lo8(1)
 	sts pipe_PowerStatus,r24
-	.loc 1 646 0
+	.loc 1 647 0
 	call menu_showPowerState
 .LVL957:
 .LBB133:
-	.loc 1 647 0
+	.loc 1 648 0
 	in r25,__SREG__
 .LVL958:
 .LBB134:
@@ -8993,12 +8993,12 @@ menuOnEnterPwrRest:
 /* #NOAPP */
 .LBE135:
 .LBE134:
-	.loc 1 647 0
+	.loc 1 648 0
 	ldi r24,lo8(1)
 	rjmp .L535
 .LVL959:
 .L536:
-	.loc 1 647 0 discriminator 3
+	.loc 1 648 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
 	ldi r24,lo8(40)
@@ -9006,11 +9006,11 @@ menuOnEnterPwrRest:
 	std Z+2,r24
 	std Z+3,__zero_reg__
 .LVL961:
-	.loc 1 647 0 discriminator 3
+	.loc 1 648 0 discriminator 3
 	ldi r24,0
 .LVL962:
 .L535:
-	.loc 1 647 0 is_stmt 0 discriminator 1
+	.loc 1 648 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
 	rjmp .L536
 .LVL963:
@@ -9023,35 +9023,35 @@ menuOnEnterPwrRest:
 .LBE137:
 .LBE136:
 .LBE133:
-	.loc 1 649 0
+	.loc 1 650 0
 	ret
 	.cfi_endproc
 .LFE42:
 	.size	menuOnEnterPwrRest, .-menuOnEnterPwrRest
-	.section	.bss.showText.2973,"aw",@nobits
-	.type	showText.2973, @object
-	.size	showText.2973, 1
-showText.2973:
+	.section	.bss.showText.2996,"aw",@nobits
+	.type	showText.2996, @object
+	.size	showText.2996, 1
+showText.2996:
 	.zero	1
-	.section	.bss.logEntryNr.2972,"aw",@nobits
-	.type	logEntryNr.2972, @object
-	.size	logEntryNr.2972, 1
-logEntryNr.2972:
+	.section	.bss.logEntryNr.2995,"aw",@nobits
+	.type	logEntryNr.2995, @object
+	.size	logEntryNr.2995, 1
+logEntryNr.2995:
 	.zero	1
-	.section	.bss.notOnOff.2931,"aw",@nobits
-	.type	notOnOff.2931, @object
-	.size	notOnOff.2931, 1
-notOnOff.2931:
+	.section	.bss.notOnOff.2954,"aw",@nobits
+	.type	notOnOff.2954, @object
+	.size	notOnOff.2954, 1
+notOnOff.2954:
 	.zero	1
-	.section	.bss.maxManNote.2930,"aw",@nobits
-	.type	maxManNote.2930, @object
-	.size	maxManNote.2930, 1
-maxManNote.2930:
+	.section	.bss.maxManNote.2953,"aw",@nobits
+	.type	maxManNote.2953, @object
+	.size	maxManNote.2953, 1
+maxManNote.2953:
 	.zero	1
-	.section	.bss.minManNote.2929,"aw",@nobits
-	.type	minManNote.2929, @object
-	.size	minManNote.2929, 1
-minManNote.2929:
+	.section	.bss.minManNote.2952,"aw",@nobits
+	.type	minManNote.2952, @object
+	.size	minManNote.2952, 1
+minManNote.2952:
 	.zero	1
 .global	usbHWmidichanSW
 	.section	.progmem.data.usbHWmidichanSW,"a",@progbits
@@ -10621,35 +10621,6 @@ menu_ModTestSelcted:
 	.word	0
 	.word	gs(menu_testModule)
 	.word	0
-.global	menu_USBser
-	.section	.progmem.data.menu_USBser,"a",@progbits
-	.type	menu_USBser, @object
-	.size	menu_USBser, 60
-menu_USBser:
-	.byte	-119
-	.byte	0
-	.string	"Active"
-	.zero	3
-	.word	0
-	.word	serusb_Active
-	.word	0
-	.word	gs(menuOnExitUSBactive)
-	.byte	1
-	.byte	0
-	.string	"SendLog"
-	.zero	2
-	.word	0
-	.word	0
-	.word	gs(menuOnEnterUSBprotokoll)
-	.word	0
-	.byte	-63
-	.byte	0
-	.string	"SndHWCfg"
-	.zero	1
-	.word	0
-	.word	0
-	.word	gs(menuOnEnterUSBsendHW)
-	.word	0
 .global	menu_modAssign
 	.section	.progmem.data.menu_modAssign,"a",@progbits
 	.type	menu_modAssign, @object
@@ -10860,7 +10831,7 @@ menu_modDefine:
 .global	menu_status
 	.section	.progmem.data.menu_status,"a",@progbits
 	.type	menu_status, @object
-	.size	menu_status, 60
+	.size	menu_status, 80
 menu_status:
 	.byte	-127
 	.byte	32
@@ -10869,6 +10840,14 @@ menu_status:
 	.word	0
 	.word	0
 	.word	gs(menuOnEnterLogDisp)
+	.word	0
+	.byte	1
+	.byte	0
+	.string	"USB"
+	.zero	6
+	.word	menu_USBser
+	.word	0
+	.word	0
 	.word	0
 	.byte	2
 	.byte	64
@@ -10886,12 +10865,41 @@ menu_status:
 	.word	0
 	.word	gs(menuOnEnterStatusMidiOut)
 	.word	0
+.global	menu_USBser
+	.section	.progmem.data.menu_USBser,"a",@progbits
+	.type	menu_USBser, @object
+	.size	menu_USBser, 60
+menu_USBser:
+	.byte	-119
+	.byte	0
+	.string	"Active"
+	.zero	3
+	.word	0
+	.word	serUSB_Active
+	.word	0
+	.word	gs(menuOnExitUSBactive)
+	.byte	1
+	.byte	0
+	.string	"SendLog"
+	.zero	2
+	.word	0
+	.word	0
+	.word	gs(menuOnEnterUSBprotokoll)
+	.word	0
+	.byte	-63
+	.byte	0
+	.string	"SndHWCfg"
+	.zero	1
+	.word	0
+	.word	0
+	.word	gs(menuOnEnterUSBsendHW)
+	.word	0
 .global	sw_version
 	.section	.progmem.data.sw_version,"a",@progbits
 	.type	sw_version, @object
 	.size	sw_version, 6
 sw_version:
-	.string	"V0.63"
+	.string	"V0.67"
 	.comm	lcdData,10,1
 	.text
 .Letext0:
@@ -11141,12 +11149,12 @@ sw_version:
 	.uleb128 0x9
 	.byte	0x3
 	.byte	0x6
-	.byte	0x43
+	.byte	0x46
 	.long	0x1f0
 	.uleb128 0xa
 	.long	.LASF31
 	.byte	0x6
-	.byte	0x44
+	.byte	0x47
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11154,7 +11162,7 @@ sw_version:
 	.uleb128 0xa
 	.long	.LASF32
 	.byte	0x6
-	.byte	0x45
+	.byte	0x48
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11162,7 +11170,7 @@ sw_version:
 	.uleb128 0xa
 	.long	.LASF33
 	.byte	0x6
-	.byte	0x46
+	.byte	0x49
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11171,17 +11179,17 @@ sw_version:
 	.uleb128 0x2
 	.long	.LASF34
 	.byte	0x6
-	.byte	0x47
+	.byte	0x4a
 	.long	0x1bd
 	.uleb128 0x9
 	.byte	0x4
 	.byte	0x6
-	.byte	0x73
+	.byte	0x76
 	.long	0x23c
 	.uleb128 0xa
 	.long	.LASF35
 	.byte	0x6
-	.byte	0x74
+	.byte	0x77
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11189,7 +11197,7 @@ sw_version:
 	.uleb128 0xa
 	.long	.LASF36
 	.byte	0x6
-	.byte	0x75
+	.byte	0x78
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11197,7 +11205,7 @@ sw_version:
 	.uleb128 0xa
 	.long	.LASF37
 	.byte	0x6
-	.byte	0x76
+	.byte	0x79
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11205,7 +11213,7 @@ sw_version:
 	.uleb128 0xa
 	.long	.LASF38
 	.byte	0x6
-	.byte	0x77
+	.byte	0x7a
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11214,17 +11222,17 @@ sw_version:
 	.uleb128 0x2
 	.long	.LASF39
 	.byte	0x6
-	.byte	0x78
+	.byte	0x7b
 	.long	0x1fb
 	.uleb128 0x9
 	.byte	0x2
 	.byte	0x6
-	.byte	0x7c
+	.byte	0x7f
 	.long	0x26c
 	.uleb128 0xa
 	.long	.LASF40
 	.byte	0x6
-	.byte	0x7d
+	.byte	0x80
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11232,7 +11240,7 @@ sw_version:
 	.uleb128 0xa
 	.long	.LASF41
 	.byte	0x6
-	.byte	0x7e
+	.byte	0x81
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11241,17 +11249,17 @@ sw_version:
 	.uleb128 0x2
 	.long	.LASF42
 	.byte	0x6
-	.byte	0x7f
+	.byte	0x82
 	.long	0x247
 	.uleb128 0x9
 	.byte	0x2
 	.byte	0x6
-	.byte	0x84
+	.byte	0x87
 	.long	0x29c
 	.uleb128 0xa
 	.long	.LASF43
 	.byte	0x6
-	.byte	0x85
+	.byte	0x88
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11259,7 +11267,7 @@ sw_version:
 	.uleb128 0xa
 	.long	.LASF44
 	.byte	0x6
-	.byte	0x86
+	.byte	0x89
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11268,17 +11276,17 @@ sw_version:
 	.uleb128 0x2
 	.long	.LASF45
 	.byte	0x6
-	.byte	0x88
+	.byte	0x8b
 	.long	0x277
 	.uleb128 0x9
 	.byte	0x3
 	.byte	0x6
-	.byte	0x8e
+	.byte	0x91
 	.long	0x2da
 	.uleb128 0xa
 	.long	.LASF46
 	.byte	0x6
-	.byte	0x8f
+	.byte	0x92
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11286,7 +11294,7 @@ sw_version:
 	.uleb128 0xa
 	.long	.LASF47
 	.byte	0x6
-	.byte	0x90
+	.byte	0x93
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11294,7 +11302,7 @@ sw_version:
 	.uleb128 0xa
 	.long	.LASF33
 	.byte	0x6
-	.byte	0x91
+	.byte	0x94
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11303,7 +11311,7 @@ sw_version:
 	.uleb128 0x2
 	.long	.LASF48
 	.byte	0x6
-	.byte	0x92
+	.byte	0x95
 	.long	0x2a7
 	.uleb128 0x7
 	.long	0x3b
@@ -11315,12 +11323,12 @@ sw_version:
 	.uleb128 0x9
 	.byte	0x3
 	.byte	0x6
-	.byte	0xc3
+	.byte	0xc7
 	.long	0x328
 	.uleb128 0xa
 	.long	.LASF49
 	.byte	0x6
-	.byte	0xc4
+	.byte	0xc8
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11328,7 +11336,7 @@ sw_version:
 	.uleb128 0xa
 	.long	.LASF50
 	.byte	0x6
-	.byte	0xc5
+	.byte	0xc9
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11336,7 +11344,7 @@ sw_version:
 	.uleb128 0xa
 	.long	.LASF51
 	.byte	0x6
-	.byte	0xc6
+	.byte	0xca
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -11345,7 +11353,7 @@ sw_version:
 	.uleb128 0x2
 	.long	.LASF52
 	.byte	0x6
-	.byte	0xc7
+	.byte	0xcb
 	.long	0x2f5
 	.uleb128 0x2
 	.long	.LASF53
@@ -11561,12 +11569,12 @@ sw_version:
 	.uleb128 0x13
 	.long	.LASF69
 	.byte	0x1
-	.word	0x7d4
+	.word	0x7d5
 	.byte	0x3
 	.uleb128 0x13
 	.long	.LASF70
 	.byte	0x1
-	.word	0x7e4
+	.word	0x7e5
 	.byte	0x3
 	.uleb128 0x14
 	.long	.LASF463
@@ -11595,7 +11603,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF72
 	.byte	0x1
-	.word	0x2e6
+	.word	0x2e7
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB47
@@ -11609,18 +11617,18 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x2e6
+	.word	0x2e7
 	.long	0x3b
 	.long	.LLST0
 	.uleb128 0x19
 	.long	.LASF75
 	.byte	0x1
-	.word	0x2e9
+	.word	0x2ea
 	.long	0x3b
 	.uleb128 0x1a
 	.long	.LASF71
 	.byte	0x1
-	.word	0x2ea
+	.word	0x2eb
 	.long	0x56d
 	.long	.LLST1
 	.uleb128 0x1b
@@ -11628,7 +11636,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x2eb
+	.word	0x2ec
 	.long	0x3b
 	.long	.LLST2
 	.byte	0
@@ -11640,7 +11648,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF73
 	.byte	0x1
-	.word	0x2f5
+	.word	0x2f6
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB48
@@ -11654,13 +11662,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x2f5
+	.word	0x2f6
 	.long	0x3b
 	.long	.LLST3
 	.uleb128 0x1d
 	.long	.LASF74
 	.byte	0x1
-	.word	0x2f6
+	.word	0x2f7
 	.long	0x78
 	.byte	0xc
 	.byte	0x64
@@ -11681,13 +11689,13 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF75
 	.byte	0x1
-	.word	0x2f8
+	.word	0x2f9
 	.long	0x3b
 	.long	.LLST4
 	.uleb128 0x1a
 	.long	.LASF71
 	.byte	0x1
-	.word	0x2f9
+	.word	0x2fa
 	.long	0x56d
 	.long	.LLST5
 	.uleb128 0x1b
@@ -11695,7 +11703,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x2fa
+	.word	0x2fb
 	.long	0x3b
 	.long	.LLST6
 	.byte	0
@@ -11705,7 +11713,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF76
 	.byte	0x1
-	.word	0x321
+	.word	0x322
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB51
@@ -11719,7 +11727,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x321
+	.word	0x322
 	.long	0x3b
 	.long	.LLST7
 	.byte	0
@@ -11727,7 +11735,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF77
 	.byte	0x1
-	.word	0x327
+	.word	0x328
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB52
@@ -11741,7 +11749,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x327
+	.word	0x328
 	.long	0x3b
 	.long	.LLST8
 	.byte	0
@@ -11749,7 +11757,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF78
 	.byte	0x1
-	.word	0x32d
+	.word	0x32e
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB53
@@ -11763,7 +11771,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x32d
+	.word	0x32e
 	.long	0x3b
 	.long	.LLST9
 	.byte	0
@@ -11771,7 +11779,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF79
 	.byte	0x1
-	.word	0x334
+	.word	0x335
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB54
@@ -11785,7 +11793,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x334
+	.word	0x335
 	.long	0x3b
 	.long	.LLST10
 	.byte	0
@@ -11793,7 +11801,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF80
 	.byte	0x1
-	.word	0x33a
+	.word	0x33b
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB55
@@ -11807,7 +11815,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x33a
+	.word	0x33b
 	.long	0x3b
 	.long	.LLST11
 	.byte	0
@@ -11815,7 +11823,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF81
 	.byte	0x1
-	.word	0x341
+	.word	0x342
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB56
@@ -11829,7 +11837,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x341
+	.word	0x342
 	.long	0x3b
 	.long	.LLST12
 	.byte	0
@@ -11837,7 +11845,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF82
 	.byte	0x1
-	.word	0x349
+	.word	0x34a
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB57
@@ -11851,13 +11859,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x349
+	.word	0x34a
 	.long	0x3b
 	.long	.LLST13
 	.uleb128 0x1a
 	.long	.LASF83
 	.byte	0x1
-	.word	0x34b
+	.word	0x34c
 	.long	0x3b
 	.long	.LLST14
 	.byte	0
@@ -11865,7 +11873,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF84
 	.byte	0x1
-	.word	0x1a9
+	.word	0x1aa
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB11
@@ -11879,7 +11887,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x1a9
+	.word	0x1aa
 	.long	0x3b
 	.long	.LLST15
 	.uleb128 0x1f
@@ -11890,7 +11898,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF85
 	.byte	0x1
-	.word	0x1bc
+	.word	0x1bd
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB14
@@ -11901,7 +11909,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x1bc
+	.word	0x1bd
 	.long	0x3b
 	.long	.LLST17
 	.uleb128 0x1e
@@ -11910,13 +11918,13 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF86
 	.byte	0x1
-	.word	0x1bf
+	.word	0x1c0
 	.long	0x3b
 	.long	.LLST18
 	.uleb128 0x1a
 	.long	.LASF87
 	.byte	0x1
-	.word	0x1c0
+	.word	0x1c1
 	.long	0x3b
 	.long	.LLST19
 	.uleb128 0x1e
@@ -11925,7 +11933,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x1c1
+	.word	0x1c2
 	.long	0x3b
 	.long	.LLST20
 	.uleb128 0x21
@@ -11947,7 +11955,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF88
 	.byte	0x1
-	.word	0x25c
+	.word	0x25d
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB37
@@ -11961,7 +11969,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x25c
+	.word	0x25d
 	.long	0x3b
 	.long	.LLST21
 	.uleb128 0x1f
@@ -11972,7 +11980,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF89
 	.byte	0x1
-	.word	0x1d0
+	.word	0x1d1
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB16
@@ -11986,13 +11994,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x1d0
+	.word	0x1d1
 	.long	0x3b
 	.long	.LLST22
 	.uleb128 0x1a
 	.long	.LASF90
 	.byte	0x1
-	.word	0x1d2
+	.word	0x1d3
 	.long	0x3b
 	.long	.LLST23
 	.uleb128 0x1f
@@ -12003,7 +12011,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF91
 	.byte	0x1
-	.word	0x264
+	.word	0x265
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB38
@@ -12017,7 +12025,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x264
+	.word	0x265
 	.long	0x3b
 	.long	.LLST24
 	.uleb128 0x21
@@ -12035,7 +12043,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF92
 	.byte	0x1
-	.word	0x28b
+	.word	0x28c
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB43
@@ -12049,7 +12057,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x28b
+	.word	0x28c
 	.long	0x3b
 	.long	.LLST25
 	.uleb128 0x1f
@@ -12060,7 +12068,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF93
 	.byte	0x1
-	.word	0x307
+	.word	0x308
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB49
@@ -12071,24 +12079,24 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x307
+	.word	0x308
 	.long	0x3b
 	.long	.LLST27
 	.uleb128 0x1a
 	.long	.LASF94
 	.byte	0x1
-	.word	0x309
+	.word	0x30a
 	.long	0x78
 	.long	.LLST28
 	.uleb128 0x19
 	.long	.LASF75
 	.byte	0x1
-	.word	0x30a
+	.word	0x30b
 	.long	0x3b
 	.uleb128 0x1a
 	.long	.LASF71
 	.byte	0x1
-	.word	0x30b
+	.word	0x30c
 	.long	0x56d
 	.long	.LLST29
 	.uleb128 0x23
@@ -12097,7 +12105,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x30c
+	.word	0x30d
 	.long	0x3b
 	.long	.LLST30
 	.byte	0
@@ -12119,7 +12127,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF95
 	.byte	0x1
-	.word	0x319
+	.word	0x31a
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB50
@@ -12133,7 +12141,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x319
+	.word	0x31a
 	.long	0x3b
 	.long	.LLST31
 	.uleb128 0x24
@@ -12157,7 +12165,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF96
 	.byte	0x1
-	.word	0x35d
+	.word	0x35e
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB59
@@ -12168,37 +12176,37 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x35d
+	.word	0x35e
 	.long	0x3b
 	.long	.LLST33
 	.uleb128 0x1d
 	.long	.LASF97
 	.byte	0x1
-	.word	0x35f
-	.long	0x3b
-	.byte	0x5
-	.byte	0x3
-	.long	minManNote.2929
-	.uleb128 0x1d
-	.long	.LASF98
-	.byte	0x1
 	.word	0x360
 	.long	0x3b
 	.byte	0x5
 	.byte	0x3
-	.long	maxManNote.2930
+	.long	minManNote.2952
 	.uleb128 0x1d
-	.long	.LASF99
+	.long	.LASF98
 	.byte	0x1
 	.word	0x361
 	.long	0x3b
 	.byte	0x5
 	.byte	0x3
-	.long	notOnOff.2931
+	.long	maxManNote.2953
+	.uleb128 0x1d
+	.long	.LASF99
+	.byte	0x1
+	.word	0x362
+	.long	0x3b
+	.byte	0x5
+	.byte	0x3
+	.long	notOnOff.2954
 	.uleb128 0x1a
 	.long	.LASF100
 	.byte	0x1
-	.word	0x362
+	.word	0x363
 	.long	0x3b
 	.long	.LLST34
 	.uleb128 0x25
@@ -12208,7 +12216,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x36c
+	.word	0x36d
 	.long	0x3b
 	.long	.LLST35
 	.byte	0
@@ -12461,7 +12469,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF101
 	.byte	0x1
-	.word	0x3bb
+	.word	0x3bc
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB60
@@ -12475,7 +12483,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x3bb
+	.word	0x3bc
 	.long	0x3b
 	.long	.LLST36
 	.uleb128 0x1f
@@ -12486,7 +12494,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF102
 	.byte	0x1
-	.word	0x3fe
+	.word	0x3ff
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB64
@@ -12500,7 +12508,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x3fe
+	.word	0x3ff
 	.long	0x3b
 	.long	.LLST37
 	.uleb128 0x1f
@@ -12511,7 +12519,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF103
 	.byte	0x1
-	.word	0x3f8
+	.word	0x3f9
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB63
@@ -12525,7 +12533,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x3f8
+	.word	0x3f9
 	.long	0x3b
 	.long	.LLST38
 	.uleb128 0x1f
@@ -12536,7 +12544,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF104
 	.byte	0x1
-	.word	0x404
+	.word	0x405
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB65
@@ -12550,7 +12558,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x404
+	.word	0x405
 	.long	0x3b
 	.long	.LLST39
 	.uleb128 0x1f
@@ -12570,7 +12578,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF105
 	.byte	0x1
-	.word	0x40d
+	.word	0x40e
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB66
@@ -12584,7 +12592,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x40d
+	.word	0x40e
 	.long	0x3b
 	.long	.LLST40
 	.uleb128 0x1f
@@ -12595,7 +12603,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF106
 	.byte	0x1
-	.word	0x475
+	.word	0x476
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB72
@@ -12606,13 +12614,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x475
+	.word	0x476
 	.long	0x3b
 	.long	.LLST42
 	.uleb128 0x1a
 	.long	.LASF107
 	.byte	0x1
-	.word	0x478
+	.word	0x479
 	.long	0x3b
 	.long	.LLST43
 	.uleb128 0x24
@@ -12695,7 +12703,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF108
 	.byte	0x1
-	.word	0x488
+	.word	0x489
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB73
@@ -12709,7 +12717,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x488
+	.word	0x489
 	.long	0x3b
 	.long	.LLST44
 	.uleb128 0x1f
@@ -12755,7 +12763,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF109
 	.byte	0x1
-	.word	0x49e
+	.word	0x49f
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB74
@@ -12766,13 +12774,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x49e
+	.word	0x49f
 	.long	0x3b
 	.long	.LLST46
 	.uleb128 0x1a
 	.long	.LASF110
 	.byte	0x1
-	.word	0x4a0
+	.word	0x4a1
 	.long	0x12e9
 	.long	.LLST47
 	.uleb128 0x25
@@ -12782,7 +12790,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF35
 	.byte	0x1
-	.word	0x4b0
+	.word	0x4b1
 	.long	0x3b
 	.long	.LLST48
 	.uleb128 0x25
@@ -12792,7 +12800,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF111
 	.byte	0x1
-	.word	0x4b6
+	.word	0x4b7
 	.long	0x3b
 	.long	.LLST49
 	.uleb128 0x24
@@ -12998,7 +13006,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF111
 	.byte	0x1
-	.word	0x4e1
+	.word	0x4e2
 	.long	0x3b
 	.long	.LLST50
 	.uleb128 0x24
@@ -13233,7 +13241,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF132
 	.byte	0x1
-	.word	0x1af
+	.word	0x1b0
 	.long	.LFB12
 	.long	.LFE12
 	.long	.LLST51
@@ -13245,7 +13253,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x1b0
+	.word	0x1b1
 	.long	0x3b
 	.long	.LLST52
 	.uleb128 0x1f
@@ -13257,7 +13265,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF112
 	.byte	0x1
-	.word	0x1b5
+	.word	0x1b6
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB13
@@ -13271,7 +13279,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x1b5
+	.word	0x1b6
 	.long	0x3b
 	.long	.LLST53
 	.uleb128 0x24
@@ -13298,7 +13306,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF113
 	.byte	0x1
-	.word	0x1c9
+	.word	0x1ca
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB15
@@ -13312,7 +13320,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x1c9
+	.word	0x1ca
 	.long	0x3b
 	.long	.LLST54
 	.uleb128 0x1f
@@ -13332,7 +13340,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF114
 	.byte	0x1
-	.word	0x26a
+	.word	0x26b
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB39
@@ -13346,7 +13354,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x26a
+	.word	0x26b
 	.long	0x3b
 	.long	.LLST55
 	.uleb128 0x1f
@@ -13366,7 +13374,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF115
 	.byte	0x1
-	.word	0x1da
+	.word	0x1db
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB17
@@ -13377,13 +13385,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x1da
+	.word	0x1db
 	.long	0x3b
 	.long	.LLST57
 	.uleb128 0x27
 	.long	.LASF116
 	.byte	0x1
-	.word	0x1da
+	.word	0x1db
 	.long	0x3b
 	.long	.LLST58
 	.uleb128 0x25
@@ -13393,7 +13401,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF117
 	.byte	0x1
-	.word	0x1de
+	.word	0x1df
 	.long	0x3b
 	.long	.LLST59
 	.uleb128 0x24
@@ -13419,7 +13427,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF118
 	.byte	0x1
-	.word	0x1ea
+	.word	0x1eb
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB18
@@ -13433,13 +13441,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x1ea
+	.word	0x1eb
 	.long	0x3b
 	.long	.LLST60
 	.uleb128 0x1d
 	.long	.LASF100
 	.byte	0x1
-	.word	0x1ec
+	.word	0x1ed
 	.long	0x3b
 	.byte	0x1
 	.byte	0x68
@@ -13464,7 +13472,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF119
 	.byte	0x1
-	.word	0x1f0
+	.word	0x1f1
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB19
@@ -13478,13 +13486,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x1f0
+	.word	0x1f1
 	.long	0x3b
 	.long	.LLST61
 	.uleb128 0x1d
 	.long	.LASF100
 	.byte	0x1
-	.word	0x1f1
+	.word	0x1f2
 	.long	0x3b
 	.byte	0x1
 	.byte	0x68
@@ -13509,7 +13517,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF120
 	.byte	0x1
-	.word	0x1f5
+	.word	0x1f6
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB20
@@ -13523,13 +13531,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x1f5
+	.word	0x1f6
 	.long	0x3b
 	.long	.LLST62
 	.uleb128 0x1d
 	.long	.LASF100
 	.byte	0x1
-	.word	0x1f6
+	.word	0x1f7
 	.long	0x3b
 	.byte	0x1
 	.byte	0x68
@@ -13554,7 +13562,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF121
 	.byte	0x1
-	.word	0x1fa
+	.word	0x1fb
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB21
@@ -13568,13 +13576,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x1fa
+	.word	0x1fb
 	.long	0x3b
 	.long	.LLST63
 	.uleb128 0x1d
 	.long	.LASF100
 	.byte	0x1
-	.word	0x1fb
+	.word	0x1fc
 	.long	0x3b
 	.byte	0x1
 	.byte	0x68
@@ -13599,7 +13607,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF122
 	.byte	0x1
-	.word	0x1ff
+	.word	0x200
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB22
@@ -13613,13 +13621,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x1ff
+	.word	0x200
 	.long	0x3b
 	.long	.LLST64
 	.uleb128 0x1d
 	.long	.LASF100
 	.byte	0x1
-	.word	0x200
+	.word	0x201
 	.long	0x3b
 	.byte	0x1
 	.byte	0x68
@@ -13644,7 +13652,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF123
 	.byte	0x1
-	.word	0x204
+	.word	0x205
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB23
@@ -13658,13 +13666,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x204
+	.word	0x205
 	.long	0x3b
 	.long	.LLST65
 	.uleb128 0x1d
 	.long	.LASF100
 	.byte	0x1
-	.word	0x205
+	.word	0x206
 	.long	0x3b
 	.byte	0x1
 	.byte	0x68
@@ -13689,7 +13697,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF124
 	.byte	0x1
-	.word	0x209
+	.word	0x20a
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB24
@@ -13703,13 +13711,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x209
+	.word	0x20a
 	.long	0x3b
 	.long	.LLST66
 	.uleb128 0x1d
 	.long	.LASF100
 	.byte	0x1
-	.word	0x20b
+	.word	0x20c
 	.long	0x3b
 	.byte	0x1
 	.byte	0x68
@@ -13734,7 +13742,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF125
 	.byte	0x1
-	.word	0x20f
+	.word	0x210
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB25
@@ -13748,13 +13756,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x20f
+	.word	0x210
 	.long	0x3b
 	.long	.LLST67
 	.uleb128 0x1d
 	.long	.LASF100
 	.byte	0x1
-	.word	0x210
+	.word	0x211
 	.long	0x3b
 	.byte	0x1
 	.byte	0x68
@@ -13779,7 +13787,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF126
 	.byte	0x1
-	.word	0x214
+	.word	0x215
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB26
@@ -13793,13 +13801,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x214
+	.word	0x215
 	.long	0x3b
 	.long	.LLST68
 	.uleb128 0x1d
 	.long	.LASF100
 	.byte	0x1
-	.word	0x215
+	.word	0x216
 	.long	0x3b
 	.byte	0x1
 	.byte	0x68
@@ -13824,7 +13832,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF127
 	.byte	0x1
-	.word	0x219
+	.word	0x21a
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB27
@@ -13838,13 +13846,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x219
+	.word	0x21a
 	.long	0x3b
 	.long	.LLST69
 	.uleb128 0x1d
 	.long	.LASF100
 	.byte	0x1
-	.word	0x21a
+	.word	0x21b
 	.long	0x3b
 	.byte	0x1
 	.byte	0x68
@@ -13869,7 +13877,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF128
 	.byte	0x1
-	.word	0x21e
+	.word	0x21f
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB28
@@ -13883,13 +13891,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x21e
+	.word	0x21f
 	.long	0x3b
 	.long	.LLST70
 	.uleb128 0x1d
 	.long	.LASF100
 	.byte	0x1
-	.word	0x21f
+	.word	0x220
 	.long	0x3b
 	.byte	0x1
 	.byte	0x68
@@ -13914,7 +13922,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF129
 	.byte	0x1
-	.word	0x223
+	.word	0x224
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB29
@@ -13928,13 +13936,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x223
+	.word	0x224
 	.long	0x3b
 	.long	.LLST71
 	.uleb128 0x1d
 	.long	.LASF100
 	.byte	0x1
-	.word	0x224
+	.word	0x225
 	.long	0x3b
 	.byte	0x1
 	.byte	0x68
@@ -13959,7 +13967,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF149
 	.byte	0x1
-	.word	0x50d
+	.word	0x50e
 	.byte	0x1
 	.long	.LFB75
 	.long	.LFE75
@@ -13972,13 +13980,13 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF130
 	.byte	0x1
-	.word	0x50d
+	.word	0x50e
 	.long	0x18c3
 	.long	.LLST72
 	.uleb128 0x29
 	.long	.LASF131
 	.byte	0x1
-	.word	0x50d
+	.word	0x50e
 	.long	0x384
 	.byte	0x6
 	.byte	0x66
@@ -13998,7 +14006,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF133
 	.byte	0x1
-	.word	0x526
+	.word	0x527
 	.long	.LFB77
 	.long	.LFE77
 	.byte	0x3
@@ -14021,7 +14029,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF134
 	.byte	0x1
-	.word	0x52a
+	.word	0x52b
 	.long	.LFB78
 	.long	.LFE78
 	.byte	0x3
@@ -14044,7 +14052,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF135
 	.byte	0x1
-	.word	0x52e
+	.word	0x52f
 	.long	.LFB79
 	.long	.LFE79
 	.byte	0x3
@@ -14067,7 +14075,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF136
 	.byte	0x1
-	.word	0x532
+	.word	0x533
 	.long	.LFB80
 	.long	.LFE80
 	.byte	0x3
@@ -14090,7 +14098,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF137
 	.byte	0x1
-	.word	0x535
+	.word	0x536
 	.long	.LFB81
 	.long	.LFE81
 	.byte	0x3
@@ -14113,7 +14121,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF138
 	.byte	0x1
-	.word	0x539
+	.word	0x53a
 	.long	.LFB82
 	.long	.LFE82
 	.byte	0x3
@@ -14136,7 +14144,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF139
 	.byte	0x1
-	.word	0x53d
+	.word	0x53e
 	.long	.LFB83
 	.long	.LFE83
 	.byte	0x3
@@ -14169,7 +14177,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF140
 	.byte	0x1
-	.word	0x545
+	.word	0x546
 	.long	.LFB84
 	.long	.LFE84
 	.byte	0x3
@@ -14202,7 +14210,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF141
 	.byte	0x1
-	.word	0x54f
+	.word	0x550
 	.long	.LFB85
 	.long	.LFE85
 	.long	.LLST73
@@ -14213,13 +14221,13 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x5a3
+	.word	0x5a4
 	.long	0x3b
 	.long	.LLST74
 	.uleb128 0x1a
 	.long	.LASF142
 	.byte	0x1
-	.word	0x5a4
+	.word	0x5a5
 	.long	0x37e
 	.long	.LLST75
 	.uleb128 0x1b
@@ -14227,7 +14235,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x59c
+	.word	0x59d
 	.long	0x3b
 	.long	.LLST76
 	.byte	0
@@ -14237,7 +14245,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF143
 	.byte	0x1
-	.word	0x5bb
+	.word	0x5bc
 	.long	.LFB86
 	.long	.LFE86
 	.long	.LLST77
@@ -14249,7 +14257,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x63e
+	.word	0x63f
 	.long	0x3b
 	.long	.LLST78
 	.uleb128 0x1f
@@ -14262,7 +14270,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x643
+	.word	0x644
 	.long	0x3b
 	.long	.LLST79
 	.byte	0
@@ -14304,7 +14312,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF144
 	.byte	0x1
-	.word	0x65a
+	.word	0x65b
 	.long	.LFB87
 	.long	.LFE87
 	.long	.LLST80
@@ -14313,13 +14321,13 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF145
 	.byte	0x1
-	.word	0x65c
+	.word	0x65d
 	.long	0x37e
 	.long	.LLST81
 	.uleb128 0x1a
 	.long	.LASF146
 	.byte	0x1
-	.word	0x65d
+	.word	0x65e
 	.long	0x3b
 	.long	.LLST82
 	.uleb128 0x23
@@ -14328,7 +14336,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x65e
+	.word	0x65f
 	.long	0x3b
 	.long	.LLST83
 	.uleb128 0x1f
@@ -14349,7 +14357,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF147
 	.byte	0x1
-	.word	0x668
+	.word	0x669
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB88
@@ -14363,7 +14371,7 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF148
 	.byte	0x1
-	.word	0x668
+	.word	0x669
 	.long	0x29
 	.long	.LLST84
 	.byte	0
@@ -14371,7 +14379,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF150
 	.byte	0x1
-	.word	0x672
+	.word	0x673
 	.byte	0x1
 	.long	.LFB89
 	.long	.LFE89
@@ -14381,19 +14389,19 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF151
 	.byte	0x1
-	.word	0x672
+	.word	0x673
 	.long	0x3b
 	.long	.LLST86
 	.uleb128 0x27
 	.long	.LASF152
 	.byte	0x1
-	.word	0x672
+	.word	0x673
 	.long	0x29
 	.long	.LLST87
 	.uleb128 0x1a
 	.long	.LASF153
 	.byte	0x1
-	.word	0x675
+	.word	0x676
 	.long	0x3b
 	.long	.LLST88
 	.uleb128 0x1e
@@ -14402,13 +14410,13 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF154
 	.byte	0x1
-	.word	0x6dd
+	.word	0x6de
 	.long	0x4d
 	.long	.LLST89
 	.uleb128 0x1a
 	.long	.LASF155
 	.byte	0x1
-	.word	0x70b
+	.word	0x70c
 	.long	0x29
 	.long	.LLST90
 	.uleb128 0x25
@@ -14418,7 +14426,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF156
 	.byte	0x1
-	.word	0x69c
+	.word	0x69d
 	.long	0x3b
 	.long	.LLST91
 	.byte	0
@@ -14429,7 +14437,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF157
 	.byte	0x1
-	.word	0x6aa
+	.word	0x6ab
 	.long	0x3b
 	.long	.LLST92
 	.byte	0
@@ -14440,7 +14448,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF158
 	.byte	0x1
-	.word	0x6c3
+	.word	0x6c4
 	.long	0x3b
 	.long	.LLST93
 	.byte	0
@@ -14451,7 +14459,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF159
 	.byte	0x1
-	.word	0x6d1
+	.word	0x6d2
 	.long	0x29
 	.long	.LLST94
 	.uleb128 0x1f
@@ -14467,7 +14475,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF160
 	.byte	0x1
-	.word	0x723
+	.word	0x724
 	.long	.LFB90
 	.long	.LFE90
 	.byte	0x3
@@ -14479,13 +14487,13 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF161
 	.byte	0x1
-	.word	0x725
+	.word	0x726
 	.long	0x3b
 	.long	.LLST95
 	.uleb128 0x1a
 	.long	.LASF162
 	.byte	0x1
-	.word	0x726
+	.word	0x727
 	.long	0x5f
 	.long	.LLST96
 	.uleb128 0x1e
@@ -14494,13 +14502,13 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x761
+	.word	0x762
 	.long	0x3b
 	.long	.LLST97
 	.uleb128 0x1a
 	.long	.LASF142
 	.byte	0x1
-	.word	0x762
+	.word	0x763
 	.long	0x37e
 	.long	.LLST98
 	.uleb128 0x25
@@ -14510,7 +14518,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x75a
+	.word	0x75b
 	.long	0x3b
 	.long	.LLST99
 	.byte	0
@@ -14520,7 +14528,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF163
 	.byte	0x1
-	.word	0x765
+	.word	0x766
 	.long	0x3b
 	.long	.LLST100
 	.byte	0
@@ -14530,7 +14538,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF164
 	.byte	0x1
-	.word	0x773
+	.word	0x774
 	.byte	0x1
 	.long	.LFB91
 	.long	.LFE91
@@ -14540,13 +14548,13 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF165
 	.byte	0x1
-	.word	0x773
+	.word	0x774
 	.long	0x12e9
 	.long	.LLST102
 	.uleb128 0x27
 	.long	.LASF166
 	.byte	0x1
-	.word	0x773
+	.word	0x774
 	.long	0x38b
 	.long	.LLST103
 	.uleb128 0x1e
@@ -14555,7 +14563,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x775
+	.word	0x776
 	.long	0x3b
 	.long	.LLST104
 	.uleb128 0x1e
@@ -14564,7 +14572,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF167
 	.byte	0x1
-	.word	0x776
+	.word	0x777
 	.long	0x3b
 	.long	.LLST105
 	.uleb128 0x1f
@@ -14577,7 +14585,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF168
 	.byte	0x1
-	.word	0x782
+	.word	0x783
 	.byte	0x1
 	.long	.LFB92
 	.long	.LFE92
@@ -14587,13 +14595,13 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF165
 	.byte	0x1
-	.word	0x782
+	.word	0x783
 	.long	0x384
 	.long	.LLST107
 	.uleb128 0x27
 	.long	.LASF166
 	.byte	0x1
-	.word	0x782
+	.word	0x783
 	.long	0x38b
 	.long	.LLST108
 	.uleb128 0x1e
@@ -14602,7 +14610,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x784
+	.word	0x785
 	.long	0x3b
 	.long	.LLST109
 	.uleb128 0x1e
@@ -14611,7 +14619,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF167
 	.byte	0x1
-	.word	0x785
+	.word	0x786
 	.long	0x3b
 	.long	.LLST110
 	.uleb128 0x1f
@@ -14624,7 +14632,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF169
 	.byte	0x1
-	.word	0x790
+	.word	0x791
 	.long	.LFB93
 	.long	.LFE93
 	.byte	0x3
@@ -14640,7 +14648,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF170
 	.byte	0x1
-	.word	0x797
+	.word	0x798
 	.long	0x18c3
 	.long	.LLST111
 	.uleb128 0x21
@@ -14680,7 +14688,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF171
 	.byte	0x1
-	.word	0x7b8
+	.word	0x7b9
 	.long	.LFB95
 	.long	.LFE95
 	.byte	0x3
@@ -14703,7 +14711,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF172
 	.byte	0x1
-	.word	0x7c1
+	.word	0x7c2
 	.long	.LFB96
 	.long	.LFE96
 	.byte	0x3
@@ -14755,7 +14763,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF173
 	.byte	0x1
-	.word	0x7da
+	.word	0x7db
 	.long	.LFB98
 	.long	.LFE98
 	.byte	0x3
@@ -14778,7 +14786,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF174
 	.byte	0x1
-	.word	0x3c1
+	.word	0x3c2
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB61
@@ -14789,19 +14797,19 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x3c1
+	.word	0x3c2
 	.long	0x3b
 	.long	.LLST113
 	.uleb128 0x1a
 	.long	.LASF175
 	.byte	0x1
-	.word	0x3c3
+	.word	0x3c4
 	.long	0x3b
 	.long	.LLST114
 	.uleb128 0x1a
 	.long	.LASF176
 	.byte	0x1
-	.word	0x3c4
+	.word	0x3c5
 	.long	0x37e
 	.long	.LLST115
 	.uleb128 0x1f
@@ -14855,7 +14863,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF177
 	.byte	0x1
-	.word	0x3dc
+	.word	0x3dd
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB62
@@ -14866,19 +14874,19 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x3dc
+	.word	0x3dd
 	.long	0x3b
 	.long	.LLST117
 	.uleb128 0x1a
 	.long	.LASF175
 	.byte	0x1
-	.word	0x3de
+	.word	0x3df
 	.long	0x3b
 	.long	.LLST118
 	.uleb128 0x1a
 	.long	.LASF176
 	.byte	0x1
-	.word	0x3df
+	.word	0x3e0
 	.long	0x37e
 	.long	.LLST119
 	.uleb128 0x1f
@@ -14932,7 +14940,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF178
 	.byte	0x1
-	.word	0x415
+	.word	0x416
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB67
@@ -14943,29 +14951,29 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x415
+	.word	0x416
 	.long	0x3b
 	.long	.LLST121
 	.uleb128 0x1d
 	.long	.LASF179
 	.byte	0x1
-	.word	0x417
-	.long	0x3b
-	.byte	0x5
-	.byte	0x3
-	.long	logEntryNr.2972
-	.uleb128 0x1d
-	.long	.LASF180
-	.byte	0x1
 	.word	0x418
 	.long	0x3b
 	.byte	0x5
 	.byte	0x3
-	.long	showText.2973
+	.long	logEntryNr.2995
+	.uleb128 0x1d
+	.long	.LASF180
+	.byte	0x1
+	.word	0x419
+	.long	0x3b
+	.byte	0x5
+	.byte	0x3
+	.long	showText.2996
 	.uleb128 0x1a
 	.long	.LASF181
 	.byte	0x1
-	.word	0x419
+	.word	0x41a
 	.long	0x3b
 	.long	.LLST122
 	.uleb128 0x1f
@@ -15120,7 +15128,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF182
 	.byte	0x1
-	.word	0x7df
+	.word	0x7e0
 	.long	.LFB99
 	.long	.LFE99
 	.byte	0x3
@@ -15144,7 +15152,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF183
 	.byte	0x1
-	.word	0x7e8
+	.word	0x7e9
 	.long	.LFB101
 	.long	.LFE101
 	.byte	0x3
@@ -15170,7 +15178,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF184
 	.byte	0x1
-	.word	0x7ed
+	.word	0x7ee
 	.long	.LFB102
 	.long	.LFE102
 	.byte	0x3
@@ -15184,7 +15192,7 @@ sw_version:
 	.long	.LBB83
 	.long	.LBE83
 	.byte	0x1
-	.word	0x7ee
+	.word	0x7ef
 	.long	0x2349
 	.uleb128 0x21
 	.long	.LVL566
@@ -15210,7 +15218,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF185
 	.byte	0x1
-	.word	0x7f2
+	.word	0x7f3
 	.long	.LFB103
 	.long	.LFE103
 	.byte	0x3
@@ -15224,7 +15232,7 @@ sw_version:
 	.long	.LBB85
 	.long	.LBE85
 	.byte	0x1
-	.word	0x7f3
+	.word	0x7f4
 	.long	0x2398
 	.uleb128 0x21
 	.long	.LVL568
@@ -15264,7 +15272,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF186
 	.byte	0x1
-	.word	0x7f9
+	.word	0x7fa
 	.long	.LFB104
 	.long	.LFE104
 	.byte	0x3
@@ -15287,7 +15295,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF187
 	.byte	0x1
-	.word	0x7ff
+	.word	0x800
 	.long	.LFB105
 	.long	.LFE105
 	.byte	0x3
@@ -15299,7 +15307,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF57
 	.byte	0x1
-	.word	0x800
+	.word	0x801
 	.long	0x3b
 	.long	.LLST123
 	.uleb128 0x1f
@@ -15328,7 +15336,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF188
 	.byte	0x1
-	.word	0x79c
+	.word	0x79d
 	.long	.LFB94
 	.long	.LFE94
 	.long	.LLST124
@@ -15337,13 +15345,13 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF189
 	.byte	0x1
-	.word	0x79f
+	.word	0x7a0
 	.long	0x3b
 	.long	.LLST125
 	.uleb128 0x1a
 	.long	.LASF190
 	.byte	0x1
-	.word	0x7a8
+	.word	0x7a9
 	.long	0x38b
 	.long	.LLST126
 	.uleb128 0x24
@@ -15433,7 +15441,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF191
 	.byte	0x1
-	.word	0x818
+	.word	0x819
 	.long	.LFB106
 	.long	.LFE106
 	.byte	0x3
@@ -15445,7 +15453,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF57
 	.byte	0x1
-	.word	0x81c
+	.word	0x81d
 	.long	0x3b
 	.long	.LLST127
 	.uleb128 0x25
@@ -15455,7 +15463,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF145
 	.byte	0x1
-	.word	0x822
+	.word	0x823
 	.long	0x37e
 	.long	.LLST128
 	.uleb128 0x1f
@@ -15476,7 +15484,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF192
 	.byte	0x1
-	.word	0x51a
+	.word	0x51b
 	.long	.LFB76
 	.long	.LFE76
 	.byte	0x3
@@ -15505,7 +15513,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF465
 	.byte	0x1
-	.word	0x831
+	.word	0x832
 	.long	.LFB107
 	.long	.LFE107
 	.byte	0x3
@@ -15517,7 +15525,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF193
 	.byte	0x1
-	.word	0x838
+	.word	0x839
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB108
@@ -15528,13 +15536,13 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF194
 	.byte	0x1
-	.word	0x838
+	.word	0x839
 	.long	0x3b
 	.long	.LLST130
 	.uleb128 0x1a
 	.long	.LASF195
 	.byte	0x1
-	.word	0x83c
+	.word	0x83d
 	.long	0x3b
 	.long	.LLST131
 	.uleb128 0x25
@@ -15544,7 +15552,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF145
 	.byte	0x1
-	.word	0x912
+	.word	0x913
 	.long	0x37e
 	.long	.LLST132
 	.byte	0
@@ -15846,7 +15854,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF196
 	.byte	0x1
-	.word	0x926
+	.word	0x927
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB109
@@ -15857,19 +15865,19 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF197
 	.byte	0x1
-	.word	0x926
+	.word	0x927
 	.long	0x384
 	.long	.LLST134
 	.uleb128 0x1a
 	.long	.LASF198
 	.byte	0x1
-	.word	0x928
+	.word	0x929
 	.long	0x3b
 	.long	.LLST135
 	.uleb128 0x1a
 	.long	.LASF199
 	.byte	0x1
-	.word	0x929
+	.word	0x92a
 	.long	0x3b
 	.long	.LLST136
 	.uleb128 0x25
@@ -15879,7 +15887,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF200
 	.byte	0x1
-	.word	0x92d
+	.word	0x92e
 	.long	0x3b
 	.long	.LLST137
 	.uleb128 0x24
@@ -15909,13 +15917,13 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF201
 	.byte	0x1
-	.word	0x938
+	.word	0x939
 	.long	0x3b
 	.long	.LLST138
 	.uleb128 0x1a
 	.long	.LASF202
 	.byte	0x1
-	.word	0x938
+	.word	0x939
 	.long	0x3b
 	.long	.LLST139
 	.uleb128 0x2f
@@ -15923,13 +15931,13 @@ sw_version:
 	.long	.LBB91
 	.long	.LBE91
 	.byte	0x1
-	.word	0x938
+	.word	0x939
 	.uleb128 0x30
 	.long	0x4ee
 	.long	.LBB93
 	.long	.LBE93
 	.byte	0x1
-	.word	0x938
+	.word	0x939
 	.uleb128 0x31
 	.long	0x4fb
 	.long	.LLST140
@@ -15976,7 +15984,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF203
 	.byte	0x1
-	.word	0x293
+	.word	0x294
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB44
@@ -15990,7 +15998,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x293
+	.word	0x294
 	.long	0x3b
 	.long	.LLST141
 	.uleb128 0x24
@@ -16020,7 +16028,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF204
 	.byte	0x1
-	.word	0x2a7
+	.word	0x2a8
 	.long	.LFB46
 	.long	.LFE46
 	.byte	0x3
@@ -16036,7 +16044,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF71
 	.byte	0x1
-	.word	0x2af
+	.word	0x2b0
 	.long	0x56d
 	.long	.LLST142
 	.uleb128 0x23
@@ -16045,7 +16053,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x2b1
+	.word	0x2b2
 	.long	0x3b
 	.long	.LLST143
 	.byte	0
@@ -16056,13 +16064,13 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF201
 	.byte	0x1
-	.word	0x2ba
+	.word	0x2bb
 	.long	0x3b
 	.long	.LLST144
 	.uleb128 0x1a
 	.long	.LASF202
 	.byte	0x1
-	.word	0x2ba
+	.word	0x2bb
 	.long	0x3b
 	.long	.LLST145
 	.uleb128 0x2f
@@ -16070,13 +16078,13 @@ sw_version:
 	.long	.LBB99
 	.long	.LBE99
 	.byte	0x1
-	.word	0x2ba
+	.word	0x2bb
 	.uleb128 0x30
 	.long	0x4ee
 	.long	.LBB101
 	.long	.LBE101
 	.byte	0x1
-	.word	0x2ba
+	.word	0x2bb
 	.uleb128 0x31
 	.long	0x4fb
 	.long	.LLST146
@@ -16115,13 +16123,13 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF201
 	.byte	0x1
-	.word	0x2d5
+	.word	0x2d6
 	.long	0x3b
 	.long	.LLST147
 	.uleb128 0x1a
 	.long	.LASF202
 	.byte	0x1
-	.word	0x2d5
+	.word	0x2d6
 	.long	0x3b
 	.long	.LLST148
 	.uleb128 0x2f
@@ -16129,13 +16137,13 @@ sw_version:
 	.long	.LBB104
 	.long	.LBE104
 	.byte	0x1
-	.word	0x2d5
+	.word	0x2d6
 	.uleb128 0x30
 	.long	0x4ee
 	.long	.LBB106
 	.long	.LBE106
 	.byte	0x1
-	.word	0x2d5
+	.word	0x2d6
 	.uleb128 0x31
 	.long	0x4fb
 	.long	.LLST149
@@ -16148,13 +16156,13 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF201
 	.byte	0x1
-	.word	0x2e0
+	.word	0x2e1
 	.long	0x3b
 	.long	.LLST150
 	.uleb128 0x1a
 	.long	.LASF202
 	.byte	0x1
-	.word	0x2e0
+	.word	0x2e1
 	.long	0x3b
 	.long	.LLST151
 	.uleb128 0x2f
@@ -16162,13 +16170,13 @@ sw_version:
 	.long	.LBB109
 	.long	.LBE109
 	.byte	0x1
-	.word	0x2e0
+	.word	0x2e1
 	.uleb128 0x30
 	.long	0x4ee
 	.long	.LBB111
 	.long	.LBE111
 	.byte	0x1
-	.word	0x2e0
+	.word	0x2e1
 	.uleb128 0x31
 	.long	0x4fb
 	.long	.LLST152
@@ -16236,7 +16244,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF205
 	.byte	0x1
-	.word	0x29b
+	.word	0x29c
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB45
@@ -16250,7 +16258,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x29b
+	.word	0x29c
 	.long	0x3b
 	.long	.LLST153
 	.uleb128 0x1f
@@ -16261,7 +16269,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF206
 	.byte	0x1
-	.word	0x453
+	.word	0x454
 	.long	.LFB68
 	.long	.LFE68
 	.byte	0x3
@@ -16290,7 +16298,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF207
 	.byte	0x1
-	.word	0x457
+	.word	0x458
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB69
@@ -16304,7 +16312,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x457
+	.word	0x458
 	.long	0x3b
 	.long	.LLST154
 	.uleb128 0x24
@@ -16344,7 +16352,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF208
 	.byte	0x1
-	.word	0x460
+	.word	0x461
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB70
@@ -16358,7 +16366,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x460
+	.word	0x461
 	.long	0x3b
 	.long	.LLST155
 	.uleb128 0x24
@@ -16398,7 +16406,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF209
 	.byte	0x1
-	.word	0x469
+	.word	0x46a
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB71
@@ -16412,7 +16420,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x469
+	.word	0x46a
 	.long	0x3b
 	.long	.LLST156
 	.uleb128 0x24
@@ -16452,7 +16460,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF210
 	.byte	0x1
-	.word	0x93c
+	.word	0x93d
 	.long	.LFB110
 	.long	.LFE110
 	.long	.LLST157
@@ -16461,7 +16469,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF198
 	.byte	0x1
-	.word	0x93d
+	.word	0x93e
 	.long	0x3b
 	.long	.LLST158
 	.uleb128 0x24
@@ -16500,7 +16508,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF211
 	.byte	0x1
-	.word	0x943
+	.word	0x944
 	.long	.LFB111
 	.long	.LFE111
 	.byte	0x3
@@ -16529,7 +16537,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF212
 	.byte	0x1
-	.word	0x950
+	.word	0x951
 	.byte	0x1
 	.long	.LFB112
 	.long	.LFE112
@@ -16539,19 +16547,19 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF197
 	.byte	0x1
-	.word	0x950
+	.word	0x951
 	.long	0x384
 	.long	.LLST160
 	.uleb128 0x1a
 	.long	.LASF198
 	.byte	0x1
-	.word	0x951
+	.word	0x952
 	.long	0x3b
 	.long	.LLST161
 	.uleb128 0x1a
 	.long	.LASF213
 	.byte	0x1
-	.word	0x952
+	.word	0x953
 	.long	0x3b
 	.long	.LLST162
 	.uleb128 0x25
@@ -16561,13 +16569,13 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF201
 	.byte	0x1
-	.word	0x958
+	.word	0x959
 	.long	0x3b
 	.long	.LLST163
 	.uleb128 0x1a
 	.long	.LASF202
 	.byte	0x1
-	.word	0x958
+	.word	0x959
 	.long	0x3b
 	.long	.LLST164
 	.uleb128 0x2f
@@ -16575,13 +16583,13 @@ sw_version:
 	.long	.LBB114
 	.long	.LBE114
 	.byte	0x1
-	.word	0x958
+	.word	0x959
 	.uleb128 0x30
 	.long	0x4ee
 	.long	.LBB116
 	.long	.LBE116
 	.byte	0x1
-	.word	0x958
+	.word	0x959
 	.uleb128 0x31
 	.long	0x4fb
 	.long	.LLST165
@@ -16651,7 +16659,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF214
 	.byte	0x1
-	.word	0x95c
+	.word	0x95d
 	.byte	0x1
 	.long	.LFB113
 	.long	.LFE113
@@ -16661,19 +16669,19 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF197
 	.byte	0x1
-	.word	0x95c
+	.word	0x95d
 	.long	0x3121
 	.long	.LLST167
 	.uleb128 0x1a
 	.long	.LASF198
 	.byte	0x1
-	.word	0x95d
+	.word	0x95e
 	.long	0x3b
 	.long	.LLST168
 	.uleb128 0x1a
 	.long	.LASF213
 	.byte	0x1
-	.word	0x95e
+	.word	0x95f
 	.long	0x3b
 	.long	.LLST169
 	.uleb128 0x25
@@ -16683,13 +16691,13 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF201
 	.byte	0x1
-	.word	0x964
+	.word	0x965
 	.long	0x3b
 	.long	.LLST170
 	.uleb128 0x1a
 	.long	.LASF202
 	.byte	0x1
-	.word	0x964
+	.word	0x965
 	.long	0x3b
 	.long	.LLST171
 	.uleb128 0x2f
@@ -16697,13 +16705,13 @@ sw_version:
 	.long	.LBB119
 	.long	.LBE119
 	.byte	0x1
-	.word	0x964
+	.word	0x965
 	.uleb128 0x30
 	.long	0x4ee
 	.long	.LBB121
 	.long	.LBE121
 	.byte	0x1
-	.word	0x964
+	.word	0x965
 	.uleb128 0x31
 	.long	0x4fb
 	.long	.LLST172
@@ -16776,7 +16784,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF215
 	.byte	0x1
-	.word	0x22d
+	.word	0x22e
 	.byte	0x1
 	.long	.LFB30
 	.long	.LFE30
@@ -16789,13 +16797,13 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF216
 	.byte	0x1
-	.word	0x22d
+	.word	0x22e
 	.long	0x3b
 	.long	.LLST173
 	.uleb128 0x1a
 	.long	.LASF165
 	.byte	0x1
-	.word	0x22e
+	.word	0x22f
 	.long	0x12e9
 	.long	.LLST174
 	.uleb128 0x24
@@ -16834,7 +16842,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF217
 	.byte	0x1
-	.word	0x234
+	.word	0x235
 	.byte	0x1
 	.long	.LFB31
 	.long	.LFE31
@@ -16844,19 +16852,19 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF216
 	.byte	0x1
-	.word	0x234
+	.word	0x235
 	.long	0x3b
 	.long	.LLST176
 	.uleb128 0x1a
 	.long	.LASF165
 	.byte	0x1
-	.word	0x235
+	.word	0x236
 	.long	0x12e9
 	.long	.LLST177
 	.uleb128 0x1a
 	.long	.LASF218
 	.byte	0x1
-	.word	0x239
+	.word	0x23a
 	.long	0x3b
 	.long	.LLST178
 	.uleb128 0x24
@@ -16946,7 +16954,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF219
 	.byte	0x1
-	.word	0x241
+	.word	0x242
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB32
@@ -16957,13 +16965,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x241
+	.word	0x242
 	.long	0x3b
 	.long	.LLST180
 	.uleb128 0x27
 	.long	.LASF220
 	.byte	0x1
-	.word	0x241
+	.word	0x242
 	.long	0x3b
 	.long	.LLST181
 	.uleb128 0x24
@@ -17026,7 +17034,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF221
 	.byte	0x1
-	.word	0x24b
+	.word	0x24c
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB33
@@ -17040,7 +17048,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x24b
+	.word	0x24c
 	.long	0x3b
 	.long	.LLST182
 	.uleb128 0x21
@@ -17064,7 +17072,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF222
 	.byte	0x1
-	.word	0x24f
+	.word	0x250
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB34
@@ -17078,7 +17086,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x24f
+	.word	0x250
 	.long	0x3b
 	.long	.LLST183
 	.uleb128 0x21
@@ -17102,7 +17110,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF223
 	.byte	0x1
-	.word	0x253
+	.word	0x254
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB35
@@ -17116,7 +17124,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x253
+	.word	0x254
 	.long	0x3b
 	.long	.LLST184
 	.uleb128 0x21
@@ -17140,7 +17148,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF224
 	.byte	0x1
-	.word	0x257
+	.word	0x258
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB36
@@ -17154,7 +17162,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x257
+	.word	0x258
 	.long	0x3b
 	.long	.LLST185
 	.uleb128 0x21
@@ -17178,7 +17186,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF225
 	.byte	0x1
-	.word	0x96c
+	.word	0x96d
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB114
@@ -17192,13 +17200,13 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF226
 	.byte	0x1
-	.word	0x96c
+	.word	0x96d
 	.long	0x333
 	.long	.LLST186
 	.uleb128 0x32
 	.long	.LASF227
 	.byte	0x1
-	.word	0x96e
+	.word	0x96f
 	.long	0x3b
 	.byte	0x16
 	.uleb128 0x1b
@@ -17206,7 +17214,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x96f
+	.word	0x970
 	.long	0x3b
 	.long	.LLST187
 	.byte	0
@@ -17215,7 +17223,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF228
 	.byte	0x1
-	.word	0x978
+	.word	0x979
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB115
@@ -17229,13 +17237,13 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF229
 	.byte	0x1
-	.word	0x978
+	.word	0x979
 	.long	0x18c3
 	.long	.LLST188
 	.uleb128 0x1a
 	.long	.LASF100
 	.byte	0x1
-	.word	0x979
+	.word	0x97a
 	.long	0x3b
 	.long	.LLST189
 	.byte	0
@@ -17243,7 +17251,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF230
 	.byte	0x1
-	.word	0x986
+	.word	0x987
 	.long	.LFB116
 	.long	.LFE116
 	.long	.LLST190
@@ -17255,7 +17263,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x989
+	.word	0x98a
 	.long	0x3b
 	.long	.LLST191
 	.byte	0
@@ -17266,7 +17274,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x990
+	.word	0x991
 	.long	0x3b
 	.long	.LLST192
 	.uleb128 0x1e
@@ -17275,7 +17283,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF231
 	.byte	0x1
-	.word	0x991
+	.word	0x992
 	.long	0x400
 	.long	.LLST193
 	.uleb128 0x21
@@ -17326,7 +17334,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF232
 	.byte	0x1
-	.word	0x99c
+	.word	0x99d
 	.byte	0x1
 	.long	.LFB117
 	.long	.LFE117
@@ -17336,13 +17344,13 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF229
 	.byte	0x1
-	.word	0x99c
+	.word	0x99d
 	.long	0x18c3
 	.long	.LLST195
 	.uleb128 0x27
 	.long	.LASF233
 	.byte	0x1
-	.word	0x99c
+	.word	0x99d
 	.long	0x3b
 	.long	.LLST196
 	.uleb128 0x21
@@ -17366,7 +17374,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF234
 	.byte	0x1
-	.word	0x353
+	.word	0x354
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB58
@@ -17380,13 +17388,13 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x353
+	.word	0x354
 	.long	0x3b
 	.long	.LLST197
 	.uleb128 0x1a
 	.long	.LASF83
 	.byte	0x1
-	.word	0x355
+	.word	0x356
 	.long	0x3b
 	.long	.LLST198
 	.uleb128 0x1f
@@ -17400,7 +17408,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF235
 	.byte	0x1
-	.word	0x9a8
+	.word	0x9a9
 	.long	.LFB118
 	.long	.LFE118
 	.long	.LLST199
@@ -17413,7 +17421,7 @@ sw_version:
 	.uleb128 0x1c
 	.string	"i"
 	.byte	0x1
-	.word	0x9a9
+	.word	0x9aa
 	.long	0x3b
 	.long	.LLST200
 	.uleb128 0x24
@@ -17467,7 +17475,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF236
 	.byte	0x1
-	.word	0x9b7
+	.word	0x9b8
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB119
@@ -17481,7 +17489,7 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF237
 	.byte	0x1
-	.word	0x9b7
+	.word	0x9b8
 	.long	0x3b
 	.long	.LLST201
 	.byte	0
@@ -17489,7 +17497,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF238
 	.byte	0x1
-	.word	0x9c5
+	.word	0x9c6
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB120
@@ -17500,13 +17508,13 @@ sw_version:
 	.uleb128 0x27
 	.long	.LASF233
 	.byte	0x1
-	.word	0x9c5
+	.word	0x9c6
 	.long	0x3b
 	.long	.LLST203
 	.uleb128 0x27
 	.long	.LASF239
 	.byte	0x1
-	.word	0x9c5
+	.word	0x9c6
 	.long	0x3b
 	.long	.LLST204
 	.uleb128 0x1e
@@ -17515,7 +17523,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF240
 	.byte	0x1
-	.word	0x9c9
+	.word	0x9ca
 	.long	0x18c3
 	.long	.LLST205
 	.uleb128 0x1e
@@ -17524,7 +17532,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF241
 	.byte	0x1
-	.word	0x9da
+	.word	0x9db
 	.long	0x18c3
 	.long	.LLST206
 	.uleb128 0x25
@@ -17534,7 +17542,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF242
 	.byte	0x1
-	.word	0x9cf
+	.word	0x9d0
 	.long	0x3b
 	.long	.LLST207
 	.uleb128 0x2e
@@ -17611,7 +17619,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF243
 	.byte	0x1
-	.word	0x9e9
+	.word	0x9ea
 	.long	.LFB121
 	.long	.LFE121
 	.long	.LLST208
@@ -17620,7 +17628,7 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF198
 	.byte	0x1
-	.word	0x9ea
+	.word	0x9eb
 	.long	0x3b
 	.long	.LLST209
 	.uleb128 0x24
@@ -17651,7 +17659,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF244
 	.byte	0x1
-	.word	0x272
+	.word	0x273
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB40
@@ -17665,7 +17673,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x272
+	.word	0x273
 	.long	0x3b
 	.long	.LLST210
 	.uleb128 0x1f
@@ -17676,7 +17684,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF245
 	.byte	0x1
-	.word	0x27a
+	.word	0x27b
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB41
@@ -17690,7 +17698,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x27a
+	.word	0x27b
 	.long	0x3b
 	.long	.LLST211
 	.uleb128 0x1f
@@ -17701,7 +17709,7 @@ sw_version:
 	.byte	0x1
 	.long	.LASF246
 	.byte	0x1
-	.word	0x282
+	.word	0x283
 	.byte	0x1
 	.long	0x3b
 	.long	.LFB42
@@ -17715,7 +17723,7 @@ sw_version:
 	.uleb128 0x18
 	.string	"arg"
 	.byte	0x1
-	.word	0x282
+	.word	0x283
 	.long	0x3b
 	.long	.LLST212
 	.uleb128 0x25
@@ -17725,13 +17733,13 @@ sw_version:
 	.uleb128 0x1a
 	.long	.LASF201
 	.byte	0x1
-	.word	0x287
+	.word	0x288
 	.long	0x3b
 	.long	.LLST213
 	.uleb128 0x1a
 	.long	.LASF202
 	.byte	0x1
-	.word	0x287
+	.word	0x288
 	.long	0x3b
 	.long	.LLST214
 	.uleb128 0x2f
@@ -17739,13 +17747,13 @@ sw_version:
 	.long	.LBB134
 	.long	.LBE134
 	.byte	0x1
-	.word	0x287
+	.word	0x288
 	.uleb128 0x30
 	.long	0x4ee
 	.long	.LBB136
 	.long	.LBE136
 	.byte	0x1
-	.word	0x287
+	.word	0x288
 	.uleb128 0x31
 	.long	0x4fb
 	.long	.LLST215
@@ -17964,7 +17972,7 @@ sw_version:
 	.uleb128 0x33
 	.long	.LASF270
 	.byte	0xa
-	.byte	0x5c
+	.byte	0x5f
 	.long	0x3ab1
 	.byte	0x1
 	.byte	0x1
@@ -17973,7 +17981,7 @@ sw_version:
 	.uleb128 0x33
 	.long	.LASF271
 	.byte	0xa
-	.byte	0x85
+	.byte	0x99
 	.long	0x3ac3
 	.byte	0x1
 	.byte	0x1
@@ -17982,21 +17990,21 @@ sw_version:
 	.uleb128 0x33
 	.long	.LASF272
 	.byte	0xa
-	.byte	0x86
+	.byte	0x9a
 	.long	0x3ac3
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x33
 	.long	.LASF273
 	.byte	0xa
-	.byte	0x7f
+	.byte	0x93
 	.long	0x3ab1
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x33
 	.long	.LASF274
 	.byte	0xa
-	.byte	0x82
+	.byte	0x96
 	.long	0x3ab1
 	.byte	0x1
 	.byte	0x1
@@ -18010,7 +18018,7 @@ sw_version:
 	.uleb128 0x33
 	.long	.LASF275
 	.byte	0xa
-	.byte	0x83
+	.byte	0x97
 	.long	0x3aef
 	.byte	0x1
 	.byte	0x1
@@ -18024,49 +18032,49 @@ sw_version:
 	.uleb128 0x33
 	.long	.LASF276
 	.byte	0xa
-	.byte	0x84
+	.byte	0x98
 	.long	0x3b0c
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x33
 	.long	.LASF277
 	.byte	0x6
-	.byte	0x48
+	.byte	0x4b
 	.long	0x483
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x33
 	.long	.LASF278
 	.byte	0x6
-	.byte	0x7a
+	.byte	0x7d
 	.long	0x499
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x33
 	.long	.LASF279
 	.byte	0x6
-	.byte	0x81
+	.byte	0x84
 	.long	0x26c
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x33
 	.long	.LASF280
 	.byte	0x6
-	.byte	0x89
+	.byte	0x8c
 	.long	0x4af
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x33
 	.long	.LASF281
 	.byte	0x6
-	.byte	0x93
+	.byte	0x96
 	.long	0x4bf
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x33
 	.long	.LASF282
 	.byte	0x6
-	.byte	0xc8
+	.byte	0xcc
 	.long	0x328
 	.byte	0x1
 	.byte	0x1
@@ -18080,14 +18088,14 @@ sw_version:
 	.uleb128 0x33
 	.long	.LASF283
 	.byte	0x6
-	.byte	0xec
+	.byte	0xf0
 	.long	0x3b77
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x33
 	.long	.LASF284
 	.byte	0x6
-	.byte	0xf2
+	.byte	0xf6
 	.long	0x3ba1
 	.byte	0x1
 	.byte	0x1
@@ -18102,7 +18110,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF285
 	.byte	0x1
-	.word	0x17a
+	.word	0x17b
 	.long	0x3ba2
 	.byte	0x1
 	.byte	0x5
@@ -18118,7 +18126,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF286
 	.byte	0x1
-	.word	0x185
+	.word	0x186
 	.long	0x3bc5
 	.byte	0x1
 	.byte	0x5
@@ -18127,7 +18135,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF287
 	.byte	0x1
-	.word	0x181
+	.word	0x182
 	.long	0x5f
 	.byte	0x1
 	.byte	0x5
@@ -18136,7 +18144,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF288
 	.byte	0x1
-	.word	0x19a
+	.word	0x19b
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18145,7 +18153,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF289
 	.byte	0x1
-	.word	0x19b
+	.word	0x19c
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18154,7 +18162,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF290
 	.byte	0x1
-	.word	0x19c
+	.word	0x19d
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18163,7 +18171,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF291
 	.byte	0x1
-	.word	0x19d
+	.word	0x19e
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18172,7 +18180,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF292
 	.byte	0x1
-	.word	0x19e
+	.word	0x19f
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18181,7 +18189,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF293
 	.byte	0x1
-	.word	0x19f
+	.word	0x1a0
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18190,7 +18198,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF294
 	.byte	0x1
-	.word	0x18d
+	.word	0x18e
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18199,7 +18207,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF295
 	.byte	0x1
-	.word	0x18e
+	.word	0x18f
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18208,7 +18216,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF296
 	.byte	0x1
-	.word	0x18f
+	.word	0x190
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18217,7 +18225,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF297
 	.byte	0x1
-	.word	0x190
+	.word	0x191
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18226,7 +18234,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF298
 	.byte	0x1
-	.word	0x191
+	.word	0x192
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18235,7 +18243,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF299
 	.byte	0x1
-	.word	0x192
+	.word	0x193
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18244,7 +18252,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF300
 	.byte	0x1
-	.word	0x193
+	.word	0x194
 	.long	0x2e5
 	.byte	0x1
 	.byte	0x5
@@ -18253,7 +18261,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF301
 	.byte	0x1
-	.word	0x198
+	.word	0x199
 	.long	0x78
 	.byte	0x1
 	.byte	0x5
@@ -18262,7 +18270,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF302
 	.byte	0x1
-	.word	0x18c
+	.word	0x18d
 	.long	0x384
 	.byte	0x1
 	.byte	0x5
@@ -18271,7 +18279,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF303
 	.byte	0x1
-	.word	0x196
+	.word	0x197
 	.long	0x18c3
 	.byte	0x1
 	.byte	0x5
@@ -18280,7 +18288,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF304
 	.byte	0x1
-	.word	0x197
+	.word	0x198
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18289,7 +18297,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF305
 	.byte	0x1
-	.word	0x1a1
+	.word	0x1a2
 	.long	0xb7
 	.byte	0x1
 	.byte	0x5
@@ -18305,7 +18313,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF306
 	.byte	0x1
-	.word	0x1a2
+	.word	0x1a3
 	.long	0x3d51
 	.byte	0x1
 	.byte	0x5
@@ -18339,7 +18347,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF308
 	.byte	0x1
-	.word	0x486
+	.word	0x487
 	.long	0x3dbe
 	.byte	0x1
 	.byte	0x5
@@ -18350,7 +18358,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF309
 	.byte	0x1
-	.word	0x188
+	.word	0x189
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18359,7 +18367,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF310
 	.byte	0x1
-	.word	0x189
+	.word	0x18a
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18368,7 +18376,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF311
 	.byte	0x1
-	.word	0x18a
+	.word	0x18b
 	.long	0x78
 	.byte	0x1
 	.byte	0x5
@@ -18377,77 +18385,77 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF312
 	.byte	0x1
-	.byte	0x21
+	.byte	0x24
 	.long	0x3e0e
-	.byte	0x1
-	.byte	0x5
-	.byte	0x3
-	.long	menu_status
-	.uleb128 0x34
-	.uleb128 0x38
-	.long	.LASF313
-	.byte	0x1
-	.byte	0x27
-	.long	0x3e21
-	.byte	0x1
-	.byte	0x5
-	.byte	0x3
-	.long	menu_modDefine
-	.uleb128 0x34
-	.uleb128 0x38
-	.long	.LASF314
-	.byte	0x1
-	.byte	0x2c
-	.long	0x3e34
-	.byte	0x1
-	.byte	0x5
-	.byte	0x3
-	.long	menu_modDefineReg
-	.uleb128 0x34
-	.uleb128 0x38
-	.long	.LASF315
-	.byte	0x1
-	.byte	0x34
-	.long	0x3e47
-	.byte	0x1
-	.byte	0x5
-	.byte	0x3
-	.long	menu_modSection
-	.uleb128 0x34
-	.uleb128 0x38
-	.long	.LASF316
-	.byte	0x1
-	.byte	0x3b
-	.long	0x3e5a
-	.byte	0x1
-	.byte	0x5
-	.byte	0x3
-	.long	menu_modSection8
-	.uleb128 0x34
-	.uleb128 0x38
-	.long	.LASF317
-	.byte	0x1
-	.byte	0x48
-	.long	0x3e6d
-	.byte	0x1
-	.byte	0x5
-	.byte	0x3
-	.long	menu_modAssign
-	.uleb128 0x34
-	.uleb128 0x38
-	.long	.LASF318
-	.byte	0x1
-	.byte	0x54
-	.long	0x3e80
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	menu_USBser
 	.uleb128 0x34
 	.uleb128 0x38
+	.long	.LASF313
+	.byte	0x1
+	.byte	0x2a
+	.long	0x3e21
+	.byte	0x1
+	.byte	0x5
+	.byte	0x3
+	.long	menu_status
+	.uleb128 0x34
+	.uleb128 0x38
+	.long	.LASF314
+	.byte	0x1
+	.byte	0x31
+	.long	0x3e34
+	.byte	0x1
+	.byte	0x5
+	.byte	0x3
+	.long	menu_modDefine
+	.uleb128 0x34
+	.uleb128 0x38
+	.long	.LASF315
+	.byte	0x1
+	.byte	0x36
+	.long	0x3e47
+	.byte	0x1
+	.byte	0x5
+	.byte	0x3
+	.long	menu_modDefineReg
+	.uleb128 0x34
+	.uleb128 0x38
+	.long	.LASF316
+	.byte	0x1
+	.byte	0x3e
+	.long	0x3e5a
+	.byte	0x1
+	.byte	0x5
+	.byte	0x3
+	.long	menu_modSection
+	.uleb128 0x34
+	.uleb128 0x38
+	.long	.LASF317
+	.byte	0x1
+	.byte	0x45
+	.long	0x3e6d
+	.byte	0x1
+	.byte	0x5
+	.byte	0x3
+	.long	menu_modSection8
+	.uleb128 0x34
+	.uleb128 0x38
+	.long	.LASF318
+	.byte	0x1
+	.byte	0x52
+	.long	0x3e80
+	.byte	0x1
+	.byte	0x5
+	.byte	0x3
+	.long	menu_modAssign
+	.uleb128 0x34
+	.uleb128 0x38
 	.long	.LASF319
 	.byte	0x1
-	.byte	0x5f
+	.byte	0x60
 	.long	0x3e93
 	.byte	0x1
 	.byte	0x5
@@ -18457,7 +18465,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF320
 	.byte	0x1
-	.byte	0x67
+	.byte	0x68
 	.long	0x3ea6
 	.byte	0x1
 	.byte	0x5
@@ -18467,7 +18475,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF321
 	.byte	0x1
-	.byte	0x74
+	.byte	0x75
 	.long	0x3eb9
 	.byte	0x1
 	.byte	0x5
@@ -18477,7 +18485,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF322
 	.byte	0x1
-	.byte	0x7f
+	.byte	0x80
 	.long	0x3ecc
 	.byte	0x1
 	.byte	0x5
@@ -18487,7 +18495,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF323
 	.byte	0x1
-	.byte	0x88
+	.byte	0x89
 	.long	0x3edf
 	.byte	0x1
 	.byte	0x5
@@ -18497,7 +18505,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF324
 	.byte	0x1
-	.byte	0x8e
+	.byte	0x8f
 	.long	0x3ef2
 	.byte	0x1
 	.byte	0x5
@@ -18507,7 +18515,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF325
 	.byte	0x1
-	.byte	0x95
+	.byte	0x96
 	.long	0x3f05
 	.byte	0x1
 	.byte	0x5
@@ -18517,7 +18525,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF326
 	.byte	0x1
-	.byte	0xa5
+	.byte	0xa6
 	.long	0x3f18
 	.byte	0x1
 	.byte	0x5
@@ -18527,7 +18535,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF327
 	.byte	0x1
-	.word	0x149
+	.word	0x14a
 	.long	0x3f2c
 	.byte	0x1
 	.byte	0x5
@@ -18537,7 +18545,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF328
 	.byte	0x1
-	.byte	0xaf
+	.byte	0xb0
 	.long	0x3f3f
 	.byte	0x1
 	.byte	0x5
@@ -18547,7 +18555,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF329
 	.byte	0x1
-	.byte	0xb6
+	.byte	0xb7
 	.long	0x3f52
 	.byte	0x1
 	.byte	0x5
@@ -18557,7 +18565,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF330
 	.byte	0x1
-	.byte	0xbe
+	.byte	0xbf
 	.long	0x3f65
 	.byte	0x1
 	.byte	0x5
@@ -18567,7 +18575,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF331
 	.byte	0x1
-	.byte	0xc6
+	.byte	0xc7
 	.long	0x3f78
 	.byte	0x1
 	.byte	0x5
@@ -18577,7 +18585,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF332
 	.byte	0x1
-	.byte	0xde
+	.byte	0xdf
 	.long	0x3f8b
 	.byte	0x1
 	.byte	0x5
@@ -18587,7 +18595,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF333
 	.byte	0x1
-	.byte	0xea
+	.byte	0xeb
 	.long	0x3f9e
 	.byte	0x1
 	.byte	0x5
@@ -18597,7 +18605,7 @@ sw_version:
 	.uleb128 0x38
 	.long	.LASF334
 	.byte	0x1
-	.byte	0xfe
+	.byte	0xff
 	.long	0x3fb1
 	.byte	0x1
 	.byte	0x5
@@ -18607,7 +18615,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF335
 	.byte	0x1
-	.word	0x10d
+	.word	0x10e
 	.long	0x3fc5
 	.byte	0x1
 	.byte	0x5
@@ -18617,7 +18625,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF336
 	.byte	0x1
-	.word	0x115
+	.word	0x116
 	.long	0x3fd9
 	.byte	0x1
 	.byte	0x5
@@ -18627,7 +18635,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF337
 	.byte	0x1
-	.word	0x132
+	.word	0x133
 	.long	0x3fed
 	.byte	0x1
 	.byte	0x5
@@ -18637,7 +18645,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF338
 	.byte	0x1
-	.word	0x133
+	.word	0x134
 	.long	0x4001
 	.byte	0x1
 	.byte	0x5
@@ -18647,7 +18655,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF339
 	.byte	0x1
-	.word	0x134
+	.word	0x135
 	.long	0x4015
 	.byte	0x1
 	.byte	0x5
@@ -18657,7 +18665,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF340
 	.byte	0x1
-	.word	0x135
+	.word	0x136
 	.long	0x4029
 	.byte	0x1
 	.byte	0x5
@@ -18667,7 +18675,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF341
 	.byte	0x1
-	.word	0x136
+	.word	0x137
 	.long	0x403d
 	.byte	0x1
 	.byte	0x5
@@ -18677,7 +18685,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF342
 	.byte	0x1
-	.word	0x137
+	.word	0x138
 	.long	0x4051
 	.byte	0x1
 	.byte	0x5
@@ -18687,7 +18695,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF343
 	.byte	0x1
-	.word	0x138
+	.word	0x139
 	.long	0x4065
 	.byte	0x1
 	.byte	0x5
@@ -18697,7 +18705,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF344
 	.byte	0x1
-	.word	0x139
+	.word	0x13a
 	.long	0x4079
 	.byte	0x1
 	.byte	0x5
@@ -18707,7 +18715,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF345
 	.byte	0x1
-	.word	0x13a
+	.word	0x13b
 	.long	0x408d
 	.byte	0x1
 	.byte	0x5
@@ -18717,7 +18725,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF346
 	.byte	0x1
-	.word	0x13b
+	.word	0x13c
 	.long	0x40a1
 	.byte	0x1
 	.byte	0x5
@@ -18727,7 +18735,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF347
 	.byte	0x1
-	.word	0x13c
+	.word	0x13d
 	.long	0x40b5
 	.byte	0x1
 	.byte	0x5
@@ -18737,7 +18745,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF348
 	.byte	0x1
-	.word	0x13d
+	.word	0x13e
 	.long	0x40c9
 	.byte	0x1
 	.byte	0x5
@@ -18747,7 +18755,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF349
 	.byte	0x1
-	.word	0x13e
+	.word	0x13f
 	.long	0x40dd
 	.byte	0x1
 	.byte	0x5
@@ -18757,7 +18765,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF350
 	.byte	0x1
-	.word	0x13f
+	.word	0x140
 	.long	0x40f1
 	.byte	0x1
 	.byte	0x5
@@ -18767,7 +18775,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF351
 	.byte	0x1
-	.word	0x140
+	.word	0x141
 	.long	0x4105
 	.byte	0x1
 	.byte	0x5
@@ -18777,7 +18785,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF352
 	.byte	0x1
-	.word	0x141
+	.word	0x142
 	.long	0x4119
 	.byte	0x1
 	.byte	0x5
@@ -18787,7 +18795,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF353
 	.byte	0x1
-	.word	0x142
+	.word	0x143
 	.long	0x412d
 	.byte	0x1
 	.byte	0x5
@@ -18797,7 +18805,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF354
 	.byte	0x1
-	.word	0x143
+	.word	0x144
 	.long	0x4141
 	.byte	0x1
 	.byte	0x5
@@ -18807,7 +18815,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF355
 	.byte	0x1
-	.word	0x144
+	.word	0x145
 	.long	0x4155
 	.byte	0x1
 	.byte	0x5
@@ -18817,7 +18825,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF356
 	.byte	0x1
-	.word	0x145
+	.word	0x146
 	.long	0x4169
 	.byte	0x1
 	.byte	0x5
@@ -18827,7 +18835,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF357
 	.byte	0x1
-	.word	0x146
+	.word	0x147
 	.long	0x417d
 	.byte	0x1
 	.byte	0x5
@@ -18837,7 +18845,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF358
 	.byte	0x1
-	.word	0x147
+	.word	0x148
 	.long	0x4191
 	.byte	0x1
 	.byte	0x5
@@ -18847,7 +18855,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF359
 	.byte	0x1
-	.word	0x163
+	.word	0x164
 	.long	0x41a5
 	.byte	0x1
 	.byte	0x5
@@ -18857,7 +18865,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF360
 	.byte	0x1
-	.word	0x174
+	.word	0x175
 	.long	0x41b9
 	.byte	0x1
 	.byte	0x5
@@ -18867,7 +18875,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF361
 	.byte	0x1
-	.word	0x175
+	.word	0x176
 	.long	0x41cd
 	.byte	0x1
 	.byte	0x5
@@ -18877,7 +18885,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF362
 	.byte	0x1
-	.word	0x176
+	.word	0x177
 	.long	0x41e1
 	.byte	0x1
 	.byte	0x5
@@ -18887,7 +18895,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF363
 	.byte	0x1
-	.word	0x179
+	.word	0x17a
 	.long	0x18c3
 	.byte	0x1
 	.byte	0x5
@@ -18896,7 +18904,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF364
 	.byte	0x1
-	.word	0x17b
+	.word	0x17c
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18905,7 +18913,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF365
 	.byte	0x1
-	.word	0x17d
+	.word	0x17e
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18914,7 +18922,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF64
 	.byte	0x1
-	.word	0x17e
+	.word	0x17f
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18923,7 +18931,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF366
 	.byte	0x1
-	.word	0x17f
+	.word	0x180
 	.long	0x2e5
 	.byte	0x1
 	.byte	0x5
@@ -18932,7 +18940,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF367
 	.byte	0x1
-	.word	0x182
+	.word	0x183
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18941,7 +18949,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF368
 	.byte	0x1
-	.word	0x183
+	.word	0x184
 	.long	0x78
 	.byte	0x1
 	.byte	0x5
@@ -18950,7 +18958,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF369
 	.byte	0x1
-	.word	0x184
+	.word	0x185
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18959,7 +18967,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF370
 	.byte	0x1
-	.word	0x186
+	.word	0x187
 	.long	0x428d
 	.byte	0x1
 	.byte	0x5
@@ -18974,7 +18982,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF371
 	.byte	0x1
-	.word	0x194
+	.word	0x195
 	.long	0x3b
 	.byte	0x1
 	.byte	0x5
@@ -18983,7 +18991,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF372
 	.byte	0x1
-	.word	0x228
+	.word	0x229
 	.long	0x42bf
 	.byte	0x1
 	.byte	0x5
@@ -18993,7 +19001,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF373
 	.byte	0x1
-	.word	0x229
+	.word	0x22a
 	.long	0x42d3
 	.byte	0x1
 	.byte	0x5
@@ -19003,7 +19011,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF374
 	.byte	0x1
-	.word	0x22a
+	.word	0x22b
 	.long	0x42e7
 	.byte	0x1
 	.byte	0x5
@@ -19013,7 +19021,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF375
 	.byte	0x1
-	.word	0x291
+	.word	0x292
 	.long	0x42fb
 	.byte	0x1
 	.byte	0x5
@@ -19023,7 +19031,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF376
 	.byte	0x1
-	.word	0x2a4
+	.word	0x2a5
 	.long	0x430f
 	.byte	0x1
 	.byte	0x5
@@ -19033,7 +19041,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF377
 	.byte	0x1
-	.word	0x2a5
+	.word	0x2a6
 	.long	0x4323
 	.byte	0x1
 	.byte	0x5
@@ -19043,7 +19051,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF378
 	.byte	0x1
-	.word	0x2a6
+	.word	0x2a7
 	.long	0x4337
 	.byte	0x1
 	.byte	0x5
@@ -19060,7 +19068,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF379
 	.byte	0x1
-	.word	0x35c
+	.word	0x35d
 	.long	0x435b
 	.byte	0x1
 	.byte	0x5
@@ -19078,7 +19086,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF380
 	.byte	0x1
-	.word	0x413
+	.word	0x414
 	.long	0x4383
 	.byte	0x1
 	.byte	0x5
@@ -19096,7 +19104,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF381
 	.byte	0x1
-	.word	0x450
+	.word	0x451
 	.long	0x43ab
 	.byte	0x1
 	.byte	0x5
@@ -19107,7 +19115,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF382
 	.byte	0x1
-	.word	0x451
+	.word	0x452
 	.long	0x43c3
 	.byte	0x1
 	.byte	0x5
@@ -19118,7 +19126,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF383
 	.byte	0x1
-	.word	0x472
+	.word	0x473
 	.long	0x43db
 	.byte	0x1
 	.byte	0x5
@@ -19129,7 +19137,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF384
 	.byte	0x1
-	.word	0x473
+	.word	0x474
 	.long	0x43f3
 	.byte	0x1
 	.byte	0x5
@@ -19140,7 +19148,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF385
 	.byte	0x1
-	.word	0x493
+	.word	0x494
 	.long	0x440b
 	.byte	0x1
 	.byte	0x5
@@ -19158,7 +19166,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF386
 	.byte	0x1
-	.word	0x494
+	.word	0x495
 	.long	0x4433
 	.byte	0x1
 	.byte	0x5
@@ -19176,7 +19184,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF387
 	.byte	0x1
-	.word	0x495
+	.word	0x496
 	.long	0x445b
 	.byte	0x1
 	.byte	0x5
@@ -19194,7 +19202,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF388
 	.byte	0x1
-	.word	0x496
+	.word	0x497
 	.long	0x4483
 	.byte	0x1
 	.byte	0x5
@@ -19205,7 +19213,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF389
 	.byte	0x1
-	.word	0x497
+	.word	0x498
 	.long	0x449b
 	.byte	0x1
 	.byte	0x5
@@ -19223,7 +19231,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF390
 	.byte	0x1
-	.word	0x498
+	.word	0x499
 	.long	0x44c3
 	.byte	0x1
 	.byte	0x5
@@ -19234,7 +19242,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF391
 	.byte	0x1
-	.word	0x499
+	.word	0x49a
 	.long	0x44db
 	.byte	0x1
 	.byte	0x5
@@ -19245,7 +19253,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF392
 	.byte	0x1
-	.word	0x49a
+	.word	0x49b
 	.long	0x44f3
 	.byte	0x1
 	.byte	0x5
@@ -19256,7 +19264,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF393
 	.byte	0x1
-	.word	0x49b
+	.word	0x49c
 	.long	0x450b
 	.byte	0x1
 	.byte	0x5
@@ -19274,7 +19282,7 @@ sw_version:
 	.uleb128 0x37
 	.long	.LASF394
 	.byte	0x1
-	.word	0x49c
+	.word	0x49d
 	.long	0x4533
 	.byte	0x1
 	.byte	0x5
@@ -19295,28 +19303,28 @@ sw_version:
 	.long	.LASF396
 	.long	.LASF396
 	.byte	0x6
-	.byte	0xa3
+	.byte	0xa6
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF397
 	.long	.LASF397
 	.byte	0x6
-	.byte	0xa7
+	.byte	0xaa
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF398
 	.long	.LASF398
 	.byte	0x6
-	.byte	0xf4
+	.byte	0xf8
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF399
 	.long	.LASF399
 	.byte	0x6
-	.byte	0xa5
+	.byte	0xa8
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
@@ -19372,7 +19380,7 @@ sw_version:
 	.long	.LASF407
 	.long	.LASF407
 	.byte	0x6
-	.byte	0xd3
+	.byte	0xd7
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
@@ -19421,7 +19429,7 @@ sw_version:
 	.long	.LASF414
 	.long	.LASF414
 	.byte	0x6
-	.byte	0xa4
+	.byte	0xa7
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
@@ -19435,7 +19443,7 @@ sw_version:
 	.long	.LASF416
 	.long	.LASF416
 	.byte	0x6
-	.byte	0xb9
+	.byte	0xbc
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
@@ -19449,7 +19457,7 @@ sw_version:
 	.long	.LASF418
 	.long	.LASF418
 	.byte	0xa
-	.byte	0x52
+	.byte	0x69
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
@@ -19470,7 +19478,7 @@ sw_version:
 	.long	.LASF421
 	.long	.LASF421
 	.byte	0xa
-	.byte	0x53
+	.byte	0x6a
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
@@ -19491,7 +19499,7 @@ sw_version:
 	.long	.LASF424
 	.long	.LASF424
 	.byte	0xa
-	.byte	0x51
+	.byte	0x68
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
@@ -19519,7 +19527,7 @@ sw_version:
 	.long	.LASF428
 	.long	.LASF428
 	.byte	0xa
-	.byte	0x54
+	.byte	0x6b
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
@@ -19554,21 +19562,21 @@ sw_version:
 	.long	.LASF433
 	.long	.LASF433
 	.byte	0x6
-	.byte	0x9e
+	.byte	0xa1
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF434
 	.long	.LASF434
 	.byte	0x6
-	.byte	0xa6
+	.byte	0xa9
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF435
 	.long	.LASF435
 	.byte	0x6
-	.byte	0xbd
+	.byte	0xc0
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
@@ -19652,7 +19660,7 @@ sw_version:
 	.long	.LASF447
 	.long	.LASF447
 	.byte	0x6
-	.byte	0xbb
+	.byte	0xbe
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
@@ -19701,21 +19709,21 @@ sw_version:
 	.long	.LASF454
 	.long	.LASF454
 	.byte	0x6
-	.byte	0xaf
+	.byte	0xb2
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF455
 	.long	.LASF455
 	.byte	0x6
-	.byte	0x9d
+	.byte	0xa0
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF456
 	.long	.LASF456
 	.byte	0x6
-	.byte	0xa9
+	.byte	0xac
 	.uleb128 0x39
 	.byte	0x1
 	.byte	0x1
@@ -21003,7 +21011,7 @@ sw_version:
 	.long	.LVL77
 	.word	0x5
 	.byte	0x3
-	.long	minManNote.2929
+	.long	minManNote.2952
 	.long	.LVL77
 	.long	.LVL88
 	.word	0x4
@@ -25491,13 +25499,15 @@ sw_version:
 	.string	"menu_selFunc"
 .LASF411:
 	.string	"eeprom_UpdateMidiOutMap"
+.LASF270:
+	.string	"serUSB_Active"
 .LASF246:
 	.string	"menuOnEnterPwrRest"
 .LASF350:
 	.string	"shortKeyTextCpl3P"
 .LASF361:
 	.string	"MenuMIDIInText"
-.LASF314:
+.LASF315:
 	.string	"menu_modDefineReg"
 .LASF370:
 	.string	"pNibbleInfo"
@@ -25599,7 +25609,7 @@ sw_version:
 	.string	"outChar"
 .LASF91:
 	.string	"menuOnExitSaveProgram"
-.LASF313:
+.LASF314:
 	.string	"menu_modDefine"
 .LASF435:
 	.string	"midi_ManualOff"
@@ -25641,7 +25651,7 @@ sw_version:
 	.string	"menuOnEnterModSec"
 .LASF71:
 	.string	"pPipe"
-.LASF316:
+.LASF317:
 	.string	"menu_modSection8"
 .LASF369:
 	.string	"dataType"
@@ -25857,8 +25867,6 @@ sw_version:
 	.string	"MenuFunc_t"
 .LASF367:
 	.string	"dataEntry"
-.LASF270:
-	.string	"serusb_Active"
 .LASF420:
 	.string	"log_getShortTextFromIndex"
 .LASF225:
@@ -26067,7 +26075,7 @@ sw_version:
 	.string	"menu_InitLCD"
 .LASF400:
 	.string	"eeprom_UpdateSoftkeys"
-.LASF315:
+.LASF316:
 	.string	"menu_modSection"
 .LASF163:
 	.string	"tempByte"
@@ -26137,7 +26145,7 @@ sw_version:
 	.string	"pSelMenuSoftKey"
 .LASF423:
 	.string	"eeprom_UpdateUSB"
-.LASF317:
+.LASF318:
 	.string	"menu_modAssign"
 .LASF349:
 	.string	"shortKeyTextCpl31"
@@ -26283,7 +26291,7 @@ sw_version:
 	.string	"softKeyCouplerPfrom1"
 .LASF20:
 	.string	"pipeOut"
-.LASF318:
+.LASF312:
 	.string	"menu_USBser"
 .LASF345:
 	.string	"shortKeyTextCpl12"
@@ -26305,7 +26313,7 @@ sw_version:
 	.string	"keylabel_toLCD"
 .LASF30:
 	.string	"Pipe_Module_t"
-.LASF312:
+.LASF313:
 	.string	"menu_status"
 .LASF353:
 	.string	"shortKeyTextCpl1P"

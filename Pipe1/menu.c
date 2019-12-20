@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.63";
+const char sw_version [] PROGMEM = "V0.67";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -29,9 +29,19 @@ uint8_t menuOnEnterStatusMidiOut(uint8_t arg);
 uint8_t menuOnEnterStatusMidiIn(uint8_t arg);
 uint8_t menuOnEnterLogDisp(uint8_t arg);
 
-//--- MAIN --- TEST ---
+// --- MAIN --- SETUP --- USB ---
+uint8_t menuOnEnterUSBprotokoll(uint8_t arg);
+uint8_t menuOnExitUSBactive(uint8_t arg);
+uint8_t menuOnEnterUSBsendHW(uint8_t arg);
+const __flash Menu_t menu_USBser[] =
+{{MENU_T_VARONOFF | MENU_T_LEFTBOUND,0,"Active",NULL,{(uint8_t *) &(serUSB_Active)},NULL,menuOnExitUSBactive},
+{MENU_T_MENU,0,"SendLog",NULL,{NULL},menuOnEnterUSBprotokoll,NULL},
+{MENU_T_MENU | MENU_T_RIGHTBOUND,0,"SndHWCfg",NULL,{NULL},menuOnEnterUSBsendHW,NULL}};
+
+//--- MAIN --- STATUS ---
 const __flash Menu_t menu_status[] =
 	{{MENU_T_MENU | MENU_T_LEFTBOUND,MENU_FLAG_FNHANDLEMESSAGE,"Log",NULL,{NULL},menuOnEnterLogDisp,NULL},
+	{MENU_T_MENU,0,"USB",menu_USBser,{NULL},NULL,NULL},
 	{MENU_T_VARBYTE,MENU_FLAG_CLEAREXTRA,"MIDI-In",NULL,{NULL},menuOnEnterStatusMidiIn,NULL},
 	{MENU_T_VARBYTE | MENU_T_RIGHTBOUND,MENU_FLAG_CLEAREXTRA,"MIDI-Out",NULL,{NULL},menuOnEnterStatusMidiOut,NULL}};
 
@@ -76,15 +86,6 @@ const __flash Menu_t menu_modAssign[] =
 	{MENU_T_MENU,0,MENUTEXT_MANP,menu_modSection,{.tag=MANUAL_P},menuOnEnterModManual,NULL},
 	{MENU_T_MENU_R,0,MENUTEXT_MANR,menu_modSection8,{.tag=MANUAL_R},NULL,NULL}
 };
-
-// --- MAIN --- SETUP --- USB ---
-uint8_t menuOnEnterUSBprotokoll(uint8_t arg);
-uint8_t menuOnExitUSBactive(uint8_t arg);
-uint8_t menuOnEnterUSBsendHW(uint8_t arg);
-const __flash Menu_t menu_USBser[] =
-	{{MENU_T_VARONOFF | MENU_T_LEFTBOUND,0,"Active",NULL,{(uint8_t *) &(serusb_Active)},NULL,menuOnExitUSBactive},
-	{MENU_T_MENU,0,"SendLog",NULL,{NULL},menuOnEnterUSBprotokoll,NULL},
-	{MENU_T_MENU | MENU_T_RIGHTBOUND,0,"SndHWCfg",NULL,{NULL},menuOnEnterUSBsendHW,NULL}};
 
 // --- MAIN --- SETUP --- MODULE --- MODTEST --- MODULE ---
 uint8_t menu_ModuleTestPattern(uint8_t arg);
@@ -1160,7 +1161,7 @@ const char HelloMsg [] PROGMEM = "\r\nMIDI-Organ-Interface\r\n";
 uint8_t menuOnExitUSBactive(uint8_t arg){
 	(void) arg;
 	eeprom_UpdateUSB();
-	if (serusb_Active == TRUE){
+	if (serUSB_Active == TRUE){
 		serial0SER_USB_sendStringP(HelloMsg);
 		serial0SER_USB_sendStringP(sw_version);
 		serial0SER_USB_sendStringP(cr_lf);

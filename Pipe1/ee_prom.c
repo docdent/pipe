@@ -34,7 +34,7 @@ const __flash EeVarList_t ee_VarList[] = {
 	{EE_CHAR_MIDIINMAP,	0, sizeof(midiInMap), (uint8_t*) midiInMap},
 	{EE_CHAR_MIDIOUTMAP, 0, sizeof(midiOutMap), (uint8_t*) midiOutMap},
 	{EE_CHAR_MODULEINSTALLED, 0, sizeof(pipe_Module), (uint8_t*) &pipe_Module},
-	{EE_CHAR_USB, 0, sizeof(serusb_Active), (uint8_t*) &serusb_Active},
+	{EE_CHAR_USB, 0, sizeof(serUSB_Active), (uint8_t*) &serUSB_Active},
 	{EE_CHAR_REG, 0, sizeof(registerMap), (uint8_t*) registerMap},
 	{EE_CHAR_PROG, 0, sizeof(programMap), (uint8_t*) programMap},
 	{EE_CHAR_SOFTKEYS, 0, sizeof(soft_KeyMenuIndex), (uint8_t*) soft_KeyMenuIndex},
@@ -225,7 +225,7 @@ uint8_t eeprom_ReadUSB(){
 	if ((eeprom_read_word(&ee.eeData.ee.usb_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.usbActive, sizeof (ee.eeData.ee.usbActive))
 	&& eeprom_read_byte(&ee.eeData.ee.charUSB) == EE_CHAR_USB))  {
 		// stored crc16 is ok
-		serusb_Active = eeprom_read_byte(&ee.eeData.ee.usbActive);
+		serUSB_Active = eeprom_read_byte(&ee.eeData.ee.usbActive);
 		return (EE_LOAD_OK);
 	} else {
 		ee_initError |= EE_ERROR_MODULES;
@@ -319,10 +319,10 @@ void eeprom_UpdateModules(){
 }
 
 void eeprom_UpdateUSB(){
-	uint16_t crc = crc16_ram((uint8_t*) &serusb_Active, sizeof(serusb_Active));
+	uint16_t crc = crc16_ram((uint8_t*) &serUSB_Active, sizeof(serUSB_Active));
 	lcd_waitSymbolOn();
 	eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charUSB), EE_CHAR_USB);
-	eeprom_update_byte(&(ee.eeData.ee.usbActive), serusb_Active);
+	eeprom_update_byte(&(ee.eeData.ee.usbActive), serUSB_Active);
 	eeprom_update_word(&(ee.eeData.ee.usb_crc), crc);
 	eepromWriteSignature();
 	lcd_waitSymbolOff();

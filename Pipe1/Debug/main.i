@@ -904,11 +904,15 @@ extern void softKey_WantLong(uint8_t wantLong);
 extern void Pipes_AllOutputsOff();
 extern void init_PipeModules();
 extern uint32_t test_PipeModule(uint8_t moduleNr);
+
+
+extern void pipe_on(uint8_t bitNr, uint8_t moduleMask);
+extern void pipe_off(uint8_t bitNr, uint8_t moduleMask);
 # 21 ".././main.c" 2
 # 1 ".././utils.h" 1
 # 22 ".././main.c" 2
 # 1 ".././serial.h" 1
-# 32 ".././serial.h"
+# 34 ".././serial.h"
 extern void init_Serial3SerESP();
 extern void serial3SER_ESPSend(uint8_t data);
 extern void serial3SER_ESP_sendStringP(const char *progmem_s);
@@ -923,9 +927,26 @@ extern volatile uint8_t* serESPTxInIndex;
 extern volatile uint8_t serESPOvflFlag;
 extern volatile uint8_t serESP_Active;
 
+
+
 extern uint8_t serESPRxBuffer[128];
 extern uint8_t serESPTxBuffer[512];
-# 80 ".././serial.h"
+extern uint8_t serESPInBuffer[8];
+extern uint8_t serESPMidiTmp[3];
+# 90 ".././serial.h"
+extern volatile uint8_t* serUSBRxInIndex;
+extern volatile uint8_t* serUSBRxOutIndex;
+extern volatile uint8_t* serUSBTxOutIndex;
+extern volatile uint8_t* serUSBTxInIndex;
+extern volatile uint8_t serUSBOvflFlag;
+extern volatile uint8_t serUSB_Active;
+
+extern uint8_t serUSBRxBuffer[64];
+extern uint8_t serUSBTxBuffer[2048];
+
+
+
+
 extern void init_Serial0SerUSB();
 extern void serial0SER_USBSend(uint8_t data);
 extern void serial0SER_USB_sendStringP(const char *progmem_s);
@@ -933,18 +954,20 @@ extern void serial0SER_USB_sendString(char *s);
 extern void serial0SER_USB_sendCRLF();
 extern uint8_t serial0SER_USBReadRx();
 
-extern volatile uint8_t serusbRxInIndex;
-extern volatile uint8_t serusbRxOutIndex;
-extern volatile uint8_t serusbTxOutIndex;
-extern volatile uint8_t serusbTxInIndex;
-extern volatile uint8_t serusbOvflFlag;
-extern volatile uint8_t serusb_Active;
 
-extern uint8_t serUsbRxBuffer[64];
-extern uint8_t serUsbTxBuffer[256];
+extern void serial0USB_logMIDIin(uint8_t data);
+
+extern void serial0USB_logMIDIout(uint8_t data);
+
+extern void serial0USB_logPipeIn(PipeMessage_t pipe);
+
+extern void serial0USB_logPipeOutOn(uint8_t bitNr, uint8_t moduleMask);
+
+extern void serial0USB_logPipeOutOff(uint8_t bitNr, uint8_t moduleMask);
+
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
-# 123 ".././serial.h"
+# 143 ".././serial.h"
 extern void init_Serial1MIDI();
 extern void serial1MIDISend(uint8_t data);
 extern uint8_t serial1MIDIReadRx();
@@ -961,6 +984,8 @@ extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
 
 extern volatile uint8_t midiTxLastCmd;
+# 168 ".././serial.h"
+extern uint8_t midi_ExtraBuffer[3];
 # 23 ".././main.c" 2
 # 1 ".././test.h" 1
 # 15 ".././test.h"
@@ -984,7 +1009,7 @@ extern uint8_t test_PipePatterns();
 extern void test_input();
 # 24 ".././main.c" 2
 # 1 ".././Midi.h" 1
-# 44 ".././Midi.h"
+# 47 ".././Midi.h"
 typedef struct {
  uint8_t hw_channel;
  uint8_t note;
@@ -1022,7 +1047,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 115 ".././Midi.h"
+# 118 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -1100,6 +1125,7 @@ extern void init_Midi();
 extern void midi_ManualOff(uint8_t manual);
 extern void midi_AllManualsOff();
 
+extern void proc_ESPmidi(uint8_t midiBytesTransferred);
 
 
 extern uint8_t midiRxActivceSensing;
@@ -1128,7 +1154,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 236 ".././Midi.h"
+# 240 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1849,6 +1875,41 @@ __asm__ __volatile__ ("sei" ::: "memory")
    if ((esp_message > 0x80) && (esp_message <= 0x80 +6)){
 
     message_push(esp_message-0x80);
+   } else if (esp_message == 0x90) {
+
+    if (serESPInBuffer[0] == 0x90) {
+
+     int8_t i = 1;
+
+     do {
+      if (serESPInBuffer[i] == '='){
+       break;
+      }
+      i++;
+     } while (i < 8);
+
+     if (i < 8) {
+
+      uint8_t midiBytesTransferred = i >> 1;
+
+      for (uint8_t j = 0; j < 3; j++){
+       serESPMidiTmp[j] = 0;
+      }
+      while (--i > 0) {
+
+       uint8_t asciiData = serESPInBuffer[i] - '0';
+       if (asciiData > 9){
+        asciiData = asciiData - (0x0A - 'A' + '0');
+       }
+       asciiData &= 0x0F;
+       serESPMidiTmp[2] = (serESPMidiTmp[2] << 4) | (serESPMidiTmp[1] >> 4);
+       serESPMidiTmp[1] = (serESPMidiTmp[1] << 4) | (serESPMidiTmp[0] >> 4);
+       serESPMidiTmp[0] = (serESPMidiTmp[0] << 4) | asciiData;
+      }
+
+      proc_ESPmidi(midiBytesTransferred);
+     }
+    }
    }
   }
 
@@ -1870,13 +1931,13 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
 
      menu_Init(
-# 115 ".././main.c" 3 4
+# 150 ".././main.c" 3 4
               ((void *)0)
-# 115 ".././main.c"
+# 150 ".././main.c"
                   , 
-# 115 ".././main.c" 3 4
+# 150 ".././main.c" 3 4
                     ((void *)0)
-# 115 ".././main.c"
+# 150 ".././main.c"
                         );
      menu_InitLCD();
      menuNotActive = 0x00;
@@ -1996,9 +2057,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
    lcd_goto(oldcursor);
    midiLastInNote = 0xFF;
    
-# 233 ".././main.c" 3
+# 268 ".././main.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 233 ".././main.c"
+# 268 ".././main.c"
   {swTimer[4].counter = 1000 / 20; swTimer[4].prescaler = (1000 % 20) / 4;};
   } else if (midiLastProgram != 0xFF) {
 
@@ -2008,9 +2069,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
    lcd_putc(0x7E);
    midiLastProgram = 0xFF;
    
-# 241 ".././main.c" 3
+# 276 ".././main.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 241 ".././main.c"
+# 276 ".././main.c"
   {swTimer[4].counter = 1000 / 20; swTimer[4].prescaler = (1000 % 20) / 4;};
   } else if ((swTimer[4].counter == 0x00) ) {
 
@@ -2030,9 +2091,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
    lcd_goto(oldcursor);
    midiLastOutNote = 0xFF;
    
-# 259 ".././main.c" 3
+# 294 ".././main.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 259 ".././main.c"
+# 294 ".././main.c"
   {swTimer[5].counter = 1000 / 20; swTimer[5].prescaler = (1000 % 20) / 4;};
   } else if (midi_RegisterChanged != 0xFF) {
 
@@ -2045,9 +2106,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
    lcd_goto(oldcursor);
    midi_RegisterChanged = 0xFF;
    
-# 270 ".././main.c" 3
+# 305 ".././main.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 270 ".././main.c"
+# 305 ".././main.c"
   {swTimer[5].counter = 1000 / 20; swTimer[5].prescaler = (1000 % 20) / 4;};
   } else if ((swTimer[5].counter == 0x00)) {
 
@@ -2106,16 +2167,16 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
    if ((swTimer[4].counter == 0xFF)) {
     
-# 327 ".././main.c" 3
+# 362 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 327 ".././main.c"
+# 362 ".././main.c"
    {swTimer[4].counter = 2500 / 20; swTimer[4].prescaler = (2500 % 20) / 4;};
    }
    if ((swTimer[5].counter == 0xFF)) {
     
-# 330 ".././main.c" 3
+# 365 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 330 ".././main.c"
+# 365 ".././main.c"
    {swTimer[5].counter = 2500 / 20; swTimer[5].prescaler = (2500 % 20) / 4;};
    }
   }

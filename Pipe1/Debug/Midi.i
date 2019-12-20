@@ -908,11 +908,15 @@ extern void softKey_WantLong(uint8_t wantLong);
 extern void Pipes_AllOutputsOff();
 extern void init_PipeModules();
 extern uint32_t test_PipeModule(uint8_t moduleNr);
+
+
+extern void pipe_on(uint8_t bitNr, uint8_t moduleMask);
+extern void pipe_off(uint8_t bitNr, uint8_t moduleMask);
 # 15 ".././Midi.c" 2
 # 1 ".././utils.h" 1
 # 16 ".././Midi.c" 2
 # 1 ".././serial.h" 1
-# 32 ".././serial.h"
+# 34 ".././serial.h"
 extern void init_Serial3SerESP();
 extern void serial3SER_ESPSend(uint8_t data);
 extern void serial3SER_ESP_sendStringP(const char *progmem_s);
@@ -927,9 +931,26 @@ extern volatile uint8_t* serESPTxInIndex;
 extern volatile uint8_t serESPOvflFlag;
 extern volatile uint8_t serESP_Active;
 
+
+
 extern uint8_t serESPRxBuffer[128];
 extern uint8_t serESPTxBuffer[512];
-# 80 ".././serial.h"
+extern uint8_t serESPInBuffer[8];
+extern uint8_t serESPMidiTmp[3];
+# 90 ".././serial.h"
+extern volatile uint8_t* serUSBRxInIndex;
+extern volatile uint8_t* serUSBRxOutIndex;
+extern volatile uint8_t* serUSBTxOutIndex;
+extern volatile uint8_t* serUSBTxInIndex;
+extern volatile uint8_t serUSBOvflFlag;
+extern volatile uint8_t serUSB_Active;
+
+extern uint8_t serUSBRxBuffer[64];
+extern uint8_t serUSBTxBuffer[2048];
+
+
+
+
 extern void init_Serial0SerUSB();
 extern void serial0SER_USBSend(uint8_t data);
 extern void serial0SER_USB_sendStringP(const char *progmem_s);
@@ -937,18 +958,20 @@ extern void serial0SER_USB_sendString(char *s);
 extern void serial0SER_USB_sendCRLF();
 extern uint8_t serial0SER_USBReadRx();
 
-extern volatile uint8_t serusbRxInIndex;
-extern volatile uint8_t serusbRxOutIndex;
-extern volatile uint8_t serusbTxOutIndex;
-extern volatile uint8_t serusbTxInIndex;
-extern volatile uint8_t serusbOvflFlag;
-extern volatile uint8_t serusb_Active;
 
-extern uint8_t serUsbRxBuffer[64];
-extern uint8_t serUsbTxBuffer[256];
+extern void serial0USB_logMIDIin(uint8_t data);
+
+extern void serial0USB_logMIDIout(uint8_t data);
+
+extern void serial0USB_logPipeIn(PipeMessage_t pipe);
+
+extern void serial0USB_logPipeOutOn(uint8_t bitNr, uint8_t moduleMask);
+
+extern void serial0USB_logPipeOutOff(uint8_t bitNr, uint8_t moduleMask);
+
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
-# 123 ".././serial.h"
+# 143 ".././serial.h"
 extern void init_Serial1MIDI();
 extern void serial1MIDISend(uint8_t data);
 extern uint8_t serial1MIDIReadRx();
@@ -965,6 +988,8 @@ extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
 
 extern volatile uint8_t midiTxLastCmd;
+# 168 ".././serial.h"
+extern uint8_t midi_ExtraBuffer[3];
 # 17 ".././Midi.c" 2
 # 1 ".././test.h" 1
 # 15 ".././test.h"
@@ -988,7 +1013,7 @@ extern uint8_t test_PipePatterns();
 extern void test_input();
 # 18 ".././Midi.c" 2
 # 1 ".././Midi.h" 1
-# 44 ".././Midi.h"
+# 47 ".././Midi.h"
 typedef struct {
  uint8_t hw_channel;
  uint8_t note;
@@ -1026,7 +1051,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 115 ".././Midi.h"
+# 118 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -1104,6 +1129,7 @@ extern void init_Midi();
 extern void midi_ManualOff(uint8_t manual);
 extern void midi_AllManualsOff();
 
+extern void proc_ESPmidi(uint8_t midiBytesTransferred);
 
 
 extern uint8_t midiRxActivceSensing;
@@ -1132,7 +1158,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 236 ".././Midi.h"
+# 240 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1935,17 +1961,22 @@ void midi_CheckRxActiveSense(){
 }
 
 void midi_CheckTxActiveSense(){
- if (midi_Setting.TxActivceSense) {
-  if (!(((swTimer[8].counter != 0x00) && (swTimer[8].counter != 0xFF)))){
 
-   
-# 191 ".././Midi.c" 3
-  for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 191 ".././Midi.c"
-  {swTimer[8].counter = 200 / 20; swTimer[8].prescaler = (200 % 20) / 4;};
+
+ if (!(((swTimer[8].counter != 0x00) && (swTimer[8].counter != 0xFF)))){
+
+  
+# 192 ".././Midi.c" 3
+ for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
+# 192 ".././Midi.c"
+ {swTimer[8].counter = 200 / 20; swTimer[8].prescaler = (200 % 20) / 4;};
+  if (midi_Setting.TxActivceSense) {
    midi_SendActiveSense();
   }
+
+  midiTxLastCmd = 0x00;
  }
+
 }
 
 
@@ -1976,9 +2007,9 @@ void midiIn_Process(uint8_t midiByte){
    if (midiByte == 0xFE) {
     midiRxActivceSensing = 1;
     
-# 224 ".././Midi.c" 3
+# 229 ".././Midi.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 224 ".././Midi.c"
+# 229 ".././Midi.c"
    {swTimer[3].counter = 500 / 20; swTimer[3].prescaler = (500 % 20) / 4;};
    } else if (midiByte == 0xFF){
     midiAllReset();
@@ -2063,6 +2094,45 @@ void midiIn_Process(uint8_t midiByte){
  }
 }
 
+void proc_ESPmidi(uint8_t midiBytesTransferred){
+
+
+ (void) midiBytesTransferred;
+ uint8_t channel = serESPMidiTmp[2] & 0x0F;
+ uint8_t noteOnOff;
+ switch (serESPMidiTmp[2] & 0xF0) {
+
+ case 0x80:
+  noteOnOff = 0x00;
+  midiNote_to_Manual(channel, serESPMidiTmp[1], noteOnOff);
+  break;
+ case 0x90:
+  if (serESPMidiTmp[0] == 0) {
+
+   noteOnOff = 0x00;
+  } else {
+
+   noteOnOff = 0x01;
+  }
+  midiNote_to_Manual(channel, serESPMidiTmp[1], noteOnOff);
+  break;
+ case 0xB0:
+  if (serESPMidiTmp[1] == 0x7B) {
+   midiAllNotesOff(channel);
+  }
+  break;
+
+ case 0:
+  channel = serESPMidiTmp[1] & 0x0F;
+  switch (serESPMidiTmp[1] & 0xF0) {
+  case 0xC0:
+   midi_ProgramChange(channel,serESPMidiTmp[0]);
+   break;
+
+  }
+  break;
+ }
+}
 
 
 
@@ -2228,9 +2298,9 @@ uint8_t read_allRegister(uint8_t* resultPtr){
   if ((regNr & 0x07) == 0x07) {
 
    if (resultPtr != 
-# 472 ".././Midi.c" 3 4
+# 516 ".././Midi.c" 3 4
                    ((void *)0)
-# 472 ".././Midi.c"
+# 516 ".././Midi.c"
                        ) {
     *resultPtr++ = mask;
    }
@@ -2252,10 +2322,10 @@ void register_onOff(uint8_t regNr, uint8_t onOff){
    uint8_t modulNr = (modBit >> 5);
    if ((onOff & 0x01) != 0){
 
-    pipe[bitNr].pipeOut &= ~(1 << modulNr);
+    pipe_on(bitNr,1 << modulNr);
    } else {
 
-    pipe[bitNr].pipeOut |= (1 << modulNr);
+    pipe_off(bitNr,1 << modulNr);
    }
   }
  }
@@ -2550,6 +2620,31 @@ void init_Manual2Module(){
 
   midiEEPromLoadError = 0xFF;
   log_putError(1,3,0);
+
+  manualMap[0][0].startNote = 36;
+  manualMap[0][0].endNote = 67;
+  manualMap[0][0].bitStart = ((0 << 5) | (0));
+  manualMap[0][1].startNote = 68;
+  manualMap[0][1].endNote = 91;
+  manualMap[0][1].bitStart = ((1 << 5) | (0));
+  manualMap[1][0].startNote = 36;
+  manualMap[1][0].endNote = 67;
+  manualMap[1][0].bitStart = ((2 << 5) | (0));
+  manualMap[1][1].startNote = 68;
+  manualMap[1][1].endNote = 91;
+  manualMap[1][1].bitStart = ((3 << 5) | (0));
+  manualMap[2][0].startNote = 36;
+  manualMap[2][0].endNote = 67;
+  manualMap[2][0].bitStart = ((4 << 5) | (0));
+  manualMap[2][1].startNote = 68;
+  manualMap[2][1].endNote = 91;
+  manualMap[2][1].bitStart = ((5 << 5) | (0));
+  manualMap[3][0].startNote = 36;
+  manualMap[3][0].endNote = 65;
+  manualMap[3][0].bitStart = ((6 << 5) | (0));
+  manualMap[4][0].startNote = 0;
+  manualMap[4][0].endNote = 29;
+  manualMap[4][0].bitStart = ((7 << 5) | (0));
  }
  Midi_updateManualRange();
 
@@ -2613,10 +2708,10 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
  if (moduleInfo.error == 0x00) {
   if (onOff == 0x00) {
 
-   pipe[bitNr].pipeOut |= modulNrMask;
+   pipe_off(bitNr,modulNrMask);
   } else {
 
-   pipe[bitNr].pipeOut &= ~(modulNrMask);
+   pipe_on(bitNr,modulNrMask);
   }
 
   if ((modulNrMask & pipe_Module.AssnWrite) == 0){
@@ -2641,6 +2736,7 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
 
 
 void midiKeyPress_Process(PipeMessage_t pipeMessage){
+ serial0USB_logPipeIn(pipeMessage);
   uint8_t command = pipeMessage.message8[1] & 0xE0;
   uint8_t shiftBit = pipeMessage.message8[1] & 0x1F;
   uint8_t moduleBits = pipeMessage.message8[0];

@@ -9,6 +9,8 @@
 #ifndef SERIAL_H_
 #define SERIAL_H_
 
+#include "message.h"
+
 //================================= S E R I A L _ E S P ===========================
 //--------- INTERN DEFs ----------
 #define SER_ESP_BAUD 115200
@@ -43,11 +45,19 @@ extern volatile uint8_t* serESPTxInIndex;
 extern volatile uint8_t serESPOvflFlag;
 extern volatile uint8_t serESP_Active;
 
+#define SER_ESP_INPUTBUFFER_SIZE 8
+#define SER_ESP_MIDTEMPBUFFER_SIZE 3 // caution currently hard coded to 3 in main.c
 extern uint8_t serESPRxBuffer[SER_ESP_RX_BUFFER_SIZE];
 extern uint8_t serESPTxBuffer[SER_ESP_TX_BUFFER_SIZE];
+extern uint8_t serESPInBuffer[SER_ESP_INPUTBUFFER_SIZE]; // save last bytes cause they might contain data from esp for a command, [0]=newest
+extern uint8_t serESPMidiTmp[SER_ESP_MIDTEMPBUFFER_SIZE]; // genereate midi msg from ascii input from esp
 
 #define SER_ESP_MSGOFFSET 0x80 // message offset, so message from ESP is 0x81, 0x82...
-// 0x81 ... 0x80+ MESSAGE_KEY_MAX are key messages from ESP to MEGAS
+// 0x81 ... 0x80+ MESSAGE_KEY_MAX are key messages from ESP to MEGAS. Caution: max 0x0F keys!
+#define SER_ESP_MSGMIDI 0x90 // interpret last received bytes as midi cmd. Cmd starts with '=', followed by up to 6 chars 'A...F'/'0...9', then 0x90
+#define SER_ESP_PARAM_START '='
+#define SER_ESP_MSG_NONE 0xFF
+
 
 #define SER_ESP_OUTMSG_LCD_TRANSFER 0x80 // sent to ESP after 80 bytes LCD-Content (values < 0x80!) had been sent;
 #define SER_ESP_OUTMSG_LCD_SETCURSOR 0x81 // sent to ESP before transfer of LCD content 0=line0,0 79=line3,19, 0x7F=invalid
@@ -70,9 +80,22 @@ extern uint8_t serESPTxBuffer[SER_ESP_TX_BUFFER_SIZE];
 #define SER_OVFL_NO 0x00
 
 #define SER_USB_RX_BUFFER_SIZE 64
-#define SER_USB_RX_BUFFER_MASK 0x3F
-#define SER_USB_TX_BUFFER_SIZE 256
-#define SER_USB_TX_BUFFER_MASK 0xFF
+#define SER_USB_TX_BUFFER_SIZE 2048
+
+#define SER_USB_RX_BUFFER_EMPTY (serUSBRxInIndex == serUSBRxOutIndex)
+#define SER_USB_TX_BUFFER_EMPTY (serUSBTxInIndex == serUSBTxOutIndex)
+#define SER_USB_RX_BUFFER_NONEMPTY (serUSBRxInIndex != serUSBRxOutIndex)
+#define SER_USB_TX_BUFFER_NONEMPTY (serUSBTxInIndex != serUSBTxOutIndex)
+
+extern volatile uint8_t* serUSBRxInIndex;
+extern volatile uint8_t* serUSBRxOutIndex;
+extern volatile uint8_t* serUSBTxOutIndex;
+extern volatile uint8_t* serUSBTxInIndex;
+extern volatile uint8_t serUSBOvflFlag;
+extern volatile uint8_t serUSB_Active;
+
+extern uint8_t serUSBRxBuffer[SER_USB_RX_BUFFER_SIZE];
+extern uint8_t serUSBTxBuffer[SER_USB_TX_BUFFER_SIZE];
 
 #undef SER_USB_WAIT // = when sending wait for empty buffer instead of ovfl
 
@@ -84,24 +107,21 @@ extern void serial0SER_USB_sendString(char *s);
 extern void serial0SER_USB_sendCRLF();
 extern uint8_t serial0SER_USBReadRx();
 
-extern volatile uint8_t serusbRxInIndex;
-extern volatile uint8_t serusbRxOutIndex;
-extern volatile uint8_t serusbTxOutIndex;
-extern volatile uint8_t serusbTxInIndex;
-extern volatile uint8_t serusbOvflFlag;
-extern volatile uint8_t serusb_Active;
+#define SER_USB_LOGMIDIIN_CHAR 'i'
+extern void serial0USB_logMIDIin(uint8_t data);
+#define SER_USB_LOGMIDIOUT_CHAR 'o'
+extern void serial0USB_logMIDIout(uint8_t data);
+#define SER_USB_LOGPIPEMSG_CHAR 'k'
+extern void serial0USB_logPipeIn(PipeMessage_t pipe);
+#define SER_USB_LOGPIPEON_CHAR 'p'
+extern void serial0USB_logPipeOutOn(uint8_t bitNr, uint8_t moduleMask);
+#define SER_USB_LOGPIPEOFF_CHAR 'q'
+extern void serial0USB_logPipeOutOff(uint8_t bitNr, uint8_t moduleMask);
 
-extern uint8_t serUsbRxBuffer[SER_USB_RX_BUFFER_SIZE];
-extern uint8_t serUsbTxBuffer[SER_USB_TX_BUFFER_SIZE];
 extern volatile uint16_t midiTxBytesCount; // total bytes sent
 extern volatile uint16_t midiRxBytesCount; // total bytes received
 
-
-#define SER_USB_RX_BUFFER_EMPTY (serusbRxInIndex == serusbRxOutIndex)
-#define SER_USB_TX_BUFFER_EMPTY (serusbTxInIndex == serusbTxOutIndex)
-#define SER_USB_RX_BUFFER_NONEMPTY (serusbRxInIndex != serusbRxOutIndex)
-#define SER_USB_TX_BUFFER_NONEMPTY (serusbTxInIndex != serusbTxOutIndex)
-#define SER_USB_OVFLOW (serusbOvflFlag == SER_OVFL_YES)
+#define SER_USB_OVFLOW (serUSBOvflFlag == SER_OVFL_YES)
 #define SER_USB_MAX_STRINGLEN 80
 
 //========================== M I D I ======================================
@@ -143,6 +163,9 @@ extern volatile uint8_t midiTxLastCmd;
 #define MIDI_TX_BUFFER_EMPTY (midiTxOutIndex == midiTxInIndex)
 #define MIDI_RX_BUFFER_NONEMPTY (midiRxInIndex != midiRxOutIndex)
 #define MIDI_TX_BUFFER_NONEMPTY (midiTxOutIndex != midiTxInIndex)
+
+#define MIDI_EXTRA_BUFFER_SIZE 3
+extern uint8_t midi_ExtraBuffer[MIDI_EXTRA_BUFFER_SIZE];
 
 
 //--------- MIDI Defs -----------

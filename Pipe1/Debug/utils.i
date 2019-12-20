@@ -903,10 +903,14 @@ extern void softKey_WantLong(uint8_t wantLong);
 extern void Pipes_AllOutputsOff();
 extern void init_PipeModules();
 extern uint32_t test_PipeModule(uint8_t moduleNr);
+
+
+extern void pipe_on(uint8_t bitNr, uint8_t moduleMask);
+extern void pipe_off(uint8_t bitNr, uint8_t moduleMask);
 # 15 ".././utils.c" 2
 
 # 1 ".././Midi.h" 1
-# 44 ".././Midi.h"
+# 47 ".././Midi.h"
 typedef struct {
  uint8_t hw_channel;
  uint8_t note;
@@ -944,7 +948,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 115 ".././Midi.h"
+# 118 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -1022,6 +1026,7 @@ extern void init_Midi();
 extern void midi_ManualOff(uint8_t manual);
 extern void midi_AllManualsOff();
 
+extern void proc_ESPmidi(uint8_t midiBytesTransferred);
 
 
 extern uint8_t midiRxActivceSensing;
@@ -1050,7 +1055,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 236 ".././Midi.h"
+# 240 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{

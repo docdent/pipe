@@ -30,7 +30,10 @@
 
 #define MIDI_NOTE_C2 36
 #define MIDI_NOTE_G6 91
+#define MIDI_NOTE_G4 67
+#define MIDI_NOTE_GIS4 68
 #define MIDI_NOTE_F4 65
+
 #define MIDI_NOTE_NONE 0xFF
 #define MIDI_NOTE_MAX 0x7F
 #define RANGE_0 0
@@ -125,7 +128,7 @@ typedef struct{
 	uint8_t InChannel; // In Channel for SW MIDI Through 0...0x0F -> 1..16, 0xFF = off
 	uint8_t OutChannel; // Out channel for SW MIDI Through
 } MidiThrough_t;
- 
+
 extern MidiThrough_t midiThrough;
 
 
@@ -149,7 +152,7 @@ extern RegisterMap_t registerMap[REGISTER_SEC_COUNT]; // for each Register Secti
 extern uint8_t registerCount; // nr of valid registers
 typedef struct{
 	uint8_t registers [REGISTER_COUNT / 8];
-	uint16_t couplers; 
+	uint16_t couplers;
 	} ProgramInfo_t;
 extern ProgramInfo_t programMap[PROGRAM_COUNT] ; // for each register one bit, 2 for couplers
 
@@ -157,7 +160,7 @@ extern uint8_t midi_RegisterChanged;
 extern uint8_t midi_CountRegisterInProgram(uint8_t program);
 extern uint8_t read_allRegister(uint8_t* resultPtr);
 
-#define REGISTER_WAS_SET 0x80 // prefix bit 7 = 1 
+#define REGISTER_WAS_SET 0x80 // prefix bit 7 = 1
 #define REGISTER_ON 0x01
 #define REGISTER_OFF 0x00
 extern void register_onOff(uint8_t regNr, uint8_t onOff);
@@ -166,7 +169,7 @@ extern uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm);
 extern uint8_t program_toRegister(uint8_t program);
 extern void midi_resetRegisters(); // turn off all register outputs
 #define REG_DONT_MATCH_PROG 0xFF
-extern uint8_t midi_RegisterMatchProgram(uint8_t program); 
+extern uint8_t midi_RegisterMatchProgram(uint8_t program);
 
 #define REGISTER_READ_HWIN 0x01
 #define REGISTER_READ_SWOUT 0x02
@@ -189,6 +192,7 @@ extern void init_Midi();
 extern void midi_ManualOff(uint8_t manual);
 extern void midi_AllManualsOff();
 
+extern void proc_ESPmidi(uint8_t midiBytesTransferred);
 //------------------------------ Active Sense ----------------------
 
 extern uint8_t midiRxActivceSensing; // 0 if no active sense, 1 if started
@@ -224,7 +228,7 @@ extern void setAllCouplers(Word_t couplers);
 #define COUPLER_2FROM3 0
 #define COUPLER_1FROM3 1
 #define COUPLER_1FROM2 2
-#define COUPLER_PFROM3 3 
+#define COUPLER_PFROM3 3
 #define COUPLER_PFROM2 4
 #define COUPLER_PFROM1 5
 #define COUPLER_3FROM2 6
@@ -237,11 +241,11 @@ extern uint8_t midi_Couplers[COUPLER_COUNT];
 
 typedef struct{
 	uint8_t dest;
-	uint8_t source;	
+	uint8_t source;
 } CplInfo_t;
 extern const __flash CplInfo_t cplInfo[COUPLER_COUNT];
 
-extern uint8_t set_Coupler(uint8_t); // set must be done via function, reset ca be done directly, 
+extern uint8_t set_Coupler(uint8_t); // set must be done via function, reset ca be done directly,
 //returns true if inverse coupler had to bee reset
 
 

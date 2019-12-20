@@ -82,7 +82,7 @@ void log_put(uint8_t LogCat, uint8_t LogNr, uint16_t LogInfo, uint8_t logType){
 	pLogEnd->logNr = LogNr;
 	pLogEnd->logInfo = LogInfo;
 	pLogEnd->logStatus = LOG_STATUS_ACTIVVE;
-	if (serusb_Active == TRUE) {
+	if (serUSB_Active == TRUE) {
 		serial0SER_USB_sendStringP(stringLog);
 		serial0SER_USB_sendString(log_getShortTextFromPtr(pLogEnd,LOG_CHANGENOTIFYNO));
 		serial0SER_USB_sendStringP(cr_lf);

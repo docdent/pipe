@@ -648,7 +648,7 @@ log_put:
 .LVL70:
 	std Z+4,r24
 	.loc 1 85 0
-	lds r24,serusb_Active
+	lds r24,serUSB_Active
 	cpi r24,lo8(-1)
 	brne .L37
 	.loc 1 86 0
@@ -1730,7 +1730,7 @@ ErrorText:
 	.uleb128 0x1e
 	.long	.LASF43
 	.byte	0x6
-	.byte	0x5c
+	.byte	0x5f
 	.long	0x635
 	.byte	0x1
 	.byte	0x1
@@ -1825,14 +1825,14 @@ ErrorText:
 	.long	.LASF52
 	.long	.LASF52
 	.byte	0x6
-	.byte	0x52
+	.byte	0x69
 	.uleb128 0x21
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF53
 	.long	.LASF53
 	.byte	0x6
-	.byte	0x53
+	.byte	0x6a
 	.byte	0
 	.section	.debug_abbrev,"",@progbits
 .Ldebug_abbrev0:
@@ -3162,6 +3162,8 @@ ErrorText:
 	.string	"log_putInfo"
 .LASF27:
 	.string	"changeNotifyStatus"
+.LASF43:
+	.string	"serUSB_Active"
 .LASF3:
 	.string	"uint8_t"
 .LASF46:
@@ -3214,8 +3216,6 @@ ErrorText:
 	.string	"log_count"
 .LASF54:
 	.string	"GNU C99 5.4.0 -mn-flash=4 -mno-skip-bug -mrelax -mmcu=avr6 -g2 -Og -std=gnu99 -funsigned-char -funsigned-bitfields -ffunction-sections -fdata-sections -fpack-struct -fshort-enums"
-.LASF43:
-	.string	"serusb_Active"
 .LASF9:
 	.string	"uptime"
 .LASF59:

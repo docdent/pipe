@@ -185,13 +185,18 @@ void midi_CheckRxActiveSense(){
 }
 
 void midi_CheckTxActiveSense(){
-	if (midi_Setting.TxActivceSense) {
-		if (!(TIMER_RUNNING(TIMER_TX_ACTIVESENSE))){
-			// timer ended or not yet running
-			TIMER_SET(TIMER_TX_ACTIVESENSE,TIMER_TX_ACTIVESENSE_MS)
+	// timer is started when any midi byte is transferred
+	// dual use: 1) send active sense (if configured) after timer elapsed 2) reset last midi command so that from time to time command is sent again  (V0.67)
+	if (!(TIMER_RUNNING(TIMER_TX_ACTIVESENSE))){
+		// timer ended or not yet running
+		TIMER_SET(TIMER_TX_ACTIVESENSE,TIMER_TX_ACTIVESENSE_MS) 
+		if (midi_Setting.TxActivceSense) {
 			midi_SendActiveSense();
 		}
+		// V 0.67 for safety: reset last command byte so that after "some" time without key change always sent midi command byte
+		MIDI_TXT_RESET_LASTCMD
 	}
+	
 }
 
 // **************************************** P R O C E S S   M I D I    I N *********************************************
@@ -305,6 +310,45 @@ void midiIn_Process(uint8_t midiByte){
 	}
 }
 
+void proc_ESPmidi(uint8_t midiBytesTransferred){
+	// ESP midi commands are execeuted here separately from regular midi input so that processing does not interfere
+	// serESPMidiTmp[2] is first byte of midi transmission if there are 3 bytes, [1] for 2 byte commands
+	(void) midiBytesTransferred; // currently not used, unused bytes are zero
+	uint8_t channel = serESPMidiTmp[2] & 0x0F;
+	uint8_t noteOnOff;
+	switch (serESPMidiTmp[2] & 0xF0) {
+		// remove channel from command
+	case MIDI_NOTEOFF:
+		noteOnOff = NOTE_OFF;
+		midiNote_to_Manual(channel, serESPMidiTmp[1], noteOnOff);
+		break;
+	case MIDI_NOTEON:
+		if (serESPMidiTmp[0] == 0) {
+			// midi spec: velocity = 0 -> note off
+			noteOnOff = NOTE_OFF;
+		} else {
+			// regular: note on
+			noteOnOff = NOTE_ON;
+		}
+		midiNote_to_Manual(channel, serESPMidiTmp[1], noteOnOff);
+		break;
+	case MIDI_CTRLCHG:
+		if (serESPMidiTmp[1] == MIDI_CTRL_ALLNOTESOFF) {
+			midiAllNotesOff(channel);
+		}
+		break;
+	// insert other 3 byte midi command check here
+	case 0: // no 3 bytes of midi data, check next byte for 2 byte commands
+		channel = serESPMidiTmp[1] & 0x0F;
+		switch (serESPMidiTmp[1] & 0xF0) {
+		case MIDI_PRGCHG:
+			midi_ProgramChange(channel,serESPMidiTmp[0]);
+			break;
+		//  process midi commands from ESP with 2 bytes here
+		}
+		break;
+	}
+}
 
 //-------------------------------------- R E G I S T E R  ---------------------------------------------
 // valid register are 0...63 !
@@ -490,10 +534,10 @@ void register_onOff(uint8_t regNr, uint8_t onOff){
 			uint8_t modulNr = MODULE_BIT_TO_MODULE(modBit);
 			if ((onOff & 0x01) != 0){
 				// set register -> output L
-				pipe[bitNr].pipeOut &= ~(1 << modulNr);
+				pipe_on(bitNr,1 << modulNr); // bitNr 0..31, moduleMask 0x01, 0x02, ... x080
 			} else {
 				// reset register -> output H
-				pipe[bitNr].pipeOut |= (1 << modulNr);
+				pipe_off(bitNr,1 << modulNr); // bitNr 0..31, moduleMask 0x01, 0x02, ... x080
 			}
 		}
 	}
@@ -788,6 +832,31 @@ void init_Manual2Module(){
 		// no default values for manual map!
 		midiEEPromLoadError = EE_LOAD_ERROR;
 		log_putError(LOG_CAT_EE,LOG_CATEE_MAN2MOD,0);
+		// V 0.65 default entries for steinmeyer organ
+		manualMap[MANUAL_III][0].startNote = MIDI_NOTE_C2;
+		manualMap[MANUAL_III][0].endNote = MIDI_NOTE_G4;
+		manualMap[MANUAL_III][0].bitStart = MODULE_BIT(0,0);
+		manualMap[MANUAL_III][1].startNote = MIDI_NOTE_GIS4;
+		manualMap[MANUAL_III][1].endNote = MIDI_NOTE_G6;
+		manualMap[MANUAL_III][1].bitStart = MODULE_BIT(1,0);
+		manualMap[MANUAL_II][0].startNote = MIDI_NOTE_C2;
+		manualMap[MANUAL_II][0].endNote = MIDI_NOTE_G4;
+		manualMap[MANUAL_II][0].bitStart = MODULE_BIT(2,0);
+		manualMap[MANUAL_II][1].startNote = MIDI_NOTE_GIS4;
+		manualMap[MANUAL_II][1].endNote = MIDI_NOTE_G6;
+		manualMap[MANUAL_II][1].bitStart = MODULE_BIT(3,0);
+		manualMap[MANUAL_I][0].startNote = MIDI_NOTE_C2;
+		manualMap[MANUAL_I][0].endNote = MIDI_NOTE_G4;
+		manualMap[MANUAL_I][0].bitStart = MODULE_BIT(4,0);
+		manualMap[MANUAL_I][1].startNote = MIDI_NOTE_GIS4;
+		manualMap[MANUAL_I][1].endNote = MIDI_NOTE_G6;
+		manualMap[MANUAL_I][1].bitStart = MODULE_BIT(5,0);
+		manualMap[MANUAL_P][0].startNote = MIDI_NOTE_C2;
+		manualMap[MANUAL_P][0].endNote = MIDI_NOTE_F4;
+		manualMap[MANUAL_P][0].bitStart = MODULE_BIT(6,0);
+		manualMap[MANUAL_R][0].startNote = 0;
+		manualMap[MANUAL_R][0].endNote = 29;
+		manualMap[MANUAL_R][0].bitStart = MODULE_BIT(7,0);
 	}
 	Midi_updateManualRange();
 	// turn off couplers
@@ -851,10 +920,10 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
 	if (moduleInfo.error == MODULE_NOERROR) {
 		if (onOff == NOTE_OFF) {
 			// note off -> write 1 to pipe mosfet
-			pipe[bitNr].pipeOut |= modulNrMask;
+			pipe_off(bitNr,modulNrMask);
 		} else {
 			// note on -> write 0 to pipe mosfet
-			pipe[bitNr].pipeOut &= ~(modulNrMask);
+			pipe_on(bitNr,modulNrMask);
 		}
 		// V0.62 direct pipe message if module can't be written
 		if ((modulNrMask & pipe_Module.AssnWrite) == 0){
@@ -879,6 +948,7 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
 //********************************************* P R O C E S S   P I P E   M E S S A G E ->MIDI, COUPLER *******************************
 
 void midiKeyPress_Process(PipeMessage_t pipeMessage){
+	serial0USB_logPipeIn(pipeMessage);
 	 uint8_t command = pipeMessage.message8[MSG_BYTE_CMD_SHIFTBIT] & MESSAGE_PIPE_CMD_MASK_H; // upper 3 bit
 	 uint8_t shiftBit = pipeMessage.message8[MSG_BYTE_CMD_SHIFTBIT] & MESSAGE_PIPE_SHIFTBIT_MASK_H; // lower 5 bits = BitNr of each module 0..31
 	 uint8_t moduleBits = pipeMessage.message8[MSG_BYTE_MODULEBITS]; // one bit for each module, so one message can countain up to 8 messages for 8 modules

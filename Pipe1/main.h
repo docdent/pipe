@@ -57,6 +57,20 @@ EEPROM memory structure
 0.63
 MIDI Tx save command and do not transfer note on/off again
 MIDI Tx Buffer set to 256
+0.64
+serial.c USB out from ArrayIndex to pointer, buffer set to 2k
+serial.c MIDI out command reuse only if VelZero4Off
+serial.c log MIDI in/out and pipe message to USB
+hwtimer.c pipe_on/off() instead of direct pipe[].pipeOut handling in midi.c; menu.c still handles it directly!
+menu.c USB is part of setup AND status menu now
+0.65
+hwtimer.c timerPipeProcess() ignore modules that are not tested corerctly
+0.66
+tiny input buffer for ESP data (4 bytes) so that commands from esp can contain more data
+0.67
+active sense tx timer reset when midi byte is sent
+reset setn midi command from time to time
+midi command from ESP
 
 TODO
 Show pressed keys

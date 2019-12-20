@@ -811,11 +811,15 @@ extern void softKey_WantLong(uint8_t wantLong);
 extern void Pipes_AllOutputsOff();
 extern void init_PipeModules();
 extern uint32_t test_PipeModule(uint8_t moduleNr);
+
+
+extern void pipe_on(uint8_t bitNr, uint8_t moduleMask);
+extern void pipe_off(uint8_t bitNr, uint8_t moduleMask);
 # 11 ".././ee_prom.c" 2
 # 1 ".././utils.h" 1
 # 12 ".././ee_prom.c" 2
 # 1 ".././serial.h" 1
-# 32 ".././serial.h"
+# 34 ".././serial.h"
 extern void init_Serial3SerESP();
 extern void serial3SER_ESPSend(uint8_t data);
 extern void serial3SER_ESP_sendStringP(const char *progmem_s);
@@ -830,9 +834,26 @@ extern volatile uint8_t* serESPTxInIndex;
 extern volatile uint8_t serESPOvflFlag;
 extern volatile uint8_t serESP_Active;
 
+
+
 extern uint8_t serESPRxBuffer[128];
 extern uint8_t serESPTxBuffer[512];
-# 80 ".././serial.h"
+extern uint8_t serESPInBuffer[8];
+extern uint8_t serESPMidiTmp[3];
+# 90 ".././serial.h"
+extern volatile uint8_t* serUSBRxInIndex;
+extern volatile uint8_t* serUSBRxOutIndex;
+extern volatile uint8_t* serUSBTxOutIndex;
+extern volatile uint8_t* serUSBTxInIndex;
+extern volatile uint8_t serUSBOvflFlag;
+extern volatile uint8_t serUSB_Active;
+
+extern uint8_t serUSBRxBuffer[64];
+extern uint8_t serUSBTxBuffer[2048];
+
+
+
+
 extern void init_Serial0SerUSB();
 extern void serial0SER_USBSend(uint8_t data);
 extern void serial0SER_USB_sendStringP(const char *progmem_s);
@@ -840,18 +861,20 @@ extern void serial0SER_USB_sendString(char *s);
 extern void serial0SER_USB_sendCRLF();
 extern uint8_t serial0SER_USBReadRx();
 
-extern volatile uint8_t serusbRxInIndex;
-extern volatile uint8_t serusbRxOutIndex;
-extern volatile uint8_t serusbTxOutIndex;
-extern volatile uint8_t serusbTxInIndex;
-extern volatile uint8_t serusbOvflFlag;
-extern volatile uint8_t serusb_Active;
 
-extern uint8_t serUsbRxBuffer[64];
-extern uint8_t serUsbTxBuffer[256];
+extern void serial0USB_logMIDIin(uint8_t data);
+
+extern void serial0USB_logMIDIout(uint8_t data);
+
+extern void serial0USB_logPipeIn(PipeMessage_t pipe);
+
+extern void serial0USB_logPipeOutOn(uint8_t bitNr, uint8_t moduleMask);
+
+extern void serial0USB_logPipeOutOff(uint8_t bitNr, uint8_t moduleMask);
+
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
-# 123 ".././serial.h"
+# 143 ".././serial.h"
 extern void init_Serial1MIDI();
 extern void serial1MIDISend(uint8_t data);
 extern uint8_t serial1MIDIReadRx();
@@ -868,9 +891,11 @@ extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
 
 extern volatile uint8_t midiTxLastCmd;
+# 168 ".././serial.h"
+extern uint8_t midi_ExtraBuffer[3];
 # 13 ".././ee_prom.c" 2
 # 1 ".././Midi.h" 1
-# 44 ".././Midi.h"
+# 47 ".././Midi.h"
 typedef struct {
  uint8_t hw_channel;
  uint8_t note;
@@ -908,7 +933,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 115 ".././Midi.h"
+# 118 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -986,6 +1011,7 @@ extern void init_Midi();
 extern void midi_ManualOff(uint8_t manual);
 extern void midi_AllManualsOff();
 
+extern void proc_ESPmidi(uint8_t midiBytesTransferred);
 
 
 extern uint8_t midiRxActivceSensing;
@@ -1014,7 +1040,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 236 ".././Midi.h"
+# 240 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1269,7 +1295,7 @@ const __flash EeVarList_t ee_VarList[] = {
  {'I', 0, sizeof(midiInMap), (uint8_t*) midiInMap},
  {'O', 0, sizeof(midiOutMap), (uint8_t*) midiOutMap},
  {'i', 0, sizeof(pipe_Module), (uint8_t*) &pipe_Module},
- {'U', 0, sizeof(serusb_Active), (uint8_t*) &serusb_Active},
+ {'U', 0, sizeof(serUSB_Active), (uint8_t*) &serUSB_Active},
  {'R', 0, sizeof(registerMap), (uint8_t*) registerMap},
  {'P', 0, sizeof(programMap), (uint8_t*) programMap},
  {'K', 0, sizeof(soft_KeyMenuIndex), (uint8_t*) soft_KeyMenuIndex},
@@ -1460,7 +1486,7 @@ uint8_t eeprom_ReadUSB(){
  if ((eeprom_read_word(&ee.eeData.ee.usb_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.usbActive, sizeof (ee.eeData.ee.usbActive))
  && eeprom_read_byte(&ee.eeData.ee.charUSB) == 'U')) {
 
-  serusb_Active = eeprom_read_byte(&ee.eeData.ee.usbActive);
+  serUSB_Active = eeprom_read_byte(&ee.eeData.ee.usbActive);
   return (0x00);
  } else {
   ee_initError |= 0x08;;
@@ -1554,10 +1580,10 @@ void eeprom_UpdateModules(){
 }
 
 void eeprom_UpdateUSB(){
- uint16_t crc = crc16_ram((uint8_t*) &serusb_Active, sizeof(serusb_Active));
+ uint16_t crc = crc16_ram((uint8_t*) &serUSB_Active, sizeof(serUSB_Active));
  lcd_waitSymbolOn();
  eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charUSB), 'U');
- eeprom_update_byte(&(ee.eeData.ee.usbActive), serusb_Active);
+ eeprom_update_byte(&(ee.eeData.ee.usbActive), serUSB_Active);
  eeprom_update_word(&(ee.eeData.ee.usb_crc), crc);
  eepromWriteSignature();
  lcd_waitSymbolOff();

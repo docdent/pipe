@@ -270,7 +270,8 @@ uint8_t module_TestAllInputs(){
 		result |= pPipe->pipeIn;
 		pPipe++;
 	}
-	return result & pipe_Module.AssnRead; // modules unassgined to read will be ignored (return bit=0)
+	// V 0.65 & pipe_ModuleTested
+	return result & pipe_Module.AssnRead & pipe_ModuleTested; // modules unassgined to read will be ignored (return bit=0)
 }
 
 void module_WaitOutputInput2Cycles(){
@@ -494,7 +495,8 @@ void softKey_WantLong(uint8_t wantLong){
 static inline void timerPipeProcess(){
 	Pipe_t *curPipe;
 	curPipe = &pipe[0];
-	uint8_t local_pipe_ModuleAssnRead = pipe_Module.AssnRead; // 1= module message processeced
+	// V 0.65 AssnRead -> new: & ModuleTesteD
+	uint8_t local_pipe_ModuleAssnRead = pipe_Module.AssnRead & pipe_ModuleTested; // 1= module message processeced
 	for (uint8_t shiftBitNr = 0; shiftBitNr < PIPE_SHIFTBIT_COUNT; shiftBitNr++) {
 		// check output error
 		PipeMessage_t myMessage;
@@ -603,5 +605,12 @@ ISR (TIMER0_COMPA_vect)
 
 }
 
-// ------------------------------------------- POWER -----------------------------------
+// ------------------------------------------- PIPE ON-OFF -----------------------------------
 
+void pipe_on(uint8_t bitNr, uint8_t moduleMask){ // bitNr 0..31, moduleMask 0x01, 0x02, ... x080
+	pipe[bitNr].pipeOut &= ~(moduleMask);
+}
+
+void pipe_off(uint8_t bitNr, uint8_t moduleMask){ // bitNr 0..31, moduleMask 0x01, 0x02, ... x080
+	pipe[bitNr].pipeOut |= moduleMask;
+}

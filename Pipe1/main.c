@@ -90,8 +90,43 @@ int main(void)
 			messageFromESP = esp_message; // save for later transfer of LCD
 			serial0SER_USBSend(esp_message); // TODO ask if USB out is enabled
 			if ((esp_message > SER_ESP_MSGOFFSET) && (esp_message <= SER_ESP_MSGOFFSET+MESSAGE_KEY_MAX)){
-				// push message from esp to queue
+				// push key message from esp to queue
 				message_push(esp_message-SER_ESP_MSGOFFSET);
+			} else if (esp_message == SER_ESP_MSGMIDI) {
+				// MIDI data from ESP
+				if (serESPInBuffer[0] == SER_ESP_MSGMIDI) {
+					// this should always be so
+					int8_t i = 1; // start with byte received before command
+					// find ascii start char '=' SER_ESP_PARAM_START
+					do {
+						if (serESPInBuffer[i] == SER_ESP_PARAM_START){
+							break;
+						}
+						i++;
+					} while (i < SER_ESP_INPUTBUFFER_SIZE);
+					// i points to '0' or SER_ESP_INPUTBUFFER_SIZE if not found
+					if (i < SER_ESP_INPUTBUFFER_SIZE) {
+						// i points to '='
+						uint8_t midiBytesTransferred = i >> 1; // 1->0, 2->1, 3-> 1, 4->2, 5->2, 6->3, 7->3
+						// clear midi buffer
+						for (uint8_t j = 0; j < SER_ESP_MIDTEMPBUFFER_SIZE; j++){
+							serESPMidiTmp[j] = 0;
+						}
+						while (--i > 0) {
+							// take next ascii byte for data, start with char after '='
+							uint8_t asciiData = serESPInBuffer[i] - '0';
+							if (asciiData > 9){
+								asciiData = asciiData - (0x0A - 'A' + '0');
+							}
+							asciiData &= 0x0F;
+							serESPMidiTmp[2] = (serESPMidiTmp[2] << 4) | (serESPMidiTmp[1] >> 4);
+							serESPMidiTmp[1] = (serESPMidiTmp[1] << 4) | (serESPMidiTmp[0] >> 4);
+							serESPMidiTmp[0] = (serESPMidiTmp[0] << 4) | asciiData;
+						}
+						// serESPMidiTmp[2] is first byte of midi transmition
+						proc_ESPmidi(midiBytesTransferred); //  process midi bytes from ESP as received bytes here!
+					} // else not found: do nothing
+				}
 			} // TODO further ESP message to handle
 		}
 		// ---------------------- KEYBOARD AND MENU ----------------------

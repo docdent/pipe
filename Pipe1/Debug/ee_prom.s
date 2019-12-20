@@ -1345,7 +1345,7 @@ eeprom_ReadUSB:
 	ldi r25,hi8(ee+331)
 	call eeprom_read_byte
 .LVL132:
-	sts serusb_Active,r24
+	sts serUSB_Active,r24
 	.loc 1 229 0
 	ldi r24,0
 	rjmp .L53
@@ -1934,8 +1934,8 @@ eeprom_UpdateUSB:
 	.loc 1 322 0
 	ldi r22,lo8(1)
 	ldi r23,0
-	ldi r24,lo8(serusb_Active)
-	ldi r25,hi8(serusb_Active)
+	ldi r24,lo8(serUSB_Active)
+	ldi r25,hi8(serUSB_Active)
 	call crc16_ram
 .LVL192:
 	movw r28,r24
@@ -1950,7 +1950,7 @@ eeprom_UpdateUSB:
 	call eeprom_update_byte
 .LVL195:
 	.loc 1 325 0
-	lds r22,serusb_Active
+	lds r22,serUSB_Active
 	ldi r24,lo8(ee+331)
 	ldi r25,hi8(ee+331)
 	call eeprom_update_byte
@@ -2487,7 +2487,7 @@ ee_VarList:
 	.byte	85
 	.byte	0
 	.word	1
-	.word	serusb_Active
+	.word	serUSB_Active
 	.byte	82
 	.byte	0
 	.word	24
@@ -2619,12 +2619,12 @@ ee:
 	.uleb128 0x7
 	.byte	0x3
 	.byte	0x5
-	.byte	0x43
+	.byte	0x46
 	.long	0xf1
 	.uleb128 0x8
 	.long	.LASF13
 	.byte	0x5
-	.byte	0x44
+	.byte	0x47
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2632,7 +2632,7 @@ ee:
 	.uleb128 0x8
 	.long	.LASF14
 	.byte	0x5
-	.byte	0x45
+	.byte	0x48
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2640,7 +2640,7 @@ ee:
 	.uleb128 0x8
 	.long	.LASF15
 	.byte	0x5
-	.byte	0x46
+	.byte	0x49
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2649,17 +2649,17 @@ ee:
 	.uleb128 0x3
 	.long	.LASF16
 	.byte	0x5
-	.byte	0x47
+	.byte	0x4a
 	.long	0xbe
 	.uleb128 0x7
 	.byte	0x4
 	.byte	0x5
-	.byte	0x73
+	.byte	0x76
 	.long	0x13d
 	.uleb128 0x8
 	.long	.LASF17
 	.byte	0x5
-	.byte	0x74
+	.byte	0x77
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2667,7 +2667,7 @@ ee:
 	.uleb128 0x8
 	.long	.LASF18
 	.byte	0x5
-	.byte	0x75
+	.byte	0x78
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2675,7 +2675,7 @@ ee:
 	.uleb128 0x8
 	.long	.LASF19
 	.byte	0x5
-	.byte	0x76
+	.byte	0x79
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2683,7 +2683,7 @@ ee:
 	.uleb128 0x8
 	.long	.LASF20
 	.byte	0x5
-	.byte	0x77
+	.byte	0x7a
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2692,17 +2692,17 @@ ee:
 	.uleb128 0x3
 	.long	.LASF21
 	.byte	0x5
-	.byte	0x78
+	.byte	0x7b
 	.long	0xfc
 	.uleb128 0x7
 	.byte	0x2
 	.byte	0x5
-	.byte	0x7c
+	.byte	0x7f
 	.long	0x16d
 	.uleb128 0x8
 	.long	.LASF22
 	.byte	0x5
-	.byte	0x7d
+	.byte	0x80
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2710,7 +2710,7 @@ ee:
 	.uleb128 0x8
 	.long	.LASF23
 	.byte	0x5
-	.byte	0x7e
+	.byte	0x81
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2719,17 +2719,17 @@ ee:
 	.uleb128 0x3
 	.long	.LASF24
 	.byte	0x5
-	.byte	0x7f
+	.byte	0x82
 	.long	0x148
 	.uleb128 0x7
 	.byte	0x2
 	.byte	0x5
-	.byte	0x84
+	.byte	0x87
 	.long	0x19d
 	.uleb128 0x8
 	.long	.LASF25
 	.byte	0x5
-	.byte	0x85
+	.byte	0x88
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2737,7 +2737,7 @@ ee:
 	.uleb128 0x8
 	.long	.LASF26
 	.byte	0x5
-	.byte	0x86
+	.byte	0x89
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2746,17 +2746,17 @@ ee:
 	.uleb128 0x3
 	.long	.LASF27
 	.byte	0x5
-	.byte	0x88
+	.byte	0x8b
 	.long	0x178
 	.uleb128 0x7
 	.byte	0x3
 	.byte	0x5
-	.byte	0x8e
+	.byte	0x91
 	.long	0x1db
 	.uleb128 0x8
 	.long	.LASF28
 	.byte	0x5
-	.byte	0x8f
+	.byte	0x92
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2764,7 +2764,7 @@ ee:
 	.uleb128 0x8
 	.long	.LASF29
 	.byte	0x5
-	.byte	0x90
+	.byte	0x93
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2772,7 +2772,7 @@ ee:
 	.uleb128 0x8
 	.long	.LASF15
 	.byte	0x5
-	.byte	0x91
+	.byte	0x94
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2781,17 +2781,17 @@ ee:
 	.uleb128 0x3
 	.long	.LASF30
 	.byte	0x5
-	.byte	0x92
+	.byte	0x95
 	.long	0x1a8
 	.uleb128 0x7
 	.byte	0xa
 	.byte	0x5
-	.byte	0x96
+	.byte	0x99
 	.long	0x20b
 	.uleb128 0x8
 	.long	.LASF31
 	.byte	0x5
-	.byte	0x97
+	.byte	0x9a
 	.long	0x20b
 	.byte	0x2
 	.byte	0x23
@@ -2799,7 +2799,7 @@ ee:
 	.uleb128 0x8
 	.long	.LASF32
 	.byte	0x5
-	.byte	0x98
+	.byte	0x9b
 	.long	0x49
 	.byte	0x2
 	.byte	0x23
@@ -2815,17 +2815,17 @@ ee:
 	.uleb128 0x3
 	.long	.LASF33
 	.byte	0x5
-	.byte	0x99
+	.byte	0x9c
 	.long	0x1e6
 	.uleb128 0x7
 	.byte	0x3
 	.byte	0x5
-	.byte	0xc3
+	.byte	0xc7
 	.long	0x259
 	.uleb128 0x8
 	.long	.LASF34
 	.byte	0x5
-	.byte	0xc4
+	.byte	0xc8
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2833,7 +2833,7 @@ ee:
 	.uleb128 0x8
 	.long	.LASF35
 	.byte	0x5
-	.byte	0xc5
+	.byte	0xc9
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2841,7 +2841,7 @@ ee:
 	.uleb128 0x8
 	.long	.LASF36
 	.byte	0x5
-	.byte	0xc6
+	.byte	0xca
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2850,7 +2850,7 @@ ee:
 	.uleb128 0x3
 	.long	.LASF37
 	.byte	0x5
-	.byte	0xc7
+	.byte	0xcb
 	.long	0x226
 	.uleb128 0x9
 	.byte	0x2
@@ -6365,7 +6365,7 @@ ee:
 	.uleb128 0x29
 	.long	.LASF126
 	.byte	0x7
-	.byte	0x5c
+	.byte	0x5f
 	.long	0x1b0c
 	.byte	0x1
 	.byte	0x1
@@ -6374,56 +6374,56 @@ ee:
 	.uleb128 0x29
 	.long	.LASF41
 	.byte	0x5
-	.byte	0x48
+	.byte	0x4b
 	.long	0x45a
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x29
 	.long	.LASF44
 	.byte	0x5
-	.byte	0x7a
+	.byte	0x7d
 	.long	0x470
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x29
 	.long	.LASF68
 	.byte	0x5
-	.byte	0x81
+	.byte	0x84
 	.long	0x16d
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x29
 	.long	.LASF47
 	.byte	0x5
-	.byte	0x89
+	.byte	0x8c
 	.long	0x486
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x29
 	.long	.LASF59
 	.byte	0x5
-	.byte	0x93
+	.byte	0x96
 	.long	0x496
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x29
 	.long	.LASF127
 	.byte	0x5
-	.byte	0x95
+	.byte	0x98
 	.long	0x30
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x29
 	.long	.LASF62
 	.byte	0x5
-	.byte	0x9a
+	.byte	0x9d
 	.long	0x4a6
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x29
 	.long	.LASF128
 	.byte	0x5
-	.byte	0xc8
+	.byte	0xcc
 	.long	0x259
 	.byte	0x1
 	.byte	0x1
@@ -9400,14 +9400,14 @@ ee:
 	.string	"charModInst"
 .LASF26:
 	.string	"sw_channel"
+.LASF126:
+	.string	"serUSB_Active"
 .LASF60:
 	.string	"reg_crc"
 .LASF141:
 	.string	"GNU C99 5.4.0 -mn-flash=4 -mno-skip-bug -mrelax -mmcu=avr6 -g2 -Og -std=gnu99 -funsigned-char -funsigned-bitfields -ffunction-sections -fdata-sections -fpack-struct -fshort-enums"
 .LASF19:
 	.string	"noteRange"
-.LASF126:
-	.string	"serusb_Active"
 .LASF5:
 	.string	"long int"
 .LASF62:
