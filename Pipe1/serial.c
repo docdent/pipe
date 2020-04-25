@@ -39,7 +39,7 @@ volatile uint8_t* serUSBRxOutIndex;
 volatile uint8_t* serUSBTxOutIndex;
 volatile uint8_t* serUSBTxInIndex;
 volatile uint8_t serUSBOvflFlag;
-volatile uint8_t serUSB_Active;
+volatile uint8_t serUSB_Active; // true: send various log infos to usb
 
 uint8_t serUSBRxBuffer[SER_USB_RX_BUFFER_SIZE];
 uint8_t serUSBTxBuffer[SER_USB_TX_BUFFER_SIZE];
@@ -58,12 +58,14 @@ uint8_t serESPMidiTmp[SER_ESP_MIDTEMPBUFFER_SIZE];
 
 //************************************* M I D I *****************************************
 
+// uses TxD1, RxD1
+
 void init_Serial1MIDI() {
 	// MIDI_SERIAL_DDR = (MIDI_SERIAL_DDR & (0xFF ^ (1 << MIDI_SERIAL_RX_PIN))) | (1 << MIDI_SERIAL_TX_PIN); // Rx Input (0) Tx Output (1)
 	UBRR1H = (MIDI_BAUDRATE >> 8);                      // shift the register right by 8 bits
 	UBRR1L = MIDI_BAUDRATE;                           // set baud rate
 	UCSR1B|= (1 << TXEN1) | (1 << RXEN1) | (1 << RXCIE1) ;                // enable receiver and transmitter and (only) rec. interrupt
-	UCSR1C|= (1 << UCSZ10) | (1 << UCSZ11);
+	UCSR1C|= (1 << UCSZ10) | (1 << UCSZ11);		// 8bit, 1 Stopbit, 
 	midiRxInIndex = 0;
 	midiRxOutIndex = 0;
 	midiTxInIndex = 0;
@@ -92,9 +94,10 @@ void serial1MIDISend(uint8_t data){
 	TIMER_SET(TIMER_TX_ACTIVESENSE,TIMER_TX_ACTIVESENSE_MS) // as we sent midi data here, active sense timer can be reset
 	UCSR1B &= ~(1 << UDRIE1);	// Interrupt abschalten für "Senderegister leer", damit Sendewarteschlange bearbeitet werden kann
 	serial0USB_logMIDIout(data); // log sent data byte to USB if selected
-	midiTxBuffer[midiTxInIndex] = data;
-	midiTxInIndex = (midiTxInIndex+1) & MIDI_TX_BUFFER_MASK;
-	if (midiTxInIndex == midiTxOutIndex){
+	midiTxBuffer[midiTxInIndex] = data; 
+	uint8_t newIndex = (midiTxInIndex+1) & MIDI_TX_BUFFER_MASK; // V 0.69 do not update midiTxInIndex on overflow
+	if (newIndex == midiTxOutIndex){
+		// overflow
 		uint8_t ovflCount = midiTxOvflCount;
 		if (ovflCount > 0) {
 			// already overflow
@@ -106,6 +109,9 @@ void serial1MIDISend(uint8_t data){
 			// new overflow
 			midiTxOvflCount = 1;
 		}
+	} else {
+		// no overflow
+		midiTxInIndex = newIndex;
 	}
 	UCSR1B |= (1 << UDRIE1); // Interrupt einschalten für "Senderegister leer"
 }
@@ -127,8 +133,8 @@ ISR(USART1_RX_vect) {
 	received_byte = UDR1;
 	// ggf. Activesense löschen (wird nicht weitergeleitet), ggf. im Menü konfigurierbar machen
 	midiRxBuffer[midiRxInIndex] =  received_byte; // Fetch the received byte value
-	midiRxInIndex = (midiRxInIndex+1) & MIDI_RX_BUFFER_MASK;
-	if (midiRxInIndex == midiRxOutIndex) {
+	uint8_t newIndex  = (midiRxInIndex+1) & MIDI_RX_BUFFER_MASK;
+	if (newIndex == midiRxOutIndex) {
 		// overflow
 		uint8_t ovflCount = midiRxOvflCount; // temp var for better performance of volatile
 		if (ovflCount > 0) {
@@ -141,6 +147,9 @@ ISR(USART1_RX_vect) {
 			// overflow is new
 			midiRxOvflCount = 1;
 		}
+	} else {
+		// no overflow
+		midiRxInIndex = newIndex;
 	}
 	midiRxBytesCount++;
 }
@@ -341,6 +350,8 @@ ISR(USART0_UDRE_vect) {
 }
 
 //================================= S E R I A L _ E S P ===========================
+
+// TxD3, RxD3
 
 void init_Serial3SerESP(){
 	UBRR3H = (SER_ESP_BAUDRATE>>8);                      // shift the register right by 8 bits

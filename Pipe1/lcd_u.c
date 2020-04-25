@@ -39,6 +39,9 @@ uint8_t lcd_buffer[LCD_LINE_COUNT*LCD_LINE_LEN]; // save written chars for outpu
 
 void lcd_init(void)
 {
+	// V 0.69 debug pin
+	uint8_t debugSave = DEBUG_GET_OUT;
+	DEBUG_OUT_LCD
 	// configure the microprocessor pins for the data lines
 	LCD_D7_DDR |= (1<<LCD_D7_BIT);                  // 4 data lines - output
 	LCD_D6_DDR |= (1<<LCD_D6_BIT);
@@ -96,6 +99,7 @@ void lcd_init(void)
 	//  has been left in the OFF condition.  This is a good time to turn the display back ON.
 	// Display On/Off Control instruction
     lcd_write_command(LCD_DISPLAYON);         // turn the display ON
+	DEBUG_SET_OUT(debugSave)
 }
 
 /*...........................................................................
@@ -108,11 +112,14 @@ void lcd_init(void)
 
 void lcd_write_character(uint8_t data)
 {
+	uint8_t debugSave = DEBUG_GET_OUT;
+	DEBUG_OUT_LCD
     LCD_RS_PORT |= (1<<LCD_RS_BIT);                 // select the Data Register (RS high)
     LCD_E_PORT &= ~(1<<LCD_E_BIT);                  // make sure E is initially low
     lcd_write_nibble(data);                           // write the upper 4-bits of the data
     lcd_write_nibble(data << 4);                      // write the lower 4-bits of the data
 	_delay_us(LCD_WAIT_CMD);
+	DEBUG_SET_OUT(debugSave)
 }
 
 /*...........................................................................
@@ -124,6 +131,8 @@ void lcd_write_character(uint8_t data)
 */
 void lcd_write_command(uint8_t data)
 {
+	uint8_t debugSave = DEBUG_GET_OUT;
+	DEBUG_OUT_LCD
     LCD_RS_PORT &= ~(1<<LCD_RS_BIT);                // select the Instruction Register (RS low)
     LCD_E_PORT &= ~(1<<LCD_E_BIT);                  // make sure E is initially low
     lcd_write_nibble(data);                    // write the upper 4-bits of the data
@@ -133,6 +142,7 @@ void lcd_write_command(uint8_t data)
 	} else {
 		_delay_us(LCD_WAIT_CMD);
 	}
+	DEBUG_SET_OUT(debugSave)
 }
 
 /*...........................................................................

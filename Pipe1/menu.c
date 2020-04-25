@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.67";
+const char sw_version [] PROGMEM = "V0.69";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -34,7 +34,7 @@ uint8_t menuOnEnterUSBprotokoll(uint8_t arg);
 uint8_t menuOnExitUSBactive(uint8_t arg);
 uint8_t menuOnEnterUSBsendHW(uint8_t arg);
 const __flash Menu_t menu_USBser[] =
-{{MENU_T_VARONOFF | MENU_T_LEFTBOUND,0,"Active",NULL,{(uint8_t *) &(serUSB_Active)},NULL,menuOnExitUSBactive},
+{{MENU_T_VARONOFF | MENU_T_LEFTBOUND,0,"EventLog",NULL,{(uint8_t *) &(serUSB_Active)},NULL,menuOnExitUSBactive}, // V0.68 clarify meaning of this function
 {MENU_T_MENU,0,"SendLog",NULL,{NULL},menuOnEnterUSBprotokoll,NULL},
 {MENU_T_MENU | MENU_T_RIGHTBOUND,0,"SndHWCfg",NULL,{NULL},menuOnEnterUSBsendHW,NULL}};
 
@@ -228,7 +228,7 @@ const __flash Menu_t menu_midi[] =
 	{MENU_T_VARMIDICHAN,MENU_FLAG_ALLOWINVALD,"Thru-Out",NULL,{&midiThrough.OutChannel},NULL,menuOnExitMidiThrough},
 	{MENU_T_VARONOFF,0,"Accept PC",NULL,{&(midi_Setting.AcceptProgChange)},NULL,menuOnExitMidiActiveSense},
 	{MENU_T_VARONOFF,0,"Act.Sense",NULL,{&(midi_Setting.TxActivceSense)},NULL,menuOnExitMidiActiveSense},
-	{MENU_T_VARONOFF | MENU_T_RIGHTBOUND,0,"Vel04Off",NULL,{&(midi_Setting.VelZero4Off)},NULL,menuOnExitMidiActiveSense}};
+	{MENU_T_VARONOFF | MENU_T_RIGHTBOUND,0,"VelZ4Off",NULL,{&(midi_Setting.VelZero4Off)},NULL,menuOnExitMidiActiveSense}};
 
 // --- MAIN --- MANUAL --- KOPPLER ---
 uint8_t menuOnExitCoupler(uint8_t arg);
@@ -1179,6 +1179,10 @@ const char usbHWempty [] PROGMEM = "empty";
 const char usbHWmodule [] PROGMEM = "Module:";
 const char usbHWBits [] PROGMEM = ", Bits:";
 const char usbHWmidichanSW [] PROGMEM = "direct MIDI-Out(int) for manual: ";
+const char usbHWmidiIn [] PROGMEM = "Midi-In:";
+const char usbHWmidiOut [] PROGMEM = "Midi-Out:";
+const char usbHWmidiThru [] PROGMEM = "Midi-Thru: ";
+const char usbHWnone [] PROGMEM = "none";
 
 uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 	(void) arg;
@@ -1285,6 +1289,65 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 		}
 		serial0SER_USB_sendCRLF();
 	}
+	// MIDI
+	serial0SER_USB_sendCRLF();
+ 	serial0SER_USB_sendStringP(usbHWmidiIn);
+	serial0SER_USB_sendCRLF();
+	uint8_t anyMidiInAssigned = FALSE;
+	for (uint8_t midiChan = MIDI_CHANNEL_1; midiChan <= MIDI_CHANNEL_MAX; midiChan++){
+		for (uint8_t section = 0; section < MIDI_SPLIT_COUNT; section++){
+			if (midiInMap[midiChan][section].manual != MANUAL_NONE) {
+				anyMidiInAssigned = TRUE; 	// midichanel is assigned to a manual
+				buffer = string_Buf;
+				buffer = putChar_MidiChan(midiChan,buffer); // print MidiChannel 
+				*buffer++ = '(';
+				buffer = putChar_Note(midiInMap[midiChan][section].midiNote, buffer);
+				*buffer++ = '-';
+				buffer = putChar_Note(midiInMap[midiChan][section].midiNote + midiInMap[midiChan][section].noteRange, buffer);
+				*buffer++ = ')';
+				*buffer++ = ' ';
+				*buffer++ = '>';
+				buffer = putChar_Manual(midiInMap[midiChan][section].manual, buffer);
+				*buffer++ = '(';
+				buffer = putChar_Note(midiInMap[midiChan][section].manualNote, buffer);
+				*buffer++ = ')';
+				*buffer++= '\0';
+				serial0SER_USB_sendString(string_Buf);
+				serial0SER_USB_sendCRLF();
+			}
+		}
+	}
+	if (anyMidiInAssigned == FALSE){
+		buffer = string_Buf;
+		serial0SER_USB_sendStringP(usbHWnone);
+		serial0SER_USB_sendCRLF();
+	}
+	serial0SER_USB_sendCRLF();
+	serial0SER_USB_sendStringP(usbHWmidiOut);
+	serial0SER_USB_sendCRLF();
+	for (uint8_t manual = 0; manual < MANUAL_COUNT; manual++){
+		buffer = string_Buf;
+		buffer = putChar_Manual(manual, buffer);
+		*buffer++ = ':';
+		if (midiOutMap[manual].hw_channel != MIDI_CHANNEL_NONE) {
+			buffer = putChar_MidiChan(midiOutMap[manual].hw_channel, buffer);
+		} else {
+			*buffer++ = '-';
+		}
+		*buffer++= '\0';
+		serial0SER_USB_sendString(string_Buf);
+		serial0SER_USB_sendCRLF();
+	}
+	serial0SER_USB_sendCRLF();
+	serial0SER_USB_sendStringP(usbHWmidiThru);
+	buffer = string_Buf;
+	buffer = putChar_MidiChan(midiThrough.InChannel,buffer);
+	*buffer++= '>';
+	buffer = putChar_MidiChan(midiThrough.OutChannel,buffer);
+	*buffer++= '\0';
+	serial0SER_USB_sendString(string_Buf);
+	serial0SER_USB_sendCRLF();
+	
 	return 0;
 }
 

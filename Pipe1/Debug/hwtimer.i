@@ -463,7 +463,7 @@ extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
 # 101 ".././utils.h"
-extern char string_Buf[40];
+extern char string_Buf[64];
 
 extern const char cr_lf [] 
 # 103 ".././utils.h" 3
@@ -865,7 +865,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 118 ".././Midi.h"
+# 120 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -972,7 +972,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 240 ".././Midi.h"
+# 242 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -2057,12 +2057,7 @@ void init_PipeModules(){
 (*(volatile uint8_t *)((0x14) + 0x20)) 
 # 187 ".././hwtimer.c"
 |= (1 << 1);
-
-
- if ((pipe_ModuleTested ^ (pipe_Module.AssnWrite | pipe_Module.AssnRead)) != 0) {
-
-  log_putError(2,0,pipe_Module.AssnRead<<8 | pipe_ModuleTested);
- }
+# 197 ".././hwtimer.c"
 }
 
 
@@ -2075,37 +2070,37 @@ uint32_t test_PipeModule(uint8_t moduleNr){
  uint8_t modulePattern = (1 << moduleNr);
  pipeProcessing = 0x80;
  
-# 205 ".././hwtimer.c" 3
+# 208 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x0B) + 0x20)) 
-# 205 ".././hwtimer.c"
+# 208 ".././hwtimer.c"
 &= ~(1 << 7);
 
  
-# 207 ".././hwtimer.c" 3
+# 210 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 207 ".././hwtimer.c"
+# 210 ".././hwtimer.c"
               |= ((1 << 0) | (1 << 1) | (1 << 2));
 
  for (uint8_t byteCount = 0; byteCount < 32 / 8; byteCount++) {
   uint8_t testByte = 0xA5;
   for (uint8_t bitNr = 0; bitNr < 8; bitNr++){
    
-# 212 ".././hwtimer.c" 3
+# 215 ".././hwtimer.c" 3
   (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 212 ".././hwtimer.c"
+# 215 ".././hwtimer.c"
                = ((testByte & 0x01) == 0) ? ~ modulePattern : 0xFF;
    testByte >>= 1;
    _delay_us(0.5);
    
-# 215 ".././hwtimer.c" 3
+# 218 ".././hwtimer.c" 3
   (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 215 ".././hwtimer.c"
+# 218 ".././hwtimer.c"
   &= ~(1 << 0);
    _delay_us(0.5);
    
-# 217 ".././hwtimer.c" 3
+# 220 ".././hwtimer.c" 3
   (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 217 ".././hwtimer.c"
+# 220 ".././hwtimer.c"
   |= (1 << 0);
   }
  }
@@ -2113,15 +2108,15 @@ uint32_t test_PipeModule(uint8_t moduleNr){
  for (uint8_t i = 0; i < 32; i++) {
   _delay_us(0.5);
   
-# 223 ".././hwtimer.c" 3
+# 226 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 223 ".././hwtimer.c"
+# 226 ".././hwtimer.c"
  &= ~(1 << 0);
   _delay_us(0.5);
   
-# 225 ".././hwtimer.c" 3
+# 228 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 225 ".././hwtimer.c"
+# 228 ".././hwtimer.c"
  |= (1 << 0);
  }
 
@@ -2131,30 +2126,30 @@ uint32_t test_PipeModule(uint8_t moduleNr){
   result <<= 1;
   _delay_us(0.5);
   
-# 233 ".././hwtimer.c" 3
+# 236 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 233 ".././hwtimer.c"
+# 236 ".././hwtimer.c"
  &= ~(1 << 0);
   if ((
-# 234 ".././hwtimer.c" 3
+# 237 ".././hwtimer.c" 3
       (*(volatile uint8_t *)((0X00) + 0x20)) 
-# 234 ".././hwtimer.c"
+# 237 ".././hwtimer.c"
                  & modulePattern) != 0) {
    result |= 0x01;
   }
   _delay_us(0.5);
   
-# 238 ".././hwtimer.c" 3
+# 241 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 238 ".././hwtimer.c"
+# 241 ".././hwtimer.c"
  |= (1 << 0);
  }
 
  pipeProcessing = 0x00;
  
-# 242 ".././hwtimer.c" 3
+# 245 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x0B) + 0x20)) 
-# 242 ".././hwtimer.c"
+# 245 ".././hwtimer.c"
 |= (1 << 7);
  return result;
 }
@@ -2207,9 +2202,9 @@ void module_StartPowerOn(){
 
  pipe_PowerStatus = 0x01;
  
-# 293 ".././hwtimer.c" 3
+# 296 ".././hwtimer.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 293 ".././hwtimer.c"
+# 296 ".././hwtimer.c"
 {swTimer[1].counter = 800 / 20; swTimer[1].prescaler = (800 % 20) / 4;};
 }
 
@@ -2220,22 +2215,22 @@ void module_PowerControl(){
   if (module_TestAllInputs() == 0){
 
    
-# 302 ".././hwtimer.c" 3
+# 305 ".././hwtimer.c" 3
   (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 302 ".././hwtimer.c"
+# 305 ".././hwtimer.c"
   |= 1 << 6;
    pipe_PowerStatus = 0x12;
-   
-# 304 ".././hwtimer.c" 3
-  for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 304 ".././hwtimer.c"
-  {swTimer[1].counter = 20 / 20; swTimer[1].prescaler = (20 % 20) / 4;};
-  } else {
-
    
 # 307 ".././hwtimer.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
 # 307 ".././hwtimer.c"
+  {swTimer[1].counter = 20 / 20; swTimer[1].prescaler = (20 % 20) / 4;};
+  } else {
+
+   
+# 310 ".././hwtimer.c" 3
+  for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
+# 310 ".././hwtimer.c"
   {swTimer[1].counter = 250 / 20; swTimer[1].prescaler = (250 % 20) / 4;};
   }
  } else if (pipe_PowerStatus == 0x12) {
@@ -2247,9 +2242,9 @@ void module_PowerControl(){
 
    log_putError(5,0,testResult);
    
-# 317 ".././hwtimer.c" 3
+# 320 ".././hwtimer.c" 3
   (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 317 ".././hwtimer.c"
+# 320 ".././hwtimer.c"
   &= ~(1 << 6);
    pipe_PowerStatus = 0x80;
   }
@@ -2313,22 +2308,22 @@ static inline void timerTimers(){
 
 static inline void timerADC(){
  if ((adcNr < 1) && ((
-# 379 ".././hwtimer.c" 3
+# 382 ".././hwtimer.c" 3
                                  (*(volatile uint8_t *)(0x7A)) 
-# 379 ".././hwtimer.c"
+# 382 ".././hwtimer.c"
                                         & (1 << 
-# 379 ".././hwtimer.c" 3
+# 382 ".././hwtimer.c" 3
                                                 6
-# 379 ".././hwtimer.c"
+# 382 ".././hwtimer.c"
                                                     )) == 0)){
 
 
   uint8_t oldADC;
   oldADC = adcKeys[adcNr].ADCval;
   uint8_t newADC = 
-# 384 ".././hwtimer.c" 3
+# 387 ".././hwtimer.c" 3
                   (*(volatile uint8_t *)(0x79))
-# 384 ".././hwtimer.c"
+# 387 ".././hwtimer.c"
                       ;
   adcKeys[adcNr].ADCval = newADC;
   if (absDifference(oldADC,newADC) < 4) {
@@ -2423,35 +2418,35 @@ static inline void timerADC(){
   newMux = 0x1F;
  }
  
-# 477 ".././hwtimer.c" 3
+# 480 ".././hwtimer.c" 3
 (*(volatile uint8_t *)(0x7C)) 
-# 477 ".././hwtimer.c"
+# 480 ".././hwtimer.c"
       = ((1 << 
-# 477 ".././hwtimer.c" 3
+# 480 ".././hwtimer.c" 3
         6
-# 477 ".././hwtimer.c"
+# 480 ".././hwtimer.c"
         ) | (1 << 
-# 477 ".././hwtimer.c" 3
+# 480 ".././hwtimer.c" 3
         5
-# 477 ".././hwtimer.c"
+# 480 ".././hwtimer.c"
         )) | (newMux & 0x1F);
  
-# 478 ".././hwtimer.c" 3
+# 481 ".././hwtimer.c" 3
 (*(volatile uint8_t *)(0x7B)) 
-# 478 ".././hwtimer.c"
+# 481 ".././hwtimer.c"
        = (
-# 478 ".././hwtimer.c" 3
+# 481 ".././hwtimer.c" 3
           (*(volatile uint8_t *)(0x7B)) 
-# 478 ".././hwtimer.c"
+# 481 ".././hwtimer.c"
                  & ~0x20) | ((newMux & 0x20) >> 2);
  
-# 479 ".././hwtimer.c" 3
+# 482 ".././hwtimer.c" 3
 (*(volatile uint8_t *)(0x7A)) 
-# 479 ".././hwtimer.c"
+# 482 ".././hwtimer.c"
        |= (1 << 
-# 479 ".././hwtimer.c" 3
+# 482 ".././hwtimer.c" 3
                 6
-# 479 ".././hwtimer.c"
+# 482 ".././hwtimer.c"
                     );
 }
 
@@ -2476,7 +2471,7 @@ static inline void timerPipeProcess(){
  for (uint8_t shiftBitNr = 0; shiftBitNr < 32; shiftBitNr++) {
 
   PipeMessage_t myMessage;
-# 518 ".././hwtimer.c"
+# 521 ".././hwtimer.c"
   uint8_t newOnState = 0xFF;
   uint8_t newOffState = 0;
   uint8_t* pInByte = &(curPipe->pipeInM16);
@@ -2516,94 +2511,94 @@ static inline void timerPipeProcess(){
 static inline void timerPipeIO(){
  Pipe_t *curPipe;
  
-# 556 ".././hwtimer.c" 3
+# 559 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 556 ".././hwtimer.c"
+# 559 ".././hwtimer.c"
               |= ((1 << 0) | (1 << 1) | (1 << 2));
  
-# 557 ".././hwtimer.c" 3
+# 560 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 557 ".././hwtimer.c"
+# 560 ".././hwtimer.c"
 &= ~(1 << 2);
  curPipe = &pipe[32 -1];
  uint8_t local_pipe_ModuleAssnWrite = ~pipe_Module.AssnWrite;
  uint8_t i = 32;
  _delay_us(0.5);
  
-# 562 ".././hwtimer.c" 3
+# 565 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 562 ".././hwtimer.c"
+# 565 ".././hwtimer.c"
 |= (1 << 2);
  do {
   curPipe->pipeInM16 = curPipe->pipeInM12;
   curPipe->pipeInM12 = curPipe->pipeInM8;
   
-# 566 ".././hwtimer.c" 3
+# 569 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 566 ".././hwtimer.c"
+# 569 ".././hwtimer.c"
  |= (1 << 0);
   
-# 567 ".././hwtimer.c" 3
+# 570 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 567 ".././hwtimer.c"
+# 570 ".././hwtimer.c"
               = curPipe->pipeOut | local_pipe_ModuleAssnWrite;
   curPipe->pipeInM8 = curPipe->pipeInM4;
   curPipe->pipeInM4 = curPipe->pipeIn;
   curPipe->pipeIn = 
-# 570 ".././hwtimer.c" 3
+# 573 ".././hwtimer.c" 3
                    (*(volatile uint8_t *)((0X00) + 0x20))
-# 570 ".././hwtimer.c"
+# 573 ".././hwtimer.c"
                              ;
   
-# 571 ".././hwtimer.c" 3
+# 574 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 571 ".././hwtimer.c"
+# 574 ".././hwtimer.c"
  &= ~(1 << 0);
   curPipe--;
  } while (--i > 0);
  asm("nop");
  asm("nop");
  
-# 576 ".././hwtimer.c" 3
+# 579 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 576 ".././hwtimer.c"
+# 579 ".././hwtimer.c"
 |= (1 << 0);
  
-# 577 ".././hwtimer.c" 3
+# 580 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 577 ".././hwtimer.c"
+# 580 ".././hwtimer.c"
 &= ~(1 << 1);
  pipeProcessing |= 0x02;
  
-# 579 ".././hwtimer.c" 3
+# 582 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 579 ".././hwtimer.c"
+# 582 ".././hwtimer.c"
              = 0;
  
-# 580 ".././hwtimer.c" 3
+# 583 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x0B) + 0x20)) 
-# 580 ".././hwtimer.c"
+# 583 ".././hwtimer.c"
 |= (1 << 7);
  
-# 581 ".././hwtimer.c" 3
+# 584 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 581 ".././hwtimer.c"
+# 584 ".././hwtimer.c"
 |= (1 << 1);
 }
 
 
 
 
-# 586 ".././hwtimer.c" 3
+# 589 ".././hwtimer.c" 3
 void __vector_21 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_21 (void)
 
-# 587 ".././hwtimer.c"
+# 590 ".././hwtimer.c"
 {
 
  
-# 589 ".././hwtimer.c" 3
+# 592 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 589 ".././hwtimer.c"
+# 592 ".././hwtimer.c"
          |= (1 << 7);
 
  switch (++msecCtr & 0x03) {
@@ -2620,9 +2615,9 @@ void __vector_21 (void) __attribute__ ((signal,used, externally_visible)) ; void
    break;
  }
  
-# 604 ".././hwtimer.c" 3
+# 607 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 604 ".././hwtimer.c"
+# 607 ".././hwtimer.c"
          &= ~(1 << 7);
 
 }

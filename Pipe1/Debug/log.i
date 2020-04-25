@@ -613,7 +613,7 @@ extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
 # 101 ".././utils.h"
-extern char string_Buf[40];
+extern char string_Buf[64];
 
 extern const char cr_lf [] 
 # 103 ".././utils.h" 3
@@ -787,7 +787,7 @@ extern volatile uint8_t midiRxInIndex;
 extern volatile uint8_t midiRxOutIndex;
 extern volatile uint8_t midiTxOutIndex;
 extern volatile uint8_t midiTxInIndex;
-extern uint8_t midiRxBuffer[32];
+extern uint8_t midiRxBuffer[256];
 extern uint8_t midiTxBuffer[256];
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
@@ -795,7 +795,7 @@ extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
 
 extern volatile uint8_t midiTxLastCmd;
-# 168 ".././serial.h"
+# 170 ".././serial.h"
 extern uint8_t midi_ExtraBuffer[3];
 # 13 ".././log.c" 2
 

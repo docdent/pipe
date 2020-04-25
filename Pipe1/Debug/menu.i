@@ -461,7 +461,7 @@ extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
 # 101 ".././utils.h"
-extern char string_Buf[40];
+extern char string_Buf[64];
 
 extern const char cr_lf [] 
 # 103 ".././utils.h" 3
@@ -680,7 +680,7 @@ extern volatile uint8_t midiRxInIndex;
 extern volatile uint8_t midiRxOutIndex;
 extern volatile uint8_t midiTxOutIndex;
 extern volatile uint8_t midiTxInIndex;
-extern uint8_t midiRxBuffer[32];
+extern uint8_t midiRxBuffer[256];
 extern uint8_t midiTxBuffer[256];
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
@@ -688,7 +688,7 @@ extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
 
 extern volatile uint8_t midiTxLastCmd;
-# 168 ".././serial.h"
+# 170 ".././serial.h"
 extern uint8_t midi_ExtraBuffer[3];
 # 17 ".././menu.c" 2
 # 1 ".././menu.h" 1
@@ -740,7 +740,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 118 ".././Midi.h"
+# 120 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -847,7 +847,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 240 ".././Midi.h"
+# 242 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1479,7 +1479,7 @@ const char sw_version []
 # 24 ".././menu.c" 3
                         __attribute__((__progmem__)) 
 # 24 ".././menu.c"
-                                = "V0.67";
+                                = "V0.69";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -1492,15 +1492,15 @@ uint8_t menuOnEnterUSBprotokoll(uint8_t arg);
 uint8_t menuOnExitUSBactive(uint8_t arg);
 uint8_t menuOnEnterUSBsendHW(uint8_t arg);
 const __flash Menu_t menu_USBser[] =
-{{9 | 0x80,0,"Active",
+{{9 | 0x80,0,"EventLog",
 # 37 ".././menu.c" 3 4
-                                               ((void *)0)
+                                                 ((void *)0)
 # 37 ".././menu.c"
-                                                   ,{(uint8_t *) &(serUSB_Active)},
+                                                     ,{(uint8_t *) &(serUSB_Active)},
 # 37 ".././menu.c" 3 4
-                                                                                   ((void *)0)
+                                                                                     ((void *)0)
 # 37 ".././menu.c"
-                                                                                       ,menuOnExitUSBactive},
+                                                                                         ,menuOnExitUSBactive},
 {1,0,"SendLog",
 # 38 ".././menu.c" 3 4
                         ((void *)0)
@@ -2466,7 +2466,7 @@ const __flash Menu_t menu_midi[] =
                                                                      ((void *)0)
 # 230 ".././menu.c"
                                                                          ,menuOnExitMidiActiveSense},
- {9 | 0xC0,0,"Vel04Off",
+ {9 | 0xC0,0,"VelZ4Off",
 # 231 ".././menu.c" 3 4
                                                   ((void *)0)
 # 231 ".././menu.c"
@@ -3711,7 +3711,7 @@ uint8_t menuOnEnterStatusMidiIn(uint8_t arg){
  pByte--;
  while (byteCount > 0){
   if (pByte < &(midiRxBuffer[0])){
-   pByte = &(midiRxBuffer[32 -1]);
+   pByte = &(midiRxBuffer[256 -1]);
   }
   lcd_hexout(*pByte--);
   if (--byteCount != 0) {
@@ -3977,6 +3977,26 @@ const char usbHWmidichanSW []
                              __attribute__((__progmem__)) 
 # 1181 ".././menu.c"
                                      = "direct MIDI-Out(int) for manual: ";
+const char usbHWmidiIn [] 
+# 1182 ".././menu.c" 3
+                         __attribute__((__progmem__)) 
+# 1182 ".././menu.c"
+                                 = "Midi-In:";
+const char usbHWmidiOut [] 
+# 1183 ".././menu.c" 3
+                          __attribute__((__progmem__)) 
+# 1183 ".././menu.c"
+                                  = "Midi-Out:";
+const char usbHWmidiThru [] 
+# 1184 ".././menu.c" 3
+                           __attribute__((__progmem__)) 
+# 1184 ".././menu.c"
+                                   = "Midi-Thru: ";
+const char usbHWnone [] 
+# 1185 ".././menu.c" 3
+                       __attribute__((__progmem__)) 
+# 1185 ".././menu.c"
+                               = "none";
 
 uint8_t menuOnEnterUSBsendHW(uint8_t arg){
  (void) arg;
@@ -4083,6 +4103,65 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
   }
   serial0SER_USB_sendCRLF();
  }
+
+ serial0SER_USB_sendCRLF();
+  serial0SER_USB_sendStringP(usbHWmidiIn);
+ serial0SER_USB_sendCRLF();
+ uint8_t anyMidiInAssigned = 0x00;
+ for (uint8_t midiChan = 0; midiChan <= 15; midiChan++){
+  for (uint8_t section = 0; section < 4; section++){
+   if (midiInMap[midiChan][section].manual != 0xFF) {
+    anyMidiInAssigned = 0xFF;
+    buffer = string_Buf;
+    buffer = putChar_MidiChan(midiChan,buffer);
+    *buffer++ = '(';
+    buffer = putChar_Note(midiInMap[midiChan][section].midiNote, buffer);
+    *buffer++ = '-';
+    buffer = putChar_Note(midiInMap[midiChan][section].midiNote + midiInMap[midiChan][section].noteRange, buffer);
+    *buffer++ = ')';
+    *buffer++ = ' ';
+    *buffer++ = '>';
+    buffer = putChar_Manual(midiInMap[midiChan][section].manual, buffer);
+    *buffer++ = '(';
+    buffer = putChar_Note(midiInMap[midiChan][section].manualNote, buffer);
+    *buffer++ = ')';
+    *buffer++= '\0';
+    serial0SER_USB_sendString(string_Buf);
+    serial0SER_USB_sendCRLF();
+   }
+  }
+ }
+ if (anyMidiInAssigned == 0x00){
+  buffer = string_Buf;
+  serial0SER_USB_sendStringP(usbHWnone);
+  serial0SER_USB_sendCRLF();
+ }
+ serial0SER_USB_sendCRLF();
+ serial0SER_USB_sendStringP(usbHWmidiOut);
+ serial0SER_USB_sendCRLF();
+ for (uint8_t manual = 0; manual < 4; manual++){
+  buffer = string_Buf;
+  buffer = putChar_Manual(manual, buffer);
+  *buffer++ = ':';
+  if (midiOutMap[manual].hw_channel != 0xFF) {
+   buffer = putChar_MidiChan(midiOutMap[manual].hw_channel, buffer);
+  } else {
+   *buffer++ = '-';
+  }
+  *buffer++= '\0';
+  serial0SER_USB_sendString(string_Buf);
+  serial0SER_USB_sendCRLF();
+ }
+ serial0SER_USB_sendCRLF();
+ serial0SER_USB_sendStringP(usbHWmidiThru);
+ buffer = string_Buf;
+ buffer = putChar_MidiChan(midiThrough.InChannel,buffer);
+ *buffer++= '>';
+ buffer = putChar_MidiChan(midiThrough.OutChannel,buffer);
+ *buffer++= '\0';
+ serial0SER_USB_sendString(string_Buf);
+ serial0SER_USB_sendCRLF();
+
  return 0;
 }
 
@@ -4092,9 +4171,9 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 void menu_Init(const __flash Menu_t* newMenu, const __flash char* pTitle){
  menuStackIndex = 0;
  if (newMenu == 
-# 1296 ".././menu.c" 3 4
+# 1359 ".././menu.c" 3 4
                ((void *)0)
-# 1296 ".././menu.c"
+# 1359 ".././menu.c"
                    ){
   currentMenu = menu_main;
   pMenuTopTitle = initMenuText;
@@ -4343,7 +4422,7 @@ void nibbleToLCDstring(){
   lcdData[3] = 0;
   break;
  case 7:
-# 1568 ".././menu.c"
+# 1631 ".././menu.c"
    if (nibble[0] <= 2){
     lcdData[0] = '3'-nibble[0];
     lcdData[1] = '\0';
@@ -4830,9 +4909,9 @@ void menuCheckArrowDown(){
  if (menuType == 1) {
   softkeyDown();
  } else if (currentMenu->pVar != 
-# 2053 ".././menu.c" 3 4
+# 2116 ".././menu.c" 3 4
                                 ((void *)0)
-# 2053 ".././menu.c"
+# 2116 ".././menu.c"
                                     ){
 
   if (menuType == 9){
@@ -4859,9 +4938,9 @@ void menuItemChanged(){
  swTimer[7].counter = 0xFF;
  uint8_t menuType = currentMenu->menuType & 0x3F;
  if ((menuType > 1) && (currentMenu->pVar != 
-# 2078 ".././menu.c" 3 4
+# 2141 ".././menu.c" 3 4
                                                       ((void *)0)
-# 2078 ".././menu.c"
+# 2141 ".././menu.c"
                                                           )) {
 
   pNibbleInfo = &(nibbleInfo[(currentMenu->menuType & 0x3F) - 1]);
@@ -4903,9 +4982,9 @@ uint8_t menu_ProcessMessage(uint8_t message){
    menuCursorSetMenu();
   }
   if (((currentMenu->menuFlags & 0x20) != 0) && (currentMenu->pFunc != 
-# 2118 ".././menu.c" 3 4
+# 2181 ".././menu.c" 3 4
                                                                                            ((void *)0)
-# 2118 ".././menu.c"
+# 2181 ".././menu.c"
                                                                                                ) && (nibbleIndex != 0xFF)) {
 
 
@@ -4947,18 +5026,18 @@ uint8_t menu_ProcessMessage(uint8_t message){
     if ((currentMenu->menuFlags & 0x10) != 0) {
 
      menuVMenuSoftKey = 
-# 2158 ".././menu.c" 3 4
+# 2221 ".././menu.c" 3 4
                        ((void *)0)
-# 2158 ".././menu.c"
+# 2221 ".././menu.c"
                            ;
     }
     if (menuStackIndex > 0){
 
      currentMenu = menuStack[--menuStackIndex];
      if (currentMenu->pOnExitFunc != 
-# 2163 ".././menu.c" 3 4
+# 2226 ".././menu.c" 3 4
                                     ((void *)0)
-# 2163 ".././menu.c"
+# 2226 ".././menu.c"
                                         ){
 
       currentMenu->pOnExitFunc (0);
@@ -4984,17 +5063,17 @@ uint8_t menu_ProcessMessage(uint8_t message){
     if ((currentMenu->menuType & 0x3F) > 1) {
 
      if (currentMenu->pFunc != 
-# 2187 ".././menu.c" 3 4
+# 2250 ".././menu.c" 3 4
                               ((void *)0)
-# 2187 ".././menu.c"
+# 2250 ".././menu.c"
                                   ){
       currentMenu->pFunc(message);
       menuItemChanged();
      }
      if (((currentMenu->menuFlags & 0x08) == 0) && (currentMenu->pVar) != 
-# 2191 ".././menu.c" 3 4
+# 2254 ".././menu.c" 3 4
                                                                                        ((void *)0)
-# 2191 ".././menu.c"
+# 2254 ".././menu.c"
                                                                                            ){
       if ((currentMenu->menuType & 0x3F) == 9){
 
@@ -5007,9 +5086,9 @@ uint8_t menu_ProcessMessage(uint8_t message){
        menuCursorSetMenu();
 
        if (currentMenu->pOnExitFunc != 
-# 2202 ".././menu.c" 3 4
+# 2265 ".././menu.c" 3 4
                                       ((void *)0)
-# 2202 ".././menu.c"
+# 2265 ".././menu.c"
                                           ){
 
         currentMenu->pOnExitFunc (0);
@@ -5030,9 +5109,9 @@ uint8_t menu_ProcessMessage(uint8_t message){
 
        currentMenu = menuStack[--menuStackIndex];
        if (currentMenu->pOnExitFunc != 
-# 2221 ".././menu.c" 3 4
+# 2284 ".././menu.c" 3 4
                                       ((void *)0)
-# 2221 ".././menu.c"
+# 2284 ".././menu.c"
                                           ){
 
         currentMenu->pOnExitFunc (0);
@@ -5046,9 +5125,9 @@ uint8_t menu_ProcessMessage(uint8_t message){
      } else {
 
       if (currentMenu->pFunc != 
-# 2233 ".././menu.c" 3 4
+# 2296 ".././menu.c" 3 4
                                ((void *)0)
-# 2233 ".././menu.c"
+# 2296 ".././menu.c"
                                    ) {
 
        if ((currentMenu->menuFlags & 0x20) != 0) {
@@ -5071,17 +5150,17 @@ uint8_t menu_ProcessMessage(uint8_t message){
        }
       }
       if (currentMenu->pMenu != 
-# 2254 ".././menu.c" 3 4
+# 2317 ".././menu.c" 3 4
                                ((void *)0)
-# 2254 ".././menu.c"
+# 2317 ".././menu.c"
                                    ){
 
        if (menuStackIndex < 16) {
         menuStack[menuStackIndex++] = currentMenu;
         if (((currentMenu->menuFlags & 0x08) != 0) && (menuVMenuSoftKey != 
-# 2258 ".././menu.c" 3 4
+# 2321 ".././menu.c" 3 4
                                                                                                  ((void *)0)
-# 2258 ".././menu.c"
+# 2321 ".././menu.c"
                                                                                                      )) {
 
          currentMenu = menuVMenuSoftKey;
@@ -5147,9 +5226,9 @@ uint8_t menu_ProcessMessage(uint8_t message){
 
    nibbleToData();
    if (currentMenu->pVar != 
-# 2322 ".././menu.c" 3 4
+# 2385 ".././menu.c" 3 4
                            ((void *)0)
-# 2322 ".././menu.c"
+# 2385 ".././menu.c"
                                ){
     uint8_t* pData = (currentMenu->pVar) + (((currentMenu->menuFlags & 0x80) != 0) ? DataAdressOffset : 0);
     if ((currentMenu->menuType & 0x3F) == 11) {
@@ -5160,9 +5239,9 @@ uint8_t menu_ProcessMessage(uint8_t message){
    }
   case 6:
    if (currentMenu->pOnExitFunc != 
-# 2331 ".././menu.c" 3 4
+# 2394 ".././menu.c" 3 4
                                   ((void *)0)
-# 2331 ".././menu.c"
+# 2394 ".././menu.c"
                                       ){
     currentMenu->pOnExitFunc (message);
    }
@@ -5194,9 +5273,9 @@ uint8_t displayMenuMessage_P(const __flash char* pMessage){
  lcd_puts_P(pMessage);
  lcd_goto(saveCursor);
  
-# 2361 ".././menu.c" 3
+# 2424 ".././menu.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 2361 ".././menu.c"
+# 2424 ".././menu.c"
 {swTimer[7].counter = 2000 / 20; swTimer[7].prescaler = (2000 % 20) / 4;};;
  return cursorPosMessage;
 }
@@ -5230,9 +5309,9 @@ void menu_DisplayMainMessage_P(const __flash char* pMessage){
  lcd_blank(0x40 + 20 - lcd_cursorPos);
  lcd_goto(saveCursor);
  
-# 2393 ".././menu.c" 3
+# 2456 ".././menu.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 2393 ".././menu.c"
+# 2456 ".././menu.c"
 {swTimer[7].counter = 2000 / 20; swTimer[7].prescaler = (2000 % 20) / 4;};;
  displayMessageArea = 2;
 }
@@ -5246,9 +5325,9 @@ void menu_DisplayMainMessage(const char* pMessage){
  lcd_blank(0x40 + 20 - lcd_cursorPos);
  lcd_goto(saveCursor);
  
-# 2405 ".././menu.c" 3
+# 2468 ".././menu.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 2405 ".././menu.c"
+# 2468 ".././menu.c"
 {swTimer[7].counter = 2000 / 20; swTimer[7].prescaler = (2000 % 20) / 4;};;
  displayMessageArea = 2;
 }
@@ -5289,9 +5368,9 @@ void init_SoftKeys(){
   for (uint8_t i = 0; i<4; i++){
    soft_KeyMenuIndex[i] = 0;
    soft_KeyMenu[i].pSelMenu = 
-# 2444 ".././menu.c" 3 4
+# 2507 ".././menu.c" 3 4
                              ((void *)0)
-# 2444 ".././menu.c"
+# 2507 ".././menu.c"
                                  ;
   }
 
@@ -5304,9 +5383,9 @@ void init_SoftKeys(){
    soft_KeyMenu[i].pSelMenu = &menu_selFunc[soft_KeyMenuIndex[i]];
   } else {
    soft_KeyMenu[i].pSelMenu = 
-# 2455 ".././menu.c" 3 4
+# 2518 ".././menu.c" 3 4
                              ((void *)0)
-# 2455 ".././menu.c"
+# 2518 ".././menu.c"
                                  ;
    log_putError(1,7,(i+1) | 0x10);
   }
@@ -5316,17 +5395,17 @@ void init_SoftKeys(){
 void softKey_Set(const __flash Menu_t* pSelMenuSoftKey, uint8_t nrSoftKey){
  if (nrSoftKey < 4) {
   if ((pSelMenuSoftKey != 
-# 2463 ".././menu.c" 3 4
+# 2526 ".././menu.c" 3 4
                          ((void *)0)
-# 2463 ".././menu.c"
+# 2526 ".././menu.c"
                              ) && ((pSelMenuSoftKey->menuType & 0x3F) == 1) && ((pSelMenuSoftKey->menuFlags & 0x10) != 0)){
    soft_KeyMenu[nrSoftKey].pSelMenu = pSelMenuSoftKey;
    soft_KeyMenuIndex[nrSoftKey] = getSoftKeyIndex(pSelMenuSoftKey);
   } else {
    soft_KeyMenu[nrSoftKey].pSelMenu = 
-# 2467 ".././menu.c" 3 4
+# 2530 ".././menu.c" 3 4
                                      ((void *)0)
-# 2467 ".././menu.c"
+# 2530 ".././menu.c"
                                          ;
    soft_KeyMenuIndex[nrSoftKey] = 0;
   }
@@ -5336,21 +5415,21 @@ void softKey_Set(const __flash Menu_t* pSelMenuSoftKey, uint8_t nrSoftKey){
 void softKeys_toLCD(){
  for (uint8_t i = 0; i<4; i++){
   if ((soft_KeyMenu[i].pSelMenu == 
-# 2475 ".././menu.c" 3 4
+# 2538 ".././menu.c" 3 4
                                   ((void *)0)
-# 2475 ".././menu.c"
+# 2538 ".././menu.c"
                                       ) || (soft_KeyMenu[i].pSelMenu->pString == 
-# 2475 ".././menu.c" 3 4
+# 2538 ".././menu.c" 3 4
                                                                                  ((void *)0)
-# 2475 ".././menu.c"
+# 2538 ".././menu.c"
                                                                                      )){
    keylabel_clr(i);
   } else {
    keylabel_set(i,(soft_KeyMenu[i].pSelMenu->pString));
    if (soft_KeyMenu[i].pSelMenu->pFunc != 
-# 2479 ".././menu.c" 3 4
+# 2542 ".././menu.c" 3 4
                                          ((void *)0)
-# 2479 ".././menu.c"
+# 2542 ".././menu.c"
                                              ){
 
     keylabel_statcheck(i,soft_KeyMenu[i].pSelMenu->pFunc(0)== 0x81 ? 0xFF : 0x00);
@@ -5380,16 +5459,16 @@ uint8_t softKey_Execute(uint8_t nrSoftKey, uint8_t myMessage){
 
   const __flash Menu_t* pSoftKeySelMenu = soft_KeyMenu[nrSoftKey].pSelMenu;
   if (pSoftKeySelMenu != 
-# 2507 ".././menu.c" 3 4
+# 2570 ".././menu.c" 3 4
                         ((void *)0)
-# 2507 ".././menu.c"
+# 2570 ".././menu.c"
                             ){
 
    if (((pSoftKeySelMenu->menuType & 0x3F) == 1) && ((pSoftKeySelMenu->menuFlags & 0x10) != 0)){
     if (pSoftKeySelMenu->pFunc != 
-# 2510 ".././menu.c" 3 4
+# 2573 ".././menu.c" 3 4
                                  ((void *)0)
-# 2510 ".././menu.c"
+# 2573 ".././menu.c"
                                      ) {
 
      uint8_t softKeyFuncResult;
@@ -5405,9 +5484,9 @@ uint8_t softKey_Execute(uint8_t nrSoftKey, uint8_t myMessage){
 
     const __flash Menu_t* pSoftKeyExeMenu = pSoftKeySelMenu->pMenu;
     if (pSoftKeyExeMenu != 
-# 2524 ".././menu.c" 3 4
+# 2587 ".././menu.c" 3 4
                           ((void *)0)
-# 2524 ".././menu.c"
+# 2587 ".././menu.c"
                               ) {
 
      menu_Init(pSoftKeyExeMenu, pSoftKeySelMenu->text);

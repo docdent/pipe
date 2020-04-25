@@ -187,10 +187,13 @@ void init_PipeModules(){
 	PIPE_LATCH2PIPE_H
 	// conclusion: which module is working?
 	// report error if working modules do not match modules assigend  by user
+	#ifndef IGNORE_MODULE_TESTRESULT
+	// not when debugging
 	if ((pipe_ModuleTested ^ (pipe_Module.AssnWrite | pipe_Module.AssnRead)) != 0) {
 		// Modules that are not working
 		log_putError(LOG_CAT_MODULES,LOG_CATMODULES_NOTWORKING,pipe_Module.AssnRead<<8 | pipe_ModuleTested);
 	}
+	#endif
 }
 
 //------------------------------------------ TEST MODULE -----------------------------

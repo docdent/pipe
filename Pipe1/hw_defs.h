@@ -55,7 +55,7 @@
 // F0
 
 #undef LCD_KBD_SHIELD // use arduino kbd Shield (or 3d printer lcd/kbd shield if undef)
-#ifdef LCD_KBD_SHIELD // 8bit ADC-Values for Arduino LCD KBD Shield and key functions (in hw_defs.h)
+#ifdef LCD_KBD_SHIELD // 8bit ADC-Values for Arduino LCD KBD Shield and key functions (in hw_defs.h) - only for debug!
 	#define ADC_KEY_NIL_VAL 0xFF
 	#define ADC_KEY1_VAL 185
 	#define ADC_KEY2_VAL 126
@@ -67,7 +67,7 @@
 	#define ADC_KEY3_FUNC MESSAGE_KEY_DOWN
 	#define ADC_KEY4_FUNC MESSAGE_KEY_UP
 	#define ADC_KEY5_FUNC MESSAGE_KEY_RIGHT
-#else // 3d printer LCD and KBD
+#else // 3d printer LCD and KBD -> default!
 	#define ADC_KEY_NIL_VAL 0xFF
 	#define ADC_KEY0_VAL 210
 	#define ADC_KEY1_VAL 173
@@ -123,7 +123,26 @@
 #define PIPE_OE_L PIPE_OE_PORT &= ~(1 << PIPE_OE_NR); // set OE low (inactive)
 #define PIPE_OE_H PIPE_OE_PORT |= (1 << PIPE_OE_NR); // set OE high (active)
 
+//************************ DEBUG PORTS *************************
+// B4,5
+#define DEBUG_ON_PINS
+#define DEBUG_DDR				DDRB
+#define DEBUG_PORT				PORTB
+#define DEBUG_PIN_1				5
+#define DEBUG_PIN_0				4
+#define DEBUG_MASK				((1 << DEBUG_PIN_1) | (1 << DEBUG_PIN_0))
+#define DEBUG_PORT_INIT			DEBUG_DDR |= DEBUG_MASK;
+#define DEBUG_OUT_MAIN			DEBUG_PORT &= ~(DEBUG_MASK); // 5/4: 00
+#define DEBUG_OUT_LCD			DEBUG_PORT = (DEBUG_PORT & (~(DEBUG_MASK))) | (1 << DEBUG_PIN_0); // 5/4: 01
+#define DEBUG_OUT_MIDI			DEBUG_PORT = (DEBUG_PORT & (~(DEBUG_MASK))) | (1 << DEBUG_PIN_1); // 5/4: 10
+#define DEBUG_OUT_MENU			DEBUG_PORT |= (DEBUG_MASK); // 5/4: 11
+#define DEBUG_GET_OUT			(DEBUG_PORT & DEBUG_MASK)
+#define DEBUG_SET_OUT(out)		DEBUG_PORT = (DEBUG_PORT & DEBUG_MASK) | (out);
 
 //************************ BIT MACROS *************************
+
+//------------------------- DEBUG ----------------------------
+#define IGNORE_MODULE_TESTRESULT
+// true if module testing shall be skipped in init
 
 #endif /* HW_DEFS_H_ */

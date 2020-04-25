@@ -70,7 +70,13 @@ tiny input buffer for ESP data (4 bytes) so that commands from esp can contain m
 0.67
 active sense tx timer reset when midi byte is sent
 reset setn midi command from time to time
-midi command from ESP
+midi command from ESP (not yet tested)
+0.68
+menu textes
+0.69
+serial.c midi send/receive: do not update index on overflow
+serial.c midi in buffer increased 
+
 
 TODO
 Show pressed keys

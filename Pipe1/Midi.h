@@ -113,6 +113,8 @@ extern void midi_ProgramChange(uint8_t channel, uint8_t program);
 
 #define NOTE_ON 0x01
 #define NOTE_OFF 0x00
+// V 0.69: set MSB if note shall not be redirected to midi output if module is not writeable
+#define NOTE_NOREDIRECT 0x80 
 
 //--------------------- MIDIN IN OUT ASSIGN ------------------------
 typedef  struct{

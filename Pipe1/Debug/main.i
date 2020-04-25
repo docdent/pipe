@@ -3,7 +3,7 @@
 # 1 "<built-in>"
 # 1 "<command-line>"
 # 1 ".././main.c"
-# 12 ".././main.c"
+# 14 ".././main.c"
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\delay.h" 1 3
 # 44 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\delay.h" 3
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\inttypes.h" 1 3
@@ -435,7 +435,7 @@ _delay_us(double __us)
  __builtin_avr_delay_cycles(__ticks_dc);
 # 299 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\delay.h" 3
 }
-# 13 ".././main.c" 2
+# 15 ".././main.c" 2
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\io.h" 1 3
 # 99 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\io.h" 3
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\sfr_defs.h" 1 3
@@ -534,9 +534,9 @@ typedef struct
 
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\lock.h" 1 3
 # 642 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\io.h" 2 3
-# 14 ".././main.c" 2
+# 16 ".././main.c" 2
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\interrupt.h" 1 3
-# 15 ".././main.c" 2
+# 17 ".././main.c" 2
 
 
 # 1 ".././lcd_u.h" 1
@@ -559,11 +559,11 @@ extern void lcd_puts_P(const char *progmem_s);
 
 extern uint8_t lcd_cursorPos;
 extern uint8_t lcd_buffer[4*20];
-# 18 ".././main.c" 2
+# 20 ".././main.c" 2
 # 1 ".././initio.h" 1
 # 14 ".././initio.h"
 extern void init_iopins (void);
-# 19 ".././main.c" 2
+# 21 ".././main.c" 2
 # 1 ".././message.h" 1
 # 11 ".././message.h"
 # 1 ".././utils.h" 1
@@ -762,7 +762,7 @@ extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
 # 101 ".././utils.h"
-extern char string_Buf[40];
+extern char string_Buf[64];
 
 extern const char cr_lf [] 
 # 103 ".././utils.h" 3
@@ -795,7 +795,7 @@ extern PipeMessage_t pipeMsgGet (void);
 extern uint8_t pipeMsgStatus (void);
 extern volatile uint8_t msgPipeOverflow;
 extern uint8_t msgPipe_Handling;
-# 20 ".././main.c" 2
+# 22 ".././main.c" 2
 # 1 ".././hwtimer.h" 1
 # 14 ".././hwtimer.h"
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\atomic.h" 1 3
@@ -908,9 +908,9 @@ extern uint32_t test_PipeModule(uint8_t moduleNr);
 
 extern void pipe_on(uint8_t bitNr, uint8_t moduleMask);
 extern void pipe_off(uint8_t bitNr, uint8_t moduleMask);
-# 21 ".././main.c" 2
+# 23 ".././main.c" 2
 # 1 ".././utils.h" 1
-# 22 ".././main.c" 2
+# 24 ".././main.c" 2
 # 1 ".././serial.h" 1
 # 34 ".././serial.h"
 extern void init_Serial3SerESP();
@@ -976,7 +976,7 @@ extern volatile uint8_t midiRxInIndex;
 extern volatile uint8_t midiRxOutIndex;
 extern volatile uint8_t midiTxOutIndex;
 extern volatile uint8_t midiTxInIndex;
-extern uint8_t midiRxBuffer[32];
+extern uint8_t midiRxBuffer[256];
 extern uint8_t midiTxBuffer[256];
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
@@ -984,9 +984,9 @@ extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
 
 extern volatile uint8_t midiTxLastCmd;
-# 168 ".././serial.h"
+# 170 ".././serial.h"
 extern uint8_t midi_ExtraBuffer[3];
-# 23 ".././main.c" 2
+# 25 ".././main.c" 2
 # 1 ".././test.h" 1
 # 15 ".././test.h"
 # 1 ".././lcd_u.h" 1
@@ -1007,7 +1007,7 @@ extern void testMIDIin();
 extern void test_USBser();
 extern uint8_t test_PipePatterns();
 extern void test_input();
-# 24 ".././main.c" 2
+# 26 ".././main.c" 2
 # 1 ".././Midi.h" 1
 # 47 ".././Midi.h"
 typedef struct {
@@ -1047,7 +1047,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 118 ".././Midi.h"
+# 120 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -1154,7 +1154,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 240 ".././Midi.h"
+# 242 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1164,7 +1164,7 @@ typedef struct{
 extern const __flash CplInfo_t cplInfo[12];
 
 extern uint8_t set_Coupler(uint8_t);
-# 25 ".././main.c" 2
+# 27 ".././main.c" 2
 # 1 ".././menu.h" 1
 
 
@@ -1296,7 +1296,7 @@ extern void menu_ClearAllDisp();
 
 extern void menu_ModuleTestExecute();
 extern uint8_t menu_OnEnterMidiPanic(uint8_t arg);
-# 26 ".././main.c" 2
+# 28 ".././main.c" 2
 # 1 ".././ee_prom.h" 1
 # 11 ".././ee_prom.h"
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\crc16.h" 1 3
@@ -1647,7 +1647,7 @@ extern
             EECompl_t ee;
 # 159 ".././ee_prom.h"
 extern uint8_t ee_initError;
-# 27 ".././main.c" 2
+# 29 ".././main.c" 2
 # 1 ".././log.h" 1
 # 12 ".././log.h"
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\ctype.h" 1 3
@@ -1791,22 +1791,23 @@ typedef struct{
  } ErrorText_t;
 # 89 ".././log.h"
 extern uint8_t log_unreadErrors;
-# 28 ".././main.c" 2
+# 30 ".././main.c" 2
+
 
 const char eprom_ok [] 
-# 29 ".././main.c" 3
+# 32 ".././main.c" 3
                       __attribute__((__progmem__)) 
-# 29 ".././main.c"
+# 32 ".././main.c"
                               = "EE:";
 const char module_string [] 
-# 30 ".././main.c" 3
+# 33 ".././main.c" 3
                            __attribute__((__progmem__)) 
-# 30 ".././main.c"
+# 33 ".././main.c"
                                    = " Mod.:";
 const char prog_name [] 
-# 31 ".././main.c" 3
+# 34 ".././main.c" 3
                        __attribute__((__progmem__)) 
-# 31 ".././main.c"
+# 34 ".././main.c"
                                = "MIDI-Interface";
 const __flash char releaseKeyString[] = "Tasten/Reg. l" "\357" "sen";
 const __flash char panicString[] = "T" "\357" "ne aus";
@@ -1819,6 +1820,13 @@ int main(void)
 
 
  init_iopins ();
+
+ 
+# 47 ".././main.c" 3
+(*(volatile uint8_t *)((0x05) + 0x20)) 
+# 47 ".././main.c"
+&= ~(((1 << 5) | (1 << 4)));
+
  init_log();
  init_Serial0SerUSB();
  init_message();
@@ -1848,9 +1856,9 @@ int main(void)
  lcd_goto((0+20)+7);
  lcd_puts_P(sw_version);
  
-# 71 ".././main.c" 3
+# 77 ".././main.c" 3
 __asm__ __volatile__ ("sei" ::: "memory")
-# 71 ".././main.c"
+# 77 ".././main.c"
      ;
  _delay_ms(1200);
  init_Serial3SerESP();
@@ -1867,6 +1875,11 @@ __asm__ __volatile__ ("sei" ::: "memory")
  messageFromESP = 0xFE;
     while (1)
     {
+  
+# 93 ".././main.c" 3
+ (*(volatile uint8_t *)((0x05) + 0x20)) 
+# 93 ".././main.c"
+ &= ~(((1 << 5) | (1 << 4)));
 
   if (serESPRxInIndex != serESPRxOutIndex) {
    uint8_t esp_message = serial3SER_ESPReadRx();
@@ -1876,6 +1889,7 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
     message_push(esp_message-0x80);
    } else if (esp_message == 0x90) {
+
 
     if (serESPInBuffer[0] == 0x90) {
 
@@ -1914,6 +1928,11 @@ __asm__ __volatile__ ("sei" ::: "memory")
   }
 
   if (message_status() != 0x00) {
+   
+# 142 ".././main.c" 3
+  (*(volatile uint8_t *)((0x05) + 0x20)) 
+# 142 ".././main.c"
+  |= (((1 << 5) | (1 << 4)));
    uint8_t keyMessage = message_get();
    if (keyMessage == (0x80 | 6)){
 
@@ -1931,13 +1950,13 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
 
      menu_Init(
-# 150 ".././main.c" 3 4
+# 159 ".././main.c" 3 4
               ((void *)0)
-# 150 ".././main.c"
+# 159 ".././main.c"
                   , 
-# 150 ".././main.c" 3 4
+# 159 ".././main.c" 3 4
                     ((void *)0)
-# 150 ".././main.c"
+# 159 ".././main.c"
                         );
      menu_InitLCD();
      menuNotActive = 0x00;
@@ -1973,6 +1992,11 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
    updateStatus = 0xFF;
   }
+  
+# 194 ".././main.c" 3
+ (*(volatile uint8_t *)((0x05) + 0x20)) 
+# 194 ".././main.c"
+ &= ~(((1 << 5) | (1 << 4)));
 
   if (swTimer[7].counter == 0x00) {
 
@@ -2035,88 +2059,96 @@ __asm__ __volatile__ ("sei" ::: "memory")
   midi_CheckRxActiveSense();
 
 
+
   uint8_t oldcursor = lcd_cursorPos;
-  if (midiLastInNote != 0xFF){
 
-   lcd_goto((0 +0));
-   if (midiLastInManual == 0xFF) {
+  if ((swTimer[4].counter == 0xFF) || (swTimer[4].counter == 0x00)) {
 
+   if (midiLastInNote != 0xFF){
 
-    lcd_ChannelOut(midiLastInChannel);
-    lcd_putc('?');
-    lcd_noteOut(midiLastInNote);
-    lcd_putc(' ');
-   } else {
+    lcd_goto((0 +0));
+    if (midiLastInManual == 0xFF) {
 
 
-    lcd_noteOut(midiLastInNote);
+     lcd_ChannelOut(midiLastInChannel);
+     lcd_putc('?');
+     lcd_noteOut(midiLastInNote);
+     lcd_putc(' ');
+    } else {
+
+
+     lcd_noteOut(midiLastInNote);
+     lcd_putc(0x7E);
+     lcd_ManualOutDec(midiLastInManual);
+     lcd_putc(' ');
+    }
+    lcd_goto(oldcursor);
+    midiLastInNote = 0xFF;
+
+    
+# 283 ".././main.c" 3
+   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
+# 283 ".././main.c"
+   {swTimer[4].counter = 700 / 20; swTimer[4].prescaler = (700 % 20) / 4;};
+   } else if (midiLastProgram != 0xFF) {
+
+    lcd_goto((0 +0));
+    lcd_putc('p');
+    lcd_dec2out(midiLastProgram);
     lcd_putc(0x7E);
-    lcd_ManualOutDec(midiLastInManual);
-    lcd_putc(' ');
+    midiLastProgram = 0xFF;
+    
+# 291 ".././main.c" 3
+   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
+# 291 ".././main.c"
+   {swTimer[4].counter = 700 / 20; swTimer[4].prescaler = (700 % 20) / 4;};
+   } else if ((swTimer[4].counter == 0x00) ) {
+
+    lcd_goto((0 +0));
+    lcd_blank(6);
+    lcd_goto(oldcursor);
+    swTimer[4].counter = 0xFF;;
    }
-   lcd_goto(oldcursor);
-   midiLastInNote = 0xFF;
-   
-# 268 ".././main.c" 3
-  for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 268 ".././main.c"
-  {swTimer[4].counter = 1000 / 20; swTimer[4].prescaler = (1000 % 20) / 4;};
-  } else if (midiLastProgram != 0xFF) {
-
-   lcd_goto((0 +0));
-   lcd_putc('p');
-   lcd_dec2out(midiLastProgram);
-   lcd_putc(0x7E);
-   midiLastProgram = 0xFF;
-   
-# 276 ".././main.c" 3
-  for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 276 ".././main.c"
-  {swTimer[4].counter = 1000 / 20; swTimer[4].prescaler = (1000 % 20) / 4;};
-  } else if ((swTimer[4].counter == 0x00) ) {
-
-
-   lcd_goto((0 +0));
-   lcd_blank(6);
-   lcd_goto(oldcursor);
-   swTimer[4].counter = 0xFF;;
   }
-  if (midiLastOutNote != 0xFF){
+
+  if ((swTimer[5].counter == 0xFF) || (swTimer[5].counter == 0x00)) {
+   if (midiLastOutNote != 0xFF){
 
 
-   lcd_goto((0 +20-5));
-   lcd_ManualOutDec(midiLastOutManual);
-   lcd_putc(0x7E);
-   lcd_noteOut(midiLastOutNote);
-   lcd_goto(oldcursor);
-   midiLastOutNote = 0xFF;
-   
-# 294 ".././main.c" 3
-  for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 294 ".././main.c"
-  {swTimer[5].counter = 1000 / 20; swTimer[5].prescaler = (1000 % 20) / 4;};
-  } else if (midi_RegisterChanged != 0xFF) {
+    lcd_goto((0 +20-5));
+    lcd_ManualOutDec(midiLastOutManual);
+    lcd_putc(0x7E);
+    lcd_noteOut(midiLastOutNote);
+    lcd_goto(oldcursor);
+    midiLastOutNote = 0xFF;
+    
+# 311 ".././main.c" 3
+   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
+# 311 ".././main.c"
+   {swTimer[5].counter = 800 / 20; swTimer[5].prescaler = (800 % 20) / 4;};
+   } else if (midi_RegisterChanged != 0xFF) {
 
-   lcd_goto((0 +20-5));
-   lcd_putc('R');
-   lcd_dec2out(midi_RegisterChanged & ~0x80);
+    lcd_goto((0 +20-5));
+    lcd_putc('R');
+    lcd_dec2out(midi_RegisterChanged & ~0x80);
 
-   lcd_putc((midi_RegisterChanged & 0x80) == 0 ? 0x08 : 0x09);
-   lcd_putc(' ');
-   lcd_goto(oldcursor);
-   midi_RegisterChanged = 0xFF;
-   
-# 305 ".././main.c" 3
-  for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 305 ".././main.c"
-  {swTimer[5].counter = 1000 / 20; swTimer[5].prescaler = (1000 % 20) / 4;};
-  } else if ((swTimer[5].counter == 0x00)) {
+    lcd_putc((midi_RegisterChanged & 0x80) == 0 ? 0x08 : 0x09);
+    lcd_putc(' ');
+    lcd_goto(oldcursor);
+    midi_RegisterChanged = 0xFF;
+    
+# 322 ".././main.c" 3
+   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
+# 322 ".././main.c"
+   {swTimer[5].counter = 800 / 20; swTimer[5].prescaler = (800 % 20) / 4;};
+   } else if ((swTimer[5].counter == 0x00)) {
 
 
-   lcd_goto((0 +20-5));
-   lcd_blank(5);
-   lcd_goto(oldcursor);
-   swTimer[5].counter = 0xFF;;
+    lcd_goto((0 +20-5));
+    lcd_blank(5);
+    lcd_goto(oldcursor);
+    swTimer[5].counter = 0xFF;;
+   }
   }
 
 
@@ -2167,16 +2199,16 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
    if ((swTimer[4].counter == 0xFF)) {
     
-# 362 ".././main.c" 3
+# 380 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 362 ".././main.c"
+# 380 ".././main.c"
    {swTimer[4].counter = 2500 / 20; swTimer[4].prescaler = (2500 % 20) / 4;};
    }
    if ((swTimer[5].counter == 0xFF)) {
     
-# 365 ".././main.c" 3
+# 383 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 365 ".././main.c"
+# 383 ".././main.c"
    {swTimer[5].counter = 2500 / 20; swTimer[5].prescaler = (2500 % 20) / 4;};
    }
   }
@@ -2186,7 +2218,15 @@ __asm__ __volatile__ ("sei" ::: "memory")
    msgPipeOverflow = 0x00;
    log_putError(4, 0, 0);
   }
-
+  
+# 392 ".././main.c" 3
+ (*(volatile uint8_t *)((0x05) + 0x20)) 
+# 392 ".././main.c"
+ = (
+# 392 ".././main.c" 3
+ (*(volatile uint8_t *)((0x05) + 0x20)) 
+# 392 ".././main.c"
+ & (~(((1 << 5) | (1 << 4))))) | (1 << 5);
 
   if (midiRxInIndex != midiRxOutIndex) {
    midiIn_Process(serial1MIDIReadRx());

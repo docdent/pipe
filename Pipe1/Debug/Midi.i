@@ -9,6 +9,7 @@
 
 
 
+
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\delay.h" 1 3
 # 44 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\delay.h" 3
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\inttypes.h" 1 3
@@ -440,7 +441,7 @@ _delay_us(double __us)
  __builtin_avr_delay_cycles(__ticks_dc);
 # 299 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\delay.h" 3
 }
-# 8 ".././Midi.c" 2
+# 9 ".././Midi.c" 2
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\io.h" 1 3
 # 99 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\io.h" 3
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\sfr_defs.h" 1 3
@@ -539,9 +540,9 @@ typedef struct
 
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\lock.h" 1 3
 # 642 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\io.h" 2 3
-# 9 ".././Midi.c" 2
-# 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\interrupt.h" 1 3
 # 10 ".././Midi.c" 2
+# 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\interrupt.h" 1 3
+# 11 ".././Midi.c" 2
 
 # 1 ".././lcd_u.h" 1
 # 111 ".././lcd_u.h"
@@ -563,11 +564,11 @@ extern void lcd_puts_P(const char *progmem_s);
 
 extern uint8_t lcd_cursorPos;
 extern uint8_t lcd_buffer[4*20];
-# 12 ".././Midi.c" 2
+# 13 ".././Midi.c" 2
 # 1 ".././initio.h" 1
 # 14 ".././initio.h"
 extern void init_iopins (void);
-# 13 ".././Midi.c" 2
+# 14 ".././Midi.c" 2
 # 1 ".././message.h" 1
 # 11 ".././message.h"
 # 1 ".././utils.h" 1
@@ -766,7 +767,7 @@ extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
 # 101 ".././utils.h"
-extern char string_Buf[40];
+extern char string_Buf[64];
 
 extern const char cr_lf [] 
 # 103 ".././utils.h" 3
@@ -799,7 +800,7 @@ extern PipeMessage_t pipeMsgGet (void);
 extern uint8_t pipeMsgStatus (void);
 extern volatile uint8_t msgPipeOverflow;
 extern uint8_t msgPipe_Handling;
-# 14 ".././Midi.c" 2
+# 15 ".././Midi.c" 2
 # 1 ".././hwtimer.h" 1
 # 14 ".././hwtimer.h"
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\atomic.h" 1 3
@@ -912,9 +913,9 @@ extern uint32_t test_PipeModule(uint8_t moduleNr);
 
 extern void pipe_on(uint8_t bitNr, uint8_t moduleMask);
 extern void pipe_off(uint8_t bitNr, uint8_t moduleMask);
-# 15 ".././Midi.c" 2
-# 1 ".././utils.h" 1
 # 16 ".././Midi.c" 2
+# 1 ".././utils.h" 1
+# 17 ".././Midi.c" 2
 # 1 ".././serial.h" 1
 # 34 ".././serial.h"
 extern void init_Serial3SerESP();
@@ -980,7 +981,7 @@ extern volatile uint8_t midiRxInIndex;
 extern volatile uint8_t midiRxOutIndex;
 extern volatile uint8_t midiTxOutIndex;
 extern volatile uint8_t midiTxInIndex;
-extern uint8_t midiRxBuffer[32];
+extern uint8_t midiRxBuffer[256];
 extern uint8_t midiTxBuffer[256];
 extern volatile uint16_t midiTxBytesCount;
 extern volatile uint16_t midiRxBytesCount;
@@ -988,9 +989,9 @@ extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
 
 extern volatile uint8_t midiTxLastCmd;
-# 168 ".././serial.h"
+# 170 ".././serial.h"
 extern uint8_t midi_ExtraBuffer[3];
-# 17 ".././Midi.c" 2
+# 18 ".././Midi.c" 2
 # 1 ".././test.h" 1
 # 15 ".././test.h"
 # 1 ".././lcd_u.h" 1
@@ -1011,7 +1012,7 @@ extern void testMIDIin();
 extern void test_USBser();
 extern uint8_t test_PipePatterns();
 extern void test_input();
-# 18 ".././Midi.c" 2
+# 19 ".././Midi.c" 2
 # 1 ".././Midi.h" 1
 # 47 ".././Midi.h"
 typedef struct {
@@ -1051,7 +1052,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 118 ".././Midi.h"
+# 120 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -1158,7 +1159,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 240 ".././Midi.h"
+# 242 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1168,7 +1169,7 @@ typedef struct{
 extern const __flash CplInfo_t cplInfo[12];
 
 extern uint8_t set_Coupler(uint8_t);
-# 19 ".././Midi.c" 2
+# 20 ".././Midi.c" 2
 # 1 ".././ee_prom.h" 1
 # 11 ".././ee_prom.h"
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\crc16.h" 1 3
@@ -1649,7 +1650,7 @@ extern
             EECompl_t ee;
 # 159 ".././ee_prom.h"
 extern uint8_t ee_initError;
-# 20 ".././Midi.c" 2
+# 21 ".././Midi.c" 2
 # 1 ".././log.h" 1
 # 12 ".././log.h"
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\ctype.h" 1 3
@@ -1793,7 +1794,7 @@ typedef struct{
  } ErrorText_t;
 # 89 ".././log.h"
 extern uint8_t log_unreadErrors;
-# 21 ".././Midi.c" 2
+# 22 ".././Midi.c" 2
 
 
 
@@ -1918,15 +1919,27 @@ void midiAllReset(){
 void midiAllNotesOff(uint8_t channel){
  uint8_t splitRange = 0;
  while (splitRange < 4){
+  uint8_t manual = midiInMap[channel][splitRange].manual;
 
-  if (midiInMap[channel][splitRange].manual < 4) {
+  if (manual < 4) {
 
    uint8_t note = midiInMap[channel][splitRange].manualNote;
 
    for (uint8_t i = midiInMap[channel][splitRange].noteRange; i > 0; i--){
-    manual_NoteOnOff(midiInMap[channel][splitRange].manual, note++, 0x00);
+    manual_NoteOnOff(midiInMap[channel][splitRange].manual, note++, 0x00 | 0x80);
+   }
+   uint8_t midiChanel = midiOutMap[manual].hw_channel;
+   if (midiChanel <= 15){
+
+    serial1MIDISend(0xB0 | midiChanel);
+    serial1MIDISend(0x7B);
+    serial1MIDISend(0);
+
    }
   }
+
+
+
   splitRange++;
  }
 }
@@ -1935,8 +1948,17 @@ void midi_ManualOff(uint8_t manual){
 
  if ((manual < 4) && (ManualNoteRange[manual].startNote != 0xFF) && (ManualNoteRange[manual].endNote != 0xFF)){
   for (uint8_t note = ManualNoteRange[manual].startNote; note <= ManualNoteRange[manual].endNote; note++){
-   manual_NoteOnOff(manual,note,0x00);
+   manual_NoteOnOff(manual,note,0x00 | 0x80);
   }
+ }
+
+ uint8_t midiChanel = midiOutMap[manual].hw_channel;
+ if (midiChanel <= 15){
+
+  serial1MIDISend(0xB0 | midiChanel);
+  serial1MIDISend(0x7B);
+  serial1MIDISend(0);
+
  }
 }
 
@@ -1966,9 +1988,9 @@ void midi_CheckTxActiveSense(){
  if (!(((swTimer[8].counter != 0x00) && (swTimer[8].counter != 0xFF)))){
 
   
-# 192 ".././Midi.c" 3
+# 214 ".././Midi.c" 3
  for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 192 ".././Midi.c"
+# 214 ".././Midi.c"
  {swTimer[8].counter = 200 / 20; swTimer[8].prescaler = (200 % 20) / 4;};
   if (midi_Setting.TxActivceSense) {
    midi_SendActiveSense();
@@ -2007,9 +2029,9 @@ void midiIn_Process(uint8_t midiByte){
    if (midiByte == 0xFE) {
     midiRxActivceSensing = 1;
     
-# 229 ".././Midi.c" 3
+# 251 ".././Midi.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 229 ".././Midi.c"
+# 251 ".././Midi.c"
    {swTimer[3].counter = 500 / 20; swTimer[3].prescaler = (500 % 20) / 4;};
    } else if (midiByte == 0xFF){
     midiAllReset();
@@ -2298,9 +2320,9 @@ uint8_t read_allRegister(uint8_t* resultPtr){
   if ((regNr & 0x07) == 0x07) {
 
    if (resultPtr != 
-# 516 ".././Midi.c" 3 4
+# 538 ".././Midi.c" 3 4
                    ((void *)0)
-# 516 ".././Midi.c"
+# 538 ".././Midi.c"
                        ) {
     *resultPtr++ = mask;
    }
@@ -2706,6 +2728,15 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
  uint8_t modulNrMask = 1 << ((moduleInfo.moduleBit >> 5));
  uint8_t bitNr = (moduleInfo.moduleBit & 0x1f);
  if (moduleInfo.error == 0x00) {
+  if (((modulNrMask & pipe_Module.AssnWrite) == 0) && ((onOff & 0x80) == 0)){
+
+   onOff &= ~0x80;
+   PipeMessage_t myMessage;
+   myMessage.message8[0] = modulNrMask;
+   myMessage.message8[1] = ((onOff == 0x01) ? 0x20 : 0x00 )| bitNr;
+   pipeMsgPush(myMessage);
+  }
+  onOff &= ~0x80;
   if (onOff == 0x00) {
 
    pipe_off(bitNr,modulNrMask);
@@ -2714,12 +2745,6 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
    pipe_on(bitNr,modulNrMask);
   }
 
-  if ((modulNrMask & pipe_Module.AssnWrite) == 0){
-   PipeMessage_t myMessage;
-   myMessage.message8[0] = modulNrMask;
-   myMessage.message8[1] = ((onOff == 0x01) ? 0x20 : 0x00 )| bitNr;
-   pipeMsgPush(myMessage);
-  }
  }
 
  if (midiOutMap[manual].sw_channel != 0xFF){
@@ -2727,7 +2752,8 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
 
   serial1MIDISend(((onOff == 0x01) || (midi_Setting.VelZero4Off) ? 0x90 : 0x80) | midiOutMap[manual].sw_channel);
   serial1MIDISend(note);
-  serial1MIDISend(((onOff == 0x00) && (midi_Setting.VelZero4Off)) ? 0 : 64);
+
+  serial1MIDISend(((onOff == 0x00)) ? 0 : 64);
 
 
  }

@@ -311,4 +311,9 @@ void init_iopins (void)
 (*(volatile uint8_t *)((0x05) + 0x20)) 
 # 24 ".././initio.c"
             &= ~(1 << 6);
+ 
+# 25 ".././initio.c" 3
+(*(volatile uint8_t *)((0x04) + 0x20)) 
+# 25 ".././initio.c"
+|= ((1 << 5) | (1 << 4));
 }

@@ -2,6 +2,7 @@
  *
  * Created: 31.01.2019 13:32:04
  *  Author: Anwender
+ * Does processing of midi messages to and from organ - handling bytes is not done here (->serial.c)
  */
 
 #include <util/delay.h>
@@ -142,15 +143,27 @@ void midiAllReset(){
 void midiAllNotesOff(uint8_t channel){
 	uint8_t splitRange = 0;
 	while (splitRange < MIDI_SPLIT_COUNT){
+		uint8_t manual = midiInMap[channel][splitRange].manual;
 		// for all split ranges
-		if (midiInMap[channel][splitRange].manual < MANUAL_COUNT) {
-			// splt range is set to a manual
+		if (manual < MANUAL_COUNT) {
+			// this splt range is assigned to a manual
 			uint8_t note = midiInMap[channel][splitRange].manualNote; // start with this note
 			// for all notes in split range
 			for (uint8_t i = midiInMap[channel][splitRange].noteRange; i > 0; i--){
-				manual_NoteOnOff(midiInMap[channel][splitRange].manual, note++, NOTE_OFF);
+				manual_NoteOnOff(midiInMap[channel][splitRange].manual, note++, NOTE_OFF | NOTE_NOREDIRECT);
+			}
+			uint8_t midiChanel = midiOutMap[manual].hw_channel;
+			if (midiChanel <= MIDI_CHANNEL_MAX){
+				// valid channel, send all notes off
+				serial1MIDISend(MIDI_CTRLCHG | midiChanel);
+				serial1MIDISend(MIDI_CTRL_ALLNOTESOFF);
+				serial1MIDISend(0);
+
 			}
 		}
+		// V 0.69 send all notes off to out channel of that manual
+		// caution: all notes off ist sent to midi out even if multiple note off are also sent by HW via pipe_message
+		// all notes off on midi out is not limited to note range of split range
 		splitRange++;
 	}
 }
@@ -159,8 +172,17 @@ void midi_ManualOff(uint8_t manual){
 	// turn all notes off of this manual
 	if ((manual < MANUAL_COUNT) && (ManualNoteRange[manual].startNote != MIDI_NOTE_NONE) && (ManualNoteRange[manual].endNote != MIDI_NOTE_NONE)){
 		for (uint8_t note = ManualNoteRange[manual].startNote; note <= ManualNoteRange[manual].endNote; note++){
-			manual_NoteOnOff(manual,note,NOTE_OFF);
+			manual_NoteOnOff(manual,note,NOTE_OFF | NOTE_NOREDIRECT);
 		}
+	}
+	// V 0.69 send all notes off to out channel of that manual
+	uint8_t midiChanel = midiOutMap[manual].hw_channel;
+	if (midiChanel <= MIDI_CHANNEL_MAX){
+		// valid channel, send all notes off
+		serial1MIDISend(MIDI_CTRLCHG | midiChanel);
+		serial1MIDISend(MIDI_CTRL_ALLNOTESOFF);
+		serial1MIDISend(0);
+
 	}
 }
 
@@ -189,14 +211,14 @@ void midi_CheckTxActiveSense(){
 	// dual use: 1) send active sense (if configured) after timer elapsed 2) reset last midi command so that from time to time command is sent again  (V0.67)
 	if (!(TIMER_RUNNING(TIMER_TX_ACTIVESENSE))){
 		// timer ended or not yet running
-		TIMER_SET(TIMER_TX_ACTIVESENSE,TIMER_TX_ACTIVESENSE_MS) 
+		TIMER_SET(TIMER_TX_ACTIVESENSE,TIMER_TX_ACTIVESENSE_MS)
 		if (midi_Setting.TxActivceSense) {
 			midi_SendActiveSense();
 		}
 		// V 0.67 for safety: reset last command byte so that after "some" time without key change always sent midi command byte
 		MIDI_TXT_RESET_LASTCMD
 	}
-	
+
 }
 
 // **************************************** P R O C E S S   M I D I    I N *********************************************
@@ -918,6 +940,15 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
 	uint8_t modulNrMask = 1 << (MODULE_BIT_TO_MODULE(moduleInfo.moduleBit)); // 0000 0001 = Module 0, 1000 0000 = Module 7
 	uint8_t bitNr = MODULE_BIT_TO_BIT(moduleInfo.moduleBit);
 	if (moduleInfo.error == MODULE_NOERROR) {
+		if (((modulNrMask & pipe_Module.AssnWrite) == 0) && ((onOff & NOTE_NOREDIRECT) == 0)){
+			// only if destination module is not assinged as writeable and flag NOTE_NOREDIRECT is not set
+			onOff &= ~NOTE_NOREDIRECT; // turn off flag
+			PipeMessage_t myMessage;
+			myMessage.message8[MSG_BYTE_MODULEBITS] = modulNrMask;
+			myMessage.message8[MSG_BYTE_CMD_SHIFTBIT] = ((onOff == NOTE_ON) ? MESSAGE_PIPE_ON_HI : MESSAGE_PIPE_OFF_HI )| bitNr;
+			pipeMsgPush(myMessage);
+		}
+		onOff &= ~NOTE_NOREDIRECT; // turn off flag
 		if (onOff == NOTE_OFF) {
 			// note off -> write 1 to pipe mosfet
 			pipe_off(bitNr,modulNrMask);
@@ -926,12 +957,6 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
 			pipe_on(bitNr,modulNrMask);
 		}
 		// V0.62 direct pipe message if module can't be written
-		if ((modulNrMask & pipe_Module.AssnWrite) == 0){
-			PipeMessage_t myMessage;
-			myMessage.message8[MSG_BYTE_MODULEBITS] = modulNrMask;
-			myMessage.message8[MSG_BYTE_CMD_SHIFTBIT] = ((onOff == NOTE_ON) ? MESSAGE_PIPE_ON_HI : MESSAGE_PIPE_OFF_HI )| bitNr;
-			pipeMsgPush(myMessage);
-		}
 	}
 	// V0.61 midi sw_channel output
 	if (midiOutMap[manual].sw_channel != MIDI_CHANNEL_NONE){
@@ -939,7 +964,8 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
 		// if settings are appropriate: note off = use note on an velocity = 0 to turn off note (less bytes !) / or send real not off!
 		serial1MIDISend(((onOff == NOTE_ON) || (midi_Setting.VelZero4Off) ? MIDI_NOTEON : MIDI_NOTEOFF) | midiOutMap[manual].sw_channel);
 		serial1MIDISend(note);
-		serial1MIDISend(((onOff == NOTE_OFF) && (midi_Setting.VelZero4Off)) ? 0 : MIDI_DEFAULT_VELOCITY);
+		// V 0.69 removed: && (midi_Setting.VelZero4Off) after (onOff == NOTE_OFF): now always send vel=0 when note off
+		serial1MIDISend(((onOff == NOTE_OFF)) ? 0 : MIDI_DEFAULT_VELOCITY);
 		// caution: sw_channel should be used only if no HW output implemented for manual. If used midi through should not be set for
 		// corresponding channel/manual
 	}

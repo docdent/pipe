@@ -738,7 +738,7 @@ extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
 # 101 ".././utils.h"
-extern char string_Buf[40];
+extern char string_Buf[64];
 
 extern const char cr_lf [] 
 # 103 ".././utils.h" 3
@@ -948,7 +948,7 @@ typedef struct{
 extern ManualNoteRange_t ManualNoteRange[4];
 
 extern void midi_ProgramChange(uint8_t channel, uint8_t program);
-# 118 ".././Midi.h"
+# 120 ".././Midi.h"
 typedef struct{
  uint8_t manual;
  uint8_t midiNote;
@@ -1055,7 +1055,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 240 ".././Midi.h"
+# 242 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1072,7 +1072,7 @@ const char cr_lf []
                    __attribute__((__progmem__)) 
 # 18 ".././utils.c"
                            = "\r\n";
-char string_Buf[40];
+char string_Buf[64];
 
 
 Longint_t editLong;
@@ -1249,7 +1249,7 @@ char* putChar_MidiChan(uint8_t channel, char* pOutput){
   channel++;
   if (channel > 9){
    *pOutput++ = '1';
-   channel =- 10;
+   channel -= 10;
   } else {
    *pOutput++ = ' ';
   }

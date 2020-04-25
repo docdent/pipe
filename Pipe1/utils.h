@@ -97,7 +97,7 @@ extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
 #define TRUE 0xFF
 #define FALSE 0x00
 
-#define STRINGBUFLEN 40
+#define STRINGBUFLEN 64
 extern char  string_Buf[STRINGBUFLEN];
 
 extern const char cr_lf [] PROGMEM;

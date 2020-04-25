@@ -9,6 +9,8 @@
 #define F_CPU 16000000UL
 #endif
 
+#define SHOW_INOUT_ON_LCD
+
 #include <util/delay.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -25,6 +27,7 @@
 #include "menu.h"
 #include "ee_prom.h"
 #include "log.h"
+#include "hw_defs.h"
 
 const char eprom_ok [] PROGMEM = "EE:";
 const char module_string [] PROGMEM = " Mod.:";
@@ -40,6 +43,9 @@ int main(void)
 	// INIT
 
 	init_iopins (); // default only: all inputs with pullup
+	#ifdef DEBUG_ON_PINS
+	DEBUG_OUT_MAIN
+	#endif
 	init_log();
 	init_Serial0SerUSB();
 	init_message();
@@ -84,6 +90,7 @@ int main(void)
 	messageFromESP = SER_ESP_SEND_LCD; // for first transfer
     while (1)
     {
+		DEBUG_OUT_MAIN
 		// V0.60 read message from usart3 (esp)
 		if SER_ESP_RX_BUFFER_NONEMPTY {
 			uint8_t esp_message = serial3SER_ESPReadRx();
@@ -93,6 +100,7 @@ int main(void)
 				// push key message from esp to queue
 				message_push(esp_message-SER_ESP_MSGOFFSET);
 			} else if (esp_message == SER_ESP_MSGMIDI) {
+				// Not yet used in V 0.68
 				// MIDI data from ESP
 				if (serESPInBuffer[0] == SER_ESP_MSGMIDI) {
 					// this should always be so
@@ -131,6 +139,7 @@ int main(void)
 		}
 		// ---------------------- KEYBOARD AND MENU ----------------------
 		if MESSAGE_PENDING {
+			DEBUG_OUT_MENU
 			uint8_t keyMessage = message_get();
 			if (keyMessage == (MESSAGE_KEY_LONGPRESSED | MESSAGE_KEY_ESC)){
 				// PANIC BUTTON
@@ -182,6 +191,7 @@ int main(void)
 			// Menu is beeing displayed
 			updateStatus = TRUE; // show status eventiually after next menu exit
 		}
+		DEBUG_OUT_MAIN
 		// ------------------------- TIMER_MENUDATA_LCDCLEAR ----------------
 		if TIMER_ELAPSED(TIMER_MENUDATA_LCDCLEAR) {
 			// if (! menuNotActive) {
@@ -244,74 +254,82 @@ int main(void)
 		midi_CheckRxActiveSense(); // check for Error of incoming Active Sense
 
 		// ------------------------ TOP STATUS LINE --------------------------
+		#ifdef SHOW_INOUT_ON_LCD
 		uint8_t oldcursor = lcd_cursorPos;
-		if (midiLastInNote != MIDI_NOTE_NONE){
-			// there is a midi in note to be displayed in status
-			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
-			if (midiLastInManual == MANUAL_NONE) {
-				// there was no manual assigned to midi in note
-				// cc?nnn
-				lcd_ChannelOut(midiLastInChannel);
-				lcd_putc('?');
-				lcd_noteOut(midiLastInNote);
-				lcd_putc(' ');
-			} else {
-				// midi input to assigned manual
-				// nnn>m
-				lcd_noteOut(midiLastInNote);
-				lcd_putc(MENU_MIDI_IO_SIGN);
-				lcd_ManualOutDec(midiLastInManual);
-				lcd_putc(' ');
+		// V0.69 do not update midi in display while displaying last value
+		if (TIMER_NOTSTARTED(TIMER_MIDIIN_DISP) || TIMER_ELAPSED(TIMER_MIDIIN_DISP)) {
+			// only if timer for midi in is not running at all (or just has elapsed)
+			if (midiLastInNote != MIDI_NOTE_NONE){
+				// there is a midi in note to be displayed in status
+				lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
+				if (midiLastInManual == MANUAL_NONE) {
+					// there was no manual assigned to midi in note
+					// cc?nnn
+					lcd_ChannelOut(midiLastInChannel);
+					lcd_putc('?');
+					lcd_noteOut(midiLastInNote);
+					lcd_putc(' ');
+				} else {
+					// midi input to assigned manual
+					// nnn>m
+					lcd_noteOut(midiLastInNote);
+					lcd_putc(MENU_MIDI_IO_SIGN);
+					lcd_ManualOutDec(midiLastInManual);
+					lcd_putc(' ');
+				}
+				lcd_goto(oldcursor);
+				midiLastInNote = MIDI_NOTE_NONE;
+				// now start timer 
+				TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)
+			} else if (midiLastProgram != MIDI_PROGRAM_NONE) {
+				// no midi not but a program change to be displayed
+				lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
+				lcd_putc('p');
+				lcd_dec2out(midiLastProgram); // here max 0..99 displayed, but Prog Change currently accepts only 0..63 anyway
+				lcd_putc(LCD_CHAR_ARROW_RIGHT);
+				midiLastProgram = MIDI_PROGRAM_NONE; // we are done, don't display again
+				TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)
+			} else if (TIMER_ELAPSED(TIMER_MIDIIN_DISP) ) {
+				// timer for showing note has elapsed
+				lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
+				lcd_blank(6);
+				lcd_goto(oldcursor);
+				TIMER_DEACTIVATE(TIMER_MIDIIN_DISP);
 			}
-			lcd_goto(oldcursor);
-			midiLastInNote = MIDI_NOTE_NONE;
-			TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)
-		} else if (midiLastProgram != MIDI_PROGRAM_NONE) {
-			// no midi not but a program change
-			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
-			lcd_putc('p');
-			lcd_dec2out(midiLastProgram); // here max 0..99 displayed, but Prog Change currently accepts only 0..63 anyway
-			lcd_putc(LCD_CHAR_ARROW_RIGHT);
-			midiLastProgram = MIDI_PROGRAM_NONE; // we are done, don't display again
-			TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)
-		} else if (TIMER_ELAPSED(TIMER_MIDIIN_DISP) ) {
-			// timer for showing note has elapsed
-			// removed or about every 2.5 second just in case screen got scrambeled
-			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
-			lcd_blank(6);
-			lcd_goto(oldcursor);
-			TIMER_DEACTIVATE(TIMER_MIDIIN_DISP);
 		}
-		if (midiLastOutNote != MIDI_NOTE_NONE){
-			// there is a midi in note to be displayed in status
-			// m>nnn
-			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIOUT);
-			lcd_ManualOutDec(midiLastOutManual);
-			lcd_putc(MENU_MIDI_IO_SIGN);
-			lcd_noteOut(midiLastOutNote);
-			lcd_goto(oldcursor);
-			midiLastOutNote = MIDI_NOTE_NONE;
-			TIMER_SET(TIMER_MIDIOUT_DISP,TIMER_MIDIOUT_DISP_MS)
-		} else if (midi_RegisterChanged != REGISTER_NONE) {
-			// register change has top priority in display so it is processed later (!) and will overwrite previos note display
-			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIOUT);
-			lcd_putc('R');
-			lcd_dec2out(midi_RegisterChanged & ~REGISTER_WAS_SET); // remove MSB
-			// V 0.60 changed: down = Register ON!
-			lcd_putc((midi_RegisterChanged & REGISTER_WAS_SET) == 0 ?  LCD_CHAR_ARROW_UP : LCD_CHAR_ARROW_DOWN); // MSB = register was set
-			lcd_putc(' ');
-			lcd_goto(oldcursor);
-			midi_RegisterChanged = REGISTER_NONE;
-			TIMER_SET(TIMER_MIDIOUT_DISP,TIMER_MIDIOUT_DISP_MS)
-		} else if (TIMER_ELAPSED(TIMER_MIDIOUT_DISP)) {
-			// timer for showing note has elapsed
-			// removed V0.59: or about every second just in case screen got scrambeled
-			lcd_goto(MENU_LCD_CURSOR_STAT_MIDIOUT);
-			lcd_blank(5);
-			lcd_goto(oldcursor);
-			TIMER_DEACTIVATE(TIMER_MIDIOUT_DISP);
+		// V0.69 do not update midi in display while displaying last value
+		if (TIMER_NOTSTARTED(TIMER_MIDIOUT_DISP) || TIMER_ELAPSED(TIMER_MIDIOUT_DISP)) {
+			if (midiLastOutNote != MIDI_NOTE_NONE){
+				// there is a midi in note to be displayed in status
+				// m>nnn
+				lcd_goto(MENU_LCD_CURSOR_STAT_MIDIOUT);
+				lcd_ManualOutDec(midiLastOutManual);
+				lcd_putc(MENU_MIDI_IO_SIGN);
+				lcd_noteOut(midiLastOutNote);
+				lcd_goto(oldcursor);
+				midiLastOutNote = MIDI_NOTE_NONE;
+				TIMER_SET(TIMER_MIDIOUT_DISP,TIMER_MIDIOUT_DISP_MS)
+			} else if (midi_RegisterChanged != REGISTER_NONE) {
+				// register change has top priority in display so it is processed later (!) and will overwrite previos note display
+				lcd_goto(MENU_LCD_CURSOR_STAT_MIDIOUT);
+				lcd_putc('R');
+				lcd_dec2out(midi_RegisterChanged & ~REGISTER_WAS_SET); // remove MSB
+				// V 0.60 changed: down = Register ON!
+				lcd_putc((midi_RegisterChanged & REGISTER_WAS_SET) == 0 ?  LCD_CHAR_ARROW_UP : LCD_CHAR_ARROW_DOWN); // MSB = register was set
+				lcd_putc(' ');
+				lcd_goto(oldcursor);
+				midi_RegisterChanged = REGISTER_NONE;
+				TIMER_SET(TIMER_MIDIOUT_DISP,TIMER_MIDIOUT_DISP_MS)
+			} else if (TIMER_ELAPSED(TIMER_MIDIOUT_DISP)) {
+				// timer for showing note has elapsed
+				// removed V0.59: or about every second just in case screen got scrambeled
+				lcd_goto(MENU_LCD_CURSOR_STAT_MIDIOUT);
+				lcd_blank(5);
+				lcd_goto(oldcursor);
+				TIMER_DEACTIVATE(TIMER_MIDIOUT_DISP);
+			}
 		}
-
+		#endif
 		//------------------------- every second ----------------------------
 		if (time_UpTimeUpdated == TRUE) {
 			time_UpTimeUpdated = FALSE;
@@ -371,7 +389,7 @@ int main(void)
 			msgPipeOverflow = MESSAGE_PIPE_OVERFLOW_NO;
 			log_putError(LOG_CAT_MESSAGE, LOG_CATMESSAGE_PIPEOVFL, 0);
 		}
-
+		DEBUG_OUT_MIDI
 		//---------------------- MIDI IN --------------------------------
 		if MIDI_RX_BUFFER_NONEMPTY {
 			midiIn_Process(serial1MIDIReadRx());

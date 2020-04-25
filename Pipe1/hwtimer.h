@@ -54,12 +54,12 @@ extern volatile uint8_t time_Uptime[4]; // 0: prescaler cycles @ 4ms, 1: seconds
 
 // when elapsed clear display of last midiout note
 #define TIMER_MIDIOUT_DISP 5
-#define TIMER_MIDIOUT_DISP_MS 1000
+#define TIMER_MIDIOUT_DISP_MS 800
 #define TIMER_MIDDISP_CLEANUP_INTERVALL 2500 // cleanup
 
 // when elapsed clear display of last midiin note
 #define TIMER_MIDIIN_DISP 4
-#define TIMER_MIDIIN_DISP_MS 1000
+#define TIMER_MIDIIN_DISP_MS 700
 
 // Timer for active sense on MIDI IN
 #define TIMER_ACTIVESENSE 3
@@ -213,6 +213,5 @@ extern uint32_t test_PipeModule(uint8_t moduleNr); // should return testpattern 
 //------------------------------ PIPE ON-OFF ------------------------
 extern void pipe_on(uint8_t bitNr, uint8_t moduleMask); // bitNr 0..31, moduleMask 0x01, 0x02, ... x080
 extern void pipe_off(uint8_t bitNr, uint8_t moduleMask); // bitNr 0..31, moduleMask 0x01, 0x02, ... x080
-
 
 #endif /* HWTIMER_H_ */

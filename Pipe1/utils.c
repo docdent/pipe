@@ -173,7 +173,7 @@ char* putChar_MidiChan(uint8_t channel, char* pOutput){
 		channel++;
 		if (channel > 9){
 			*pOutput++ = '1';
-			channel =- 10;
+			channel -= 10;
 		} else {
 			*pOutput++ = ' ';		
 		}

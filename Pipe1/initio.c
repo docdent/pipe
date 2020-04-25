@@ -22,4 +22,5 @@ void init_iopins (void)
 	PIPE_OE_PORT &= ~(1 << PIPE_OE_NR); // OE off
 	PWR_EN_DDR |= 1 << PWR_EN_PIN; // 12V Enable Port
 	PWR_EN_PORT &= ~(1 << PWR_EN_PIN); // 0= Power off;
+	DEBUG_PORT_INIT
 }

@@ -706,81 +706,96 @@ uint8_t lcd_buffer[4*20];
 void lcd_init(void)
 {
 
- 
+ uint8_t debugSave = (
 # 43 ".././lcd_u.c" 3
-(*(volatile uint8_t *)(0x101)) 
+                    (*(volatile uint8_t *)((0x05) + 0x20)) 
 # 43 ".././lcd_u.c"
+                    & ((1 << 5) | (1 << 4)));
+ 
+# 44 ".././lcd_u.c" 3
+(*(volatile uint8_t *)((0x05) + 0x20)) 
+# 44 ".././lcd_u.c"
+= (
+# 44 ".././lcd_u.c" 3
+(*(volatile uint8_t *)((0x05) + 0x20)) 
+# 44 ".././lcd_u.c"
+& (~(((1 << 5) | (1 << 4))))) | (1 << 4);
+
+ 
+# 46 ".././lcd_u.c" 3
+(*(volatile uint8_t *)(0x101)) 
+# 46 ".././lcd_u.c"
            |= (1<<
-# 43 ".././lcd_u.c" 3
+# 46 ".././lcd_u.c" 3
                   4
-# 43 ".././lcd_u.c"
+# 46 ".././lcd_u.c"
                             );
  
-# 44 ".././lcd_u.c" 3
+# 47 ".././lcd_u.c" 3
 (*(volatile uint8_t *)(0x101)) 
-# 44 ".././lcd_u.c"
+# 47 ".././lcd_u.c"
            |= (1<<
-# 44 ".././lcd_u.c" 3
+# 47 ".././lcd_u.c" 3
                   3
-# 44 ".././lcd_u.c"
+# 47 ".././lcd_u.c"
                             );
  
-# 45 ".././lcd_u.c" 3
+# 48 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x0D) + 0x20)) 
-# 45 ".././lcd_u.c"
+# 48 ".././lcd_u.c"
            |= (1<<
-# 45 ".././lcd_u.c" 3
+# 48 ".././lcd_u.c" 3
                   3
-# 45 ".././lcd_u.c"
+# 48 ".././lcd_u.c"
                             );
  
-# 46 ".././lcd_u.c" 3
+# 49 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x13) + 0x20)) 
-# 46 ".././lcd_u.c"
+# 49 ".././lcd_u.c"
            |= (1<<
-# 46 ".././lcd_u.c" 3
+# 49 ".././lcd_u.c" 3
                   5
-# 46 ".././lcd_u.c"
+# 49 ".././lcd_u.c"
                             );
 
  
-# 48 ".././lcd_u.c" 3
+# 51 ".././lcd_u.c" 3
 (*(volatile uint8_t *)(0x101)) 
-# 48 ".././lcd_u.c"
+# 51 ".././lcd_u.c"
           |= (1<<
-# 48 ".././lcd_u.c" 3
+# 51 ".././lcd_u.c" 3
                  6
-# 48 ".././lcd_u.c"
+# 51 ".././lcd_u.c"
                           );
  
-# 49 ".././lcd_u.c" 3
+# 52 ".././lcd_u.c" 3
 (*(volatile uint8_t *)(0x101)) 
-# 49 ".././lcd_u.c"
+# 52 ".././lcd_u.c"
            |= (1<<
-# 49 ".././lcd_u.c" 3
+# 52 ".././lcd_u.c" 3
                   5
-# 49 ".././lcd_u.c"
+# 52 ".././lcd_u.c"
                             );
 
     _delay_ms(100);
-# 67 ".././lcd_u.c"
+# 70 ".././lcd_u.c"
     
-# 67 ".././lcd_u.c" 3
+# 70 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 67 ".././lcd_u.c"
+# 70 ".././lcd_u.c"
                &= ~(1<<
-# 67 ".././lcd_u.c" 3
+# 70 ".././lcd_u.c" 3
                        5
-# 67 ".././lcd_u.c"
+# 70 ".././lcd_u.c"
                                  );
     
-# 68 ".././lcd_u.c" 3
+# 71 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 68 ".././lcd_u.c"
+# 71 ".././lcd_u.c"
               &= ~(1<<
-# 68 ".././lcd_u.c" 3
+# 71 ".././lcd_u.c" 3
                       6
-# 68 ".././lcd_u.c"
+# 71 ".././lcd_u.c"
                                );
 
 
@@ -812,52 +827,98 @@ void lcd_init(void)
 
 
     lcd_write_command(0b00001100);
+ 
+# 102 ".././lcd_u.c" 3
+(*(volatile uint8_t *)((0x05) + 0x20)) 
+# 102 ".././lcd_u.c"
+= (
+# 102 ".././lcd_u.c" 3
+(*(volatile uint8_t *)((0x05) + 0x20)) 
+# 102 ".././lcd_u.c"
+& ((1 << 5) | (1 << 4))) | (debugSave);
 }
-# 109 ".././lcd_u.c"
+# 113 ".././lcd_u.c"
 void lcd_write_character(uint8_t data)
 {
+ uint8_t debugSave = (
+# 115 ".././lcd_u.c" 3
+                    (*(volatile uint8_t *)((0x05) + 0x20)) 
+# 115 ".././lcd_u.c"
+                    & ((1 << 5) | (1 << 4)));
+ 
+# 116 ".././lcd_u.c" 3
+(*(volatile uint8_t *)((0x05) + 0x20)) 
+# 116 ".././lcd_u.c"
+= (
+# 116 ".././lcd_u.c" 3
+(*(volatile uint8_t *)((0x05) + 0x20)) 
+# 116 ".././lcd_u.c"
+& (~(((1 << 5) | (1 << 4))))) | (1 << 4);
     
-# 111 ".././lcd_u.c" 3
+# 117 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 111 ".././lcd_u.c"
+# 117 ".././lcd_u.c"
                |= (1<<
-# 111 ".././lcd_u.c" 3
+# 117 ".././lcd_u.c" 3
                       5
-# 111 ".././lcd_u.c"
+# 117 ".././lcd_u.c"
                                 );
     
-# 112 ".././lcd_u.c" 3
+# 118 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 112 ".././lcd_u.c"
+# 118 ".././lcd_u.c"
               &= ~(1<<
-# 112 ".././lcd_u.c" 3
+# 118 ".././lcd_u.c" 3
                       6
-# 112 ".././lcd_u.c"
+# 118 ".././lcd_u.c"
                                );
     lcd_write_nibble(data);
     lcd_write_nibble(data << 4);
  _delay_us(64);
+ 
+# 122 ".././lcd_u.c" 3
+(*(volatile uint8_t *)((0x05) + 0x20)) 
+# 122 ".././lcd_u.c"
+= (
+# 122 ".././lcd_u.c" 3
+(*(volatile uint8_t *)((0x05) + 0x20)) 
+# 122 ".././lcd_u.c"
+& ((1 << 5) | (1 << 4))) | (debugSave);
 }
-# 125 ".././lcd_u.c"
+# 132 ".././lcd_u.c"
 void lcd_write_command(uint8_t data)
 {
+ uint8_t debugSave = (
+# 134 ".././lcd_u.c" 3
+                    (*(volatile uint8_t *)((0x05) + 0x20)) 
+# 134 ".././lcd_u.c"
+                    & ((1 << 5) | (1 << 4)));
+ 
+# 135 ".././lcd_u.c" 3
+(*(volatile uint8_t *)((0x05) + 0x20)) 
+# 135 ".././lcd_u.c"
+= (
+# 135 ".././lcd_u.c" 3
+(*(volatile uint8_t *)((0x05) + 0x20)) 
+# 135 ".././lcd_u.c"
+& (~(((1 << 5) | (1 << 4))))) | (1 << 4);
     
-# 127 ".././lcd_u.c" 3
+# 136 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 127 ".././lcd_u.c"
+# 136 ".././lcd_u.c"
                &= ~(1<<
-# 127 ".././lcd_u.c" 3
+# 136 ".././lcd_u.c" 3
                        5
-# 127 ".././lcd_u.c"
+# 136 ".././lcd_u.c"
                                  );
     
-# 128 ".././lcd_u.c" 3
+# 137 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 128 ".././lcd_u.c"
+# 137 ".././lcd_u.c"
               &= ~(1<<
-# 128 ".././lcd_u.c" 3
+# 137 ".././lcd_u.c" 3
                       6
-# 128 ".././lcd_u.c"
+# 137 ".././lcd_u.c"
                                );
     lcd_write_nibble(data);
     lcd_write_nibble(data << 4);
@@ -866,113 +927,122 @@ void lcd_write_command(uint8_t data)
  } else {
   _delay_us(64);
  }
+ 
+# 145 ".././lcd_u.c" 3
+(*(volatile uint8_t *)((0x05) + 0x20)) 
+# 145 ".././lcd_u.c"
+= (
+# 145 ".././lcd_u.c" 3
+(*(volatile uint8_t *)((0x05) + 0x20)) 
+# 145 ".././lcd_u.c"
+& ((1 << 5) | (1 << 4))) | (debugSave);
 }
-# 148 ".././lcd_u.c"
+# 158 ".././lcd_u.c"
 void lcd_write_nibble(uint8_t data)
 {
     if (data & 1<<7) {
   
-# 151 ".././lcd_u.c" 3
+# 161 ".././lcd_u.c" 3
  (*(volatile uint8_t *)(0x102)) 
-# 151 ".././lcd_u.c"
+# 161 ".././lcd_u.c"
              |= (1<<
-# 151 ".././lcd_u.c" 3
+# 161 ".././lcd_u.c" 3
                     4
-# 151 ".././lcd_u.c"
+# 161 ".././lcd_u.c"
                               );
  } else {
      
-# 153 ".././lcd_u.c" 3
+# 163 ".././lcd_u.c" 3
     (*(volatile uint8_t *)(0x102)) 
-# 153 ".././lcd_u.c"
+# 163 ".././lcd_u.c"
                 &= ~(1<<
-# 153 ".././lcd_u.c" 3
+# 163 ".././lcd_u.c" 3
                         4
-# 153 ".././lcd_u.c"
+# 163 ".././lcd_u.c"
                                   );
  }
     if (data & 1<<6) {
   
-# 156 ".././lcd_u.c" 3
+# 166 ".././lcd_u.c" 3
  (*(volatile uint8_t *)(0x102)) 
-# 156 ".././lcd_u.c"
+# 166 ".././lcd_u.c"
              |= (1<<
-# 156 ".././lcd_u.c" 3
+# 166 ".././lcd_u.c" 3
                     3
-# 156 ".././lcd_u.c"
+# 166 ".././lcd_u.c"
                               );
  } else {
   
-# 158 ".././lcd_u.c" 3
+# 168 ".././lcd_u.c" 3
  (*(volatile uint8_t *)(0x102)) 
-# 158 ".././lcd_u.c"
+# 168 ".././lcd_u.c"
              &= ~(1<<
-# 158 ".././lcd_u.c" 3
+# 168 ".././lcd_u.c" 3
                      3
-# 158 ".././lcd_u.c"
+# 168 ".././lcd_u.c"
                                );
  }
     if (data & 1<<5) {
   
-# 161 ".././lcd_u.c" 3
+# 171 ".././lcd_u.c" 3
  (*(volatile uint8_t *)((0x0E) + 0x20)) 
-# 161 ".././lcd_u.c"
+# 171 ".././lcd_u.c"
              |= (1<<
-# 161 ".././lcd_u.c" 3
+# 171 ".././lcd_u.c" 3
                     3
-# 161 ".././lcd_u.c"
+# 171 ".././lcd_u.c"
                               );
  } else {
   
-# 163 ".././lcd_u.c" 3
+# 173 ".././lcd_u.c" 3
  (*(volatile uint8_t *)((0x0E) + 0x20)) 
-# 163 ".././lcd_u.c"
+# 173 ".././lcd_u.c"
              &= ~(1<<
-# 163 ".././lcd_u.c" 3
+# 173 ".././lcd_u.c" 3
                      3
-# 163 ".././lcd_u.c"
+# 173 ".././lcd_u.c"
                                );
  }
     if (data & 1<<4) {
   
-# 166 ".././lcd_u.c" 3
+# 176 ".././lcd_u.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 166 ".././lcd_u.c"
+# 176 ".././lcd_u.c"
              |= (1<<
-# 166 ".././lcd_u.c" 3
+# 176 ".././lcd_u.c" 3
                     5
-# 166 ".././lcd_u.c"
+# 176 ".././lcd_u.c"
                               );
  } else {
   
-# 168 ".././lcd_u.c" 3
+# 178 ".././lcd_u.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 168 ".././lcd_u.c"
+# 178 ".././lcd_u.c"
              &= ~(1<<
-# 168 ".././lcd_u.c" 3
+# 178 ".././lcd_u.c" 3
                      5
-# 168 ".././lcd_u.c"
+# 178 ".././lcd_u.c"
                                );
  }
 
     
-# 171 ".././lcd_u.c" 3
+# 181 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 171 ".././lcd_u.c"
+# 181 ".././lcd_u.c"
               |= (1<<
-# 171 ".././lcd_u.c" 3
+# 181 ".././lcd_u.c" 3
                      6
-# 171 ".././lcd_u.c"
+# 181 ".././lcd_u.c"
                               );
     _delay_us(1);
     
-# 173 ".././lcd_u.c" 3
+# 183 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 173 ".././lcd_u.c"
+# 183 ".././lcd_u.c"
               &= ~(1<<
-# 173 ".././lcd_u.c" 3
+# 183 ".././lcd_u.c" 3
                       6
-# 173 ".././lcd_u.c"
+# 183 ".././lcd_u.c"
                                );
     _delay_us(1);
 }
@@ -1031,7 +1101,7 @@ uint8_t getCursorFromLCDRAMcursor(uint8_t lcd_cursor){
  return 0xFF;
 
 }
-# 239 ".././lcd_u.c"
+# 249 ".././lcd_u.c"
 void lcd_putc(char c)
 {
 
@@ -1071,9 +1141,9 @@ void lcd_putc(char c)
 void lcd_puts(const char *s)
 {
  if (s != 
-# 277 ".././lcd_u.c" 3 4
+# 287 ".././lcd_u.c" 3 4
          ((void *)0)
-# 277 ".././lcd_u.c"
+# 287 ".././lcd_u.c"
              ){
   register char c;
 
@@ -1091,19 +1161,19 @@ void lcd_puts(const char *s)
 void lcd_puts_P(const char *progmem_s)
 {
  if (progmem_s != 
-# 293 ".././lcd_u.c" 3 4
+# 303 ".././lcd_u.c" 3 4
                  ((void *)0)
-# 293 ".././lcd_u.c"
+# 303 ".././lcd_u.c"
                      ){
   register char c;
   while ((c=
-# 295 ".././lcd_u.c" 3
+# 305 ".././lcd_u.c" 3
            (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 295 ".././lcd_u.c"
+# 305 ".././lcd_u.c"
            progmem_s++
-# 295 ".././lcd_u.c" 3
+# 305 ".././lcd_u.c" 3
            )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 295 ".././lcd_u.c"
+# 305 ".././lcd_u.c"
                                      ))
   lcd_putc(c);
  }

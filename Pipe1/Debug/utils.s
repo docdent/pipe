@@ -678,23 +678,24 @@ putChar_MidiChan:
 	movw r26,r22
 	adiw r26,1
 .LVL104:
-	ldi r24,lo8(49)
-	movw r30,r22
-	st Z,r24
+	ldi r25,lo8(49)
 .LVL105:
+	movw r30,r22
+	st Z,r25
 	.loc 1 176 0
-	ldi r25,lo8(-10)
-	rjmp .L49
+	ldi r25,lo8(-9)
+	add r25,r24
 .LVL106:
+	rjmp .L49
+.LVL107:
 .L48:
 	.loc 1 178 0
 	movw r26,r22
 	adiw r26,1
-.LVL107:
+.LVL108:
 	ldi r24,lo8(32)
 	movw r30,r22
 	st Z,r24
-.LVL108:
 .L49:
 	.loc 1 180 0
 	movw r30,r26
@@ -2482,7 +2483,7 @@ cgPattern_Up:
 	.comm	lcd_cursorIsOn,1,1
 	.comm	editByte,1,1
 	.comm	editLong,4,1
-	.comm	string_Buf,40,1
+	.comm	string_Buf,64,1
 .global	cr_lf
 	.section	.progmem.data.cr_lf,"a",@progbits
 	.type	cr_lf, @object
@@ -4322,7 +4323,7 @@ cr_lf:
 	.long	0xf39
 	.uleb128 0x8
 	.long	0xbc
-	.byte	0x27
+	.byte	0x3f
 	.byte	0
 	.uleb128 0x28
 	.long	.LASF110
@@ -5867,8 +5868,8 @@ cr_lf:
 	.long	.LVL105
 	.long	.LVL106
 	.word	0x3
-	.byte	0x9
-	.byte	0xf6
+	.byte	0x88
+	.sleb128 1
 	.byte	0x9f
 	.long	.LVL106
 	.long	.LVL110
@@ -5917,7 +5918,7 @@ cr_lf:
 	.byte	0x93
 	.uleb128 0x1
 	.long	.LVL104
-	.long	.LVL106
+	.long	.LVL107
 	.word	0x6
 	.byte	0x6a
 	.byte	0x93
@@ -5925,8 +5926,8 @@ cr_lf:
 	.byte	0x6b
 	.byte	0x93
 	.uleb128 0x1
-	.long	.LVL106
 	.long	.LVL107
+	.long	.LVL108
 	.word	0x6
 	.byte	0x66
 	.byte	0x93
@@ -5934,7 +5935,7 @@ cr_lf:
 	.byte	0x67
 	.byte	0x93
 	.uleb128 0x1
-	.long	.LVL107
+	.long	.LVL108
 	.long	.LVL109
 	.word	0x6
 	.byte	0x6a
