@@ -1012,6 +1012,14 @@ extern uint8_t midi_RegisterMatchProgram(uint8_t program);
 extern uint8_t count_Registers(uint8_t mode);
 
 
+
+
+extern uint8_t prog_Display;
+extern uint8_t prog_UpdDisplay;
+extern void prog_set(uint8_t prog);
+extern void prog_toLcd();
+
+
 extern void init_Midi2Manual();
 extern void init_Manual2Midi();
 extern void init_Manual2Module();
@@ -1055,7 +1063,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 242 ".././Midi.h"
+# 250 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{

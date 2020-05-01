@@ -114,7 +114,7 @@ extern void midi_ProgramChange(uint8_t channel, uint8_t program);
 #define NOTE_ON 0x01
 #define NOTE_OFF 0x00
 // V 0.69: set MSB if note shall not be redirected to midi output if module is not writeable
-#define NOTE_NOREDIRECT 0x80 
+#define NOTE_NOREDIRECT 0x80
 
 //--------------------- MIDIN IN OUT ASSIGN ------------------------
 typedef  struct{
@@ -178,6 +178,14 @@ extern uint8_t midi_RegisterMatchProgram(uint8_t program);
 #define REGISTER_READ_ALL 0x03
 #define REGISTER_READ_HWIN_XOR_SWOUT 0x04
 extern uint8_t count_Registers(uint8_t mode);
+
+//----------------------- PROGRAM ---------------------
+#define PROGR_NONE 0xFF
+#define PROGR_MAX 63
+extern uint8_t prog_Display; // Program value 0...63
+extern uint8_t prog_UpdDisplay; // TRUE if PROGRAM has changed and should be updated
+extern void prog_set(uint8_t prog);
+extern void prog_toLcd(); // send 4 byte to LCD at current cursor pos: "P:1A" .. "P:8H"
 
 //----------------------- FUNCTIONS -------------------
 extern void init_Midi2Manual();

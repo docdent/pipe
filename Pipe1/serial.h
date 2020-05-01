@@ -155,6 +155,9 @@ extern volatile uint16_t midiRxBytesCount;
 extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
 
+extern volatile uint8_t midiRxBuffUsage; // max used lenght of Midi Rx Buffer
+extern volatile uint8_t midiTxBuffUsage; // max used lenght of Midi Tx Buffer
+
 extern volatile uint8_t midiTxLastCmd;
 #define MIDI_TX_LASTCMD_NONE 0x00 // valid commands are 0x80...0xFF only
 #define MIDI_TXT_RESET_LASTCMD midiTxLastCmd = MIDI_TX_LASTCMD_NONE;
@@ -163,8 +166,8 @@ extern volatile uint8_t midiTxLastCmd;
 #define MIDI_TX_BUFFER_EMPTY (midiTxOutIndex == midiTxInIndex)
 #define MIDI_RX_BUFFER_NONEMPTY (midiRxInIndex != midiRxOutIndex)
 #define MIDI_TX_BUFFER_NONEMPTY (midiTxOutIndex != midiTxInIndex)
-#define MIDI_RX_BUFFER_LOAD (midiRxInIndex > midiRxOutIndex ? midiRxInIndex > midiRxOutIndex : MIDI_RX_BUFFER_SIZE - midiRxOutIndex + midiRxInIndex)
-#define MIDI_TX_BUFFER_LOAD (midiTxInIndex > midiTxOutIndex ? midiTxInIndex > midiTxOutIndex : MIDI_TX_BUFFER_SIZE - midiTxOutIndex + midiTxInIndex)
+#define MIDI_RX_BUFFER_LOAD (midiRxInIndex > midiRxOutIndex ? midiRxInIndex - midiRxOutIndex : MIDI_RX_BUFFER_SIZE - midiRxOutIndex + midiRxInIndex)
+#define MIDI_TX_BUFFER_LOAD (midiTxInIndex > midiTxOutIndex ? midiTxInIndex - midiTxOutIndex : MIDI_TX_BUFFER_SIZE - midiTxOutIndex + midiTxInIndex)
 
 #define MIDI_EXTRA_BUFFER_SIZE 3
 extern uint8_t midi_ExtraBuffer[MIDI_EXTRA_BUFFER_SIZE];

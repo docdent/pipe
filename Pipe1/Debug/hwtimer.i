@@ -929,6 +929,14 @@ extern uint8_t midi_RegisterMatchProgram(uint8_t program);
 extern uint8_t count_Registers(uint8_t mode);
 
 
+
+
+extern uint8_t prog_Display;
+extern uint8_t prog_UpdDisplay;
+extern void prog_set(uint8_t prog);
+extern void prog_toLcd();
+
+
 extern void init_Midi2Manual();
 extern void init_Manual2Midi();
 extern void init_Manual2Module();
@@ -972,7 +980,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 242 ".././Midi.h"
+# 250 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1003,11 +1011,11 @@ typedef struct Menu {
 
 
 } Menu_t;
-# 171 ".././menu.h"
+# 173 ".././menu.h"
 extern const __flash Menu_t * menuStack[16];
 
 uint8_t lcdData[10];
-# 183 ".././menu.h"
+# 185 ".././menu.h"
 typedef struct {
  uint8_t nibbleCount;
  uint8_t nibblePos[8];
@@ -1057,7 +1065,7 @@ extern void dataToNibbles();
 extern void menu_DisplayMainMessage_P(const __flash char* pMessage);
 extern void menu_DisplayMainMessage(const char* pMessage);
 extern void menu_deleteMessage();
-# 240 ".././menu.h"
+# 242 ".././menu.h"
 typedef struct{
  const __flash struct Menu *pSelMenu;
 } SoftKeyMenu_List_t;
@@ -1077,14 +1085,14 @@ extern uint8_t softKey_Execute(uint8_t nrSoftKey, uint8_t myMessage);
 
 
 extern const char sw_version [] 
-# 258 ".././menu.h" 3
+# 260 ".././menu.h" 3
                                __attribute__((__progmem__))
-# 258 ".././menu.h"
+# 260 ".././menu.h"
                                       ;
 extern const char HelloMsg [] 
-# 259 ".././menu.h" 3
+# 261 ".././menu.h" 3
                              __attribute__((__progmem__))
-# 259 ".././menu.h"
+# 261 ".././menu.h"
                                     ;
 
 extern uint8_t menu_TestModulePattern;

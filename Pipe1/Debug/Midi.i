@@ -988,8 +988,11 @@ extern volatile uint16_t midiRxBytesCount;
 extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
 
+extern volatile uint8_t midiRxBuffUsage;
+extern volatile uint8_t midiTxBuffUsage;
+
 extern volatile uint8_t midiTxLastCmd;
-# 170 ".././serial.h"
+# 173 ".././serial.h"
 extern uint8_t midi_ExtraBuffer[3];
 # 18 ".././Midi.c" 2
 # 1 ".././test.h" 1
@@ -1116,6 +1119,14 @@ extern uint8_t midi_RegisterMatchProgram(uint8_t program);
 extern uint8_t count_Registers(uint8_t mode);
 
 
+
+
+extern uint8_t prog_Display;
+extern uint8_t prog_UpdDisplay;
+extern void prog_set(uint8_t prog);
+extern void prog_toLcd();
+
+
 extern void init_Midi2Manual();
 extern void init_Manual2Midi();
 extern void init_Manual2Module();
@@ -1159,7 +1170,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 242 ".././Midi.h"
+# 250 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1451,11 +1462,11 @@ typedef struct Menu {
 
 
 } Menu_t;
-# 171 ".././menu.h"
+# 173 ".././menu.h"
 extern const __flash Menu_t * menuStack[16];
 
 uint8_t lcdData[10];
-# 183 ".././menu.h"
+# 185 ".././menu.h"
 typedef struct {
  uint8_t nibbleCount;
  uint8_t nibblePos[8];
@@ -1505,7 +1516,7 @@ extern void dataToNibbles();
 extern void menu_DisplayMainMessage_P(const __flash char* pMessage);
 extern void menu_DisplayMainMessage(const char* pMessage);
 extern void menu_deleteMessage();
-# 240 ".././menu.h"
+# 242 ".././menu.h"
 typedef struct{
  const __flash struct Menu *pSelMenu;
 } SoftKeyMenu_List_t;
@@ -1525,14 +1536,14 @@ extern uint8_t softKey_Execute(uint8_t nrSoftKey, uint8_t myMessage);
 
 
 extern const char sw_version [] 
-# 258 ".././menu.h" 3
+# 260 ".././menu.h" 3
                                __attribute__((__progmem__))
-# 258 ".././menu.h"
+# 260 ".././menu.h"
                                       ;
 extern const char HelloMsg [] 
-# 259 ".././menu.h" 3
+# 261 ".././menu.h" 3
                              __attribute__((__progmem__))
-# 259 ".././menu.h"
+# 261 ".././menu.h"
                                     ;
 
 extern uint8_t menu_TestModulePattern;
@@ -1835,6 +1846,8 @@ uint8_t midi_RegisterChanged;
 
 void init_Midi(){
  midi_CouplerReset();
+ prog_Display = 0xFF;
+ prog_UpdDisplay = 0x00;
 }
 
 void midi_CouplerReset(){
@@ -1988,9 +2001,9 @@ void midi_CheckTxActiveSense(){
  if (!(((swTimer[8].counter != 0x00) && (swTimer[8].counter != 0xFF)))){
 
   
-# 214 ".././Midi.c" 3
+# 216 ".././Midi.c" 3
  for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 214 ".././Midi.c"
+# 216 ".././Midi.c"
  {swTimer[8].counter = 200 / 20; swTimer[8].prescaler = (200 % 20) / 4;};
   if (midi_Setting.TxActivceSense) {
    midi_SendActiveSense();
@@ -2029,9 +2042,9 @@ void midiIn_Process(uint8_t midiByte){
    if (midiByte == 0xFE) {
     midiRxActivceSensing = 1;
     
-# 251 ".././Midi.c" 3
+# 253 ".././Midi.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 251 ".././Midi.c"
+# 253 ".././Midi.c"
    {swTimer[3].counter = 500 / 20; swTimer[3].prescaler = (500 % 20) / 4;};
    } else if (midiByte == 0xFF){
     midiAllReset();
@@ -2320,9 +2333,9 @@ uint8_t read_allRegister(uint8_t* resultPtr){
   if ((regNr & 0x07) == 0x07) {
 
    if (resultPtr != 
-# 538 ".././Midi.c" 3 4
+# 540 ".././Midi.c" 3 4
                    ((void *)0)
-# 538 ".././Midi.c"
+# 540 ".././Midi.c"
                        ) {
     *resultPtr++ = mask;
    }
@@ -2358,6 +2371,7 @@ uint8_t program_toRegister(uint8_t program){
 
  uint8_t result = 0;
  if (program < 64){
+  prog_set(program);
   uint8_t regBits;
   uint8_t regNr = 0;
   uint8_t *regBytePtr = &(programMap[program].registers[0]);
@@ -2487,6 +2501,29 @@ uint8_t midi_CountRegisterInProgram(uint8_t program){
  return result;
 
 }
+
+
+uint8_t prog_Display;
+uint8_t prog_UpdDisplay;
+
+void prog_set(uint8_t prog){
+ if (prog != prog_Display){
+  prog_Display = prog;
+  prog_UpdDisplay = 0xFF;
+ }
+}
+
+void prog_toLcd(){
+ if (prog_Display != 0xFF) {
+  lcd_putc('P');
+  lcd_putc(':');
+  lcd_putc('1' + (prog_Display & 0x07));
+  lcd_putc('A' + ((prog_Display >> 3) & 0x07));
+ } else {
+  lcd_blank(4);
+ }
+}
+
 
 
 

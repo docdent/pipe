@@ -59,6 +59,8 @@ uint8_t midi_RegisterChanged;
 
 void init_Midi(){
 	midi_CouplerReset();
+	prog_Display = PROGR_NONE;
+	prog_UpdDisplay = FALSE;
 }
 
 void midi_CouplerReset(){
@@ -570,6 +572,7 @@ uint8_t program_toRegister(uint8_t program){
 	// Program 0..63
 	uint8_t result = 0; // return nr of registers that are turned on by program
 	if (program < PROGRAM_COUNT){
+		prog_set(program); // for display in main
 		uint8_t regBits;
 		uint8_t regNr = 0;
 		uint8_t *regBytePtr = &(programMap[program].registers[0]);
@@ -699,6 +702,29 @@ uint8_t midi_CountRegisterInProgram(uint8_t program){
 	return result;
 
 }
+// PROGRAM DISPLAY V 0.71
+
+uint8_t prog_Display; // Program value 0...63
+uint8_t prog_UpdDisplay; // TRUE if PROGRAM has changed and should be updated
+
+void prog_set(uint8_t prog){
+	if (prog != prog_Display){
+		prog_Display = prog;
+		prog_UpdDisplay = TRUE;
+	}
+}
+
+void prog_toLcd(){
+	if (prog_Display != PROGR_NONE) {
+		lcd_putc('P');
+		lcd_putc(':');
+		lcd_putc('1' + (prog_Display & 0x07));
+		lcd_putc('A' + ((prog_Display >> 3) & 0x07));
+	} else {
+		lcd_blank(4);
+	}
+}
+
 
 //------------------------------------- M I D I C H A N N E L   T O   M A N U A L ---------------------------------
 

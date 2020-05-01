@@ -92,6 +92,7 @@ typedef struct Menu {
 	#define MENU_LCD_CURSOR_STAT_MIDIOUT (LCD_LINE0+16-6)
 	#define MENU_LCD_CURSOR_STAT_CENTRAL (LCD_LINE0+8-3)
 	#define MENU_LCD_CURSOR_STAT_PWR (MENU_LCD_CURSOR_STAT_CENTRAL+5)
+	#define MENU_LCD_CURSOR_PROG (LCD_LINE0+0)
 	#define LCD_LINELEN 16
 #else
 	#define MENU_LCD_MENUTEXTLEN 10 // 9 valid chars
@@ -108,6 +109,7 @@ typedef struct Menu {
 	#define MENU_LCD_CURSOR_STAT_MIDIOUT (LCD_LINE0+20-5)
 	#define MENU_LCD_CURSOR_STAT_CENTRAL (LCD_LINE0+10-3)
 	#define MENU_LCD_CURSOR_STAT_PWR (MENU_LCD_CURSOR_STAT_CENTRAL+5)
+	#define MENU_LCD_CURSOR_PROG (LCD_LINE2+8)
 	#define LCD_LINELEN 20
 #endif
 //----------------------------------- MENU TEXT and VALUES--------------------------------------------

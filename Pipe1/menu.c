@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.69";
+const char sw_version [] PROGMEM = "V0.71";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -228,7 +228,9 @@ const __flash Menu_t menu_midi[] =
 	{MENU_T_VARMIDICHAN,MENU_FLAG_ALLOWINVALD,"Thru-Out",NULL,{&midiThrough.OutChannel},NULL,menuOnExitMidiThrough},
 	{MENU_T_VARONOFF,0,"Accept PC",NULL,{&(midi_Setting.AcceptProgChange)},NULL,menuOnExitMidiActiveSense},
 	{MENU_T_VARONOFF,0,"Act.Sense",NULL,{&(midi_Setting.TxActivceSense)},NULL,menuOnExitMidiActiveSense},
-	{MENU_T_VARONOFF | MENU_T_RIGHTBOUND,0,"VelZ4Off",NULL,{&(midi_Setting.VelZero4Off)},NULL,menuOnExitMidiActiveSense}};
+	{MENU_T_VARONOFF,0,"VelZ4Off",NULL,{&(midi_Setting.VelZero4Off)},NULL,menuOnExitMidiActiveSense},
+	{MENU_T_VARDEC,MENU_FLAG_READONLY,"RxBufUse",NULL,{&(midiRxBuffUsage)},NULL,NULL},	// V0.70 midi buffer usage
+	{MENU_T_VARDEC | MENU_T_RIGHTBOUND,MENU_FLAG_READONLY,"TxBufUse",NULL,{&(midiTxBuffUsage)},NULL,NULL}};
 
 // --- MAIN --- MANUAL --- KOPPLER ---
 uint8_t menuOnExitCoupler(uint8_t arg);
@@ -302,6 +304,8 @@ uint8_t softKeyK1A(uint8_t arg);
 uint8_t softKeyK2A(uint8_t arg);
 uint8_t softKeyK3A(uint8_t arg);
 uint8_t softKeyK4A(uint8_t arg);
+uint8_t softKeyPrP(uint8_t arg);
+uint8_t softKeyPrM(uint8_t arg);
 uint8_t softKeyRegOff(uint8_t arg);
 
 const __flash char shortKeyTextNone[MENU_LCD_MENUTEXTLEN]  = "";
@@ -321,10 +325,12 @@ const __flash char shortKeyTextCpl3P[MENU_LCD_MENUTEXTLEN]  = "3<P\x80";
 const __flash char shortKeyTextCpl21[MENU_LCD_MENUTEXTLEN]  = "2<1\x80";
 const __flash char shortKeyTextCpl2P[MENU_LCD_MENUTEXTLEN]  = "2<P\x80";
 const __flash char shortKeyTextCpl1P[MENU_LCD_MENUTEXTLEN]  = "1<P\x80";
-const __flash char shortKeyTextK1A[MENU_LCD_MENUTEXTLEN]  = "Kb1A\x80";
-const __flash char shortKeyTextK2A[MENU_LCD_MENUTEXTLEN]  = "Kb2A\x80";
-const __flash char shortKeyTextK3A[MENU_LCD_MENUTEXTLEN]  = "Kb3A\x80";
-const __flash char shortKeyTextK4A[MENU_LCD_MENUTEXTLEN]  = "Kb4A\x80";
+const __flash char shortKeyTextK1A[MENU_LCD_MENUTEXTLEN]  = "Pr1A\x80";
+const __flash char shortKeyTextK2A[MENU_LCD_MENUTEXTLEN]  = "Pr2A\x80";
+const __flash char shortKeyTextK3A[MENU_LCD_MENUTEXTLEN]  = "Pr3A\x80";
+const __flash char shortKeyTextK4A[MENU_LCD_MENUTEXTLEN]  = "Pr4A\x80";
+const __flash char shortKeyTextPRP[MENU_LCD_MENUTEXTLEN]  = "P+/s";
+const __flash char shortKeyTextPRM[MENU_LCD_MENUTEXTLEN]  = "P-/c";
 const __flash char shortKeyTextRegOff[MENU_LCD_MENUTEXTLEN]  = "Reg" LCD_STRING_ARROWDOWN;
 
 const __flash Menu_t menu_selFunc[] =
@@ -343,10 +349,12 @@ const __flash Menu_t menu_selFunc[] =
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Koppel2<1",NULL,{.pString=shortKeyTextCpl21},softKeyCoupler2from1,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Koppel2<P",NULL,{.pString=shortKeyTextCpl2P},softKeyCoupler2fromP,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Koppel1<P",NULL,{.pString=shortKeyTextCpl1P},softKeyCoupler1fromP,NULL},
-	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 1A",NULL,{.pString=shortKeyTextK1A},softKeyK1A,NULL},
-	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 2A",NULL,{.pString=shortKeyTextK2A},softKeyK2A,NULL},
-	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 3A",NULL,{.pString=shortKeyTextK3A},softKeyK3A,NULL},
-	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Kombin 4A",NULL,{.pString=shortKeyTextK4A},softKeyK4A,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Pr.+/set",NULL,{.pString=shortKeyTextPRP},softKeyPrP,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Pr.-/clr",NULL,{.pString=shortKeyTextPRM},softKeyPrM,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog. 1A",NULL,{.pString=shortKeyTextK1A},softKeyK1A,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog. 2A",NULL,{.pString=shortKeyTextK2A},softKeyK2A,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog. 3A",NULL,{.pString=shortKeyTextK3A},softKeyK3A,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog. 4A",NULL,{.pString=shortKeyTextK4A},softKeyK4A,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Reg.aus",NULL,{.pString=shortKeyTextRegOff},softKeyRegOff,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"MIDI Off",NULL,{.pString=shortKeyTextMIDIoff},menu_OnEnterMidiPanic,NULL},
 	{MENU_T_MENU_R,MENU_FLAG_MENU_SOFTKEY,"Setup",menu_setup,{.pString=shortKeyTextSetup},NULL,NULL}};
@@ -608,6 +616,42 @@ uint8_t softKeyRegOff(uint8_t arg){
 	}
 	return 0;
 }
+
+uint8_t softKeyPrP(uint8_t arg){
+	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
+		// longpress: set
+		if (prog_Display != PROGR_NONE){
+			// there is a program active: program current register set to program
+			menuDisplaySaveMessage(register_toProgram(prog_Display, TRUE));
+		}
+	} else if (arg != 0) {
+		// shortpress: PROGR_MAX program
+		if (prog_Display == PROGR_MAX){
+			prog_Display = PROGR_NONE;			
+		} else {
+			prog_Display++;
+		}
+		prog_UpdDisplay = TRUE;
+	}
+	return 0;	
+}
+
+uint8_t softKeyPrM(uint8_t arg){
+	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
+		midi_resetRegisters();
+		prog_set(PROGR_NONE);
+	} else if (arg != 0) {
+		// shortpress: PROGR_MAX program
+		if (prog_Display == PROGR_NONE){
+			prog_Display = PROGR_MAX;
+		} else {
+			prog_Display--;
+		}
+		prog_UpdDisplay = TRUE;
+	}
+	return 0;
+}
+
 //*************************** I N D I V I D U A L   M E N U   F U N C T I O N S ******************************
 
 uint8_t menuOnExitSaveProgram(uint8_t arg){

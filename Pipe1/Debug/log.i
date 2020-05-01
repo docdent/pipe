@@ -794,8 +794,11 @@ extern volatile uint16_t midiRxBytesCount;
 extern volatile uint8_t midiRxOvflCount;
 extern volatile uint8_t midiTxOvflCount;
 
+extern volatile uint8_t midiRxBuffUsage;
+extern volatile uint8_t midiTxBuffUsage;
+
 extern volatile uint8_t midiTxLastCmd;
-# 170 ".././serial.h"
+# 173 ".././serial.h"
 extern uint8_t midi_ExtraBuffer[3];
 # 13 ".././log.c" 2
 

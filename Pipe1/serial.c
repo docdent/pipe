@@ -34,6 +34,9 @@ volatile uint8_t midiTxOvfl;
 volatile uint8_t midiRxOvflCount;
 volatile uint8_t midiTxOvflCount;
 
+volatile uint8_t midiRxBuffUsage; // max used lenght of Midi Rx Buffer
+volatile uint8_t midiTxBuffUsage; // max used lenght of Midi Tx Buffer
+
 volatile uint8_t* serUSBRxInIndex;
 volatile uint8_t* serUSBRxOutIndex;
 volatile uint8_t* serUSBTxOutIndex;
@@ -74,6 +77,8 @@ void init_Serial1MIDI() {
 	midiTxOvfl = SER_OVFL_NO;
 	midiRxOvflCount = 0;
 	midiTxOvflCount = 0;
+	midiRxBuffUsage = 0; // max used lenght of Midi Rx Buffer
+	midiTxBuffUsage = 0; // max used lenght of Midi Tx Buffer
 	MIDI_TXT_RESET_LASTCMD
 }
 
@@ -113,6 +118,10 @@ void serial1MIDISend(uint8_t data){
 		// no overflow
 		midiTxInIndex = newIndex;
 	}
+	uint8_t txBufferLoad = MIDI_TX_BUFFER_LOAD;
+	if (txBufferLoad > midiTxBuffUsage) {
+		midiTxBuffUsage = txBufferLoad;
+	}
 	UCSR1B |= (1 << UDRIE1); // Interrupt einschalten für "Senderegister leer"
 }
 
@@ -150,6 +159,10 @@ ISR(USART1_RX_vect) {
 	} else {
 		// no overflow
 		midiRxInIndex = newIndex;
+	}
+	uint8_t rxBufferLoad = MIDI_RX_BUFFER_LOAD;
+	if (rxBufferLoad > midiRxBuffUsage) {
+		midiRxBuffUsage = rxBufferLoad;
 	}
 	midiRxBytesCount++;
 }

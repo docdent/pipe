@@ -147,6 +147,11 @@ int main(void)
 				midi_AllManualsOff();
 				midi_resetRegisters();
 				midi_CouplerReset();
+				init_log(); // clear log V 0.70
+				midiRxBuffUsage = 0; // max used lenght of Midi Rx Buffer
+				midiTxBuffUsage = 0; // max used lenght of Midi Tx Buffer
+				POWER_ON
+				pipe_PowerStatus = POWERSTATE_FORCE_ON; // V0.70 power on
 				menu_DisplayMainMessage_P(panicString);
 			}
 			if (menuNotActive == TRUE) {
@@ -185,6 +190,7 @@ int main(void)
 				menu_ClearAllDisp();
 				softKeys_toLCD();
 				softKey_WantLong(TRUE);
+				prog_UpdDisplay = TRUE; // update program display 
 				updateStatus = FALSE; // set when entering menu or from elsewhere if there is a update
 			}
 		} else {
@@ -330,6 +336,12 @@ int main(void)
 			}
 		}
 		#endif
+		//----------------------- program display ------------------------
+		if (prog_UpdDisplay == TRUE){
+			prog_UpdDisplay = FALSE;
+			lcd_goto(MENU_LCD_CURSOR_PROG);
+			prog_toLcd();
+		}
 		//------------------------- every second ----------------------------
 		if (time_UpTimeUpdated == TRUE) {
 			time_UpTimeUpdated = FALSE;
