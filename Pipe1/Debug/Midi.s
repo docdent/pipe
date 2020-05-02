@@ -1914,17 +1914,17 @@ prog_toLcd:
 .LVL214:
 	.loc 1 723 0
 	lds r24,prog_Display
-	andi r24,lo8(7)
-	subi r24,lo8(-(49))
-	call lcd_putc
-.LVL215:
-	.loc 1 724 0
-	lds r24,prog_Display
 	lsr r24
 	lsr r24
 	lsr r24
 	andi r24,lo8(7)
 	subi r24,lo8(-(65))
+	call lcd_putc
+.LVL215:
+	.loc 1 724 0
+	lds r24,prog_Display
+	andi r24,lo8(7)
+	subi r24,lo8(-(49))
 	call lcd_putc
 .LVL216:
 	.loc 1 725 0

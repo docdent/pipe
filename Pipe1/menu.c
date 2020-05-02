@@ -309,6 +309,8 @@ uint8_t softKeyPrM(uint8_t arg);
 uint8_t softKeyPrSet(uint8_t arg);
 uint8_t softKeyPrInc(uint8_t arg);
 uint8_t softKeyPrDec(uint8_t arg);
+uint8_t softKeyPBInc(uint8_t arg);
+uint8_t softKeyPBDec(uint8_t arg);
 uint8_t softKeyRegOff(uint8_t arg);
 
 const __flash char shortKeyTextNone[MENU_LCD_MENUTEXTLEN]  = "";
@@ -328,14 +330,16 @@ const __flash char shortKeyTextCpl3P[MENU_LCD_MENUTEXTLEN]  = "3<P\x80";
 const __flash char shortKeyTextCpl21[MENU_LCD_MENUTEXTLEN]  = "2<1\x80";
 const __flash char shortKeyTextCpl2P[MENU_LCD_MENUTEXTLEN]  = "2<P\x80";
 const __flash char shortKeyTextCpl1P[MENU_LCD_MENUTEXTLEN]  = "1<P\x80";
-const __flash char shortKeyTextK1A[MENU_LCD_MENUTEXTLEN]  = "P1A";
-const __flash char shortKeyTextK2A[MENU_LCD_MENUTEXTLEN]  = "P2A";
-const __flash char shortKeyTextK3A[MENU_LCD_MENUTEXTLEN]  = "P3A";
-const __flash char shortKeyTextK4A[MENU_LCD_MENUTEXTLEN]  = "P4A";
+const __flash char shortKeyTextK1A[MENU_LCD_MENUTEXTLEN]  = "PA1";
+const __flash char shortKeyTextK2A[MENU_LCD_MENUTEXTLEN]  = "PA2";
+const __flash char shortKeyTextK3A[MENU_LCD_MENUTEXTLEN]  = "PA3";
+const __flash char shortKeyTextK4A[MENU_LCD_MENUTEXTLEN]  = "PA4";
 const __flash char shortKeyTextPRP[MENU_LCD_MENUTEXTLEN]  = "P+/s";
 const __flash char shortKeyTextPRM[MENU_LCD_MENUTEXTLEN]  = "P-/c";
 const __flash char shortKeyTextPRI[MENU_LCD_MENUTEXTLEN]  = "P+";
 const __flash char shortKeyTextPRD[MENU_LCD_MENUTEXTLEN]  = "P-";
+const __flash char shortKeyTextPBI[MENU_LCD_MENUTEXTLEN]  = "PrB+";
+const __flash char shortKeyTextPBD[MENU_LCD_MENUTEXTLEN]  = "PrB-";
 const __flash char shortKeyTextPRS[MENU_LCD_MENUTEXTLEN]  = "Pset";
 const __flash char shortKeyTextRegOff[MENU_LCD_MENUTEXTLEN]  = "Pclr";
 
@@ -365,6 +369,8 @@ const __flash Menu_t menu_selFunc[] =
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog.set",NULL,{.pString=shortKeyTextPRS},softKeyPrSet,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog.+",NULL,{.pString=shortKeyTextPRI},softKeyPrInc,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog.-",NULL,{.pString=shortKeyTextPRD},softKeyPrDec,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"PrBank+",NULL,{.pString=shortKeyTextPBI},softKeyPBInc,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"PrBank.-",NULL,{.pString=shortKeyTextPBD},softKeyPBDec,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"MIDI Off",NULL,{.pString=shortKeyTextMIDIoff},menu_OnEnterMidiPanic,NULL},
 	{MENU_T_MENU_R,MENU_FLAG_MENU_SOFTKEY,"Setup",menu_setup,{.pString=shortKeyTextSetup},NULL,NULL}};
 
@@ -694,7 +700,7 @@ uint8_t softKeyPrInc(uint8_t arg){
 			// longpress: bank increment (8 program steps)
 			if (prog_Display != PROGR_NONE){
 				// there is a program active: program current register set to program
-				prog_Display = (prog_Display + 8) & 0x3F;
+				prog_Display = (prog_Display + 8) & 0x38;
 			}
 		} else if (arg != 0) {
 			// shortpress:  program
@@ -715,7 +721,7 @@ uint8_t softKeyPrDec(uint8_t arg){
 			// longpress: bank increment (8 program steps)
 			if (prog_Display != PROGR_NONE){
 				// there is a program active: program current register set to program
-				prog_Display = (prog_Display - 8) & 0x3F;
+				prog_Display = (prog_Display - 8) & 0x38;
 			}
 		} else if (arg != 0) {
 			// shortpress:  program
@@ -727,6 +733,29 @@ uint8_t softKeyPrDec(uint8_t arg){
 		}
 		send_progrChange_toMidiThru(prog_Display);
 		prog_UpdDisplay = TRUE;
+	}
+	return 0;
+}
+uint8_t softKeyPBInc(uint8_t arg){
+	if (arg != 0) {
+		//  bank increment (8 program steps)
+		if (prog_Display != PROGR_NONE){
+			// there is a program active: program current register set to program
+			prog_Display = (prog_Display + 8) & 0x38;
+			send_progrChange_toMidiThru(prog_Display);
+			prog_UpdDisplay = TRUE;
+		}
+	}
+	return 0;
+}
+uint8_t softKeyPBDec(uint8_t arg){
+	if (arg != 0) {
+		// there is a program active: program current register set to program
+		if (prog_Display != PROGR_NONE){
+			prog_Display = (prog_Display - 8) & 0x38;
+			send_progrChange_toMidiThru(prog_Display);
+			prog_UpdDisplay = TRUE;
+		}
 	}
 	return 0;
 }

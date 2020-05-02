@@ -1353,8 +1353,8 @@ extern char* putString_P(const __flash char* pSourceString, char* pOutput){
 
 extern char* putString_Prog(char* pOutput, uint8_t progNr){
  *pOutput++ = 'P';
- *pOutput++ = '1'+ (progNr & 0x07);
  *pOutput++ = 'A'+ ((progNr >> 3) & 0x07);
+ *pOutput++ = '1'+ (progNr & 0x07);
  return pOutput;
 }
 

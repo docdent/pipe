@@ -720,8 +720,8 @@ void prog_toLcd(){
 	if (prog_Display != PROGR_NONE) {
 		lcd_putc('P');
 		lcd_putc(' ');
-		lcd_putc('1' + (prog_Display & 0x07));
 		lcd_putc('A' + ((prog_Display >> 3) & 0x07));
+		lcd_putc('1' + (prog_Display & 0x07));
 		lcd_putc(' ');
 	} else {
 		lcd_blank(5);
