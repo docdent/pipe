@@ -85,6 +85,8 @@ program change in softkey menu and display in main
 0.72
 midi: program change also send to midi (out thru!)
 main: display for program in left upper corner; also overrides Midi In display
+0.73
+midi: received program change sent to midi out through  even if thru in channel does not match
 
 
 TODO
