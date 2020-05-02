@@ -75,7 +75,16 @@ midi command from ESP (not yet tested)
 menu textes
 0.69
 serial.c midi send/receive: do not update index on overflow
-serial.c midi in buffer increased 
+serial.c midi in buffer increased
+0.70
+menu: show imidi buffer usage
+main: clear log on panic button
+main: turn on power on panic button
+0.71
+program change in softkey menu and display in main
+0.72
+midi: program change also send to midi (out thru!)
+main: display for program in left upper corner; also overrides Midi In display
 
 
 TODO
@@ -92,7 +101,7 @@ log for events and input
 Restore Menu display after panic button message
 Restore Menu display after MEssage
 Coupler for lowest bass note  only
-PC Out to MIDI for PC In
+
 */
 
 

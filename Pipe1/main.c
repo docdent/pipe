@@ -219,7 +219,6 @@ int main(void)
 		}
 
 		// ----------------------------- TIMER POWER ------------------------
-
 		if TIMER_ELAPSED(TIMER_POWER) {
 			module_PowerControl();
 			menu_showPowerState();
@@ -263,44 +262,47 @@ int main(void)
 		#ifdef SHOW_INOUT_ON_LCD
 		uint8_t oldcursor = lcd_cursorPos;
 		// V0.69 do not update midi in display while displaying last value
-		if (TIMER_NOTSTARTED(TIMER_MIDIIN_DISP) || TIMER_ELAPSED(TIMER_MIDIIN_DISP)) {
-			// only if timer for midi in is not running at all (or just has elapsed)
-			if (midiLastInNote != MIDI_NOTE_NONE){
-				// there is a midi in note to be displayed in status
-				lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
-				if (midiLastInManual == MANUAL_NONE) {
-					// there was no manual assigned to midi in note
-					// cc?nnn
-					lcd_ChannelOut(midiLastInChannel);
-					lcd_putc('?');
-					lcd_noteOut(midiLastInNote);
-					lcd_putc(' ');
-				} else {
-					// midi input to assigned manual
-					// nnn>m
-					lcd_noteOut(midiLastInNote);
-					lcd_putc(MENU_MIDI_IO_SIGN);
-					lcd_ManualOutDec(midiLastInManual);
-					lcd_putc(' ');
+		if (TIMER_ELAPSED(TIMER_MIDIIN_DISP)){
+			if TIMER_NOTSTARTED(TIMER_MIDIIN_DISP) {
+				// only if timer for midi in is not running at all (or just has elapsed)
+				if ((midiLastInNote != MIDI_NOTE_NONE) && (prog_Display == PROGR_NONE)) {
+					// V0.72 only if no program is to be displayed
+					// there is a midi in note to be displayed in status
+					lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
+					if (midiLastInManual == MANUAL_NONE) {
+						// there was no manual assigned to midi in note
+						// cc?nnn
+						lcd_ChannelOut(midiLastInChannel);
+						lcd_putc('?');
+						lcd_noteOut(midiLastInNote);
+						lcd_putc(' ');
+					} else {
+						// midi input to assigned manual
+						// nnn>m
+						lcd_noteOut(midiLastInNote);
+						lcd_putc(MENU_MIDI_IO_SIGN);
+						lcd_ManualOutDec(midiLastInManual);
+						lcd_putc(' ');
+					}
+					lcd_goto(oldcursor);
+					midiLastInNote = MIDI_NOTE_NONE;
+					// now start timer 
+					TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)
+				} else if (midiLastProgram != MIDI_PROGRAM_NONE) {
+					// no midi not but a program change to be displayed
+					lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
+					lcd_putc('p');
+					lcd_dec2out(midiLastProgram); // here max 0..99 displayed, but Prog Change currently accepts only 0..63 anyway
+					lcd_putc(LCD_CHAR_ARROW_RIGHT);
+					midiLastProgram = MIDI_PROGRAM_NONE; // we are done, don't display again
+					TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)
+				} else if (TIMER_ELAPSED(TIMER_MIDIIN_DISP) ) {
+					// timer for showing note has elapsed
+					lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
+					lcd_blank(6);
+					lcd_goto(oldcursor);
+					TIMER_DEACTIVATE(TIMER_MIDIIN_DISP);
 				}
-				lcd_goto(oldcursor);
-				midiLastInNote = MIDI_NOTE_NONE;
-				// now start timer 
-				TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)
-			} else if (midiLastProgram != MIDI_PROGRAM_NONE) {
-				// no midi not but a program change to be displayed
-				lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
-				lcd_putc('p');
-				lcd_dec2out(midiLastProgram); // here max 0..99 displayed, but Prog Change currently accepts only 0..63 anyway
-				lcd_putc(LCD_CHAR_ARROW_RIGHT);
-				midiLastProgram = MIDI_PROGRAM_NONE; // we are done, don't display again
-				TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)
-			} else if (TIMER_ELAPSED(TIMER_MIDIIN_DISP) ) {
-				// timer for showing note has elapsed
-				lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
-				lcd_blank(6);
-				lcd_goto(oldcursor);
-				TIMER_DEACTIVATE(TIMER_MIDIIN_DISP);
 			}
 		}
 		// V0.69 do not update midi in display while displaying last value

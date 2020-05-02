@@ -267,6 +267,13 @@ extern char* putString_P(const __flash char* pSourceString, char* pOutput){
 	return pOutput;
 }
 
+extern char* putString_Prog(char* pOutput, uint8_t progNr){
+	*pOutput++ = 'P';
+	*pOutput++ = '1'+ (progNr & 0x07);
+	*pOutput++ = 'A'+ ((progNr >> 3) & 0x07);
+	return pOutput;
+}
+
 void lcd_decout(uint8_t decNumber){
 	uint8_t nibble = 0;
 	while (decNumber >= 100) {

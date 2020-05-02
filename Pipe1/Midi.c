@@ -612,6 +612,7 @@ void midi_ProgramChange(uint8_t channel, uint8_t program){
 		if (channelValid == TRUE) {
 			// only if input channel is assigned to any manual
 			program_toRegister(program);
+			prog_set(program);
 			midiLastProgram = program;
 		}
 	}
@@ -630,6 +631,7 @@ void midi_ProgramChange(uint8_t channel, uint8_t program){
 
 void midi_resetRegisters(){
 	for (uint8_t i = 0; i < registerCount; i++){
+		prog_set(PROGR_NONE);
 		register_onOff(i,REGISTER_OFF);
 	}
 }
@@ -717,11 +719,12 @@ void prog_set(uint8_t prog){
 void prog_toLcd(){
 	if (prog_Display != PROGR_NONE) {
 		lcd_putc('P');
-		lcd_putc(':');
+		lcd_putc(' ');
 		lcd_putc('1' + (prog_Display & 0x07));
 		lcd_putc('A' + ((prog_Display >> 3) & 0x07));
+		lcd_putc(' ');
 	} else {
-		lcd_blank(4);
+		lcd_blank(5);
 	}
 }
 

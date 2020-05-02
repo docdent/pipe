@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.71";
+const char sw_version [] PROGMEM = "V0.72";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -255,8 +255,8 @@ uint8_t menuOnExitRegisterEdit(uint8_t arg);
 uint8_t menuOnExitSaveProgram(uint8_t arg);
 uint8_t menuOnExitLoadProgran(uint8_t arg);
 const __flash Menu_t menu_register[] = {
-	{MENU_T_VARPROG | MENU_T_LEFTBOUND,0,"Komb.lad.",NULL,{&menuVKombination},NULL,menuOnExitLoadProgran},
-	{MENU_T_VARPROG,0,"Komb.sp.",NULL,{&menuVKombination},NULL,menuOnExitSaveProgram},
+	{MENU_T_VARPROG | MENU_T_LEFTBOUND,0,"Prog.lad.",NULL,{&menuVKombination},NULL,menuOnExitLoadProgran},
+	{MENU_T_VARPROG,0,"Prog.sp.",NULL,{&menuVKombination},NULL,menuOnExitSaveProgram},
 	{MENU_T_MENU,0,"aus",NULL,{NULL},menuOnEnterResetReg,NULL},
 	{MENU_T_VARBINREG,0,"Reg.1-8",NULL,{&menuVRegisters[0]},NULL,menuOnExitRegisterEdit},
 	{MENU_T_VARBINREG,0,"Reg.9-16",NULL,{&menuVRegisters[1]},NULL,menuOnExitRegisterEdit},
@@ -306,6 +306,9 @@ uint8_t softKeyK3A(uint8_t arg);
 uint8_t softKeyK4A(uint8_t arg);
 uint8_t softKeyPrP(uint8_t arg);
 uint8_t softKeyPrM(uint8_t arg);
+uint8_t softKeyPrSet(uint8_t arg);
+uint8_t softKeyPrInc(uint8_t arg);
+uint8_t softKeyPrDec(uint8_t arg);
 uint8_t softKeyRegOff(uint8_t arg);
 
 const __flash char shortKeyTextNone[MENU_LCD_MENUTEXTLEN]  = "";
@@ -325,13 +328,16 @@ const __flash char shortKeyTextCpl3P[MENU_LCD_MENUTEXTLEN]  = "3<P\x80";
 const __flash char shortKeyTextCpl21[MENU_LCD_MENUTEXTLEN]  = "2<1\x80";
 const __flash char shortKeyTextCpl2P[MENU_LCD_MENUTEXTLEN]  = "2<P\x80";
 const __flash char shortKeyTextCpl1P[MENU_LCD_MENUTEXTLEN]  = "1<P\x80";
-const __flash char shortKeyTextK1A[MENU_LCD_MENUTEXTLEN]  = "Pr1A\x80";
-const __flash char shortKeyTextK2A[MENU_LCD_MENUTEXTLEN]  = "Pr2A\x80";
-const __flash char shortKeyTextK3A[MENU_LCD_MENUTEXTLEN]  = "Pr3A\x80";
-const __flash char shortKeyTextK4A[MENU_LCD_MENUTEXTLEN]  = "Pr4A\x80";
+const __flash char shortKeyTextK1A[MENU_LCD_MENUTEXTLEN]  = "P1A";
+const __flash char shortKeyTextK2A[MENU_LCD_MENUTEXTLEN]  = "P2A";
+const __flash char shortKeyTextK3A[MENU_LCD_MENUTEXTLEN]  = "P3A";
+const __flash char shortKeyTextK4A[MENU_LCD_MENUTEXTLEN]  = "P4A";
 const __flash char shortKeyTextPRP[MENU_LCD_MENUTEXTLEN]  = "P+/s";
 const __flash char shortKeyTextPRM[MENU_LCD_MENUTEXTLEN]  = "P-/c";
-const __flash char shortKeyTextRegOff[MENU_LCD_MENUTEXTLEN]  = "Reg" LCD_STRING_ARROWDOWN;
+const __flash char shortKeyTextPRI[MENU_LCD_MENUTEXTLEN]  = "P+";
+const __flash char shortKeyTextPRD[MENU_LCD_MENUTEXTLEN]  = "P-";
+const __flash char shortKeyTextPRS[MENU_LCD_MENUTEXTLEN]  = "Pset";
+const __flash char shortKeyTextRegOff[MENU_LCD_MENUTEXTLEN]  = "Pclr";
 
 const __flash Menu_t menu_selFunc[] =
 	{{MENU_T_MENU_L,MENU_FLAG_MENU_SOFTKEY,"<none>",NULL,{.pString=shortKeyTextNone},NULL,NULL},
@@ -355,7 +361,10 @@ const __flash Menu_t menu_selFunc[] =
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog. 2A",NULL,{.pString=shortKeyTextK2A},softKeyK2A,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog. 3A",NULL,{.pString=shortKeyTextK3A},softKeyK3A,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog. 4A",NULL,{.pString=shortKeyTextK4A},softKeyK4A,NULL},
-	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Reg.aus",NULL,{.pString=shortKeyTextRegOff},softKeyRegOff,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog.clr",NULL,{.pString=shortKeyTextRegOff},softKeyRegOff,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog.set",NULL,{.pString=shortKeyTextPRS},softKeyPrSet,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog.+",NULL,{.pString=shortKeyTextPRI},softKeyPrInc,NULL},
+	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"Prog.-",NULL,{.pString=shortKeyTextPRD},softKeyPrDec,NULL},
 	{MENU_T_MENU,MENU_FLAG_MENU_SOFTKEY,"MIDI Off",NULL,{.pString=shortKeyTextMIDIoff},menu_OnEnterMidiPanic,NULL},
 	{MENU_T_MENU_R,MENU_FLAG_MENU_SOFTKEY,"Setup",menu_setup,{.pString=shortKeyTextSetup},NULL,NULL}};
 
@@ -558,20 +567,23 @@ uint8_t softKeyCoupler1fromP(uint8_t arg){
 	return result;
 }
 
-const __flash char messageSaved[] = " Reg.in Komb.gesp.";
-const __flash char messageLoaded[] = " Reg.gesetzt";
+const __flash char messageSaved[] = " Reg "LCD_STRING_ARROWRIGHT" ";
+const __flash char messageLoaded[] = " Reg";
 const __flash char messageRegisterMan[] = "+";
 
 
-void menuDisplaySaveMessage(uint8_t regNumber){
+void menuDisplaySaveMessage(uint8_t regNumber, uint8_t progNr){
 	char* pChar = string_Buf; // utils.c
 	pChar = putChar_Dec(regNumber, pChar);
-	putString_P(messageSaved, pChar);
+	pChar = putString_P(messageSaved, pChar);
+	putString_Prog(pChar, progNr);
 	menu_DisplayMainMessage(string_Buf);
 }
 
-void menuDisplayLoadMessage(uint8_t regNumber){
+void menuDisplayLoadMessage(uint8_t regNumber, uint8_t progNr){
 	char* pChar = string_Buf; // utils.c
+	pChar = putString_Prog(pChar, progNr);
+	*pChar++ = LCD_CHAR_ARROW_RIGHT;
 	pChar = putChar_Dec(regNumber, pChar);
 	pChar = putString_P(messageLoaded, pChar);
 	module_WaitOutputInput2Cycles(); // wait until new register are transferred to output and read back
@@ -583,12 +595,27 @@ void menuDisplayLoadMessage(uint8_t regNumber){
 	menu_DisplayMainMessage(string_Buf);
 }
 
+void send_progrChange_toMidiThru(uint8_t program){
+	// V 0.72 send program change to midi-through-out!
+	if (program <= PROGR_MAX) {
+		// check if it is a valid program nr
+		if (midiThrough.OutChannel != MIDI_CHANNEL_NONE) {
+			// only if out channel is valid: do as in midiKeyPress_Process
+			serial1MIDISend(MIDI_PRGCHG | midiThrough.OutChannel);
+			// if note off: use note on an velocity = 0 to turn off note (less bytes !)
+			serial1MIDISend(program);
+		} // maybe chekc if invalid program nr should be sent as all tones of?
+	}
+}
+
 uint8_t handle_programKey(uint8_t arg, uint8_t program){
 	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
 		// longpress
-		menuDisplaySaveMessage(register_toProgram(program, TRUE));
+		menuDisplaySaveMessage(register_toProgram(program, TRUE),program);
 	} else if (arg != 0) {
-		menuDisplayLoadMessage(program_toRegister(program));
+		// short press: set program
+		menuDisplayLoadMessage(program_toRegister(program),program);
+		send_progrChange_toMidiThru(program);
 	}
 	return 	((midi_CountRegisterInProgram(program) > 0) && (midi_RegisterMatchProgram(program) == 0)) ? MENU_SOFTKEY_FUNC_RETURN_STATUS_ON : MENU_SOFTKEY_FUNC_RETURN_STATUS_OFF;
 }
@@ -622,18 +649,19 @@ uint8_t softKeyPrP(uint8_t arg){
 		// longpress: set
 		if (prog_Display != PROGR_NONE){
 			// there is a program active: program current register set to program
-			menuDisplaySaveMessage(register_toProgram(prog_Display, TRUE));
+			menuDisplaySaveMessage(register_toProgram(prog_Display, TRUE),prog_Display);
 		}
 	} else if (arg != 0) {
 		// shortpress: PROGR_MAX program
 		if (prog_Display == PROGR_MAX){
-			prog_Display = PROGR_NONE;			
+			prog_Display = PROGR_NONE;
 		} else {
 			prog_Display++;
 		}
+		send_progrChange_toMidiThru(prog_Display);
 		prog_UpdDisplay = TRUE;
 	}
-	return 0;	
+	return 0;
 }
 
 uint8_t softKeyPrM(uint8_t arg){
@@ -647,10 +675,62 @@ uint8_t softKeyPrM(uint8_t arg){
 		} else {
 			prog_Display--;
 		}
+		send_progrChange_toMidiThru(prog_Display);
 		prog_UpdDisplay = TRUE;
 	}
 	return 0;
 }
+
+uint8_t softKeyPrSet(uint8_t arg) {
+	if ((arg != 0) && (prog_Display != PROGR_NONE)) {
+			menuDisplaySaveMessage(register_toProgram(prog_Display, TRUE),prog_Display);
+	}
+	return 0;
+}
+
+uint8_t softKeyPrInc(uint8_t arg){
+	if (arg != 0) {
+		if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
+			// longpress: bank increment (8 program steps)
+			if (prog_Display != PROGR_NONE){
+				// there is a program active: program current register set to program
+				prog_Display = (prog_Display + 8) & 0x3F;
+			}
+		} else if (arg != 0) {
+			// shortpress:  program
+			if (prog_Display == PROGR_MAX){
+				prog_Display = PROGR_NONE;
+			} else {
+				prog_Display++;
+			}
+		}
+		send_progrChange_toMidiThru(prog_Display);
+		prog_UpdDisplay = TRUE;
+	}
+	return 0;
+}
+uint8_t softKeyPrDec(uint8_t arg){
+	if (arg != 0) {
+		if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
+			// longpress: bank increment (8 program steps)
+			if (prog_Display != PROGR_NONE){
+				// there is a program active: program current register set to program
+				prog_Display = (prog_Display - 8) & 0x3F;
+			}
+		} else if (arg != 0) {
+			// shortpress:  program
+			if (prog_Display == PROGR_NONE){
+				prog_Display = PROGR_MAX;
+			} else {
+				prog_Display--;
+			}
+		}
+		send_progrChange_toMidiThru(prog_Display);
+		prog_UpdDisplay = TRUE;
+	}
+	return 0;
+}
+
 
 //*************************** I N D I V I D U A L   M E N U   F U N C T I O N S ******************************
 
@@ -1343,7 +1423,7 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 			if (midiInMap[midiChan][section].manual != MANUAL_NONE) {
 				anyMidiInAssigned = TRUE; 	// midichanel is assigned to a manual
 				buffer = string_Buf;
-				buffer = putChar_MidiChan(midiChan,buffer); // print MidiChannel 
+				buffer = putChar_MidiChan(midiChan,buffer); // print MidiChannel
 				*buffer++ = '(';
 				buffer = putChar_Note(midiInMap[midiChan][section].midiNote, buffer);
 				*buffer++ = '-';
@@ -1391,7 +1471,7 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 	*buffer++= '\0';
 	serial0SER_USB_sendString(string_Buf);
 	serial0SER_USB_sendCRLF();
-	
+
 	return 0;
 }
 
