@@ -617,7 +617,7 @@ void midi_ProgramChange(uint8_t channel, uint8_t program){
 		}
 	}
 	// V 0.58 SW MIDI Through
-	if (channel == midiThrough.InChannel){
+	//if (channel == midiThrough.InChannel){
 		// if IN Channel is matched (through OFF -> midiThrough.InChannel = 0xFF)
 		if (midiThrough.OutChannel != MIDI_CHANNEL_NONE) {
 			// only if out channel is valid: do as in midiKeyPress_Process
@@ -625,7 +625,7 @@ void midi_ProgramChange(uint8_t channel, uint8_t program){
 			// if note off: use note on an velocity = 0 to turn off note (less bytes !)
 			serial1MIDISend(program);
 		}
-	}
+	//} V 0.73 send program change to "thru" out always
 }
 
 
@@ -719,7 +719,7 @@ void prog_set(uint8_t prog){
 void prog_toLcd(){
 	if (prog_Display != PROGR_NONE) {
 		lcd_putc('P');
-		lcd_putc(' ');
+		lcd_putc('.');
 		lcd_putc('A' + ((prog_Display >> 3) & 0x07));
 		lcd_putc('1' + (prog_Display & 0x07));
 		lcd_putc(' ');

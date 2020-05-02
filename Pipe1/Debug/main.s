@@ -447,7 +447,7 @@ main:
 	.loc 1 186 0
 	lds r24,menuNotActive
 	cpi r24,lo8(-1)
-	brne .L65
+	brne .L66
 	.loc 1 188 0
 	cpi r29,lo8(-1)
 	brne .L17
@@ -469,7 +469,7 @@ main:
 	ldi r29,0
 	rjmp .L17
 .LVL73:
-.L65:
+.L66:
 	.loc 1 198 0
 	ldi r29,lo8(-1)
 .LVL74:
@@ -646,29 +646,31 @@ main:
 .LVL99:
 	.loc 1 265 0
 	lds r24,swTimer+8
-	cpse r24,__zero_reg__
-	rjmp .L30
-	.loc 1 266 0
+	tst r24
+	breq .L30
+	.loc 1 265 0 is_stmt 0 discriminator 1
 	lds r24,swTimer+8
 	cpi r24,lo8(-1)
 	breq .+2
-	rjmp .L30
+	rjmp .L31
+.L30:
+	.loc 1 266 0 is_stmt 1
+	lds r24,prog_Display
+	cpi r24,lo8(-1)
+	breq .+2
+	rjmp .L31
 	.loc 1 268 0
 	lds r24,midiLastInNote
 	cpi r24,lo8(-1)
-	breq .L31
-	.loc 1 268 0 is_stmt 0 discriminator 1
-	lds r24,prog_Display
-	cpi r24,lo8(-1)
-	brne .L31
-	.loc 1 271 0 is_stmt 1
+	breq .L32
+	.loc 1 271 0
 	ldi r24,0
 	call lcd_goto
 .LVL100:
 	.loc 1 272 0
 	lds r24,midiLastInManual
 	cpi r24,lo8(-1)
-	brne .L32
+	brne .L33
 	.loc 1 275 0
 	lds r24,midiLastInChannel
 	call lcd_ChannelOut
@@ -685,8 +687,8 @@ main:
 	ldi r24,lo8(32)
 	call lcd_putc
 .LVL104:
-	rjmp .L33
-.L32:
+	rjmp .L34
+.L33:
 	.loc 1 282 0
 	lds r24,midiLastInNote
 	call lcd_noteOut
@@ -703,7 +705,7 @@ main:
 	ldi r24,lo8(32)
 	call lcd_putc
 .LVL108:
-.L33:
+.L34:
 	.loc 1 287 0
 	mov r24,r28
 	call lcd_goto
@@ -728,9 +730,9 @@ main:
 .LBE87:
 	.loc 1 290 0
 	ldi r24,lo8(1)
-	rjmp .L34
+	rjmp .L35
 .LVL111:
-.L35:
+.L36:
 	.loc 1 290 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
@@ -742,10 +744,10 @@ main:
 	.loc 1 290 0 discriminator 3
 	ldi r24,0
 .LVL114:
-.L34:
+.L35:
 	.loc 1 290 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
-	rjmp .L35
+	rjmp .L36
 .LVL115:
 .LBB89:
 .LBB90:
@@ -756,14 +758,13 @@ main:
 .LBE90:
 .LBE89:
 .LBE86:
-	.loc 1 290 0
-	rjmp .L30
+	rjmp .L31
 .LVL117:
-.L31:
+.L32:
 	.loc 1 291 0
 	lds r24,midiLastProgram
 	cpi r24,lo8(-1)
-	breq .L36
+	breq .L37
 	.loc 1 293 0
 	ldi r24,0
 	call lcd_goto
@@ -799,9 +800,9 @@ main:
 .LBE92:
 	.loc 1 298 0
 	ldi r24,lo8(1)
-	rjmp .L37
+	rjmp .L38
 .LVL123:
-.L38:
+.L39:
 	.loc 1 298 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
@@ -813,10 +814,10 @@ main:
 	.loc 1 298 0 discriminator 3
 	ldi r24,0
 .LVL126:
-.L37:
+.L38:
 	.loc 1 298 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
-	rjmp .L38
+	rjmp .L39
 .LVL127:
 .LBB94:
 .LBB95:
@@ -827,13 +828,13 @@ main:
 .LBE95:
 .LBE94:
 .LBE91:
-	rjmp .L30
+	rjmp .L31
 .LVL129:
-.L36:
+.L37:
 	.loc 1 299 0
 	lds r24,swTimer+8
 	cpse r24,__zero_reg__
-	rjmp .L30
+	rjmp .L31
 	.loc 1 301 0
 	call lcd_goto
 .LVL130:
@@ -848,20 +849,20 @@ main:
 	.loc 1 304 0
 	ldi r24,lo8(-1)
 	sts swTimer+8,r24
-.L30:
+.L31:
 	.loc 1 309 0
 	lds r24,swTimer+10
 	cpi r24,lo8(-1)
-	breq .L39
+	breq .L40
 	.loc 1 309 0 is_stmt 0 discriminator 1
 	lds r24,swTimer+10
 	cpse r24,__zero_reg__
-	rjmp .L40
-.L39:
+	rjmp .L41
+.L40:
 	.loc 1 310 0 is_stmt 1
 	lds r24,midiLastOutNote
 	cpi r24,lo8(-1)
-	breq .L41
+	breq .L42
 	.loc 1 313 0
 	ldi r24,lo8(15)
 	call lcd_goto
@@ -901,9 +902,9 @@ main:
 .LBE97:
 	.loc 1 319 0
 	ldi r24,lo8(1)
-	rjmp .L42
+	rjmp .L43
 .LVL139:
-.L43:
+.L44:
 	.loc 1 319 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
@@ -915,10 +916,10 @@ main:
 	.loc 1 319 0 discriminator 3
 	ldi r24,0
 .LVL142:
-.L42:
+.L43:
 	.loc 1 319 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
-	rjmp .L43
+	rjmp .L44
 .LVL143:
 .LBB99:
 .LBB100:
@@ -929,13 +930,13 @@ main:
 .LBE100:
 .LBE99:
 .LBE96:
-	rjmp .L40
+	rjmp .L41
 .LVL145:
-.L41:
+.L42:
 	.loc 1 320 0
 	lds r24,midi_RegisterChanged
 	cpi r24,lo8(-1)
-	breq .L44
+	breq .L45
 	.loc 1 322 0
 	ldi r24,lo8(15)
 	call lcd_goto
@@ -952,12 +953,12 @@ main:
 	.loc 1 326 0
 	lds r24,midi_RegisterChanged
 	tst r24
-	brlt .L66
+	brlt .L67
 	ldi r24,lo8(8)
-	rjmp .L45
-.L66:
+	rjmp .L46
+.L67:
 	ldi r24,lo8(9)
-.L45:
+.L46:
 	.loc 1 326 0 is_stmt 0 discriminator 4
 	call lcd_putc
 .LVL149:
@@ -988,9 +989,9 @@ main:
 .LBE102:
 	.loc 1 330 0 discriminator 4
 	ldi r24,lo8(1)
-	rjmp .L46
+	rjmp .L47
 .LVL153:
-.L47:
+.L48:
 	.loc 1 330 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
@@ -1002,10 +1003,10 @@ main:
 	.loc 1 330 0 discriminator 3
 	ldi r24,0
 .LVL156:
-.L46:
+.L47:
 	.loc 1 330 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
-	rjmp .L47
+	rjmp .L48
 .LVL157:
 .LBB104:
 .LBB105:
@@ -1016,13 +1017,13 @@ main:
 .LBE105:
 .LBE104:
 .LBE101:
-	rjmp .L40
+	rjmp .L41
 .LVL159:
-.L44:
+.L45:
 	.loc 1 331 0
 	lds r24,swTimer+10
 	cpse r24,__zero_reg__
-	rjmp .L40
+	rjmp .L41
 	.loc 1 334 0
 	ldi r24,lo8(15)
 	call lcd_goto
@@ -1038,11 +1039,11 @@ main:
 	.loc 1 337 0
 	ldi r24,lo8(-1)
 	sts swTimer+10,r24
-.L40:
+.L41:
 	.loc 1 342 0
 	lds r24,prog_UpdDisplay
 	cpi r24,lo8(-1)
-	brne .L48
+	brne .L49
 	.loc 1 343 0
 	sts prog_UpdDisplay,__zero_reg__
 	.loc 1 344 0
@@ -1052,12 +1053,12 @@ main:
 	.loc 1 345 0
 	call prog_toLcd
 .LVL164:
-.L48:
+.L49:
 	.loc 1 348 0
 	lds r24,time_UpTimeUpdated
 	cpi r24,lo8(-1)
 	breq .+2
-	rjmp .L49
+	rjmp .L50
 .LBB106:
 	.loc 1 349 0
 	sts time_UpTimeUpdated,__zero_reg__
@@ -1070,19 +1071,19 @@ main:
 .LVL167:
 	.loc 1 354 0
 	cpi r28,lo8(-1)
-	brne .L50
+	brne .L51
 	.loc 1 355 0
 	call lcd_cursoroff
 .LVL168:
-.L50:
+.L51:
 	.loc 1 358 0
 	lds r24,time_Uptime+3
 	tst r24
-	breq .L67
+	breq .L68
 	.loc 1 362 0
 	lds r24,time_Uptime+1
 	sbrc r24,0
-	rjmp .L68
+	rjmp .L69
 	.loc 1 364 0
 	mov __tmp_reg__,r31
 	ldi r31,lo8(58)
@@ -1092,9 +1093,9 @@ main:
 	ldi r16,lo8(time_Uptime+3)
 	ldi r17,hi8(time_Uptime+3)
 .LVL169:
-	rjmp .L51
+	rjmp .L52
 .LVL170:
-.L67:
+.L68:
 	.loc 1 361 0
 	mov __tmp_reg__,r31
 	ldi r31,lo8(58)
@@ -1103,8 +1104,8 @@ main:
 	.loc 1 360 0
 	ldi r16,lo8(time_Uptime+2)
 	ldi r17,hi8(time_Uptime+2)
-	rjmp .L51
-.L68:
+	rjmp .L52
+.L69:
 	.loc 1 366 0
 	set
 	clr r14
@@ -1113,7 +1114,7 @@ main:
 	ldi r16,lo8(time_Uptime+3)
 	ldi r17,hi8(time_Uptime+3)
 .LVL171:
-.L51:
+.L52:
 	.loc 1 368 0
 	ldi r24,lo8(7)
 	call lcd_goto
@@ -1139,7 +1140,7 @@ main:
 .LVL177:
 	.loc 1 374 0
 	tst r20
-	breq .L52
+	breq .L53
 	.loc 1 375 0
 	ldi r21,0
 	ldi r22,0
@@ -1148,13 +1149,13 @@ main:
 .LVL178:
 	.loc 1 376 0
 	sts midiRxOvflCount,__zero_reg__
-.L52:
+.L53:
 	.loc 1 378 0
 	lds r20,midiTxOvflCount
 .LVL179:
 	.loc 1 379 0
 	tst r20
-	breq .L53
+	breq .L54
 	.loc 1 380 0
 	ldi r21,0
 	ldi r22,lo8(1)
@@ -1163,29 +1164,29 @@ main:
 .LVL180:
 	.loc 1 381 0
 	sts midiTxOvflCount,__zero_reg__
-.L53:
+.L54:
 	.loc 1 384 0
 	lds r24,pipe_PowerStatus
 	sbrs r24,4
-	rjmp .L69
+	rjmp .L70
 	ldi r24,lo8(32)
-	rjmp .L54
-.L69:
+	rjmp .L55
+.L70:
 	ldi r24,lo8(9)
-.L54:
+.L55:
 	.loc 1 384 0 is_stmt 0 discriminator 4
 	call lcd_putc
 .LVL181:
 	.loc 1 385 0 is_stmt 1 discriminator 4
 	lds r24,log_unreadErrors
 	cpi r24,lo8(-1)
-	brne .L70
+	brne .L71
 	.loc 1 385 0 is_stmt 0
 	ldi r24,lo8(69)
-	rjmp .L55
-.L70:
+	rjmp .L56
+.L71:
 	ldi r24,lo8(32)
-.L55:
+.L56:
 	.loc 1 385 0 discriminator 4
 	call lcd_putc
 .LVL182:
@@ -1195,15 +1196,15 @@ main:
 .LVL183:
 	.loc 1 388 0 discriminator 4
 	cpi r28,lo8(-1)
-	brne .L56
+	brne .L57
 	.loc 1 389 0
 	call lcd_cursosblink
 .LVL184:
-.L56:
+.L57:
 	.loc 1 393 0
 	lds r24,swTimer+8
 	cpi r24,lo8(-1)
-	brne .L57
+	brne .L58
 .LBB107:
 	.loc 1 394 0
 	in r25,__SREG__
@@ -1220,9 +1221,9 @@ main:
 .LBE108:
 	.loc 1 394 0
 	ldi r24,lo8(1)
-	rjmp .L58
+	rjmp .L59
 .LVL186:
-.L59:
+.L60:
 	.loc 1 394 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
@@ -1234,10 +1235,10 @@ main:
 	.loc 1 394 0 discriminator 3
 	ldi r24,0
 .LVL189:
-.L58:
+.L59:
 	.loc 1 394 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
-	rjmp .L59
+	rjmp .L60
 .LVL190:
 .LBB110:
 .LBB111:
@@ -1245,14 +1246,14 @@ main:
 	out __SREG__,r25
 	.loc 3 71 0
 .LVL191:
-.L57:
+.L58:
 .LBE111:
 .LBE110:
 .LBE107:
 	.loc 1 396 0
 	lds r24,swTimer+10
 	cpi r24,lo8(-1)
-	brne .L49
+	brne .L50
 .LBB112:
 	.loc 1 397 0
 	in r25,__SREG__
@@ -1269,9 +1270,9 @@ main:
 .LBE113:
 	.loc 1 397 0
 	ldi r24,lo8(1)
-	rjmp .L60
+	rjmp .L61
 .LVL193:
-.L61:
+.L62:
 	.loc 1 397 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
@@ -1283,10 +1284,10 @@ main:
 	.loc 1 397 0 discriminator 3
 	ldi r24,0
 .LVL196:
-.L60:
+.L61:
 	.loc 1 397 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
-	rjmp .L61
+	rjmp .L62
 .LVL197:
 .LBB115:
 .LBB116:
@@ -1294,7 +1295,7 @@ main:
 	out __SREG__,r25
 	.loc 3 71 0
 .LVL198:
-.L49:
+.L50:
 .LBE116:
 .LBE115:
 .LBE112:
@@ -1302,7 +1303,7 @@ main:
 	.loc 1 402 0
 	lds r24,msgPipeOverflow
 	cpi r24,lo8(-1)
-	brne .L62
+	brne .L63
 	.loc 1 403 0
 	sts msgPipeOverflow,__zero_reg__
 	.loc 1 404 0
@@ -1312,7 +1313,7 @@ main:
 	ldi r24,lo8(4)
 	call log_putError
 .LVL199:
-.L62:
+.L63:
 	.loc 1 406 0
 	in r24,0x5
 	.loc 1 406 0
@@ -1323,13 +1324,13 @@ main:
 	lds r25,midiRxInIndex
 	lds r24,midiRxOutIndex
 	cp r25,r24
-	breq .L63
+	breq .L64
 	.loc 1 409 0
 	call serial1MIDIReadRx
 .LVL200:
 	call midiIn_Process
 .LVL201:
-.L63:
+.L64:
 	.loc 1 412 0
 	call pipeMsgStatus
 .LVL202:

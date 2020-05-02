@@ -2518,7 +2518,7 @@ void prog_set(uint8_t prog){
 void prog_toLcd(){
  if (prog_Display != 0xFF) {
   lcd_putc('P');
-  lcd_putc(' ');
+  lcd_putc('.');
   lcd_putc('A' + ((prog_Display >> 3) & 0x07));
   lcd_putc('1' + (prog_Display & 0x07));
   lcd_putc(' ');

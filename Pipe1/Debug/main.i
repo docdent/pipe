@@ -2082,10 +2082,10 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
   uint8_t oldcursor = lcd_cursorPos;
 
-  if ((swTimer[4].counter == 0x00)){
-   if (swTimer[4].counter == 0xFF) {
+  if ((swTimer[4].counter == 0x00) || (swTimer[4].counter == 0xFF)){
+   if (prog_Display == 0xFF) {
 
-    if ((midiLastInNote != 0xFF) && (prog_Display == 0xFF)) {
+    if (midiLastInNote != 0xFF) {
 
 
      lcd_goto((0 +0));

@@ -262,10 +262,10 @@ int main(void)
 		#ifdef SHOW_INOUT_ON_LCD
 		uint8_t oldcursor = lcd_cursorPos;
 		// V0.69 do not update midi in display while displaying last value
-		if (TIMER_ELAPSED(TIMER_MIDIIN_DISP)){
-			if TIMER_NOTSTARTED(TIMER_MIDIIN_DISP) {
+		if (TIMER_ELAPSED(TIMER_MIDIIN_DISP) || TIMER_NOTSTARTED(TIMER_MIDIIN_DISP)){
+			if (prog_Display == PROGR_NONE) {
 				// only if timer for midi in is not running at all (or just has elapsed)
-				if ((midiLastInNote != MIDI_NOTE_NONE) && (prog_Display == PROGR_NONE)) {
+				if (midiLastInNote != MIDI_NOTE_NONE) {
 					// V0.72 only if no program is to be displayed
 					// there is a midi in note to be displayed in status
 					lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);

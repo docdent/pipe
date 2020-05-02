@@ -1909,7 +1909,7 @@ prog_toLcd:
 	call lcd_putc
 .LVL213:
 	.loc 1 722 0
-	ldi r24,lo8(32)
+	ldi r24,lo8(46)
 	call lcd_putc
 .LVL214:
 	.loc 1 723 0
@@ -6205,7 +6205,7 @@ cplInfo:
 	.byte	0x68
 	.byte	0x2
 	.byte	0x8
-	.byte	0x20
+	.byte	0x2e
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL215
