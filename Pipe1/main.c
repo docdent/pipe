@@ -204,6 +204,7 @@ int main(void)
 				// currently: always check timer, not only when menu active menu
 				uint8_t saveCursor = lcd_cursorPos;
 				menu_deleteMessage();
+				prog_UpdDisplay = TRUE; // to update reg display
 				lcd_goto(saveCursor);
 			 //}
 			TIMER_DEACTIVATE(TIMER_MENUDATA_LCDCLEAR)
@@ -343,6 +344,11 @@ int main(void)
 			prog_UpdDisplay = FALSE;
 			lcd_goto(MENU_LCD_CURSOR_PROG);
 			prog_toLcd();
+			if (prog_Display != PROGR_NONE) {
+				reg_toLCD();
+			} else {
+				reg_ClearOnLCD();
+			}
 		}
 		//------------------------- every second ----------------------------
 		if (time_UpTimeUpdated == TRUE) {

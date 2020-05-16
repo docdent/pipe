@@ -436,6 +436,7 @@ extern void lcd_waitSymbolOff();
 extern uint8_t lcd_noteOut(uint8_t noteNr);
 
 
+
 extern char* putString_P(const __flash char* pSourceString, char* pOutput);
 extern char* putChar_Dec2(uint8_t val, char* pOutput);
 extern char* putChar_Dec(uint8_t val, char* pOutput);
@@ -444,10 +445,11 @@ extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
 extern char* putChar_Manual(uint8_t manual, char* pOutput);
 extern char* putChar_MidiChan(uint8_t channel, char* pOutput);
+extern char* putString_Prog(char* pOutput, uint8_t progNr);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 73 ".././utils.h"
+# 75 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -467,13 +469,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 101 ".././utils.h"
+# 103 ".././utils.h"
 extern char string_Buf[64];
 
 extern const char cr_lf [] 
-# 103 ".././utils.h" 3
+# 105 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 103 ".././utils.h"
+# 105 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);

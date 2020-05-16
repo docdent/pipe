@@ -540,9 +540,9 @@ typedef struct
 
 
 # 1 ".././lcd_u.h" 1
-# 111 ".././lcd_u.h"
+# 117 ".././lcd_u.h"
 
-# 111 ".././lcd_u.h"
+# 117 ".././lcd_u.h"
 extern void lcd_write_nibble(uint8_t data);
 extern void lcd_write_command(uint8_t data);
 extern void lcd_write_character(uint8_t data);
@@ -730,6 +730,7 @@ extern void lcd_waitSymbolOff();
 extern uint8_t lcd_noteOut(uint8_t noteNr);
 
 
+
 extern char* putString_P(const __flash char* pSourceString, char* pOutput);
 extern char* putChar_Dec2(uint8_t val, char* pOutput);
 extern char* putChar_Dec(uint8_t val, char* pOutput);
@@ -738,10 +739,11 @@ extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
 extern char* putChar_Manual(uint8_t manual, char* pOutput);
 extern char* putChar_MidiChan(uint8_t channel, char* pOutput);
+extern char* putString_Prog(char* pOutput, uint8_t progNr);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 73 ".././utils.h"
+# 75 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -761,13 +763,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 101 ".././utils.h"
+# 103 ".././utils.h"
 extern char string_Buf[64];
 
 extern const char cr_lf [] 
-# 103 ".././utils.h" 3
+# 105 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 103 ".././utils.h"
+# 105 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -1095,6 +1097,8 @@ extern ProgramInfo_t programMap[64] ;
 extern uint8_t midi_RegisterChanged;
 extern uint8_t midi_CountRegisterInProgram(uint8_t program);
 extern uint8_t read_allRegister(uint8_t* resultPtr);
+extern void reg_ClearOnLCD();
+extern void reg_toLCD();
 
 
 
@@ -1120,6 +1124,14 @@ extern uint8_t prog_Display;
 extern uint8_t prog_UpdDisplay;
 extern void prog_set(uint8_t prog);
 extern void prog_toLcd();
+typedef struct {
+ uint8_t cursor;
+ char manualChar;
+ uint8_t regStart;
+ uint8_t regEnd;
+} RegOut_t;
+
+extern const __flash RegOut_t reg_Out[6];
 
 
 extern void init_Midi2Manual();
@@ -1165,7 +1177,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 250 ".././Midi.h"
+# 260 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -2024,6 +2036,7 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
     uint8_t saveCursor = lcd_cursorPos;
     menu_deleteMessage();
+    prog_UpdDisplay = 0xFF;
     lcd_goto(saveCursor);
 
    swTimer[7].counter = 0xFF;
@@ -2108,9 +2121,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
      midiLastInNote = 0xFF;
 
      
-# 290 ".././main.c" 3
+# 291 ".././main.c" 3
     for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 290 ".././main.c"
+# 291 ".././main.c"
     {swTimer[4].counter = 700 / 20; swTimer[4].prescaler = (700 % 20) / 4;};
     } else if (midiLastProgram != 0xFF) {
 
@@ -2120,9 +2133,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
      lcd_putc(0x7E);
      midiLastProgram = 0xFF;
      
-# 298 ".././main.c" 3
+# 299 ".././main.c" 3
     for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 298 ".././main.c"
+# 299 ".././main.c"
     {swTimer[4].counter = 700 / 20; swTimer[4].prescaler = (700 % 20) / 4;};
     } else if ((swTimer[4].counter == 0x00) ) {
 
@@ -2145,9 +2158,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
     lcd_goto(oldcursor);
     midiLastOutNote = 0xFF;
     
-# 319 ".././main.c" 3
+# 320 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 319 ".././main.c"
+# 320 ".././main.c"
    {swTimer[5].counter = 800 / 20; swTimer[5].prescaler = (800 % 20) / 4;};
    } else if (midi_RegisterChanged != 0xFF) {
 
@@ -2160,9 +2173,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
     lcd_goto(oldcursor);
     midi_RegisterChanged = 0xFF;
     
-# 330 ".././main.c" 3
+# 331 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 330 ".././main.c"
+# 331 ".././main.c"
    {swTimer[5].counter = 800 / 20; swTimer[5].prescaler = (800 % 20) / 4;};
    } else if ((swTimer[5].counter == 0x00)) {
 
@@ -2179,6 +2192,11 @@ __asm__ __volatile__ ("sei" ::: "memory")
    prog_UpdDisplay = 0x00;
    lcd_goto((0 +0));
    prog_toLcd();
+   if (prog_Display != 0xFF) {
+    reg_toLCD();
+   } else {
+    reg_ClearOnLCD();
+   }
   }
 
   if (time_UpTimeUpdated == 0xFF) {
@@ -2228,16 +2246,16 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
    if ((swTimer[4].counter == 0xFF)) {
     
-# 394 ".././main.c" 3
+# 400 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 394 ".././main.c"
+# 400 ".././main.c"
    {swTimer[4].counter = 2500 / 20; swTimer[4].prescaler = (2500 % 20) / 4;};
    }
    if ((swTimer[5].counter == 0xFF)) {
     
-# 397 ".././main.c" 3
+# 403 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 397 ".././main.c"
+# 403 ".././main.c"
    {swTimer[5].counter = 2500 / 20; swTimer[5].prescaler = (2500 % 20) / 4;};
    }
   }
@@ -2248,13 +2266,13 @@ __asm__ __volatile__ ("sei" ::: "memory")
    log_putError(4, 0, 0);
   }
   
-# 406 ".././main.c" 3
+# 412 ".././main.c" 3
  (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 406 ".././main.c"
+# 412 ".././main.c"
  = (
-# 406 ".././main.c" 3
+# 412 ".././main.c" 3
  (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 406 ".././main.c"
+# 412 ".././main.c"
  & (~(((1 << 5) | (1 << 4))))) | (1 << 5);
 
   if (midiRxInIndex != midiRxOutIndex) {

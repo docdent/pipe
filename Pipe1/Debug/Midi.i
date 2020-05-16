@@ -545,9 +545,9 @@ typedef struct
 # 11 ".././Midi.c" 2
 
 # 1 ".././lcd_u.h" 1
-# 111 ".././lcd_u.h"
+# 117 ".././lcd_u.h"
 
-# 111 ".././lcd_u.h"
+# 117 ".././lcd_u.h"
 extern void lcd_write_nibble(uint8_t data);
 extern void lcd_write_command(uint8_t data);
 extern void lcd_write_character(uint8_t data);
@@ -735,6 +735,7 @@ extern void lcd_waitSymbolOff();
 extern uint8_t lcd_noteOut(uint8_t noteNr);
 
 
+
 extern char* putString_P(const __flash char* pSourceString, char* pOutput);
 extern char* putChar_Dec2(uint8_t val, char* pOutput);
 extern char* putChar_Dec(uint8_t val, char* pOutput);
@@ -743,10 +744,11 @@ extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
 extern char* putChar_Manual(uint8_t manual, char* pOutput);
 extern char* putChar_MidiChan(uint8_t channel, char* pOutput);
+extern char* putString_Prog(char* pOutput, uint8_t progNr);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 73 ".././utils.h"
+# 75 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -766,13 +768,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 101 ".././utils.h"
+# 103 ".././utils.h"
 extern char string_Buf[64];
 
 extern const char cr_lf [] 
-# 103 ".././utils.h" 3
+# 105 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 103 ".././utils.h"
+# 105 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -1100,6 +1102,8 @@ extern ProgramInfo_t programMap[64] ;
 extern uint8_t midi_RegisterChanged;
 extern uint8_t midi_CountRegisterInProgram(uint8_t program);
 extern uint8_t read_allRegister(uint8_t* resultPtr);
+extern void reg_ClearOnLCD();
+extern void reg_toLCD();
 
 
 
@@ -1125,6 +1129,14 @@ extern uint8_t prog_Display;
 extern uint8_t prog_UpdDisplay;
 extern void prog_set(uint8_t prog);
 extern void prog_toLcd();
+typedef struct {
+ uint8_t cursor;
+ char manualChar;
+ uint8_t regStart;
+ uint8_t regEnd;
+} RegOut_t;
+
+extern const __flash RegOut_t reg_Out[6];
 
 
 extern void init_Midi2Manual();
@@ -1170,7 +1182,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 250 ".././Midi.h"
+# 260 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -2262,11 +2274,11 @@ uint8_t read_Register(uint8_t regNr, uint8_t mode){
    if (((pipe[bitNr].pipeOut & mask) == 0) && ((mode & 0x02) != 0)) {
 
     return 0x01;
-   } else if (((pipe[bitNr].pipeIn & mask) != 0) && ((mode & 0x01) != 0)) {
+   } else if (((pipe[bitNr].pipeIn & mask & pipe_Module.AssnRead) != 0) && ((mode & 0x01) != 0)) {
 
 
     return 0x01;
-   } else if (((pipe[bitNr].pipeOut & mask) != 0) && ((pipe[bitNr].pipeIn & mask) != 0) && (mode == 0x04)){
+   } else if (((pipe[bitNr].pipeOut & mask) != 0) && ((pipe[bitNr].pipeIn & mask & pipe_Module.AssnRead) != 0) && (mode == 0x04)){
     return 0x01;
 
    } else {
@@ -2291,7 +2303,8 @@ uint8_t get_RegisterStatus(uint8_t regNr){
    if ((pipe[bitNr].pipeOut & mask) == 0) {
 
     return 0x02;
-   } else if ((pipe[bitNr].pipeIn & mask) != 0) {
+   } else if ((pipe[bitNr].pipeIn & mask & pipe_Module.AssnRead) != 0) {
+
 
 
     return 0x01;
@@ -2333,9 +2346,9 @@ uint8_t read_allRegister(uint8_t* resultPtr){
   if ((regNr & 0x07) == 0x07) {
 
    if (resultPtr != 
-# 540 ".././Midi.c" 3 4
+# 541 ".././Midi.c" 3 4
                    ((void *)0)
-# 540 ".././Midi.c"
+# 541 ".././Midi.c"
                        ) {
     *resultPtr++ = mask;
    }
@@ -2416,7 +2429,7 @@ void midi_ProgramChange(uint8_t channel, uint8_t program){
   }
  }
 
- if (channel == midiThrough.InChannel){
+
 
   if (midiThrough.OutChannel != 0xFF) {
 
@@ -2424,7 +2437,7 @@ void midi_ProgramChange(uint8_t channel, uint8_t program){
 
    serial1MIDISend(program);
   }
- }
+
 }
 
 
@@ -2518,7 +2531,7 @@ void prog_set(uint8_t prog){
 void prog_toLcd(){
  if (prog_Display != 0xFF) {
   lcd_putc('P');
-  lcd_putc('.');
+  lcd_putc('-');
   lcd_putc('A' + ((prog_Display >> 3) & 0x07));
   lcd_putc('1' + (prog_Display & 0x07));
   lcd_putc(' ');
@@ -2527,6 +2540,47 @@ void prog_toLcd(){
  }
 }
 
+const __flash RegOut_t reg_Out[6] = {{0x40 +1,'1',10,14},{0x40 +6,' ',15,18},
+ {0x40 +10,'2',20,24},{0x40 +15,' ',25,29},{(0+20)+1,'P',0,4},{(0+20)+6,' ',5,9}};
+
+void reg_toLCD(){
+
+ for (uint8_t i = 0; i < 6; i++){
+  lcd_goto(reg_Out[i].cursor);
+  char myChar = reg_Out[i].manualChar;
+  if ((myChar > ' ') && (myChar <= 0x7F)) {
+
+   lcd_putc(myChar);
+   lcd_putc(' ');
+  }
+  uint8_t reg = reg_Out[i].regStart;
+  while (reg <= reg_Out[i].regEnd) {
+   if (reg == reg_Out[i].regEnd) {
+
+    lcd_putc(0x0A + (get_RegisterStatus(reg) == 0x00 ? 0 : 1));
+   } else {
+
+    uint8_t addChar = get_RegisterStatus(reg++) == 0x00 ? 0 : 2;
+    addChar += get_RegisterStatus(reg) == 0x00 ? 0 : 1;
+    lcd_putc(0x0C + addChar);
+   }
+   reg++;
+  }
+  lcd_putc(' ');
+ }
+}
+
+void reg_ClearOnLCD(){
+ for (uint8_t i = 0; i < 6; i++){
+  lcd_goto(reg_Out[i].cursor);
+  char myChar = reg_Out[i].manualChar;
+  uint8_t spaceCount;
+  spaceCount = (reg_Out[i].regEnd - reg_Out[i].regStart) + 1;
+  spaceCount = (spaceCount + 1) >> 1;
+  spaceCount += ((myChar > ' ') && (myChar <= 0x7F)) ? 2 : 0;
+  lcd_blank(spaceCount);
+ }
+}
 
 
 
@@ -2891,14 +2945,12 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 
 
 void midiSendAllNotesOff(){
- for (uint8_t i = 0; i < 4; i++){
-  uint8_t chan = midiOutMap[i].hw_channel;
-  if (chan <= 15) {
-   serial1MIDISend(0xB0 | chan);
-   serial1MIDISend(0x7B);
-   serial1MIDISend(0);
-  }
+ if (midiThrough.OutChannel <= 15) {
+  serial1MIDISend(0xB0 | (midiThrough.OutChannel));
+  serial1MIDISend(0x7B);
+  serial1MIDISend(0);
  }
+# 1150 ".././Midi.c"
 }
 
 void midi_SendActiveSense(){

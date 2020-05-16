@@ -67,6 +67,78 @@ const uint8_t cgPattern_Block [8] PROGMEM = {
 	0
 };
 
+const uint8_t cgPattern_RegOff [8] PROGMEM = {
+	// block
+	0b00011000,
+	0b00011000,
+	0b00000000,
+	0b00000000,
+	0b00000000,
+	0b00000000,
+	0b00000000,
+	0
+};
+
+const uint8_t cgPattern_RegOn [8] PROGMEM = {
+	// block
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0
+};
+
+const uint8_t cgPattern_RegOffOff [8] PROGMEM = {
+	// block
+	0b00011011,
+	0b00011011,
+	0b00000000,
+	0b00000000,
+	0b00000000,
+	0b00000000,
+	0b00000000,
+	0
+};
+
+const uint8_t cgPattern_RegOffOn [8] PROGMEM = {
+	// block
+	0b00011011,
+	0b00011011,
+	0b00000011,
+	0b00000011,
+	0b00000011,
+	0b00000011,
+	0b00000011,
+	0
+};
+
+const uint8_t cgPattern_RegOnOff [8] PROGMEM = {
+	// block
+	0b00011011,
+	0b00011011,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0
+};
+
+const uint8_t cgPattern_RegOnOn [8] PROGMEM = {
+	// block
+	0b00011011,
+	0b00011011,
+	0b00011011,
+	0b00011011,
+	0b00011011,
+	0b00011011,
+	0b00011011,
+	0
+};
+
 void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr){
 	lcd_write_command(LCD_SETCGRAMADR | (charNr << 3));
 	for (uint8_t i = 0; i < 8; i++){
@@ -77,7 +149,14 @@ void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr){
 void lcd_initCG(){
 	lcd_setCG(0,cgPattern_Up); // 0x08 = Arrow Up
 	lcd_setCG(1,cgPattern_Down); // 0x09 = Arrow Down
-	lcd_setCG(2,cgPattern_Block); // 0x0A = Block = State On
+	// old: 0x0A = Block = State On
+	lcd_setCG(2,cgPattern_RegOff); // 0x0A = Single Reg Off
+	lcd_setCG(3,cgPattern_RegOn); // 0x0B = Single Reg Off
+	lcd_setCG(4,cgPattern_RegOffOff); // 0x0C = Reg Off Off
+	lcd_setCG(5,cgPattern_RegOffOn); // 0x0D = Reg Off On
+	lcd_setCG(6,cgPattern_RegOnOff); // 0x0E = Reg On Off
+	lcd_setCG(7,cgPattern_RegOnOn); // 0x0F = Reg On On
+
 }
 
 void lcd_hexout(uint8_t hexNumber){
@@ -175,7 +254,7 @@ char* putChar_MidiChan(uint8_t channel, char* pOutput){
 			*pOutput++ = '1';
 			channel -= 10;
 		} else {
-			*pOutput++ = ' ';		
+			*pOutput++ = ' ';
 		}
 		*pOutput++ = '0'+channel;
 	}
@@ -267,7 +346,7 @@ extern char* putString_P(const __flash char* pSourceString, char* pOutput){
 	return pOutput;
 }
 
-extern char* putString_Prog(char* pOutput, uint8_t progNr){
+char* putString_Prog(char* pOutput, uint8_t progNr){
 	*pOutput++ = 'P';
 	*pOutput++ = 'A'+ ((progNr >> 3) & 0x07);
 	*pOutput++ = '1'+ (progNr & 0x07);

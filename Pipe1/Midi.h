@@ -161,6 +161,8 @@ extern ProgramInfo_t programMap[PROGRAM_COUNT] ; // for each register one bit, 2
 extern uint8_t midi_RegisterChanged;
 extern uint8_t midi_CountRegisterInProgram(uint8_t program);
 extern uint8_t read_allRegister(uint8_t* resultPtr);
+extern void reg_ClearOnLCD();
+extern void reg_toLCD();
 
 #define REGISTER_WAS_SET 0x80 // prefix bit 7 = 1
 #define REGISTER_ON 0x01
@@ -186,6 +188,14 @@ extern uint8_t prog_Display; // Program value 0...63
 extern uint8_t prog_UpdDisplay; // TRUE if PROGRAM has changed and should be updated
 extern void prog_set(uint8_t prog);
 extern void prog_toLcd(); // send 4 byte to LCD at current cursor pos: "P:1A" .. "P:8H"
+typedef struct {
+	uint8_t cursor;
+	char manualChar;
+	uint8_t regStart;
+	uint8_t regEnd;
+} RegOut_t;
+#define REGOUT_LEN 6
+extern const __flash RegOut_t reg_Out[REGOUT_LEN];
 
 //----------------------- FUNCTIONS -------------------
 extern void init_Midi2Manual();

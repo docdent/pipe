@@ -467,11 +467,11 @@ uint8_t read_Register(uint8_t regNr, uint8_t mode){
 			if (((pipe[bitNr].pipeOut & mask) == 0) && ((mode & REGISTER_READ_SWOUT) != 0)) {
 				// read sw output and output is L (active)
 				return REGISTER_ON;
-			} else if (((pipe[bitNr].pipeIn & mask) != 0) && ((mode & REGISTER_READ_HWIN) != 0)) {
-				// read hw input and Input is H (active)
+			} else if (((pipe[bitNr].pipeIn & mask & pipe_Module.AssnRead) != 0) && ((mode & REGISTER_READ_HWIN) != 0)) {
+				// read hw input and Input is H (active) AND module is assigned readable V 0.74
 				// result ON if output is H (works with disconnected HW or input is H
 				return REGISTER_ON;
-			} else if (((pipe[bitNr].pipeOut & mask) != 0) && ((pipe[bitNr].pipeIn & mask) != 0) && (mode == REGISTER_READ_HWIN_XOR_SWOUT)){
+			} else if (((pipe[bitNr].pipeOut & mask) != 0) && ((pipe[bitNr].pipeIn & mask & pipe_Module.AssnRead) != 0) && (mode == REGISTER_READ_HWIN_XOR_SWOUT)){
 				return REGISTER_ON;
 				// sw out off and hw input on -> additional register manually active
 			} else  {
@@ -496,7 +496,8 @@ uint8_t get_RegisterStatus(uint8_t regNr){
 			if ((pipe[bitNr].pipeOut & mask) == 0) {
 				// read sw output is L (active)
 				return REGISTER_READ_SWOUT;
-			} else if ((pipe[bitNr].pipeIn & mask) != 0) {
+			} else if ((pipe[bitNr].pipeIn & mask & pipe_Module.AssnRead) != 0) {
+				// V 0.74: valid input modules only if assigned to read!
 				// read hw input and Input is H (active)
 				// result ON if output is H (works with disconnected HW or input is H
 				return REGISTER_READ_HWIN;
@@ -719,7 +720,7 @@ void prog_set(uint8_t prog){
 void prog_toLcd(){
 	if (prog_Display != PROGR_NONE) {
 		lcd_putc('P');
-		lcd_putc('.');
+		lcd_putc('-');
 		lcd_putc('A' + ((prog_Display >> 3) & 0x07));
 		lcd_putc('1' + (prog_Display & 0x07));
 		lcd_putc(' ');
@@ -728,6 +729,47 @@ void prog_toLcd(){
 	}
 }
 
+const __flash RegOut_t reg_Out[REGOUT_LEN] = {{LCD_LINE1+1,'1',10,14},{LCD_LINE1+6,' ',15,18},
+	{LCD_LINE1+10,'2',20,24},{LCD_LINE1+15,' ',25,29},{LCD_LINE2+1,'P',0,4},{LCD_LINE2+6,' ',5,9}};
+
+void reg_toLCD(){
+	// lcd output register
+	for (uint8_t i = 0; i < REGOUT_LEN; i++){
+		lcd_goto(reg_Out[i].cursor);
+		char myChar = reg_Out[i].manualChar;
+		if ((myChar > ' ') && (myChar <= 0x7F)) {
+			// only if valid char
+			lcd_putc(myChar);
+			lcd_putc(' ');
+		}
+		uint8_t reg = reg_Out[i].regStart;
+		while (reg <= reg_Out[i].regEnd) {
+			if (reg == reg_Out[i].regEnd) {
+				// only one register left for out
+				lcd_putc(LCD_CHAR_REG_OFF+ (get_RegisterStatus(reg) == REGISTER_OFF ? 0 : 1));
+			} else {
+				// at least 2 register left
+				uint8_t addChar = get_RegisterStatus(reg++) == REGISTER_OFF ? 0 : 2;
+				addChar += get_RegisterStatus(reg) == REGISTER_OFF ? 0 : 1;
+				lcd_putc(LCD_CHAR_REG_OFFOFF+ addChar);
+			}
+			reg++;
+		}
+		lcd_putc(' ');
+	}
+}
+
+void reg_ClearOnLCD(){
+	for (uint8_t i = 0; i < REGOUT_LEN; i++){
+		lcd_goto(reg_Out[i].cursor);
+		char myChar = reg_Out[i].manualChar;
+		uint8_t spaceCount;
+		spaceCount = (reg_Out[i].regEnd - reg_Out[i].regStart) + 1;
+		spaceCount = (spaceCount + 1) >> 1; // (nr of reg) / 2 plus 1 if odd number
+		spaceCount += ((myChar > ' ') && (myChar <= 0x7F)) ? 2 : 0; // add caption if valid
+		lcd_blank(spaceCount);
+	}
+}
 
 //------------------------------------- M I D I C H A N N E L   T O   M A N U A L ---------------------------------
 
@@ -1092,14 +1134,19 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 //******************************************* S E N D   A L L N O T E S O F F ************************************
 
 void midiSendAllNotesOff(){
-	for (uint8_t i = 0; i < MANUAL_COUNT; i++){
-		uint8_t chan = midiOutMap[i].hw_channel;
-		if (chan <= MIDI_CHANNEL_16) {
-			serial1MIDISend(MIDI_CTRLCHG | chan);
-			serial1MIDISend(MIDI_CTRL_ALLNOTESOFF);
-			serial1MIDISend(0);
-		}
+	if (midiThrough.OutChannel <= MIDI_CHANNEL_16) {
+		serial1MIDISend(MIDI_CTRLCHG | (midiThrough.OutChannel));
+		serial1MIDISend(MIDI_CTRL_ALLNOTESOFF);
+		serial1MIDISend(0);
 	}
+// 	for (uint8_t i = 0; i < MANUAL_COUNT; i++){
+// 		uint8_t chan = midiOutMap[i].hw_channel;
+// 		if (chan <= MIDI_CHANNEL_16) {
+// 			serial1MIDISend(MIDI_CTRLCHG | chan);
+// 			serial1MIDISend(MIDI_CTRL_ALLNOTESOFF);
+// 			serial1MIDISend(0);
+// 		}
+// 	}
 }
 
 void midi_SendActiveSense(){

@@ -2337,50 +2337,50 @@ __vector_55:
 	.long	0x77
 	.byte	0x7
 	.byte	0
+	.uleb128 0x2
+	.byte	0x1
+	.byte	0x8
+	.long	.LASF13
 	.uleb128 0x9
 	.byte	0x3
 	.byte	0x5
-	.byte	0xd1
-	.long	0xfb
+	.byte	0xdb
+	.long	0x102
 	.uleb128 0xa
-	.long	.LASF13
+	.long	.LASF14
 	.byte	0x5
-	.byte	0xd2
+	.byte	0xdc
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
 	.uleb128 0
 	.uleb128 0xa
-	.long	.LASF14
+	.long	.LASF15
 	.byte	0x5
-	.byte	0xd3
+	.byte	0xdd
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
 	.uleb128 0x1
 	.uleb128 0xa
-	.long	.LASF15
+	.long	.LASF16
 	.byte	0x5
-	.byte	0xd4
+	.byte	0xde
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
 	.uleb128 0x2
 	.byte	0
 	.uleb128 0x3
-	.long	.LASF16
+	.long	.LASF17
 	.byte	0x5
-	.byte	0xd5
-	.long	0xc8
+	.byte	0xdf
+	.long	0xcf
 	.uleb128 0xb
 	.byte	0x2
 	.long	0x30
-	.uleb128 0x2
-	.byte	0x1
-	.byte	0x8
-	.long	.LASF17
 	.uleb128 0xc
-	.long	0x10c
+	.long	0xc8
 	.uleb128 0xc
 	.long	0x30
 	.uleb128 0x5
@@ -2526,13 +2526,13 @@ __vector_55:
 	.long	.LASF27
 	.byte	0x1
 	.word	0x117
-	.long	0x106
+	.long	0x10d
 	.long	.LLST7
 	.uleb128 0x19
 	.long	.LASF28
 	.byte	0x1
 	.word	0x120
-	.long	0x106
+	.long	0x10d
 	.byte	0x6
 	.byte	0x62
 	.byte	0x93
@@ -3259,7 +3259,7 @@ __vector_55:
 	.string	"c"
 	.byte	0x1
 	.word	0x102
-	.long	0x10c
+	.long	0xc8
 	.long	.LLST35
 	.uleb128 0x23
 	.long	.LBB41
@@ -3385,7 +3385,7 @@ __vector_55:
 	.byte	0
 	.uleb128 0xb
 	.byte	0x2
-	.long	0x10c
+	.long	0xc8
 	.uleb128 0x2b
 	.byte	0x1
 	.long	.LASF52
@@ -3410,7 +3410,7 @@ __vector_55:
 	.long	.LASF27
 	.byte	0x1
 	.word	0x138
-	.long	0x106
+	.long	0x10d
 	.long	.LLST42
 	.byte	0
 	.uleb128 0x26
@@ -3428,13 +3428,13 @@ __vector_55:
 	.long	.LASF27
 	.byte	0x1
 	.word	0x149
-	.long	0x106
+	.long	0x10d
 	.long	.LLST44
 	.uleb128 0x18
 	.long	.LASF28
 	.byte	0x1
 	.word	0x14f
-	.long	0x106
+	.long	0x10d
 	.long	.LLST45
 	.uleb128 0x14
 	.long	.LBB42
@@ -3484,7 +3484,7 @@ __vector_55:
 	.long	.LASF27
 	.byte	0x1
 	.word	0x15d
-	.long	0x106
+	.long	0x10d
 	.long	.LLST50
 	.byte	0
 	.uleb128 0x28
@@ -3535,13 +3535,13 @@ __vector_55:
 	.long	.LASF27
 	.byte	0x1
 	.word	0x182
-	.long	0x106
+	.long	0x10d
 	.long	.LLST53
 	.uleb128 0x19
 	.long	.LASF28
 	.byte	0x1
 	.word	0x18b
-	.long	0x106
+	.long	0x10d
 	.byte	0x6
 	.byte	0x62
 	.byte	0x93
@@ -3609,7 +3609,7 @@ __vector_55:
 	.string	"c"
 	.byte	0x1
 	.word	0x1a4
-	.long	0x10c
+	.long	0xc8
 	.long	.LLST60
 	.uleb128 0x2c
 	.long	.Ldebug_ranges0+0
@@ -3658,7 +3658,7 @@ __vector_55:
 	.string	"c"
 	.byte	0x1
 	.word	0x1ac
-	.long	0x10c
+	.long	0xc8
 	.long	.LLST66
 	.uleb128 0x20
 	.long	.LVL178
@@ -3705,7 +3705,7 @@ __vector_55:
 	.long	.LASF27
 	.byte	0x1
 	.word	0x1b8
-	.long	0x106
+	.long	0x10d
 	.long	.LLST68
 	.byte	0
 	.uleb128 0x26
@@ -3723,7 +3723,7 @@ __vector_55:
 	.long	.LASF27
 	.byte	0x1
 	.word	0x1c9
-	.long	0x106
+	.long	0x10d
 	.long	.LLST70
 	.uleb128 0x18
 	.long	.LASF62
@@ -3735,13 +3735,13 @@ __vector_55:
 	.long	.LASF28
 	.byte	0x1
 	.word	0x1d0
-	.long	0x106
+	.long	0x10d
 	.long	.LLST72
 	.uleb128 0x18
 	.long	.LASF63
 	.byte	0x1
 	.word	0x1dc
-	.long	0x106
+	.long	0x10d
 	.long	.LLST73
 	.uleb128 0x2c
 	.long	.Ldebug_ranges0+0x18
@@ -3801,7 +3801,7 @@ __vector_55:
 	.long	.LASF27
 	.byte	0x1
 	.word	0x1e6
-	.long	0x106
+	.long	0x10d
 	.long	.LLST79
 	.byte	0
 	.uleb128 0x5
@@ -3812,7 +3812,7 @@ __vector_55:
 	.uleb128 0x2e
 	.long	.LASF65
 	.byte	0x7
-	.byte	0x67
+	.byte	0x69
 	.long	0xcea
 	.byte	0x1
 	.byte	0x1
@@ -4142,8 +4142,8 @@ __vector_55:
 	.uleb128 0x2e
 	.long	.LASF97
 	.byte	0x5
-	.byte	0xd6
-	.long	0xfb
+	.byte	0xe0
+	.long	0x102
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x5
@@ -6819,7 +6819,7 @@ __vector_55:
 	.string	"__ToDo"
 .LASF4:
 	.string	"unsigned int"
-.LASF15:
+.LASF16:
 	.string	"AcceptProgChange"
 .LASF6:
 	.string	"long unsigned int"
@@ -6877,7 +6877,7 @@ __vector_55:
 	.string	"midiTxOvfl"
 .LASF80:
 	.string	"serUSBOvflFlag"
-.LASF16:
+.LASF17:
 	.string	"MidiSetting_t"
 .LASF38:
 	.string	"serial0USB_logPipeIn"
@@ -6911,7 +6911,7 @@ __vector_55:
 	.string	"midiTxBuffer"
 .LASF57:
 	.string	"serial3SER_ESP_sendStringP"
-.LASF17:
+.LASF13:
 	.string	"char"
 .LASF50:
 	.string	"serial0SER_USB_sendString"
@@ -6923,7 +6923,7 @@ __vector_55:
 	.string	"serial1MIDISend"
 .LASF71:
 	.string	"serESP_Active"
-.LASF14:
+.LASF15:
 	.string	"VelZero4Off"
 .LASF21:
 	.string	"received_byte"
@@ -6955,7 +6955,7 @@ __vector_55:
 	.string	"serESPOvflFlag"
 .LASF99:
 	.string	"sw_version"
-.LASF13:
+.LASF14:
 	.string	"TxActivceSense"
 .LASF102:
 	.string	"midiRxOvfl"

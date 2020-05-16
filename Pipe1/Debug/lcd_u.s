@@ -675,7 +675,7 @@ lcd_putc:
 	cpi r29,lo8(-91)
 	breq .L31
 	.loc 1 262 0
-	cpi r29,lo8(10)
+	cpi r29,lo8(42)
 	breq .L32
 	.loc 1 264 0
 	cpi r29,lo8(-30)

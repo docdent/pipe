@@ -2817,48 +2817,48 @@ ee:
 	.byte	0x5
 	.byte	0x9e
 	.long	0x1e6
+	.uleb128 0x2
+	.byte	0x1
+	.byte	0x8
+	.long	.LASF34
 	.uleb128 0x7
 	.byte	0x3
 	.byte	0x5
-	.byte	0xd1
-	.long	0x259
+	.byte	0xdb
+	.long	0x260
 	.uleb128 0x8
-	.long	.LASF34
+	.long	.LASF35
 	.byte	0x5
-	.byte	0xd2
+	.byte	0xdc
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
 	.uleb128 0
 	.uleb128 0x8
-	.long	.LASF35
+	.long	.LASF36
 	.byte	0x5
-	.byte	0xd3
+	.byte	0xdd
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
 	.uleb128 0x1
 	.uleb128 0x8
-	.long	.LASF36
+	.long	.LASF37
 	.byte	0x5
-	.byte	0xd4
+	.byte	0xde
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
 	.uleb128 0x2
 	.byte	0
 	.uleb128 0x3
-	.long	.LASF37
+	.long	.LASF38
 	.byte	0x5
-	.byte	0xd5
-	.long	0x226
+	.byte	0xdf
+	.long	0x22d
 	.uleb128 0x9
 	.byte	0x2
 	.long	0x30
-	.uleb128 0x2
-	.byte	0x1
-	.byte	0x8
-	.long	.LASF38
 	.uleb128 0xa
 	.long	0x30
 	.uleb128 0xb
@@ -2942,7 +2942,7 @@ ee:
 	.long	.LASF48
 	.byte	0x6
 	.byte	0x6e
-	.long	0x259
+	.long	0x260
 	.byte	0x3
 	.byte	0x23
 	.uleb128 0x140
@@ -3272,7 +3272,7 @@ ee:
 	.long	.LASF80
 	.byte	0x1
 	.byte	0x31
-	.long	0x264
+	.long	0x26b
 	.long	.LLST0
 	.uleb128 0x13
 	.long	.LASF81
@@ -3398,7 +3398,7 @@ ee:
 	.long	.LASF80
 	.byte	0x1
 	.byte	0x41
-	.long	0x264
+	.long	0x26b
 	.long	.LLST11
 	.uleb128 0x13
 	.long	.LASF81
@@ -3548,13 +3548,13 @@ ee:
 	.long	.LASF93
 	.byte	0x1
 	.byte	0x51
-	.long	0x264
+	.long	0x26b
 	.long	.LLST28
 	.uleb128 0x14
 	.long	.LASF94
 	.byte	0x1
 	.byte	0x53
-	.long	0x264
+	.long	0x26b
 	.long	.LLST29
 	.uleb128 0x1d
 	.long	.Ldebug_ranges0+0
@@ -3746,7 +3746,7 @@ ee:
 	.long	.LASF96
 	.byte	0x1
 	.byte	0x7a
-	.long	0x264
+	.long	0x26b
 	.long	.LLST33
 	.uleb128 0x1d
 	.long	.Ldebug_ranges0+0x18
@@ -3876,7 +3876,7 @@ ee:
 	.long	.LASF94
 	.byte	0x1
 	.byte	0x86
-	.long	0x264
+	.long	0x26b
 	.long	.LLST37
 	.uleb128 0x1d
 	.long	.Ldebug_ranges0+0x30
@@ -6193,13 +6193,13 @@ ee:
 	.long	.LASF121
 	.byte	0x1
 	.word	0x182
-	.long	0x264
+	.long	0x26b
 	.long	.LLST68
 	.uleb128 0x28
 	.long	.LASF122
 	.byte	0x1
 	.word	0x182
-	.long	0x264
+	.long	0x26b
 	.long	.LLST69
 	.uleb128 0x28
 	.long	.LASF81
@@ -6423,8 +6423,8 @@ ee:
 	.uleb128 0x29
 	.long	.LASF128
 	.byte	0x5
-	.byte	0xd6
-	.long	0x259
+	.byte	0xe0
+	.long	0x260
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x5
@@ -9464,7 +9464,7 @@ ee:
 	.string	"moduleAssignRead"
 .LASF117:
 	.string	"eeprom_UpdateProg"
-.LASF36:
+.LASF37:
 	.string	"AcceptProgChange"
 .LASF54:
 	.string	"charUSB"
@@ -9528,7 +9528,7 @@ ee:
 	.string	"eeprom_ReadMidiThrough"
 .LASF133:
 	.string	"eeprom_read_byte"
-.LASF37:
+.LASF38:
 	.string	"MidiSetting_t"
 .LASF94:
 	.string	"pEeBlock"
@@ -9570,7 +9570,7 @@ ee:
 	.string	"eeprom_ReadUSB"
 .LASF39:
 	.string	"charStart"
-.LASF38:
+.LASF34:
 	.string	"char"
 .LASF119:
 	.string	"eeprom_UpdateALL"
@@ -9588,7 +9588,7 @@ ee:
 	.string	"midiSettings"
 .LASF134:
 	.string	"eeprom_read_word"
-.LASF35:
+.LASF36:
 	.string	"VelZero4Off"
 .LASF102:
 	.string	"eeprom_ReadModules"
@@ -9628,7 +9628,7 @@ ee:
 	.string	"dataSize"
 .LASF110:
 	.string	"eeprom_UpdateManualMap"
-.LASF34:
+.LASF35:
 	.string	"TxActivceSense"
 .LASF107:
 	.string	"eeprom_ReadSoftkeys"

@@ -50,6 +50,7 @@ extern void lcd_waitSymbolOff();
 extern uint8_t lcd_noteOut(uint8_t noteNr);
 
 #define PUTSTRING_MAXLEN 20
+
 extern char* putString_P(const __flash char* pSourceString, char* pOutput);
 extern char* putChar_Dec2(uint8_t val, char* pOutput);
 extern char* putChar_Dec(uint8_t val, char* pOutput);
@@ -58,6 +59,7 @@ extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
 extern char* putChar_Manual(uint8_t manual, char* pOutput);
 extern char* putChar_MidiChan(uint8_t channel, char* pOutput);
+extern char* putString_Prog(char* pOutput, uint8_t progNr);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
@@ -67,7 +69,7 @@ extern uint8_t lcd_edit_byte(uint8_t cursor);
 #define KEYLABEL_COUNT 4
 #define KEYLABEL_LEN 5
 #define KEYLABEL_LCDLINE LCD_LINE3
-#define KEYLABEL_STATEON_CHAR 0x0A
+#define KEYLABEL_STATEON_CHAR 0x2A
 #define KEYLABEL_STATEOFF_CHAR 0x80 // and see lcd_u.h
 
 extern const __flash char keylabel_plus []  ;

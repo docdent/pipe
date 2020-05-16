@@ -142,9 +142,9 @@ typedef int32_t int_farptr_t;
 
 typedef uint32_t uint_farptr_t;
 # 9 ".././lcd_u.h" 2
-# 111 ".././lcd_u.h"
+# 117 ".././lcd_u.h"
 
-# 111 ".././lcd_u.h"
+# 117 ".././lcd_u.h"
 extern void lcd_write_nibble(uint8_t data);
 extern void lcd_write_command(uint8_t data);
 extern void lcd_write_character(uint8_t data);
@@ -1115,7 +1115,7 @@ void lcd_putc(char c)
    stored_char = 0x20;
   } else if (stored_char == 0xA5){
    stored_char = 0x14;
-  } else if (stored_char == 0x0A){
+  } else if (stored_char == 0x2A){
    stored_char = 0x15;
   } else if (stored_char == 0xE2){
    stored_char = 0x13;

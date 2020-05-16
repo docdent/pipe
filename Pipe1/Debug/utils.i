@@ -706,6 +706,7 @@ extern void lcd_waitSymbolOff();
 extern uint8_t lcd_noteOut(uint8_t noteNr);
 
 
+
 extern char* putString_P(const __flash char* pSourceString, char* pOutput);
 extern char* putChar_Dec2(uint8_t val, char* pOutput);
 extern char* putChar_Dec(uint8_t val, char* pOutput);
@@ -714,10 +715,11 @@ extern char* putChar_long(uint16_t val, char* pOutput);
 extern char* putChar_Note(uint8_t note, char* pOutput);
 extern char* putChar_Manual(uint8_t manual, char* pOutput);
 extern char* putChar_MidiChan(uint8_t channel, char* pOutput);
+extern char* putString_Prog(char* pOutput, uint8_t progNr);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 73 ".././utils.h"
+# 75 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -737,13 +739,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 101 ".././utils.h"
+# 103 ".././utils.h"
 extern char string_Buf[64];
 
 extern const char cr_lf [] 
-# 103 ".././utils.h" 3
+# 105 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 103 ".././utils.h"
+# 105 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -751,7 +753,7 @@ extern uint8_t get_StrLen(const char* pString);
 extern uint8_t reverse_Bits(uint8_t val);
 # 13 ".././utils.c" 2
 # 1 ".././lcd_u.h" 1
-# 111 ".././lcd_u.h"
+# 117 ".././lcd_u.h"
 extern void lcd_write_nibble(uint8_t data);
 extern void lcd_write_command(uint8_t data);
 extern void lcd_write_character(uint8_t data);
@@ -993,6 +995,8 @@ extern ProgramInfo_t programMap[64] ;
 extern uint8_t midi_RegisterChanged;
 extern uint8_t midi_CountRegisterInProgram(uint8_t program);
 extern uint8_t read_allRegister(uint8_t* resultPtr);
+extern void reg_ClearOnLCD();
+extern void reg_toLCD();
 
 
 
@@ -1018,6 +1022,14 @@ extern uint8_t prog_Display;
 extern uint8_t prog_UpdDisplay;
 extern void prog_set(uint8_t prog);
 extern void prog_toLcd();
+typedef struct {
+ uint8_t cursor;
+ char manualChar;
+ uint8_t regStart;
+ uint8_t regEnd;
+} RegOut_t;
+
+extern const __flash RegOut_t reg_Out[6];
 
 
 extern void init_Midi2Manual();
@@ -1063,7 +1075,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 250 ".././Midi.h"
+# 260 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1143,17 +1155,113 @@ const uint8_t cgPattern_Block [8]
  0
 };
 
+const uint8_t cgPattern_RegOff [8] 
+# 70 ".././utils.c" 3
+                                  __attribute__((__progmem__)) 
+# 70 ".././utils.c"
+                                          = {
+
+ 0b00011000,
+ 0b00011000,
+ 0b00000000,
+ 0b00000000,
+ 0b00000000,
+ 0b00000000,
+ 0b00000000,
+ 0
+};
+
+const uint8_t cgPattern_RegOn [8] 
+# 82 ".././utils.c" 3
+                                 __attribute__((__progmem__)) 
+# 82 ".././utils.c"
+                                         = {
+
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0
+};
+
+const uint8_t cgPattern_RegOffOff [8] 
+# 94 ".././utils.c" 3
+                                     __attribute__((__progmem__)) 
+# 94 ".././utils.c"
+                                             = {
+
+ 0b00011011,
+ 0b00011011,
+ 0b00000000,
+ 0b00000000,
+ 0b00000000,
+ 0b00000000,
+ 0b00000000,
+ 0
+};
+
+const uint8_t cgPattern_RegOffOn [8] 
+# 106 ".././utils.c" 3
+                                    __attribute__((__progmem__)) 
+# 106 ".././utils.c"
+                                            = {
+
+ 0b00011011,
+ 0b00011011,
+ 0b00000011,
+ 0b00000011,
+ 0b00000011,
+ 0b00000011,
+ 0b00000011,
+ 0
+};
+
+const uint8_t cgPattern_RegOnOff [8] 
+# 118 ".././utils.c" 3
+                                    __attribute__((__progmem__)) 
+# 118 ".././utils.c"
+                                            = {
+
+ 0b00011011,
+ 0b00011011,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0
+};
+
+const uint8_t cgPattern_RegOnOn [8] 
+# 130 ".././utils.c" 3
+                                   __attribute__((__progmem__)) 
+# 130 ".././utils.c"
+                                           = {
+
+ 0b00011011,
+ 0b00011011,
+ 0b00011011,
+ 0b00011011,
+ 0b00011011,
+ 0b00011011,
+ 0b00011011,
+ 0
+};
+
 void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr){
  lcd_write_command(0b01000000 | (charNr << 3));
  for (uint8_t i = 0; i < 8; i++){
   lcd_write_character(
-# 73 ".././utils.c" 3
+# 145 ".././utils.c" 3
                      (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 73 ".././utils.c"
+# 145 ".././utils.c"
                      patternPtr++
-# 73 ".././utils.c" 3
+# 145 ".././utils.c" 3
                      )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 73 ".././utils.c"
+# 145 ".././utils.c"
                                                 );
  }
 }
@@ -1161,7 +1269,14 @@ void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr){
 void lcd_initCG(){
  lcd_setCG(0,cgPattern_Up);
  lcd_setCG(1,cgPattern_Down);
- lcd_setCG(2,cgPattern_Block);
+
+ lcd_setCG(2,cgPattern_RegOff);
+ lcd_setCG(3,cgPattern_RegOn);
+ lcd_setCG(4,cgPattern_RegOffOff);
+ lcd_setCG(5,cgPattern_RegOffOn);
+ lcd_setCG(6,cgPattern_RegOnOff);
+ lcd_setCG(7,cgPattern_RegOnOn);
+
 }
 
 void lcd_hexout(uint8_t hexNumber){
@@ -1351,7 +1466,7 @@ extern char* putString_P(const __flash char* pSourceString, char* pOutput){
  return pOutput;
 }
 
-extern char* putString_Prog(char* pOutput, uint8_t progNr){
+char* putString_Prog(char* pOutput, uint8_t progNr){
  *pOutput++ = 'P';
  *pOutput++ = 'A'+ ((progNr >> 3) & 0x07);
  *pOutput++ = '1'+ (progNr & 0x07);
@@ -1611,11 +1726,11 @@ uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status){
  uint8_t result = 0;
  for (uint8_t i = 0; i < 5; i++){
   uint8_t tempChar = *charPtr;
-  if ((status == 0) && (tempChar == 0x0A)) {
+  if ((status == 0) && (tempChar == 0x2A)) {
    *charPtr = 0x80;
    result = 0xFF;
   } else if ((status != 0) && (tempChar == 0x80)) {
-   *charPtr = 0x0A;
+   *charPtr = 0x2A;
    result = 0xFF;
   }
   charPtr++;

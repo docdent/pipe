@@ -97,7 +97,13 @@
 #define LCD_CHAR_ARROW_RIGHT 0x7E
 #define LCD_CHAR_ARROW_LEFT 0x7F
 #define LCD_CHAR_STATEONOFF 0x80 // also off state cause it shows as space
-#define LCD_CHAR_STATEON 0x0A // also in utils.h, will show as block
+#define LCD_CHAR_STATEON 0x2A // also in utils.h, will show as ---block--- -> star
+#define LCD_CHAR_REG_OFF 0x0A // new V 0.74 Reg on off symbols
+#define LCD_CHAR_REG_ON 0x0B
+#define LCD_CHAR_REG_OFFOFF 0x0C
+#define LCD_CHAR_REG_OFFON 0x0D
+#define LCD_CHAR_REG_ONOFF 0x0E
+#define LCD_CHAR_REG_ONON 0x0F
 
 #define LCD_WAIT_POWERUP 100 // ms
 #define LCD_WAIT_RESET0 5000 // us

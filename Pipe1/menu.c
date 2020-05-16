@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.73";
+const char sw_version [] PROGMEM = "V0.74";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -650,6 +650,16 @@ uint8_t softKeyRegOff(uint8_t arg){
 	return 0;
 }
 
+void softKeyUpdateProg(){
+	if (prog_Display <= PROGR_MAX){
+		send_progrChange_toMidiThru(prog_Display);
+		program_toRegister(prog_Display);
+	} else {
+		midi_resetRegisters();
+	}
+	prog_UpdDisplay = TRUE;
+}
+
 uint8_t softKeyPrP(uint8_t arg){
 	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
 		// longpress: set
@@ -664,8 +674,7 @@ uint8_t softKeyPrP(uint8_t arg){
 		} else {
 			prog_Display++;
 		}
-		send_progrChange_toMidiThru(prog_Display);
-		prog_UpdDisplay = TRUE;
+		softKeyUpdateProg();
 	}
 	return 0;
 }
@@ -681,8 +690,7 @@ uint8_t softKeyPrM(uint8_t arg){
 		} else {
 			prog_Display--;
 		}
-		send_progrChange_toMidiThru(prog_Display);
-		prog_UpdDisplay = TRUE;
+		softKeyUpdateProg();
 	}
 	return 0;
 }
@@ -710,8 +718,7 @@ uint8_t softKeyPrInc(uint8_t arg){
 				prog_Display++;
 			}
 		}
-		send_progrChange_toMidiThru(prog_Display);
-		prog_UpdDisplay = TRUE;
+		softKeyUpdateProg();
 	}
 	return 0;
 }
@@ -731,31 +738,28 @@ uint8_t softKeyPrDec(uint8_t arg){
 				prog_Display--;
 			}
 		}
-		send_progrChange_toMidiThru(prog_Display);
-		prog_UpdDisplay = TRUE;
+		softKeyUpdateProg();
 	}
 	return 0;
 }
 uint8_t softKeyPBInc(uint8_t arg){
 	if (arg != 0) {
 		//  bank increment (8 program steps)
-		if (prog_Display != PROGR_NONE){
+		//if (prog_Display != PROGR_NONE){
 			// there is a program active: program current register set to program
 			prog_Display = (prog_Display + 8) & 0x38;
-			send_progrChange_toMidiThru(prog_Display);
-			prog_UpdDisplay = TRUE;
-		}
+			softKeyUpdateProg();
+		//}
 	}
 	return 0;
 }
 uint8_t softKeyPBDec(uint8_t arg){
 	if (arg != 0) {
 		// there is a program active: program current register set to program
-		if (prog_Display != PROGR_NONE){
+		//if (prog_Display != PROGR_NONE){
 			prog_Display = (prog_Display - 8) & 0x38;
-			send_progrChange_toMidiThru(prog_Display);
-			prog_UpdDisplay = TRUE;
-		}
+			softKeyUpdateProg();
+		//}
 	}
 	return 0;
 }
