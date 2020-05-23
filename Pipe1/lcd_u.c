@@ -31,6 +31,9 @@
 #include <avr/pgmspace.h>
 #include <stddef.h>
 #include "hw_defs.h"
+#include "utils.h"
+#include "menu.h"
+#include "hwtimer.h"
 
 uint8_t lcd_cursorPos;
 uint8_t lcd_buffer[LCD_LINE_COUNT*LCD_LINE_LEN]; // save written chars for output to other devices - does not LCD RAM BUFFER!
@@ -42,6 +45,7 @@ void lcd_init(void)
 	// V 0.69 debug pin
 	uint8_t debugSave = DEBUG_GET_OUT;
 	DEBUG_OUT_LCD
+	lcd_displayingMessage = FALSE;
 	// configure the microprocessor pins for the data lines
 	LCD_D7_DDR |= (1<<LCD_D7_BIT);                  // 4 data lines - output
 	LCD_D6_DDR |= (1<<LCD_D6_BIT);
@@ -225,6 +229,7 @@ void lcd_home()
 }
 
 uint8_t getCursorFromLCDRAMcursor(uint8_t lcd_cursor){
+	// convert non linear LCD-Cursor to linear Cursor 0..19 = line 0, 20..39 = line 1...
 	if ((lcd_cursor >= LCD_LINE0) && (lcd_cursor < LCD_EOLINE0)){
 		// line 0
 		return lcd_cursor-LCD_LINE0 + 0;
@@ -235,10 +240,9 @@ uint8_t getCursorFromLCDRAMcursor(uint8_t lcd_cursor){
 	} else if ((lcd_cursor >= LCD_LINE3) && (lcd_cursor < LCD_EOLINE3)){
 		return lcd_cursor-LCD_LINE3 + 60;
 	}
-	return 0xFF;
-	
-}
+	return 0xFF; // default should not occure
 
+}
 
 /*************************************************************************
 Display character
@@ -248,6 +252,11 @@ Returns:  none
 
 void lcd_putc(char c)
 {
+	// V 0.76 no output if displaying message
+	if ((lcd_displayingMessage == FALSE) || (lcd_cursorPos < MENU_LCD_CURSOR_MAINMESSAGE) 
+		|| (lcd_cursorPos >= MENU_LCD_CURSOR_MAINMESSAGE+MENU_LCD_LEN_MAINMESSAGE)) {
+		lcd_write_character(c);
+	}
 	// V 0.61: store char in lcd_buffer. convert values > 0x7F to special charactes < 0x20
 	// so data transfer uses bytes below 0x80 only
 	uint8_t cursor = getCursorFromLCDRAMcursor(lcd_cursorPos);
@@ -273,7 +282,6 @@ void lcd_putc(char c)
 		lcd_buffer[cursor] = stored_char;
 	}
 	lcd_cursorPos =  (lcd_cursorPos+1) &0x7F;
-	lcd_write_character(c);
 }
 
 
@@ -305,4 +313,76 @@ void lcd_puts_P(const char *progmem_s)
 		while ((c=pgm_read_byte(progmem_s++)))
 		lcd_putc(c);
 	}
+}
+
+//------------------------------ MESSAGE ------------------------------
+
+uint8_t lcd_displayingMessage;
+
+void lcd_message(const char *pMessage){
+	uint8_t saveCursor = lcd_cursorPos;
+	uint8_t textLen = get_StrLen(pMessage);
+	lcd_goto(MENU_LCD_CURSOR_MAINMESSAGE);
+	uint8_t pos = 0;
+	while (pos < ((MENU_LCD_LEN_MAINMESSAGE - textLen) >> 1)) {
+		lcd_write_character(' '); // blank but do not write to buffer
+		pos++;
+	}	
+	while (*pMessage != 0){
+		lcd_write_character(*pMessage++);
+		pos++;
+	}
+	while (pos++ < MENU_LCD_LEN_MAINMESSAGE){
+		lcd_write_character(' ');
+	}
+	lcd_goto(saveCursor);
+	lcd_displayingMessage = TRUE;
+	TIMER_SET(TIMER_MENUDATA_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
+}
+	
+void lcd_message_P(const char *pMessage_P){
+	uint8_t saveCursor = lcd_cursorPos;
+	uint8_t textLen = get_StrLenP(pMessage_P);
+	lcd_goto(MENU_LCD_CURSOR_MAINMESSAGE);
+	uint8_t pos = 0;
+	while (pos < ((MENU_LCD_LEN_MAINMESSAGE - textLen) >> 1)) {
+		lcd_write_character(' '); // blank but do not write to buffer
+		pos++;
+	}	
+	while (pgm_read_byte(pMessage_P) != 0){
+		lcd_write_character(pgm_read_byte(pMessage_P++));
+		pos++;
+	}
+	while (pos++ < MENU_LCD_LEN_MAINMESSAGE){
+		lcd_write_character(' ');
+	}
+	lcd_goto(saveCursor);
+	lcd_displayingMessage = TRUE;
+	TIMER_SET(TIMER_MENUDATA_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
+}
+
+
+void lcd_message_clear(){
+	uint8_t saveCursor = lcd_cursorPos;
+	uint8_t lcdBufferPos = getCursorFromLCDRAMcursor(MENU_LCD_CURSOR_MAINMESSAGE);
+	lcd_goto(MENU_LCD_CURSOR_MAINMESSAGE);
+	for (uint8_t i = 0; i < MENU_LCD_LEN_MAINMESSAGE; i++){
+		uint8_t stored_char = lcd_buffer[lcdBufferPos++];
+		if (stored_char == LCD_CHARREPL_NOTESTRAIGHT_SYM){
+			stored_char = LCD_CHAR_NOTESTRAIGHT_SYM; 
+		} else if (stored_char == LCD_CHARREPL_STATEON){
+			stored_char = LCD_CHAR_STATEON; 
+		} else if (stored_char == LCD_CHARREPL_SZ){
+			stored_char = LCD_CHAR_SZ; 
+		} else if (stored_char == LCD_CHARREPL_UMLAUTU){
+			stored_char = LCD_CHAR_UMLAUTU; 
+		} else if (stored_char == LCD_CHARREPL_UMLAUTO){
+			stored_char = LCD_CHAR_UMLAUTO; 
+		} else if (stored_char == LCD_CHARREPL_UMLAUTA){
+			stored_char = LCD_CHAR_UMLAUTA; 
+		} // other chars replaced by  ' ' are not translated back
+		lcd_write_character(stored_char);
+	}
+	lcd_goto(saveCursor);
+	lcd_displayingMessage = FALSE;
 }

@@ -34,6 +34,7 @@ extern uint8_t eeprom_ReadMidiOutMap();
 extern uint8_t eeprom_ReadModules();
 extern uint8_t eeprom_ReadUSB();
 extern uint8_t eeprom_ReadReg();
+extern uint8_t eeprom_ReadRegOut();
 extern uint8_t eeprom_ReadProg();
 extern uint8_t eeprom_ReadSoftkeys();
 extern uint8_t eeprom_ReadMidiThrough();
@@ -44,6 +45,7 @@ extern void eeprom_UpdateMidiOutMap();
 extern void eeprom_UpdateModules();
 extern void eeprom_UpdateUSB();
 extern void eeprom_UpdateReg();
+extern void eeprom_UpdateRegOut();
 extern void eeprom_UpdateProg();
 extern void eeprom_UpdateSoftkeys();
 extern void eeprom_UpdateMidiThrough();
@@ -66,6 +68,7 @@ extern void eeprom_UpdateALL();
 #define EE_CHAR_PROG 'P'
 #define EE_CHAR_SOFTKEYS 'K'
 #define EE_CHAR_MIDITHROUGH 'T'
+#define EE_CHAR_REGOUT 'r'
 #define EE_NR_MANUALMAP 0
 #define EE_NR_MIDIINMAP 1
 #define EE_NR_MIDIOUTMAP 2
@@ -129,7 +132,10 @@ typedef struct{
 	uint8_t charMidiThrough;
 	MidiThrough_t midiThrough;
 	uint16_t midiThrough_crc;
-	uint8_t charEnd;
+	uint8_t charRegOut;
+	RegOut_t reg_Out[REGOUT_LEN];
+	uint16_t regOut_crc;
+	uint8_t charEnd; // only for debugging
 } Ee_t;
 
 #define EEPROM_DATABLOCK_SIZE 2048 // adapt to size of EE_t manually !

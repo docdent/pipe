@@ -191,7 +191,7 @@ char* log_getShortTextFromPtr(LogList_t* pLogEntry,  char changeNotifyStatus){
 		pChar = putChar_hex(pLogEntry->logCategory, pChar);
 		pChar = putChar_hex(pLogEntry->logNr, pChar);
 		*(pChar++) = '-';
-		pChar = putChar_long(pLogEntry->logInfo, pChar);
+		pChar = putChar_word(pLogEntry->logInfo, pChar);
 		*pChar = '\0';
 		if (changeNotifyStatus != LOG_CHANGENOTIFYNO){
 			// when Status is to be changed (to read)

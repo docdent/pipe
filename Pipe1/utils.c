@@ -262,7 +262,7 @@ char* putChar_MidiChan(uint8_t channel, char* pOutput){
 	return pOutput;
 }
 
-char* putChar_long(uint16_t val, char* pOutput){
+char* putChar_word(uint16_t val, char* pOutput){
 	pOutput = pOutput + 4;
 	*pOutput = 0;
 	uint8_t nibble;
@@ -273,6 +273,19 @@ char* putChar_long(uint16_t val, char* pOutput){
 	}
 	return pOutput+4;
 }
+
+char* putChar_long(uint32_t val, char* pOutput){
+	pOutput = pOutput + 8;
+	*pOutput = 0;
+	uint8_t nibble;
+	for (uint8_t i = 0; i < 4; i++){
+		nibble = val & 0x0F;
+		*(--pOutput) =  (nibble > 9 ) ? 'A'-10+nibble : '0'+nibble;
+		val = val >> 4;
+	}
+	return pOutput+4;
+}
+
 
 char* putChar_Note(uint8_t midiNote, char* pOutput){
 	char prefix;

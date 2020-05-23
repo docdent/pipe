@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.74";
+const char sw_version [] PROGMEM = "V0.76";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -139,9 +139,30 @@ const __flash Menu_t menu_eeprom[] =
 {MENU_T_MENU,0,"EEBackup",NULL,{NULL},menuOnEnterEEBackup,NULL},
 {MENU_T_MENU_R,0,"EERestore",NULL,{NULL},menuOnEnterEERestore,NULL}};
 
+// --- MAIN --- SETUP --- REGISTER --- OUT
+const __flash Menu_t menu_regoutSec[] =	{
+	{MENU_T_VARBYTE | MENU_T_LEFTBOUND,MENU_FLAG_DATAOFFSET,"Cursor",NULL,{&(reg_Out[0].cursor)},NULL,NULL},
+	{MENU_T_VARBYTE,MENU_FLAG_DATAOFFSET,"Char",NULL,{&(reg_Out[0].manualChar)},NULL,NULL},
+	{MENU_T_VARREG,MENU_FLAG_DATAOFFSET,"RegBeg",NULL,{&(reg_Out[0].regStart)},NULL,NULL},
+	{MENU_T_VARREG | MENU_T_RIGHTBOUND,MENU_FLAG_DATAOFFSET,"RegEnd",NULL,{&(reg_Out[0].regEnd)},NULL,NULL}};
+
+// --- MAIN --- SETUP --- REGISTER
+uint8_t menuOnEnterRegOut(uint8_t arg);
+const __flash Menu_t menu_regout[] =
+{{MENU_T_MENU_L,0,MENUTEXT_SEC1,menu_regoutSec,{.tag=0},menuOnEnterRegOut,NULL},
+{MENU_T_MENU,0,MENUTEXT_SEC2,menu_regoutSec,{.tag=1},menuOnEnterRegOut,NULL},
+{MENU_T_MENU,0,MENUTEXT_SEC3,menu_regoutSec,{.tag=2},menuOnEnterRegOut,NULL},
+{MENU_T_MENU,0,MENUTEXT_SEC4,menu_regoutSec,{.tag=3},menuOnEnterRegOut,NULL},
+{MENU_T_MENU,0,MENUTEXT_SEC5,menu_regoutSec,{.tag=4},menuOnEnterRegOut,NULL},
+{MENU_T_MENU,0,MENUTEXT_SEC6,menu_regoutSec,{.tag=5},menuOnEnterRegOut,NULL},
+{MENU_T_MENU,0,MENUTEXT_SEC7,menu_regoutSec,{.tag=6},menuOnEnterRegOut,NULL},
+{MENU_T_MENU_R,0,MENUTEXT_SEC8,menu_regoutSec,{.tag=7},menuOnEnterRegOut,NULL}};
+
 // --- MAIN --- SETUP ---
+uint8_t menuOnExitRegisterOut(uint8_t arg);
 const __flash Menu_t menu_setup[] =
 {{MENU_T_MENU_L,0,"Module",menu_module,{NULL},NULL,NULL},
+{MENU_T_MENU,0,"Register",menu_regout,{NULL},NULL,menuOnExitRegisterOut},
 {MENU_T_MENU,0,"USB",menu_USBser,{NULL},NULL,NULL},
 {MENU_T_MENU,0,"Power",menu_Power,{NULL},NULL,NULL},
 {MENU_T_MENU_R,0,"EEprom",menu_eeprom,{NULL},NULL,NULL}};
@@ -446,6 +467,13 @@ void menuCheckArrowDown();
 
 //*************************** I N D I V I D U A L   S O F T K E Y   F U N C T I O N S ******************************
 
+uint8_t menuOnExitRegisterOut(uint8_t arg){
+	(void) arg;
+	eeprom_UpdateRegOut();
+	return 0;
+}
+
+
 uint8_t menuOnExitMidiThrough(uint8_t arg){
 	(void) arg;
 	eeprom_UpdateMidiThrough();
@@ -583,7 +611,7 @@ void menuDisplaySaveMessage(uint8_t regNumber, uint8_t progNr){
 	pChar = putChar_Dec(regNumber, pChar);
 	pChar = putString_P(messageSaved, pChar);
 	putString_Prog(pChar, progNr);
-	menu_DisplayMainMessage(string_Buf);
+	lcd_message(string_Buf);
 }
 
 void menuDisplayLoadMessage(uint8_t regNumber, uint8_t progNr){
@@ -598,7 +626,7 @@ void menuDisplayLoadMessage(uint8_t regNumber, uint8_t progNr){
 		pChar = putString_P(messageRegisterMan, pChar);
 		putChar_Dec(extraRegisters, pChar);
 	}
-	menu_DisplayMainMessage(string_Buf);
+	lcd_message(string_Buf);
 }
 
 void send_progrChange_toMidiThru(uint8_t program){
@@ -816,7 +844,7 @@ const __flash char menuMessageMIDIpanic[]  = "MIDI Noten aus";
 
 uint8_t menu_OnEnterMidiPanic(uint8_t arg){
 	(void) arg;
-	displayMenuMessage_P(menuMessageMIDIpanic);
+	lcd_message_P(menuMessageMIDIpanic);
 	midiSendAllNotesOff();
 	menuCursorSetMenu();
 	return 0;
@@ -851,7 +879,7 @@ void menu_ModuleTestExecute(){
 		if (menu_TestModuleBitCounter == MENU_TESTMODULE_STARTFLAG){
 			menu_TestModuleBitCounter = 0;
 		} else {
-			displayMenuMessage_P(menuMessageAbort);
+			lcd_message_P(menuMessageAbort);
 			menu_TestModuleBitCounter = MENU_TESTMODULE_ENDFLAG;
 			TIMER_SET(TIMER_TESTMODULE,TIMER_TESTMODEND_MS)
 			menuCursorSetMenu();
@@ -884,11 +912,14 @@ void menu_ModuleTestExecute(){
 	} else if (menu_TestModuleBitCounter == PIPE_SHIFTBIT_COUNT) {
 		// this was the last one
 		if (menu_TestModuleErrorList == 0){
-			displayMenuMessage_P(menuMessageOK);
+			lcd_message_P(menuMessageOK);
 		} else {
 			editLong.longval = menu_TestModuleErrorList;
-			lcd_goto(displayMenuMessage_P(menuMessageE));
-			lcd_longout();
+			char *buffer = string_Buf;
+			buffer = putString_P(menuMessageE,buffer);
+			buffer = putChar_long(menu_TestModuleErrorList, buffer);
+			*buffer = 0;
+			lcd_message(string_Buf);
 		}
 		menu_TestModuleBitCounter = MENU_TESTMODULE_ENDFLAG;
 		TIMER_SET(TIMER_TESTMODULE,TIMER_TESTMODEND_MS)
@@ -992,6 +1023,13 @@ uint8_t menuOnEnterModSecReg(uint8_t arg){
 	(void) arg;
 	menuVsection = currentMenu->tag; // set Section from tag (dual use of pFunc);
 	DataAdressOffset = (&(registerMap[menuVsection & 0x07]) - &(registerMap[0])) * sizeof(RegisterMap_t);
+	return 0;
+}
+
+uint8_t menuOnEnterRegOut(uint8_t arg){
+	(void) arg;
+	menuVsection = currentMenu->tag; // set Section from tag (dual use of pFunc);
+	DataAdressOffset = (&(reg_Out[menuVsection & 0x07]) - &(reg_Out[0])) * sizeof(RegOut_t);
 	return 0;
 }
 
@@ -1263,7 +1301,7 @@ const char msg_programming1[] PROGMEM = "save...";
 const char msg_programming2[] PROGMEM = "ok     ";
 
 void menuLCDwriteOK(){
-	displayMenuMessage_P(menuMessageOK);
+	lcd_message_P(menuMessageOK);
 }
 
 uint8_t menuOnEnterEEBackup(uint8_t arg){
@@ -1286,7 +1324,7 @@ uint8_t menuOnEnterEERestore(uint8_t arg){
 
 uint8_t menuOnEnterEEUpdate(uint8_t arg){
 	(void) arg;
-	displayMenuMessage_P(msg_programming1);
+	lcd_puts_P(msg_programming1);
 	lcd_goto(MENU_LCD_CURSOR_DATA);
 	eeprom_UpdateALL();
 	menuLCDwriteOK();
@@ -2293,7 +2331,7 @@ void menuCheckArrowDown(){
 void menuItemChanged(){
 	// called when currentMenu is updated within same menu to display meneu text and data if appropriate / clear data when none to display
 	// init pNibbleInfo, dataType, dataEntry and print Data or clear data space
-	TIMER_DEACTIVATE(TIMER_MENUDATA_LCDCLEAR) // if timer had been activated to clear data line: abort timer
+	// TIMER_DEACTIVATE(TIMER_MENUDATA_LCDCLEAR) // if timer had been activated to clear data line: abort timer -> V0.76 cancelled
 	uint8_t menuType = currentMenu->menuType & MENU_T_REMOVEBOUND_MASK;
 	if ((menuType > MENU_T_MENU) && (currentMenu->pVar != NULL)) {
 		// only if menu item is data and there is a pointer to data value
@@ -2560,33 +2598,34 @@ uint8_t menu_ProcessMessage(uint8_t message){
 	return menuFinished;
 }
 //**************************************** MESSAGE DISPLAY ****************************************
-uint8_t displayMenuMessage_P(const __flash char* pMessage){
-	// display message on Extra or Data area
-	uint8_t saveCursor = lcd_cursorPos;
-	uint8_t cursorPosMessage;
-	if ((currentMenu->menuType & MENU_T_REMOVEBOUND_MASK) == MENU_T_MENU){
-		// menu type: menu
-		// center message in extra and data display area
-		uint8_t strlen = get_StrLenP(pMessage);
-		lcd_goto(MENU_LCD_CURSOR_EXTRA + ((MENU_LCD_DATALEN + MENU_LCD_EXTRALEN - strlen) >> 1));
-		displayMessageArea = MENU_DISPLAY_AREA_EXTRA_AND_DATA;
-	} else {
-		// menu type: data
-		lcd_goto(MENU_LCD_CURSOR_EXTRA);
-		displayMessageArea = MENU_DISPLAY_AREA_EXTRA;
-	}
-	cursorPosMessage = lcd_cursorPos;
-	lcd_puts_P(pMessage);
-	lcd_goto(saveCursor);
-	TIMER_SET(TIMER_MENUDATA_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
-	return cursorPosMessage; // returns cursor pos of end of message
-}
+// uint8_t displayMenuMessage_P(const __flash char* pMessage){
+// 	// display message on Extra or Data area
+// 	uint8_t saveCursor = lcd_cursorPos;
+// 	uint8_t cursorPosMessage;
+// 	if ((currentMenu->menuType & MENU_T_REMOVEBOUND_MASK) == MENU_T_MENU){
+// 		// menu type: menu
+// 		// center message in extra and data display area
+// 		uint8_t strlen = get_StrLenP(pMessage);
+// 		lcd_goto(MENU_LCD_CURSOR_EXTRA + ((MENU_LCD_DATALEN + MENU_LCD_EXTRALEN - strlen) >> 1));
+// 		displayMessageArea = MENU_DISPLAY_AREA_EXTRA_AND_DATA;
+// 	} else {
+// 		// menu type: data
+// 		lcd_goto(MENU_LCD_CURSOR_EXTRA);
+// 		displayMessageArea = MENU_DISPLAY_AREA_EXTRA;
+// 	}
+// 	cursorPosMessage = lcd_cursorPos;
+// 	lcd_puts_P(pMessage);
+// 	lcd_goto(saveCursor);
+// 	TIMER_SET(TIMER_MENUDATA_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
+// 	return cursorPosMessage; // returns cursor pos of end of message
+// }
 
 void menudeleteMainMessage(){
-	uint8_t saveCursor = lcd_cursorPos;
-	lcd_goto(MENU_LCD_CURSOR_MAINMESSAGE);
-	lcd_blank(MENU_LCD_LEN_MAINMESSAGE);
-	lcd_goto(saveCursor);
+	lcd_message_clear();
+// 	uint8_t saveCursor = lcd_cursorPos;
+// 	lcd_goto(MENU_LCD_CURSOR_MAINMESSAGE);
+// 	lcd_blank(MENU_LCD_LEN_MAINMESSAGE);
+// 	lcd_goto(saveCursor);
 }
 
 void menu_deleteMessage(){
@@ -2602,17 +2641,17 @@ void menu_deleteMessage(){
 	}
 }
 
-void menu_DisplayMainMessage_P(const __flash char* pMessage){
-	uint8_t saveCursor = lcd_cursorPos;
-	uint8_t textLen = get_StrLenP(pMessage);
-	lcd_goto(MENU_LCD_CURSOR_MAINMESSAGE);
-	lcd_blank((MENU_LCD_LEN_MAINMESSAGE - textLen) >> 1);
-	lcd_puts_P(pMessage);
-	lcd_blank(MENU_LCD_CURSOR_MAINMESSAGE + MENU_LCD_LEN_MAINMESSAGE - lcd_cursorPos);
-	lcd_goto(saveCursor);
-	TIMER_SET(TIMER_MENUDATA_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
-	displayMessageArea = MENU_DISPLAY_AREA_MAIN;
-}
+// void menu_DisplayMainMessage_P(const __flash char* pMessage){
+// 	uint8_t saveCursor = lcd_cursorPos;
+// 	uint8_t textLen = get_StrLenP(pMessage);
+// 	lcd_goto(MENU_LCD_CURSOR_MAINMESSAGE);
+// 	lcd_blank((MENU_LCD_LEN_MAINMESSAGE - textLen) >> 1);
+// 	lcd_puts_P(pMessage);
+// 	lcd_blank(MENU_LCD_CURSOR_MAINMESSAGE + MENU_LCD_LEN_MAINMESSAGE - lcd_cursorPos);
+// 	lcd_goto(saveCursor);
+// 	TIMER_SET(TIMER_MENUDATA_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
+// 	displayMessageArea = MENU_DISPLAY_AREA_MAIN;
+// }
 
 void menu_DisplayMainMessage(const char* pMessage){
 	uint8_t saveCursor = lcd_cursorPos;

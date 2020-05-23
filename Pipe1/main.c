@@ -59,6 +59,7 @@ int main(void)
 	init_Manual2Midi();
 	init_Midi();
 	init_Registers();
+	init_RegOut();
 	init_Manual2Module();
 	init_SoftKeys();
 	eeprom_UpdateALL(); // save all current settings (eventually defaults) to eeprom
@@ -152,7 +153,7 @@ int main(void)
 				midiTxBuffUsage = 0; // max used lenght of Midi Tx Buffer
 				POWER_ON
 				pipe_PowerStatus = POWERSTATE_FORCE_ON; // V0.70 power on
-				menu_DisplayMainMessage_P(panicString);
+				lcd_message_P(panicString);
 			}
 			if (menuNotActive == TRUE) {
 				// --- MESSAGE
@@ -200,13 +201,14 @@ int main(void)
 		DEBUG_OUT_MAIN
 		// ------------------------- TIMER_MENUDATA_LCDCLEAR ----------------
 		if TIMER_ELAPSED(TIMER_MENUDATA_LCDCLEAR) {
-			// if (! menuNotActive) {
-				// currently: always check timer, not only when menu active menu
-				uint8_t saveCursor = lcd_cursorPos;
-				menu_deleteMessage();
-				prog_UpdDisplay = TRUE; // to update reg display
-				lcd_goto(saveCursor);
-			 //}
+// 			// if (! menuNotActive) {
+// 				// currently: always check timer, not only when menu active menu
+// 				uint8_t saveCursor = lcd_cursorPos;
+// 				menu_deleteMessage();
+// 				prog_UpdDisplay = TRUE; // to update reg display
+// 				lcd_goto(saveCursor);
+// 			 //}
+			lcd_message_clear();
 			TIMER_DEACTIVATE(TIMER_MENUDATA_LCDCLEAR)
 		}
 

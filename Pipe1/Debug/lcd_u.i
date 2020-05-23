@@ -158,9 +158,13 @@ extern void lcd_goto(uint8_t pos);
 extern void lcd_putc(char c);
 extern void lcd_puts(const char *s);
 extern void lcd_puts_P(const char *progmem_s);
+extern void lcd_message(const char *s);
+extern void lcd_message_P(const char *progmem_s);
+extern void lcd_message_clear();
 
 extern uint8_t lcd_cursorPos;
 extern uint8_t lcd_buffer[4*20];
+extern uint8_t lcd_displayingMessage;
 # 9 ".././lcd_u.c" 2
 # 29 ".././lcd_u.c"
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\io.h" 1 3
@@ -695,9 +699,544 @@ typedef int wchar_t;
 # 33 ".././lcd_u.c" 2
 # 1 ".././hw_defs.h" 1
 # 34 ".././lcd_u.c" 2
+# 1 ".././utils.h" 1
+# 16 ".././utils.h"
+
+# 16 ".././utils.h"
+typedef union{
+ uint32_t longval;
+ uint8_t byteval[4];
+ } Longint_t;
+
+extern Longint_t editLong;
+extern uint8_t editByte;
+
+typedef union{
+ uint16_t wordval;
+ uint8_t byteval[2];
+ } Word_t;
+
+extern uint8_t lcd_cursorIsOn;
+
+extern uint8_t nibbleToChr(uint8_t myNibble);
 
 
-# 35 ".././lcd_u.c"
+
+extern void lcd_initCG();
+extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
+extern void lcd_wordout(uint16_t hexNumber);
+extern void lcd_hexout(uint8_t hexNumber);
+extern void lcd_ManualOut(uint8_t manual);
+extern void lcd_ManualOutDec(uint8_t manual);
+extern void lcd_ChannelOut(uint8_t channel);
+extern void lcd_longout();
+extern void lcd_cursoroff();
+extern void lcd_cursosblink();
+extern void lcd_blank(uint8_t count);
+extern void lcd_dec2out(uint8_t val);
+extern void lcd_clrEol();
+extern void lcd_waitSymbolOn();
+extern void lcd_waitSymbolOff();
+extern uint8_t lcd_noteOut(uint8_t noteNr);
+
+
+
+extern char* putString_P(const __flash char* pSourceString, char* pOutput);
+extern char* putChar_Dec2(uint8_t val, char* pOutput);
+extern char* putChar_Dec(uint8_t val, char* pOutput);
+extern char* putChar_hex(uint8_t val, char* pOutput);
+extern char* putChar_word(uint16_t val, char* pOutput);
+extern char* putChar_long(uint32_t val, char* pOutput);
+extern char* putChar_Note(uint8_t note, char* pOutput);
+extern char* putChar_Manual(uint8_t manual, char* pOutput);
+extern char* putChar_MidiChan(uint8_t channel, char* pOutput);
+extern char* putString_Prog(char* pOutput, uint8_t progNr);
+
+extern uint8_t lcd_edit_longint(uint8_t cursor);
+extern uint8_t lcd_edit_byte(uint8_t cursor);
+# 76 ".././utils.h"
+extern const __flash char keylabel_plus [] ;
+extern const __flash char keylabel_minus [] ;
+extern const __flash char keylabel_up [] ;
+extern const __flash char keylabel_down [] ;
+extern const __flash char keylabel_right [] ;
+extern const __flash char keylabel_left [] ;
+extern const __flash char keylabel_onoff [] ;
+extern const __flash char keylabel_exit [] ;
+extern const __flash char keylabel_text [] ;
+extern const __flash char keylabel_0 [] ;
+extern const __flash char keylabel_1 [] ;
+extern const __flash char keylabel_on [] ;
+extern const __flash char keylabel_off [] ;
+
+
+extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
+extern void keylabel_toLCD();
+extern void keylabel_clr(uint8_t keyNr);
+extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
+# 104 ".././utils.h"
+extern char string_Buf[64];
+
+extern const char cr_lf [] 
+# 106 ".././utils.h" 3
+                          __attribute__((__progmem__))
+# 106 ".././utils.h"
+                                 ;
+
+extern uint8_t get_StrLenP(const __flash char* pString);
+extern uint8_t get_StrLen(const char* pString);
+extern uint8_t reverse_Bits(uint8_t val);
+# 35 ".././lcd_u.c" 2
+# 1 ".././menu.h" 1
+# 9 ".././menu.h"
+# 1 ".././Midi.h" 1
+# 12 ".././Midi.h"
+# 1 ".././message.h" 1
+# 11 ".././message.h"
+# 1 ".././utils.h" 1
+# 12 ".././message.h" 2
+
+
+
+extern void init_message (void);
+extern void message_push (uint8_t msg);
+extern uint8_t message_get (void);
+extern uint8_t message_status (void);
+extern uint8_t message_peek();
+extern volatile uint8_t msgOverflow;
+# 64 ".././message.h"
+typedef union {
+ uint16_t Message16;
+ uint8_t message8[2];
+} PipeMessage_t;
+
+extern void pipeMsgInit (void);
+extern void pipeMsgPush (PipeMessage_t message);
+extern PipeMessage_t pipeMsgGet (void);
+extern uint8_t pipeMsgStatus (void);
+extern volatile uint8_t msgPipeOverflow;
+extern uint8_t msgPipe_Handling;
+# 13 ".././Midi.h" 2
+# 47 ".././Midi.h"
+typedef struct {
+ uint8_t hw_channel;
+ uint8_t note;
+} ChannelNote_t;
+
+typedef struct {
+ uint8_t manual;
+ uint8_t note;
+} ManualNote_t;
+
+typedef struct {
+ uint8_t moduleNr;
+ uint8_t bitNr;
+} ModuleBit_t;
+
+
+
+
+typedef struct {
+ uint8_t error;
+ uint8_t moduleBit;
+} ModulBitError_t;
+
+typedef struct{
+ uint8_t startNote;
+ uint8_t endNote;
+ uint8_t bitStart;
+} ManualMap_t;
+extern ManualMap_t manualMap[4][4];
+
+typedef struct{
+ uint8_t startNote;
+ uint8_t endNote;
+} ManualNoteRange_t;
+extern ManualNoteRange_t ManualNoteRange[4];
+
+extern void midi_ProgramChange(uint8_t channel, uint8_t program);
+# 120 ".././Midi.h"
+typedef struct{
+ uint8_t manual;
+ uint8_t midiNote;
+ uint8_t noteRange;
+ uint8_t manualNote;
+} MidiInMap_t;
+
+extern MidiInMap_t midiInMap[16][4];
+
+typedef struct{
+ uint8_t InChannel;
+ uint8_t OutChannel;
+} MidiThrough_t;
+
+extern MidiThrough_t midiThrough;
+
+
+typedef struct{
+ uint8_t hw_channel;
+ uint8_t sw_channel;
+
+ } MidiOutMap_t;
+extern MidiOutMap_t midiOutMap[4];
+
+
+
+
+typedef struct{
+ uint8_t startReg;
+ uint8_t endReg;
+ uint8_t bitStart;
+} RegisterMap_t;
+extern RegisterMap_t registerMap[8];
+
+extern uint8_t registerCount;
+typedef struct{
+ uint8_t registers [64 / 8];
+ uint16_t couplers;
+ } ProgramInfo_t;
+extern ProgramInfo_t programMap[64] ;
+
+extern uint8_t midi_RegisterChanged;
+extern uint8_t midi_CountRegisterInProgram(uint8_t program);
+extern uint8_t read_allRegister(uint8_t* resultPtr);
+
+typedef struct {
+ uint8_t cursor;
+ uint8_t manualChar;
+ uint8_t regStart;
+ uint8_t regEnd;
+} RegOut_t;
+
+
+extern RegOut_t reg_Out[8];
+extern void init_RegOut();
+extern void reg_ClearOnLCD();
+extern void reg_toLCD();
+
+
+
+
+extern void register_onOff(uint8_t regNr, uint8_t onOff);
+extern void registers_CalcCount();
+extern uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm);
+extern uint8_t program_toRegister(uint8_t program);
+extern void midi_resetRegisters();
+
+extern uint8_t midi_RegisterMatchProgram(uint8_t program);
+
+
+
+
+
+extern uint8_t count_Registers(uint8_t mode);
+
+
+
+
+
+
+extern uint8_t prog_Display;
+extern uint8_t prog_UpdDisplay;
+extern void prog_set(uint8_t prog);
+extern void prog_toLcd();
+
+
+extern void init_Midi2Manual();
+extern void init_Manual2Midi();
+extern void init_Manual2Module();
+extern void init_Registers();
+
+extern void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff);
+extern ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note);
+extern void Midi_updateManualRange();
+
+extern void midiSendAllNotesOff();
+extern void init_Midi();
+extern void midi_ManualOff(uint8_t manual);
+extern void midi_AllManualsOff();
+
+extern void proc_ESPmidi(uint8_t midiBytesTransferred);
+
+
+extern uint8_t midiRxActivceSensing;
+typedef struct {
+ uint8_t TxActivceSense;
+ uint8_t VelZero4Off;
+ uint8_t AcceptProgChange;
+} MidiSetting_t;
+extern MidiSetting_t midi_Setting;
+
+extern uint8_t midiLastOutNote;
+extern uint8_t midiLastOutManual;
+extern uint8_t midiLastInNote;
+extern uint8_t midiLastInChannel;
+extern uint8_t midiLastInManual;
+extern uint8_t midiLastProgram;
+
+extern void midiKeyPress_Process(PipeMessage_t pipeMessage);
+extern void midiIn_Process(uint8_t midiByte);
+extern void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff);
+extern void midi_SendActiveSense();
+extern void midi_CheckRxActiveSense();
+extern void midi_CheckTxActiveSense();
+
+
+extern void midi_CouplerReset();
+extern Word_t getAllCouplers();
+extern void setAllCouplers(Word_t couplers);
+# 265 ".././Midi.h"
+extern uint8_t midi_Couplers[12];
+
+typedef struct{
+ uint8_t dest;
+ uint8_t source;
+} CplInfo_t;
+extern const __flash CplInfo_t cplInfo[12];
+
+extern uint8_t set_Coupler(uint8_t);
+# 10 ".././menu.h" 2
+# 53 ".././menu.h"
+typedef uint8_t (*MenuFunc_t) (uint8_t arg);
+
+typedef struct Menu {
+ const uint8_t menuType;
+ const uint8_t menuFlags;
+ const char text [10];
+ const __flash struct Menu *pMenu;
+ union {
+  uint8_t * pVar;
+  uint16_t tag;
+  const __flash char* pString;
+ };
+ MenuFunc_t pFunc;
+
+ MenuFunc_t pOnExitFunc;
+
+
+} Menu_t;
+# 173 ".././menu.h"
+extern const __flash Menu_t * menuStack[16];
+
+uint8_t lcdData[10];
+# 185 ".././menu.h"
+typedef struct {
+ uint8_t nibbleCount;
+ uint8_t nibblePos[8];
+} NibbleInfo_t;
+
+extern uint16_t DataAdressOffset;
+extern uint8_t menuNote;
+extern uint8_t menuMidiChan;
+extern uint8_t menuSection;
+extern uint8_t menuManual;
+extern uint8_t menuTestModuleBit;
+extern uint8_t menuTestData;
+extern uint8_t menuVmidiChan;
+extern uint8_t menuVsection;
+extern uint8_t menuVmanual;
+extern uint8_t menuVkey;
+extern uint8_t menuVmodule;
+extern uint8_t menuVKombination;
+extern uint8_t menuVRegisters[64 / 8];
+
+extern uint32_t menuModVal;
+extern const __flash char* pMenuTopTitle;
+extern const __flash Menu_t* menuVMenuSoftKey;
+extern uint8_t menuVSoftKey;
+
+extern void menuCurrMenuToLCD();
+extern void menuParentMenuToLCD();
+extern void menuTextOut(const __flash char* pChar, char finalChar);
+extern void menuItemChanged();
+extern void menuCursorSetExtra();
+extern void menuCursorSetMenu();
+extern void menuResetVars();
+extern void menuClearMenuDisp();
+extern void menu_ClearDataDisp();
+extern void menuClearExtraDisp();
+extern void menuDisplayValue();
+extern void menuTextOut(const __flash char* pChar, char finalChar);
+extern void menuCursorSetDataNibble();
+
+extern void nibbleToData();
+extern void nibbleChange(uint8_t nibbleNr , int8_t addValue);
+extern uint8_t nibbleCheckOvfl(int8_t myNibble);
+extern void LCDStringOut();
+extern void nibbleToLCDstring();
+extern void dataToNibbles();
+
+extern void menu_DisplayMainMessage_P(const __flash char* pMessage);
+extern void menu_DisplayMainMessage(const char* pMessage);
+extern void menu_deleteMessage();
+# 242 ".././menu.h"
+typedef struct{
+ const __flash struct Menu *pSelMenu;
+} SoftKeyMenu_List_t;
+
+
+extern uint8_t soft_KeyMenuIndex[4];
+extern SoftKeyMenu_List_t soft_KeyMenu[4];
+
+extern void init_SoftKeys();
+extern void softKey_Set(const __flash Menu_t* pSoftKey, uint8_t nrSoftKey);
+extern void softKeys_toLCD();
+extern uint8_t softKey_MessageKey_ToSoftKeyNr(uint8_t messageKey);
+extern uint8_t softKey_Execute(uint8_t nrSoftKey, uint8_t myMessage);
+
+
+
+
+
+extern const char sw_version [] 
+# 260 ".././menu.h" 3
+                               __attribute__((__progmem__))
+# 260 ".././menu.h"
+                                      ;
+extern const char HelloMsg [] 
+# 261 ".././menu.h" 3
+                             __attribute__((__progmem__))
+# 261 ".././menu.h"
+                                    ;
+
+extern uint8_t menu_TestModulePattern;
+extern uint8_t menu_TestModuleBitCounter;
+extern uint32_t menu_TestModuleErrorList;
+
+extern void menu_showPowerState();
+
+
+
+
+
+
+void menu_Init(const __flash Menu_t* newMenu, const __flash char* pTitle);
+extern void menu_InitLCD();
+extern uint8_t menu_ProcessMessage(uint8_t message);
+extern void menu_ClearAllDisp();
+
+extern void menu_ModuleTestExecute();
+extern uint8_t menu_OnEnterMidiPanic(uint8_t arg);
+# 36 ".././lcd_u.c" 2
+# 1 ".././hwtimer.h" 1
+# 14 ".././hwtimer.h"
+# 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\atomic.h" 1 3
+# 38 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\atomic.h" 3
+# 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\interrupt.h" 1 3
+# 39 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\atomic.h" 2 3
+
+
+
+
+# 42 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\util\\atomic.h" 3
+static __inline__ uint8_t __iSeiRetVal(void)
+{
+    __asm__ __volatile__ ("sei" ::: "memory");
+    return 1;
+}
+
+static __inline__ uint8_t __iCliRetVal(void)
+{
+    __asm__ __volatile__ ("cli" ::: "memory");
+    return 1;
+}
+
+static __inline__ void __iSeiParam(const uint8_t *__s)
+{
+    __asm__ __volatile__ ("sei" ::: "memory");
+    __asm__ volatile ("" ::: "memory");
+    (void)__s;
+}
+
+static __inline__ void __iCliParam(const uint8_t *__s)
+{
+    __asm__ __volatile__ ("cli" ::: "memory");
+    __asm__ volatile ("" ::: "memory");
+    (void)__s;
+}
+
+static __inline__ void __iRestore(const uint8_t *__s)
+{
+    (*(volatile uint8_t *)((0x3F) + 0x20)) = *__s;
+    __asm__ volatile ("" ::: "memory");
+}
+# 15 ".././hwtimer.h" 2
+# 31 ".././hwtimer.h"
+
+# 31 ".././hwtimer.h"
+extern volatile uint8_t time_Uptime[4];
+# 79 ".././hwtimer.h"
+typedef struct {
+ uint8_t counter;
+ uint8_t prescaler;
+} Timer;
+extern volatile Timer swTimer[9];
+extern volatile uint8_t time_Uptime[4];
+extern volatile uint8_t time_UpTimeUpdated;
+
+extern void init_HwTimer();
+extern void init_Timers();
+extern void init_ADC();
+extern void init_Pipe();
+# 132 ".././hwtimer.h"
+typedef struct {
+ uint8_t mux;
+ uint8_t ADCval;
+ uint8_t key;
+
+ uint8_t keyRepeating;
+ uint16_t keyTimer;
+} KeyInfo;
+extern volatile KeyInfo adcKeys[1];
+
+extern uint8_t keyWants[6];
+# 165 ".././hwtimer.h"
+typedef struct {
+ uint8_t pipeOutM4;
+ uint8_t pipeOut;
+ uint8_t pipeInM16;
+ uint8_t pipeInM12;
+ uint8_t pipeInM8;
+ uint8_t pipeInM4;
+ uint8_t pipeIn;
+ uint8_t pipeInStat;
+} Pipe_t;
+extern Pipe_t pipe[32];
+
+
+
+
+
+
+extern volatile uint8_t pipeProcessing;
+
+extern uint8_t pipe_ModuleTested;
+
+typedef struct {
+ uint8_t AssnRead;
+ uint8_t AssnWrite;
+} Pipe_Module_t;
+
+extern Pipe_Module_t pipe_Module;
+# 200 ".././hwtimer.h"
+extern uint8_t pipe_PowerStatus;
+
+
+
+extern uint8_t module_TestAllInputs();
+extern void module_WaitOutputInput2Cycles();
+extern void module_StartPowerOn();
+extern void module_PowerControl();
+extern void softKey_WantLong(uint8_t wantLong);
+extern void Pipes_AllOutputsOff();
+extern void init_PipeModules();
+extern uint32_t test_PipeModule(uint8_t moduleNr);
+
+
+extern void pipe_on(uint8_t bitNr, uint8_t moduleMask);
+extern void pipe_off(uint8_t bitNr, uint8_t moduleMask);
+# 37 ".././lcd_u.c" 2
+
 uint8_t lcd_cursorPos;
 uint8_t lcd_buffer[4*20];
 
@@ -707,95 +1246,96 @@ void lcd_init(void)
 {
 
  uint8_t debugSave = (
-# 43 ".././lcd_u.c" 3
+# 46 ".././lcd_u.c" 3
                     (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 43 ".././lcd_u.c"
+# 46 ".././lcd_u.c"
                     & ((1 << 5) | (1 << 4)));
  
-# 44 ".././lcd_u.c" 3
+# 47 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 44 ".././lcd_u.c"
+# 47 ".././lcd_u.c"
 = (
-# 44 ".././lcd_u.c" 3
+# 47 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 44 ".././lcd_u.c"
+# 47 ".././lcd_u.c"
 & (~(((1 << 5) | (1 << 4))))) | (1 << 4);
+ lcd_displayingMessage = 0x00;
 
  
-# 46 ".././lcd_u.c" 3
+# 50 ".././lcd_u.c" 3
 (*(volatile uint8_t *)(0x101)) 
-# 46 ".././lcd_u.c"
+# 50 ".././lcd_u.c"
            |= (1<<
-# 46 ".././lcd_u.c" 3
+# 50 ".././lcd_u.c" 3
                   4
-# 46 ".././lcd_u.c"
+# 50 ".././lcd_u.c"
                             );
  
-# 47 ".././lcd_u.c" 3
+# 51 ".././lcd_u.c" 3
 (*(volatile uint8_t *)(0x101)) 
-# 47 ".././lcd_u.c"
+# 51 ".././lcd_u.c"
            |= (1<<
-# 47 ".././lcd_u.c" 3
+# 51 ".././lcd_u.c" 3
                   3
-# 47 ".././lcd_u.c"
+# 51 ".././lcd_u.c"
                             );
  
-# 48 ".././lcd_u.c" 3
+# 52 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x0D) + 0x20)) 
-# 48 ".././lcd_u.c"
+# 52 ".././lcd_u.c"
            |= (1<<
-# 48 ".././lcd_u.c" 3
+# 52 ".././lcd_u.c" 3
                   3
-# 48 ".././lcd_u.c"
+# 52 ".././lcd_u.c"
                             );
  
-# 49 ".././lcd_u.c" 3
+# 53 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x13) + 0x20)) 
-# 49 ".././lcd_u.c"
+# 53 ".././lcd_u.c"
            |= (1<<
-# 49 ".././lcd_u.c" 3
+# 53 ".././lcd_u.c" 3
                   5
-# 49 ".././lcd_u.c"
+# 53 ".././lcd_u.c"
                             );
 
  
-# 51 ".././lcd_u.c" 3
+# 55 ".././lcd_u.c" 3
 (*(volatile uint8_t *)(0x101)) 
-# 51 ".././lcd_u.c"
+# 55 ".././lcd_u.c"
           |= (1<<
-# 51 ".././lcd_u.c" 3
+# 55 ".././lcd_u.c" 3
                  6
-# 51 ".././lcd_u.c"
+# 55 ".././lcd_u.c"
                           );
  
-# 52 ".././lcd_u.c" 3
+# 56 ".././lcd_u.c" 3
 (*(volatile uint8_t *)(0x101)) 
-# 52 ".././lcd_u.c"
+# 56 ".././lcd_u.c"
            |= (1<<
-# 52 ".././lcd_u.c" 3
+# 56 ".././lcd_u.c" 3
                   5
-# 52 ".././lcd_u.c"
+# 56 ".././lcd_u.c"
                             );
 
     _delay_ms(100);
-# 70 ".././lcd_u.c"
+# 74 ".././lcd_u.c"
     
-# 70 ".././lcd_u.c" 3
+# 74 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 70 ".././lcd_u.c"
+# 74 ".././lcd_u.c"
                &= ~(1<<
-# 70 ".././lcd_u.c" 3
+# 74 ".././lcd_u.c" 3
                        5
-# 70 ".././lcd_u.c"
+# 74 ".././lcd_u.c"
                                  );
     
-# 71 ".././lcd_u.c" 3
+# 75 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 71 ".././lcd_u.c"
+# 75 ".././lcd_u.c"
               &= ~(1<<
-# 71 ".././lcd_u.c" 3
+# 75 ".././lcd_u.c" 3
                       6
-# 71 ".././lcd_u.c"
+# 75 ".././lcd_u.c"
                                );
 
 
@@ -828,97 +1368,97 @@ void lcd_init(void)
 
     lcd_write_command(0b00001100);
  
-# 102 ".././lcd_u.c" 3
+# 106 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 102 ".././lcd_u.c"
+# 106 ".././lcd_u.c"
 = (
-# 102 ".././lcd_u.c" 3
+# 106 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 102 ".././lcd_u.c"
+# 106 ".././lcd_u.c"
 & ((1 << 5) | (1 << 4))) | (debugSave);
 }
-# 113 ".././lcd_u.c"
+# 117 ".././lcd_u.c"
 void lcd_write_character(uint8_t data)
 {
  uint8_t debugSave = (
-# 115 ".././lcd_u.c" 3
+# 119 ".././lcd_u.c" 3
                     (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 115 ".././lcd_u.c"
+# 119 ".././lcd_u.c"
                     & ((1 << 5) | (1 << 4)));
  
-# 116 ".././lcd_u.c" 3
+# 120 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 116 ".././lcd_u.c"
+# 120 ".././lcd_u.c"
 = (
-# 116 ".././lcd_u.c" 3
+# 120 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 116 ".././lcd_u.c"
+# 120 ".././lcd_u.c"
 & (~(((1 << 5) | (1 << 4))))) | (1 << 4);
     
-# 117 ".././lcd_u.c" 3
+# 121 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 117 ".././lcd_u.c"
+# 121 ".././lcd_u.c"
                |= (1<<
-# 117 ".././lcd_u.c" 3
+# 121 ".././lcd_u.c" 3
                       5
-# 117 ".././lcd_u.c"
+# 121 ".././lcd_u.c"
                                 );
     
-# 118 ".././lcd_u.c" 3
+# 122 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 118 ".././lcd_u.c"
+# 122 ".././lcd_u.c"
               &= ~(1<<
-# 118 ".././lcd_u.c" 3
+# 122 ".././lcd_u.c" 3
                       6
-# 118 ".././lcd_u.c"
+# 122 ".././lcd_u.c"
                                );
     lcd_write_nibble(data);
     lcd_write_nibble(data << 4);
  _delay_us(64);
  
-# 122 ".././lcd_u.c" 3
+# 126 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 122 ".././lcd_u.c"
+# 126 ".././lcd_u.c"
 = (
-# 122 ".././lcd_u.c" 3
+# 126 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 122 ".././lcd_u.c"
+# 126 ".././lcd_u.c"
 & ((1 << 5) | (1 << 4))) | (debugSave);
 }
-# 132 ".././lcd_u.c"
+# 136 ".././lcd_u.c"
 void lcd_write_command(uint8_t data)
 {
  uint8_t debugSave = (
-# 134 ".././lcd_u.c" 3
+# 138 ".././lcd_u.c" 3
                     (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 134 ".././lcd_u.c"
+# 138 ".././lcd_u.c"
                     & ((1 << 5) | (1 << 4)));
  
-# 135 ".././lcd_u.c" 3
+# 139 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 135 ".././lcd_u.c"
+# 139 ".././lcd_u.c"
 = (
-# 135 ".././lcd_u.c" 3
+# 139 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 135 ".././lcd_u.c"
+# 139 ".././lcd_u.c"
 & (~(((1 << 5) | (1 << 4))))) | (1 << 4);
     
-# 136 ".././lcd_u.c" 3
+# 140 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 136 ".././lcd_u.c"
+# 140 ".././lcd_u.c"
                &= ~(1<<
-# 136 ".././lcd_u.c" 3
+# 140 ".././lcd_u.c" 3
                        5
-# 136 ".././lcd_u.c"
+# 140 ".././lcd_u.c"
                                  );
     
-# 137 ".././lcd_u.c" 3
+# 141 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 137 ".././lcd_u.c"
+# 141 ".././lcd_u.c"
               &= ~(1<<
-# 137 ".././lcd_u.c" 3
+# 141 ".././lcd_u.c" 3
                       6
-# 137 ".././lcd_u.c"
+# 141 ".././lcd_u.c"
                                );
     lcd_write_nibble(data);
     lcd_write_nibble(data << 4);
@@ -928,121 +1468,121 @@ void lcd_write_command(uint8_t data)
   _delay_us(64);
  }
  
-# 145 ".././lcd_u.c" 3
+# 149 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 145 ".././lcd_u.c"
+# 149 ".././lcd_u.c"
 = (
-# 145 ".././lcd_u.c" 3
+# 149 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 145 ".././lcd_u.c"
+# 149 ".././lcd_u.c"
 & ((1 << 5) | (1 << 4))) | (debugSave);
 }
-# 158 ".././lcd_u.c"
+# 162 ".././lcd_u.c"
 void lcd_write_nibble(uint8_t data)
 {
     if (data & 1<<7) {
   
-# 161 ".././lcd_u.c" 3
+# 165 ".././lcd_u.c" 3
  (*(volatile uint8_t *)(0x102)) 
-# 161 ".././lcd_u.c"
+# 165 ".././lcd_u.c"
              |= (1<<
-# 161 ".././lcd_u.c" 3
+# 165 ".././lcd_u.c" 3
                     4
-# 161 ".././lcd_u.c"
+# 165 ".././lcd_u.c"
                               );
  } else {
      
-# 163 ".././lcd_u.c" 3
+# 167 ".././lcd_u.c" 3
     (*(volatile uint8_t *)(0x102)) 
-# 163 ".././lcd_u.c"
+# 167 ".././lcd_u.c"
                 &= ~(1<<
-# 163 ".././lcd_u.c" 3
+# 167 ".././lcd_u.c" 3
                         4
-# 163 ".././lcd_u.c"
+# 167 ".././lcd_u.c"
                                   );
  }
     if (data & 1<<6) {
   
-# 166 ".././lcd_u.c" 3
+# 170 ".././lcd_u.c" 3
  (*(volatile uint8_t *)(0x102)) 
-# 166 ".././lcd_u.c"
+# 170 ".././lcd_u.c"
              |= (1<<
-# 166 ".././lcd_u.c" 3
+# 170 ".././lcd_u.c" 3
                     3
-# 166 ".././lcd_u.c"
+# 170 ".././lcd_u.c"
                               );
  } else {
   
-# 168 ".././lcd_u.c" 3
+# 172 ".././lcd_u.c" 3
  (*(volatile uint8_t *)(0x102)) 
-# 168 ".././lcd_u.c"
+# 172 ".././lcd_u.c"
              &= ~(1<<
-# 168 ".././lcd_u.c" 3
+# 172 ".././lcd_u.c" 3
                      3
-# 168 ".././lcd_u.c"
+# 172 ".././lcd_u.c"
                                );
  }
     if (data & 1<<5) {
   
-# 171 ".././lcd_u.c" 3
+# 175 ".././lcd_u.c" 3
  (*(volatile uint8_t *)((0x0E) + 0x20)) 
-# 171 ".././lcd_u.c"
+# 175 ".././lcd_u.c"
              |= (1<<
-# 171 ".././lcd_u.c" 3
+# 175 ".././lcd_u.c" 3
                     3
-# 171 ".././lcd_u.c"
+# 175 ".././lcd_u.c"
                               );
  } else {
   
-# 173 ".././lcd_u.c" 3
+# 177 ".././lcd_u.c" 3
  (*(volatile uint8_t *)((0x0E) + 0x20)) 
-# 173 ".././lcd_u.c"
+# 177 ".././lcd_u.c"
              &= ~(1<<
-# 173 ".././lcd_u.c" 3
+# 177 ".././lcd_u.c" 3
                      3
-# 173 ".././lcd_u.c"
+# 177 ".././lcd_u.c"
                                );
  }
     if (data & 1<<4) {
   
-# 176 ".././lcd_u.c" 3
+# 180 ".././lcd_u.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 176 ".././lcd_u.c"
+# 180 ".././lcd_u.c"
              |= (1<<
-# 176 ".././lcd_u.c" 3
+# 180 ".././lcd_u.c" 3
                     5
-# 176 ".././lcd_u.c"
+# 180 ".././lcd_u.c"
                               );
  } else {
   
-# 178 ".././lcd_u.c" 3
+# 182 ".././lcd_u.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 178 ".././lcd_u.c"
+# 182 ".././lcd_u.c"
              &= ~(1<<
-# 178 ".././lcd_u.c" 3
+# 182 ".././lcd_u.c" 3
                      5
-# 178 ".././lcd_u.c"
+# 182 ".././lcd_u.c"
                                );
  }
 
     
-# 181 ".././lcd_u.c" 3
+# 185 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 181 ".././lcd_u.c"
+# 185 ".././lcd_u.c"
               |= (1<<
-# 181 ".././lcd_u.c" 3
+# 185 ".././lcd_u.c" 3
                      6
-# 181 ".././lcd_u.c"
+# 185 ".././lcd_u.c"
                               );
     _delay_us(1);
     
-# 183 ".././lcd_u.c" 3
+# 187 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 183 ".././lcd_u.c"
+# 187 ".././lcd_u.c"
               &= ~(1<<
-# 183 ".././lcd_u.c" 3
+# 187 ".././lcd_u.c" 3
                       6
-# 183 ".././lcd_u.c"
+# 187 ".././lcd_u.c"
                                );
     _delay_us(1);
 }
@@ -1088,6 +1628,7 @@ void lcd_home()
 }
 
 uint8_t getCursorFromLCDRAMcursor(uint8_t lcd_cursor){
+
  if ((lcd_cursor >= 0) && (lcd_cursor < 20)){
 
   return lcd_cursor-0 + 0;
@@ -1101,9 +1642,20 @@ uint8_t getCursorFromLCDRAMcursor(uint8_t lcd_cursor){
  return 0xFF;
 
 }
-# 249 ".././lcd_u.c"
+
+
+
+
+
+
+
 void lcd_putc(char c)
 {
+
+ if ((lcd_displayingMessage == 0x00) || (lcd_cursorPos < 0x40)
+  || (lcd_cursorPos >= 0x40 +20)) {
+  lcd_write_character(c);
+ }
 
 
  uint8_t cursor = getCursorFromLCDRAMcursor(lcd_cursorPos);
@@ -1129,7 +1681,6 @@ void lcd_putc(char c)
   lcd_buffer[cursor] = stored_char;
  }
  lcd_cursorPos = (lcd_cursorPos+1) &0x7F;
- lcd_write_character(c);
 }
 
 
@@ -1141,9 +1692,9 @@ void lcd_putc(char c)
 void lcd_puts(const char *s)
 {
  if (s != 
-# 287 ".././lcd_u.c" 3 4
+# 295 ".././lcd_u.c" 3 4
          ((void *)0)
-# 287 ".././lcd_u.c"
+# 295 ".././lcd_u.c"
              ){
   register char c;
 
@@ -1161,20 +1712,116 @@ void lcd_puts(const char *s)
 void lcd_puts_P(const char *progmem_s)
 {
  if (progmem_s != 
-# 303 ".././lcd_u.c" 3 4
+# 311 ".././lcd_u.c" 3 4
                  ((void *)0)
-# 303 ".././lcd_u.c"
+# 311 ".././lcd_u.c"
                      ){
   register char c;
   while ((c=
-# 305 ".././lcd_u.c" 3
+# 313 ".././lcd_u.c" 3
            (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 305 ".././lcd_u.c"
+# 313 ".././lcd_u.c"
            progmem_s++
-# 305 ".././lcd_u.c" 3
+# 313 ".././lcd_u.c" 3
            )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 305 ".././lcd_u.c"
+# 313 ".././lcd_u.c"
                                      ))
   lcd_putc(c);
  }
+}
+
+
+
+uint8_t lcd_displayingMessage;
+
+void lcd_message(const char *pMessage){
+ uint8_t saveCursor = lcd_cursorPos;
+ uint8_t textLen = get_StrLen(pMessage);
+ lcd_goto(0x40);
+ uint8_t pos = 0;
+ while (pos < ((20 - textLen) >> 1)) {
+  lcd_write_character(' ');
+  pos++;
+ }
+ while (*pMessage != 0){
+  lcd_write_character(*pMessage++);
+  pos++;
+ }
+ while (pos++ < 20){
+  lcd_write_character(' ');
+ }
+ lcd_goto(saveCursor);
+ lcd_displayingMessage = 0xFF;
+ 
+# 340 ".././lcd_u.c" 3
+for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
+# 340 ".././lcd_u.c"
+{swTimer[7].counter = 2000 / 20; swTimer[7].prescaler = (2000 % 20) / 4;};;
+}
+
+void lcd_message_P(const char *pMessage_P){
+ uint8_t saveCursor = lcd_cursorPos;
+ uint8_t textLen = get_StrLenP(pMessage_P);
+ lcd_goto(0x40);
+ uint8_t pos = 0;
+ while (pos < ((20 - textLen) >> 1)) {
+  lcd_write_character(' ');
+  pos++;
+ }
+ while (
+# 352 ".././lcd_u.c" 3
+       (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
+# 352 ".././lcd_u.c"
+       pMessage_P
+# 352 ".././lcd_u.c" 3
+       )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; })) 
+# 352 ".././lcd_u.c"
+                                 != 0){
+  lcd_write_character(
+# 353 ".././lcd_u.c" 3
+                     (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
+# 353 ".././lcd_u.c"
+                     pMessage_P++
+# 353 ".././lcd_u.c" 3
+                     )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
+# 353 ".././lcd_u.c"
+                                                );
+  pos++;
+ }
+ while (pos++ < 20){
+  lcd_write_character(' ');
+ }
+ lcd_goto(saveCursor);
+ lcd_displayingMessage = 0xFF;
+ 
+# 361 ".././lcd_u.c" 3
+for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
+# 361 ".././lcd_u.c"
+{swTimer[7].counter = 2000 / 20; swTimer[7].prescaler = (2000 % 20) / 4;};;
+}
+
+
+void lcd_message_clear(){
+ uint8_t saveCursor = lcd_cursorPos;
+ uint8_t lcdBufferPos = getCursorFromLCDRAMcursor(0x40);
+ lcd_goto(0x40);
+ for (uint8_t i = 0; i < 20; i++){
+  uint8_t stored_char = lcd_buffer[lcdBufferPos++];
+  if (stored_char == 0x14){
+   stored_char = 0xA5;
+  } else if (stored_char == 0x15){
+   stored_char = 0x2A;
+  } else if (stored_char == 0x13){
+   stored_char = 0xE2;
+  } else if (stored_char == 0x12){
+   stored_char = 0xF5;
+  } else if (stored_char == 0x11){
+   stored_char = 0xEF;
+  } else if (stored_char == 0x10){
+   stored_char = 0xE1;
+  }
+  lcd_write_character(stored_char);
+ }
+ lcd_goto(saveCursor);
+ lcd_displayingMessage = 0x00;
 }

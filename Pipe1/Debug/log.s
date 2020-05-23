@@ -560,7 +560,7 @@ log_getShortTextFromPtr:
 	.loc 1 194 0
 	ldd r24,Y+8
 	ldd r25,Y+9
-	call putChar_long
+	call putChar_word
 .LVL64:
 	.loc 1 195 0
 	movw r30,r24
@@ -1703,7 +1703,7 @@ ErrorText:
 	.uleb128 0x1e
 	.long	.LASF41
 	.byte	0x4
-	.byte	0x69
+	.byte	0x6a
 	.long	0x620
 	.byte	0x1
 	.byte	0x1
@@ -3136,12 +3136,12 @@ ErrorText:
 	.section	.debug_str,"MS",@progbits,1
 .LASF28:
 	.string	"pChar"
-.LASF51:
-	.string	"putChar_long"
 .LASF35:
 	.string	"log_putWarning"
 .LASF13:
 	.string	"logNr"
+.LASF51:
+	.string	"putChar_word"
 .LASF10:
 	.string	"logStatus"
 .LASF18:

@@ -127,7 +127,11 @@ extern void lcd_goto(uint8_t pos);
 extern void lcd_putc(char c);
 extern void lcd_puts(const char *s);
 extern void lcd_puts_P(const char *progmem_s);
+extern void lcd_message(const char *s);
+extern void lcd_message_P(const char *progmem_s);
+extern void lcd_message_clear();
 
 extern uint8_t lcd_cursorPos;
 extern uint8_t lcd_buffer[LCD_LINE_COUNT*LCD_LINE_LEN]; // sorted, does not match weird LCD RAM
+extern uint8_t lcd_displayingMessage; // true if message is beeing displayd -> no outut to lcd in rande
 #endif /* LCD_U_H_ */

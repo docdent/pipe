@@ -270,6 +270,17 @@ uint8_t eeprom_ReadSoftkeys(){
 	}
 }
 
+uint8_t eeprom_ReadRegOut(){
+	if ((eeprom_read_word(&ee.eeData.ee.regOut_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.reg_Out, sizeof (reg_Out)))){
+		// stored crc is ok
+		eeprom_read_block((uint8_t*) reg_Out, (uint8_t*) &ee.eeData.ee.reg_Out, sizeof (ee.eeData.ee.reg_Out));
+		return(EE_LOAD_OK);
+	} else {
+		ee_initError |= EE_ERROR_REG;
+		return (EE_LOAD_ERROR);
+	}
+}
+
 void eepromWriteSignature(){
 	eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charStart),EE_CHAR_START);
 	eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charEnd),EE_CHAR_END);
@@ -370,6 +381,16 @@ void eeprom_UpdateSoftkeys(){
 	lcd_waitSymbolOff();
 }
 
+void eeprom_UpdateRegOut(){
+	uint16_t crc = crc16_ram((uint8_t*) reg_Out, sizeof(reg_Out));
+	lcd_waitSymbolOn();
+	eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charRegOut), EE_CHAR_REGOUT);
+	eeprom_update_block((uint8_t*) reg_Out, (uint8_t*) &ee.eeData.ee.reg_Out, sizeof(reg_Out));
+	eeprom_update_word(&(ee.eeData.ee.regOut_crc), crc);
+	eepromWriteSignature();
+	lcd_waitSymbolOff();
+}
+
 void eeprom_UpdateALL(){
 	eeprom_UpdateManualMap();
 	eeprom_UpdateMidiInMap();
@@ -380,6 +401,7 @@ void eeprom_UpdateALL(){
 	eeprom_UpdateProg();
 	eeprom_UpdateSoftkeys();
 	eeprom_UpdateMidiThrough();
+	eeprom_UpdateRegOut();
 }
 
 

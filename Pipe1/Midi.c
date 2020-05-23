@@ -729,8 +729,15 @@ void prog_toLcd(){
 	}
 }
 
-const __flash RegOut_t reg_Out[REGOUT_LEN] = {{LCD_LINE1+1,'1',10,14},{LCD_LINE1+6,' ',15,18},
-	{LCD_LINE1+10,'2',20,24},{LCD_LINE1+15,' ',25,29},{LCD_LINE2+1,'P',0,4},{LCD_LINE2+6,' ',5,9}};
+RegOut_t reg_Out[REGOUT_LEN] = {{LCD_LINE1+1,'1',10,14},{LCD_LINE1+6,' ',15,18},
+{LCD_LINE1+10,'2',20,24},{LCD_LINE1+15,' ',25,29},{LCD_LINE2+1,'P',0,4},{LCD_LINE2+6,' ',5,9},
+{0,' ',REGISTER_NONE,REGISTER_NONE},{0,' ',REGISTER_NONE,REGISTER_NONE}};
+
+void init_RegOut(){
+	if (eeprom_ReadRegOut() == EE_LOAD_ERROR) {
+		// load some default values for my organ -> alredy done in array declaration
+	}
+}
 
 void reg_toLCD(){
 	// lcd output register
@@ -743,6 +750,9 @@ void reg_toLCD(){
 			lcd_putc(' ');
 		}
 		uint8_t reg = reg_Out[i].regStart;
+		if (reg == REGISTER_NONE) {
+			break;
+		}
 		while (reg <= reg_Out[i].regEnd) {
 			if (reg == reg_Out[i].regEnd) {
 				// only one register left for out
