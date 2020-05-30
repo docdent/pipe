@@ -2306,6 +2306,8 @@ uint8_t read_Register(uint8_t regNr, uint8_t mode){
 
 uint8_t get_RegisterStatus(uint8_t regNr){
 
+
+ uint8_t result = 0;
  if (regNr < registerCount) {
 
   ModulBitError_t modBitComplette = regNr_to_moduleBit(regNr);
@@ -2317,18 +2319,17 @@ uint8_t get_RegisterStatus(uint8_t regNr){
    uint8_t mask = 1 << modulNr;
    if ((pipe[bitNr].pipeOut & mask) == 0) {
 
-    return 0x02;
-   } else if ((pipe[bitNr].pipeIn & mask & pipe_Module.AssnRead) != 0) {
+    result |= 0x02;
+   }
+   if ((pipe[bitNr].pipeIn & mask & pipe_Module.AssnRead) != 0) {
 
 
 
-    return 0x01;
-   } else {
-    return 0x00;
+    result |= 0x01;
    }
   }
  }
- return 0x00;
+ return result;
 }
 
 
@@ -2361,9 +2362,9 @@ uint8_t read_allRegister(uint8_t* resultPtr){
   if ((regNr & 0x07) == 0x07) {
 
    if (resultPtr != 
-# 541 ".././Midi.c" 3 4
+# 542 ".././Midi.c" 3 4
                    ((void *)0)
-# 541 ".././Midi.c"
+# 542 ".././Midi.c"
                        ) {
     *resultPtr++ = mask;
    }
@@ -2496,17 +2497,17 @@ uint8_t midi_RegisterMatchProgram(uint8_t program){
   actualReg = get_RegisterStatus(i);
   if ((tempReg & 0x01) != 0) {
 
-   if (actualReg != 0x02) {
+   if (!(actualReg & 0x02)) {
 
     return 0xFF;
    }
 
   } else {
 
-   if (actualReg == 0x02) {
+   if (actualReg & 0x02) {
 
     return 0xFF;
-   } else if (actualReg == 0x01) {
+   } else if (actualReg & 0x01) {
 
     result++;
    }
@@ -2586,19 +2587,19 @@ void reg_toLCD(uint8_t readHWonly){
    if (reg == reg_Out[i].regEnd) {
 
     if (readHWonly == 0xFF) {
-     lcd_putc(0x0A + (get_RegisterStatus(reg) == 0x01 ? 1 : 0));
+     lcd_putc(0x0A + ((get_RegisterStatus(reg) & 0x01) ? 1 : 0));
     } else {
-     lcd_putc(0x0A + (get_RegisterStatus(reg) == 0x00 ? 0 : 1));
+     lcd_putc(0x0A + ((get_RegisterStatus(reg) & 0x02) ? 1 : 0));
     }
    } else {
 
     if (readHWonly == 0xFF) {
-     uint8_t addChar = get_RegisterStatus(reg++) == 0x01 ? 2 : 0;
-     addChar += get_RegisterStatus(reg) == 0x01 ? 1 : 0;
+     uint8_t addChar = (get_RegisterStatus(reg++) & 0x01) ? 2 : 0;
+     addChar += (get_RegisterStatus(reg) & 0x01) ? 1 : 0;
      lcd_putc(0x0C + addChar);
     } else {
-     uint8_t addChar = get_RegisterStatus(reg++) == 0x00 ? 0 : 2;
-     addChar += get_RegisterStatus(reg) == 0x00 ? 0 : 1;
+     uint8_t addChar = (get_RegisterStatus(reg++) & 0x02) ? 2 : 0;
+     addChar += (get_RegisterStatus(reg) & 0x02) ? 1 : 0;
      lcd_putc(0x0C + addChar);
     }
    }
@@ -2988,7 +2989,7 @@ void midiSendAllNotesOff(){
   serial1MIDISend(0x7B);
   serial1MIDISend(0);
  }
-# 1173 ".././Midi.c"
+# 1174 ".././Midi.c"
 }
 
 void midi_SendActiveSense(){

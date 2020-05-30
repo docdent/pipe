@@ -484,6 +484,8 @@ uint8_t read_Register(uint8_t regNr, uint8_t mode){
 
 uint8_t get_RegisterStatus(uint8_t regNr){
 	// result: REGISTER_READ_HWIN 0x01, REGISTER_READ_SWOUT 0x02; 0x00: REGISTER_OFF
+	// V 0.78: return SW and HW out independently
+	uint8_t result = 0;
 	if (regNr < registerCount) {
 		// valid register
 		ModulBitError_t modBitComplette = regNr_to_moduleBit(regNr);
@@ -495,18 +497,17 @@ uint8_t get_RegisterStatus(uint8_t regNr){
 			uint8_t mask = 1 << modulNr;
 			if ((pipe[bitNr].pipeOut & mask) == 0) {
 				// read sw output is L (active)
-				return REGISTER_READ_SWOUT;
-			} else if ((pipe[bitNr].pipeIn & mask & pipe_Module.AssnRead) != 0) {
+				result |= REGISTER_READ_SWOUT;
+			}
+			if ((pipe[bitNr].pipeIn & mask & pipe_Module.AssnRead) != 0) {
 				// V 0.74: valid input modules only if assigned to read!
 				// read hw input and Input is H (active)
 				// result ON if output is H (works with disconnected HW or input is H
-				return REGISTER_READ_HWIN;
-			} else {
-				return REGISTER_OFF;
+				result |= REGISTER_READ_HWIN;
 			}
 		}
 	}
-	return REGISTER_OFF; // default for unassigned/invalid register
+	return result; // default for unassigned/invalid register
 }
 
 
@@ -670,17 +671,17 @@ uint8_t midi_RegisterMatchProgram(uint8_t program){
 		actualReg = get_RegisterStatus(i);
 		if ((tempReg & 0x01) != 0) {
 			// this register should be set
-			if (actualReg != REGISTER_READ_SWOUT) {
+			if (!(actualReg & REGISTER_READ_SWOUT)) {
 				// output is not set by SW: return 0xFF
 				return REG_DONT_MATCH_PROG;
 			}
 			// else: OK, register is set
 		} else {
 			// this register should not be set
-			if (actualReg == REGISTER_READ_SWOUT) {
+			if (actualReg & REGISTER_READ_SWOUT) {
 				// is set: return 0xFF
 				return REG_DONT_MATCH_PROG;
-			} else if (actualReg == REGISTER_READ_HWIN) {
+			} else if (actualReg & REGISTER_READ_HWIN) {
 				// is set by HW
 				result++; // inc return val
 			}
@@ -760,19 +761,19 @@ void reg_toLCD(uint8_t readHWonly){
 			if (reg == reg_Out[i].regEnd) {
 				// only one register left for out
 				if (readHWonly == TRUE) {
-					lcd_putc(LCD_CHAR_REG_OFF+ (get_RegisterStatus(reg) == REGISTER_READ_HWIN ? 1 : 0));
+					lcd_putc(LCD_CHAR_REG_OFF+ ((get_RegisterStatus(reg) & REGISTER_READ_HWIN) ? 1 : 0));
 				} else {
-					lcd_putc(LCD_CHAR_REG_OFF+  (get_RegisterStatus(reg) == REGISTER_OFF ? 0 : 1));
+					lcd_putc(LCD_CHAR_REG_OFF+  ((get_RegisterStatus(reg) & REGISTER_READ_SWOUT) ? 1 : 0));
 				}
 			} else {
 				// at least 2 register left
 				if (readHWonly == TRUE) {
-					uint8_t addChar = get_RegisterStatus(reg++) == REGISTER_READ_HWIN ? 2 : 0;
-					addChar += get_RegisterStatus(reg) == REGISTER_READ_HWIN ? 1 : 0;
+					uint8_t addChar = (get_RegisterStatus(reg++) & REGISTER_READ_HWIN) ? 2 : 0;
+					addChar += (get_RegisterStatus(reg) & REGISTER_READ_HWIN) ? 1 : 0;
 					lcd_putc(LCD_CHAR_REG_OFFOFF+ addChar);
 				} else {
-					uint8_t addChar = get_RegisterStatus(reg++) == REGISTER_OFF ? 0 : 2;
-					addChar += get_RegisterStatus(reg) == REGISTER_OFF ? 0 : 1;
+					uint8_t addChar = (get_RegisterStatus(reg++) & REGISTER_READ_SWOUT) ? 2 : 0;
+					addChar += (get_RegisterStatus(reg) & REGISTER_READ_SWOUT) ? 1 : 0;
 					lcd_putc(LCD_CHAR_REG_OFFOFF+ addChar);
 				}
 			}

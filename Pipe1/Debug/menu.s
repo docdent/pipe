@@ -11725,7 +11725,7 @@ menu_USBser:
 	.type	sw_version, @object
 	.size	sw_version, 6
 sw_version:
-	.string	"V0.77"
+	.string	"V0.78"
 	.comm	lcdData,10,1
 	.text
 .Letext0:
