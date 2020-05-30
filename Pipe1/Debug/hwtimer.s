@@ -43,7 +43,7 @@ init_Timers:
 .LVL2:
 .L2:
 	.loc 1 43 0 is_stmt 0 discriminator 1
-	cpi r24,lo8(9)
+	cpi r24,lo8(10)
 	brlo .L3
 .LBE55:
 	.loc 1 47 0 is_stmt 1
@@ -1961,7 +1961,7 @@ __vector_21:
 .LVL149:
 .LBB144:
 	.loc 1 347 0
-	cpi r25,lo8(9)
+	cpi r25,lo8(10)
 	brlo .L88
 .LVL150:
 .LBE144:
@@ -2248,7 +2248,7 @@ adcNr:
 	.zero	1
 	.comm	time_UpTimeUpdated,1,1
 	.comm	time_Uptime,4,1
-	.comm	swTimer,18,1
+	.comm	swTimer,20,1
 	.comm	msecCtr,1,1
 	.comm	lcdData,10,1
 	.text
@@ -2356,12 +2356,12 @@ adcNr:
 	.uleb128 0x9
 	.byte	0x2
 	.byte	0x6
-	.byte	0x4f
+	.byte	0x53
 	.long	0xe8
 	.uleb128 0xa
 	.long	.LASF14
 	.byte	0x6
-	.byte	0x50
+	.byte	0x54
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2369,7 +2369,7 @@ adcNr:
 	.uleb128 0xa
 	.long	.LASF15
 	.byte	0x6
-	.byte	0x51
+	.byte	0x55
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2378,17 +2378,17 @@ adcNr:
 	.uleb128 0x3
 	.long	.LASF16
 	.byte	0x6
-	.byte	0x52
+	.byte	0x56
 	.long	0xc3
 	.uleb128 0x9
 	.byte	0x6
 	.byte	0x6
-	.byte	0x84
+	.byte	0x88
 	.long	0x142
 	.uleb128 0xb
 	.string	"mux"
 	.byte	0x6
-	.byte	0x85
+	.byte	0x89
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2396,7 +2396,7 @@ adcNr:
 	.uleb128 0xa
 	.long	.LASF17
 	.byte	0x6
-	.byte	0x86
+	.byte	0x8a
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2404,7 +2404,7 @@ adcNr:
 	.uleb128 0xb
 	.string	"key"
 	.byte	0x6
-	.byte	0x87
+	.byte	0x8b
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2412,7 +2412,7 @@ adcNr:
 	.uleb128 0xa
 	.long	.LASF18
 	.byte	0x6
-	.byte	0x89
+	.byte	0x8d
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2420,7 +2420,7 @@ adcNr:
 	.uleb128 0xa
 	.long	.LASF19
 	.byte	0x6
-	.byte	0x8a
+	.byte	0x8e
 	.long	0x49
 	.byte	0x2
 	.byte	0x23
@@ -2429,17 +2429,17 @@ adcNr:
 	.uleb128 0x3
 	.long	.LASF20
 	.byte	0x6
-	.byte	0x8b
+	.byte	0x8f
 	.long	0xf3
 	.uleb128 0x9
 	.byte	0x8
 	.byte	0x6
-	.byte	0xa5
+	.byte	0xa9
 	.long	0x1c6
 	.uleb128 0xa
 	.long	.LASF21
 	.byte	0x6
-	.byte	0xa6
+	.byte	0xaa
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2447,7 +2447,7 @@ adcNr:
 	.uleb128 0xa
 	.long	.LASF22
 	.byte	0x6
-	.byte	0xa7
+	.byte	0xab
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2455,7 +2455,7 @@ adcNr:
 	.uleb128 0xa
 	.long	.LASF23
 	.byte	0x6
-	.byte	0xa8
+	.byte	0xac
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2463,7 +2463,7 @@ adcNr:
 	.uleb128 0xa
 	.long	.LASF24
 	.byte	0x6
-	.byte	0xa9
+	.byte	0xad
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2471,7 +2471,7 @@ adcNr:
 	.uleb128 0xa
 	.long	.LASF25
 	.byte	0x6
-	.byte	0xaa
+	.byte	0xae
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2479,7 +2479,7 @@ adcNr:
 	.uleb128 0xa
 	.long	.LASF26
 	.byte	0x6
-	.byte	0xab
+	.byte	0xaf
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2487,7 +2487,7 @@ adcNr:
 	.uleb128 0xa
 	.long	.LASF27
 	.byte	0x6
-	.byte	0xac
+	.byte	0xb0
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2495,7 +2495,7 @@ adcNr:
 	.uleb128 0xa
 	.long	.LASF28
 	.byte	0x6
-	.byte	0xad
+	.byte	0xb1
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2504,17 +2504,17 @@ adcNr:
 	.uleb128 0x3
 	.long	.LASF29
 	.byte	0x6
-	.byte	0xae
+	.byte	0xb2
 	.long	0x14d
 	.uleb128 0x9
 	.byte	0x2
 	.byte	0x6
-	.byte	0xba
+	.byte	0xbe
 	.long	0x1f6
 	.uleb128 0xa
 	.long	.LASF30
 	.byte	0x6
-	.byte	0xbb
+	.byte	0xbf
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2522,7 +2522,7 @@ adcNr:
 	.uleb128 0xa
 	.long	.LASF31
 	.byte	0x6
-	.byte	0xbc
+	.byte	0xc0
 	.long	0x30
 	.byte	0x2
 	.byte	0x23
@@ -2531,7 +2531,7 @@ adcNr:
 	.uleb128 0x3
 	.long	.LASF32
 	.byte	0x6
-	.byte	0xbd
+	.byte	0xc1
 	.long	0x1d1
 	.uleb128 0xc
 	.byte	0x2
@@ -3872,7 +3872,7 @@ adcNr:
 	.long	0xe3e
 	.uleb128 0x6
 	.long	0x82
-	.byte	0x8
+	.byte	0x9
 	.byte	0
 	.uleb128 0x3a
 	.long	0xe8

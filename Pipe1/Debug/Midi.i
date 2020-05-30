@@ -850,12 +850,12 @@ static __inline__ void __iRestore(const uint8_t *__s)
 
 # 31 ".././hwtimer.h"
 extern volatile uint8_t time_Uptime[4];
-# 79 ".././hwtimer.h"
+# 83 ".././hwtimer.h"
 typedef struct {
  uint8_t counter;
  uint8_t prescaler;
 } Timer;
-extern volatile Timer swTimer[9];
+extern volatile Timer swTimer[10];
 extern volatile uint8_t time_Uptime[4];
 extern volatile uint8_t time_UpTimeUpdated;
 
@@ -863,7 +863,7 @@ extern void init_HwTimer();
 extern void init_Timers();
 extern void init_ADC();
 extern void init_Pipe();
-# 132 ".././hwtimer.h"
+# 136 ".././hwtimer.h"
 typedef struct {
  uint8_t mux;
  uint8_t ADCval;
@@ -875,7 +875,7 @@ typedef struct {
 extern volatile KeyInfo adcKeys[1];
 
 extern uint8_t keyWants[6];
-# 165 ".././hwtimer.h"
+# 169 ".././hwtimer.h"
 typedef struct {
  uint8_t pipeOutM4;
  uint8_t pipeOut;
@@ -903,7 +903,7 @@ typedef struct {
 } Pipe_Module_t;
 
 extern Pipe_Module_t pipe_Module;
-# 200 ".././hwtimer.h"
+# 204 ".././hwtimer.h"
 extern uint8_t pipe_PowerStatus;
 
 
@@ -1119,7 +1119,7 @@ typedef struct {
 extern RegOut_t reg_Out[8];
 extern void init_RegOut();
 extern void reg_ClearOnLCD();
-extern void reg_toLCD();
+extern void reg_toLCD(uint8_t readHWonly);
 
 
 
@@ -2466,6 +2466,9 @@ void midi_resetRegisters(){
 uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm){
 
 
+
+ midi_resetRegisters();
+ module_WaitOutputInput2Cycles();
  uint8_t result = 0;
  if (program < 64){
   uint8_t *regBytePtr = &(programMap[program].registers[0]);
@@ -2565,7 +2568,7 @@ void init_RegOut(){
  }
 }
 
-void reg_toLCD(){
+void reg_toLCD(uint8_t readHWonly){
 
  for (uint8_t i = 0; i < 8; i++){
   lcd_goto(reg_Out[i].cursor);
@@ -2582,12 +2585,22 @@ void reg_toLCD(){
   while (reg <= reg_Out[i].regEnd) {
    if (reg == reg_Out[i].regEnd) {
 
-    lcd_putc(0x0A + (get_RegisterStatus(reg) == 0x00 ? 0 : 1));
+    if (readHWonly == 0xFF) {
+     lcd_putc(0x0A + (get_RegisterStatus(reg) == 0x01 ? 1 : 0));
+    } else {
+     lcd_putc(0x0A + (get_RegisterStatus(reg) == 0x00 ? 0 : 1));
+    }
    } else {
 
-    uint8_t addChar = get_RegisterStatus(reg++) == 0x00 ? 0 : 2;
-    addChar += get_RegisterStatus(reg) == 0x00 ? 0 : 1;
-    lcd_putc(0x0C + addChar);
+    if (readHWonly == 0xFF) {
+     uint8_t addChar = get_RegisterStatus(reg++) == 0x01 ? 2 : 0;
+     addChar += get_RegisterStatus(reg) == 0x01 ? 1 : 0;
+     lcd_putc(0x0C + addChar);
+    } else {
+     uint8_t addChar = get_RegisterStatus(reg++) == 0x00 ? 0 : 2;
+     addChar += get_RegisterStatus(reg) == 0x00 ? 0 : 1;
+     lcd_putc(0x0C + addChar);
+    }
    }
    reg++;
   }
@@ -2975,7 +2988,7 @@ void midiSendAllNotesOff(){
   serial1MIDISend(0x7B);
   serial1MIDISend(0);
  }
-# 1160 ".././Midi.c"
+# 1173 ".././Midi.c"
 }
 
 void midi_SendActiveSense(){

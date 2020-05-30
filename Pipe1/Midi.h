@@ -173,7 +173,7 @@ typedef struct {
 extern RegOut_t reg_Out[REGOUT_LEN];
 extern void init_RegOut();
 extern void reg_ClearOnLCD();
-extern void reg_toLCD();
+extern void reg_toLCD(uint8_t readHWonly);
 
 #define REGISTER_WAS_SET 0x80 // prefix bit 7 = 1
 #define REGISTER_ON 0x01

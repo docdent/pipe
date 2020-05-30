@@ -36,6 +36,7 @@ const __flash char releaseKeyString[] = "Tasten/Reg. l" LCD_STRING_UMLAUTO "sen"
 const __flash char panicString[] = "T" LCD_STRING_UMLAUTO "ne aus";
 uint8_t menuNotActive;
 uint8_t messageFromESP;
+uint8_t regShowHW = FALSE;
 
 int main(void)
 {
@@ -191,7 +192,7 @@ int main(void)
 				menu_ClearAllDisp();
 				softKeys_toLCD();
 				softKey_WantLong(TRUE);
-				prog_UpdDisplay = TRUE; // update program display 
+				prog_UpdDisplay = TRUE; // update program display
 				updateStatus = FALSE; // set when entering menu or from elsewhere if there is a update
 			}
 		} else {
@@ -289,7 +290,7 @@ int main(void)
 					}
 					lcd_goto(oldcursor);
 					midiLastInNote = MIDI_NOTE_NONE;
-					// now start timer 
+					// now start timer
 					TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)
 				} else if (midiLastProgram != MIDI_PROGRAM_NONE) {
 					// no midi not but a program change to be displayed
@@ -342,12 +343,15 @@ int main(void)
 		}
 		#endif
 		//----------------------- program display ------------------------
-		if (prog_UpdDisplay == TRUE){
+		if ((menuNotActive == TRUE) &&((prog_UpdDisplay == TRUE) || (TIMER_ELAPSED(TIMER_REGDISPLAY)))) {
+			// 0.77: only if menu is not active!
 			prog_UpdDisplay = FALSE;
+			TIMER_SET(TIMER_REGDISPLAY,TIMER_REGDISPLAY_MS)
 			lcd_goto(MENU_LCD_CURSOR_PROG);
 			prog_toLcd();
 			if (prog_Display != PROGR_NONE) {
-				reg_toLCD();
+				reg_toLCD(regShowHW);
+				regShowHW = ~regShowHW;
 			} else {
 				reg_ClearOnLCD();
 			}

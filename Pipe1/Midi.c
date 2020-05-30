@@ -640,6 +640,9 @@ void midi_resetRegisters(){
 uint8_t register_toProgram(uint8_t program, uint8_t SaveEEProm){
 	// Program 0..63
 	// saves current registers to program
+	// V0.76 reset register ouptu first
+	midi_resetRegisters();
+	module_WaitOutputInput2Cycles(); // now register read input is HW register only
 	uint8_t result = 0;
 	if (program < PROGRAM_COUNT){
 		uint8_t *regBytePtr = &(programMap[program].registers[0]);
@@ -739,7 +742,7 @@ void init_RegOut(){
 	}
 }
 
-void reg_toLCD(){
+void reg_toLCD(uint8_t readHWonly){
 	// lcd output register
 	for (uint8_t i = 0; i < REGOUT_LEN; i++){
 		lcd_goto(reg_Out[i].cursor);
@@ -756,12 +759,22 @@ void reg_toLCD(){
 		while (reg <= reg_Out[i].regEnd) {
 			if (reg == reg_Out[i].regEnd) {
 				// only one register left for out
-				lcd_putc(LCD_CHAR_REG_OFF+ (get_RegisterStatus(reg) == REGISTER_OFF ? 0 : 1));
+				if (readHWonly == TRUE) {
+					lcd_putc(LCD_CHAR_REG_OFF+ (get_RegisterStatus(reg) == REGISTER_READ_HWIN ? 1 : 0));
+				} else {
+					lcd_putc(LCD_CHAR_REG_OFF+  (get_RegisterStatus(reg) == REGISTER_OFF ? 0 : 1));
+				}
 			} else {
 				// at least 2 register left
-				uint8_t addChar = get_RegisterStatus(reg++) == REGISTER_OFF ? 0 : 2;
-				addChar += get_RegisterStatus(reg) == REGISTER_OFF ? 0 : 1;
-				lcd_putc(LCD_CHAR_REG_OFFOFF+ addChar);
+				if (readHWonly == TRUE) {
+					uint8_t addChar = get_RegisterStatus(reg++) == REGISTER_READ_HWIN ? 2 : 0;
+					addChar += get_RegisterStatus(reg) == REGISTER_READ_HWIN ? 1 : 0;
+					lcd_putc(LCD_CHAR_REG_OFFOFF+ addChar);
+				} else {
+					uint8_t addChar = get_RegisterStatus(reg++) == REGISTER_OFF ? 0 : 2;
+					addChar += get_RegisterStatus(reg) == REGISTER_OFF ? 0 : 1;
+					lcd_putc(LCD_CHAR_REG_OFFOFF+ addChar);
+				}
 			}
 			reg++;
 		}

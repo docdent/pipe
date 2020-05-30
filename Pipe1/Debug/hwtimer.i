@@ -502,12 +502,12 @@ extern uint8_t msgPipe_Handling;
 # 16 ".././hwtimer.h" 2
 # 31 ".././hwtimer.h"
 extern volatile uint8_t time_Uptime[4];
-# 79 ".././hwtimer.h"
+# 83 ".././hwtimer.h"
 typedef struct {
  uint8_t counter;
  uint8_t prescaler;
 } Timer;
-extern volatile Timer swTimer[9];
+extern volatile Timer swTimer[10];
 extern volatile uint8_t time_Uptime[4];
 extern volatile uint8_t time_UpTimeUpdated;
 
@@ -515,7 +515,7 @@ extern void init_HwTimer();
 extern void init_Timers();
 extern void init_ADC();
 extern void init_Pipe();
-# 132 ".././hwtimer.h"
+# 136 ".././hwtimer.h"
 typedef struct {
  uint8_t mux;
  uint8_t ADCval;
@@ -527,7 +527,7 @@ typedef struct {
 extern volatile KeyInfo adcKeys[1];
 
 extern uint8_t keyWants[6];
-# 165 ".././hwtimer.h"
+# 169 ".././hwtimer.h"
 typedef struct {
  uint8_t pipeOutM4;
  uint8_t pipeOut;
@@ -555,7 +555,7 @@ typedef struct {
 } Pipe_Module_t;
 
 extern Pipe_Module_t pipe_Module;
-# 200 ".././hwtimer.h"
+# 204 ".././hwtimer.h"
 extern uint8_t pipe_PowerStatus;
 
 
@@ -925,7 +925,7 @@ typedef struct {
 extern RegOut_t reg_Out[8];
 extern void init_RegOut();
 extern void reg_ClearOnLCD();
-extern void reg_toLCD();
+extern void reg_toLCD(uint8_t readHWonly);
 
 
 
@@ -1698,7 +1698,7 @@ _delay_us(double __us)
 
 # 21 ".././hwtimer.c"
 volatile uint8_t msecCtr;
-volatile Timer swTimer[9];
+volatile Timer swTimer[10];
 volatile uint8_t time_Uptime[4];
 volatile uint8_t time_UpTimeUpdated;
 
@@ -1719,7 +1719,7 @@ uint8_t pipe_PowerStatus;
 
 
 void init_Timers() {
- for (uint8_t i = 0; i < 9; i++) {
+ for (uint8_t i = 0; i < 10; i++) {
   swTimer[i].counter = 0xFF;
   swTimer[i].prescaler = 0;
  }
@@ -2303,7 +2303,7 @@ static inline uint8_t absDifference(uint8_t data1,uint8_t data2){
 static inline void timerTimers(){
  Timer *mytimer;
  mytimer = (Timer*) &(swTimer[0]);
- for (uint8_t i = 0; i < 9; i++) {
+ for (uint8_t i = 0; i < 10; i++) {
   if ((mytimer->counter != 0x00) && (mytimer->counter != 0xFF)) {
    uint8_t newPrescaler = (mytimer->prescaler)+1;
    if (newPrescaler >= 20 / 4) {

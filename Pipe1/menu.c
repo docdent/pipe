@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.76";
+const char sw_version [] PROGMEM = "V0.77";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -688,20 +688,43 @@ void softKeyUpdateProg(){
 	prog_UpdDisplay = TRUE;
 }
 
+void progDec(){
+	if (prog_Display == PROGR_NONE){
+		prog_Display = PROGR_MAX;
+	} else if (prog_Display <= PROGR_MAX) {
+		prog_Display--; // also set 0-> none
+	} else {
+		// "invalid" prog nr: just reactivate last nr
+		prog_Display &= 0x7F;
+	}
+}
+
+void progInc(){
+	if (prog_Display == PROGR_MAX){
+		// after max prog  -> none
+		prog_Display = PROGR_NONE;
+	} else if (prog_Display < PROGR_MAX){
+		// normal prog  -> just inc
+		prog_Display++;
+	} else if (prog_Display == PROGR_NONE){
+		prog_Display = 0;
+	} else {
+		// "invalid" prog nr: just reactivate last nr
+		prog_Display &= 0x7F;
+	}
+}
+
 uint8_t softKeyPrP(uint8_t arg){
 	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
 		// longpress: set
-		if (prog_Display != PROGR_NONE){
-			// there is a program active: program current register set to program
+		if (prog_Display <= PROGR_MAX){
+			// there is a program active: program current register set to program -> also resets current prog HW output
 			menuDisplaySaveMessage(register_toProgram(prog_Display, TRUE),prog_Display);
+			prog_Display != 0x80; // set MSB to deactivate display but still keep prog nr
 		}
 	} else if (arg != 0) {
 		// shortpress: PROGR_MAX program
-		if (prog_Display == PROGR_MAX){
-			prog_Display = PROGR_NONE;
-		} else {
-			prog_Display++;
-		}
+		progInc();
 		softKeyUpdateProg();
 	}
 	return 0;
@@ -713,11 +736,7 @@ uint8_t softKeyPrM(uint8_t arg){
 		prog_set(PROGR_NONE);
 	} else if (arg != 0) {
 		// shortpress: PROGR_MAX program
-		if (prog_Display == PROGR_NONE){
-			prog_Display = PROGR_MAX;
-		} else {
-			prog_Display--;
-		}
+		progDec();
 		softKeyUpdateProg();
 	}
 	return 0;
@@ -740,11 +759,7 @@ uint8_t softKeyPrInc(uint8_t arg){
 			}
 		} else if (arg != 0) {
 			// shortpress:  program
-			if (prog_Display == PROGR_MAX){
-				prog_Display = PROGR_NONE;
-			} else {
-				prog_Display++;
-			}
+			progInc();
 		}
 		softKeyUpdateProg();
 	}
@@ -759,12 +774,8 @@ uint8_t softKeyPrDec(uint8_t arg){
 				prog_Display = (prog_Display - 8) & 0x38;
 			}
 		} else if (arg != 0) {
+			progDec();
 			// shortpress:  program
-			if (prog_Display == PROGR_NONE){
-				prog_Display = PROGR_MAX;
-			} else {
-				prog_Display--;
-			}
 		}
 		softKeyUpdateProg();
 	}
