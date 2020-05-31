@@ -35,8 +35,10 @@
 #include "menu.h"
 #include "hwtimer.h"
 
-uint8_t lcd_cursorPos;
-uint8_t lcd_buffer[LCD_LINE_COUNT*LCD_LINE_LEN]; // save written chars for output to other devices - does not LCD RAM BUFFER!
+uint8_t lcd_cursorPos; // save lcd cursor position as it can't be read vom hd44780 lcd
+uint8_t lcd_buffer[LCD_LINE_COUNT*LCD_LINE_LEN]; // save written chars for output to other devices - does not match LCD RAM BUFFER!
+// here: line0-0... line0-19, line1-0...line1-19 etc. LCD has different, weird RAM mapping !
+uint8_t lcd_cursorIsOn;
 
 /*============================== 4-bit LCD Functions ======================*/
 
@@ -229,7 +231,7 @@ void lcd_home()
 }
 
 uint8_t getCursorFromLCDRAMcursor(uint8_t lcd_cursor){
-	// convert non linear LCD-Cursor to linear Cursor 0..19 = line 0, 20..39 = line 1...
+	// convert non linear LCD-Cursor to linear Cursor 0..19 = line 0, 20..39 = line 1... for buffer
 	if ((lcd_cursor >= LCD_LINE0) && (lcd_cursor < LCD_EOLINE0)){
 		// line 0
 		return lcd_cursor-LCD_LINE0 + 0;
@@ -253,7 +255,7 @@ Returns:  none
 void lcd_putc(char c)
 {
 	// V 0.76 no output if displaying message
-	if ((lcd_displayingMessage == FALSE) || (lcd_cursorPos < MENU_LCD_CURSOR_MAINMESSAGE) 
+	if ((lcd_displayingMessage == FALSE) || (lcd_cursorPos < MENU_LCD_CURSOR_MAINMESSAGE)
 		|| (lcd_cursorPos >= MENU_LCD_CURSOR_MAINMESSAGE+MENU_LCD_LEN_MAINMESSAGE)) {
 		lcd_write_character(c);
 	}
@@ -263,22 +265,22 @@ void lcd_putc(char c)
 	if (cursor != 0xFF){
 		uint8_t stored_char = c;
 		if (stored_char == LCD_CHAR_WAIT_SYMBOL){
-			stored_char = LCD_CHARREPL_WAIT_SYMBOL; 
+			stored_char = LCD_CHARREPL_WAIT_SYMBOL;
 		} else if (stored_char == LCD_CHAR_STATEONOFF){
-			stored_char = LCD_CHARREPL_STATEONOFF; 
+			stored_char = LCD_CHARREPL_STATEONOFF;
 		} else if (stored_char == LCD_CHAR_NOTESTRAIGHT_SYM){
-			stored_char = LCD_CHARREPL_NOTESTRAIGHT_SYM; 
+			stored_char = LCD_CHARREPL_NOTESTRAIGHT_SYM;
 		} else if (stored_char == LCD_CHAR_STATEON){
-			stored_char = LCD_CHARREPL_STATEON; 
+			stored_char = LCD_CHARREPL_STATEON;
 		} else if (stored_char == LCD_CHAR_SZ){
-			stored_char = LCD_CHARREPL_SZ; 
+			stored_char = LCD_CHARREPL_SZ;
 		} else if (stored_char == LCD_CHAR_UMLAUTU){
-			stored_char = LCD_CHARREPL_UMLAUTU; 
+			stored_char = LCD_CHARREPL_UMLAUTU;
 		} else if (stored_char == LCD_CHAR_UMLAUTO){
-			stored_char = LCD_CHARREPL_UMLAUTO; 
+			stored_char = LCD_CHARREPL_UMLAUTO;
 		} else if (stored_char == LCD_CHAR_UMLAUTA){
-			stored_char = LCD_CHARREPL_UMLAUTA; 
-		} 
+			stored_char = LCD_CHARREPL_UMLAUTA;
+		}
 		lcd_buffer[cursor] = stored_char;
 	}
 	lcd_cursorPos =  (lcd_cursorPos+1) &0x7F;
@@ -317,17 +319,20 @@ void lcd_puts_P(const char *progmem_s)
 
 //------------------------------ MESSAGE ------------------------------
 
-uint8_t lcd_displayingMessage;
+uint8_t lcd_displayingMessage; // TRUE when a message is beeing displayed. Then all lcd outputs are wirten to buffer only
+uint8_t lcd_saveCursorIsOn;
 
 void lcd_message(const char *pMessage){
+	// clear message area and display message, start timer
 	uint8_t saveCursor = lcd_cursorPos;
+	lcd_saveCursorIsOn = lcd_cursorIsOn;
 	uint8_t textLen = get_StrLen(pMessage);
 	lcd_goto(MENU_LCD_CURSOR_MAINMESSAGE);
 	uint8_t pos = 0;
 	while (pos < ((MENU_LCD_LEN_MAINMESSAGE - textLen) >> 1)) {
 		lcd_write_character(' '); // blank but do not write to buffer
 		pos++;
-	}	
+	}
 	while (*pMessage != 0){
 		lcd_write_character(*pMessage++);
 		pos++;
@@ -337,18 +342,19 @@ void lcd_message(const char *pMessage){
 	}
 	lcd_goto(saveCursor);
 	lcd_displayingMessage = TRUE;
-	TIMER_SET(TIMER_MENUDATA_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
+	TIMER_SET(TIMER_MESSAGE_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
 }
-	
+
 void lcd_message_P(const char *pMessage_P){
 	uint8_t saveCursor = lcd_cursorPos;
+	lcd_saveCursorIsOn = lcd_cursorIsOn;
 	uint8_t textLen = get_StrLenP(pMessage_P);
 	lcd_goto(MENU_LCD_CURSOR_MAINMESSAGE);
 	uint8_t pos = 0;
 	while (pos < ((MENU_LCD_LEN_MAINMESSAGE - textLen) >> 1)) {
 		lcd_write_character(' '); // blank but do not write to buffer
 		pos++;
-	}	
+	}
 	while (pgm_read_byte(pMessage_P) != 0){
 		lcd_write_character(pgm_read_byte(pMessage_P++));
 		pos++;
@@ -358,31 +364,180 @@ void lcd_message_P(const char *pMessage_P){
 	}
 	lcd_goto(saveCursor);
 	lcd_displayingMessage = TRUE;
-	TIMER_SET(TIMER_MENUDATA_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
+	TIMER_SET(TIMER_MESSAGE_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
 }
 
 
 void lcd_message_clear(){
+	// restores lcd content from buffer. Used after message has been displayed some time
 	uint8_t saveCursor = lcd_cursorPos;
 	uint8_t lcdBufferPos = getCursorFromLCDRAMcursor(MENU_LCD_CURSOR_MAINMESSAGE);
 	lcd_goto(MENU_LCD_CURSOR_MAINMESSAGE);
 	for (uint8_t i = 0; i < MENU_LCD_LEN_MAINMESSAGE; i++){
 		uint8_t stored_char = lcd_buffer[lcdBufferPos++];
 		if (stored_char == LCD_CHARREPL_NOTESTRAIGHT_SYM){
-			stored_char = LCD_CHAR_NOTESTRAIGHT_SYM; 
+			stored_char = LCD_CHAR_NOTESTRAIGHT_SYM;
 		} else if (stored_char == LCD_CHARREPL_STATEON){
-			stored_char = LCD_CHAR_STATEON; 
+			stored_char = LCD_CHAR_STATEON;
 		} else if (stored_char == LCD_CHARREPL_SZ){
-			stored_char = LCD_CHAR_SZ; 
+			stored_char = LCD_CHAR_SZ;
 		} else if (stored_char == LCD_CHARREPL_UMLAUTU){
-			stored_char = LCD_CHAR_UMLAUTU; 
+			stored_char = LCD_CHAR_UMLAUTU;
 		} else if (stored_char == LCD_CHARREPL_UMLAUTO){
-			stored_char = LCD_CHAR_UMLAUTO; 
+			stored_char = LCD_CHAR_UMLAUTO;
 		} else if (stored_char == LCD_CHARREPL_UMLAUTA){
-			stored_char = LCD_CHAR_UMLAUTA; 
+			stored_char = LCD_CHAR_UMLAUTA;
 		} // other chars replaced by  ' ' are not translated back
 		lcd_write_character(stored_char);
 	}
 	lcd_goto(saveCursor);
+	if 	(lcd_saveCursorIsOn == TRUE){
+		lcd_cursosblink();
+	} else {
+		lcd_cursoroff();
+	}
 	lcd_displayingMessage = FALSE;
 }
+
+//------------------------------- CHARACTER GENENERATOR --------------------------------
+
+const uint8_t cgPattern_Up [8] PROGMEM = {
+	// arrow up
+	0b00000100,
+	0b00001110,
+	0b00010101,
+	0b00000100,
+	0b00000100,
+	0b00000100,
+	0b00000100,
+	0
+};
+
+const uint8_t cgPattern_Down [8] PROGMEM = {
+	// arrow down
+	0b00000100,
+	0b00000100,
+	0b00000100,
+	0b00000100,
+	0b00010101,
+	0b00001110,
+	0b00000100,
+	0
+};
+
+const uint8_t cgPattern_Block [8] PROGMEM = {
+	// block
+	0b00000000,
+	0b00000000,
+	0b00001110,
+	0b00001110,
+	0b00001110,
+	0b00001110,
+	0b00000000,
+	0
+};
+
+const uint8_t cgPattern_RegOff [8] PROGMEM = {
+	// block
+	0b00011000,
+	0b00011000,
+	0b00000000,
+	0b00000000,
+	0b00000000,
+	0b00000000,
+	0b00000000,
+	0
+};
+
+const uint8_t cgPattern_RegOn [8] PROGMEM = {
+	// block
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0
+};
+
+const uint8_t cgPattern_RegOffOff [8] PROGMEM = {
+	// block
+	0b00011011,
+	0b00011011,
+	0b00000000,
+	0b00000000,
+	0b00000000,
+	0b00000000,
+	0b00000000,
+	0
+};
+
+const uint8_t cgPattern_RegOffOn [8] PROGMEM = {
+	// block
+	0b00011011,
+	0b00011011,
+	0b00000011,
+	0b00000011,
+	0b00000011,
+	0b00000011,
+	0b00000011,
+	0
+};
+
+const uint8_t cgPattern_RegOnOff [8] PROGMEM = {
+	// block
+	0b00011011,
+	0b00011011,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0b00011000,
+	0
+};
+
+const uint8_t cgPattern_RegOnOn [8] PROGMEM = {
+	// block
+	0b00011011,
+	0b00011011,
+	0b00011011,
+	0b00011011,
+	0b00011011,
+	0b00011011,
+	0b00011011,
+	0
+};
+
+void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr){
+	lcd_write_command(LCD_SETCGRAMADR | (charNr << 3));
+	for (uint8_t i = 0; i < 8; i++){
+		lcd_write_character(pgm_read_byte(patternPtr++));
+	}
+}
+
+void lcd_initCG(){
+	lcd_setCG(0,cgPattern_Up); // 0x08 = Arrow Up
+	lcd_setCG(1,cgPattern_Down); // 0x09 = Arrow Down
+	// old: 0x0A = Block = State On
+	lcd_setCG(2,cgPattern_RegOff); // 0x0A = Single Reg Off
+	lcd_setCG(3,cgPattern_RegOn); // 0x0B = Single Reg Off
+	lcd_setCG(4,cgPattern_RegOffOff); // 0x0C = 2 Reg Off Off
+	lcd_setCG(5,cgPattern_RegOffOn); // 0x0D = 2 Reg Off On
+	lcd_setCG(6,cgPattern_RegOnOff); // 0x0E = 2 Reg On Off
+	lcd_setCG(7,cgPattern_RegOnOn); // 0x0F = 2 Reg On On
+
+}
+
+//----------------------------------- CURSOR -------------------------#
+
+void lcd_cursosblink(){
+	lcd_write_command((1 << LCD_DISPLAYMODE) | (1 << LCD_DISPLAYMODE_ON) | (1 << LCD_DISPLAYMODE_BLINK));
+	lcd_cursorIsOn = TRUE;
+}
+
+void lcd_cursoroff(){
+	lcd_write_command((1 << LCD_DISPLAYMODE) | (1 << LCD_DISPLAYMODE_ON));
+	lcd_cursorIsOn = FALSE;
+}
+

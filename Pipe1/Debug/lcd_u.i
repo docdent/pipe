@@ -145,6 +145,11 @@ typedef uint32_t uint_farptr_t;
 # 117 ".././lcd_u.h"
 
 # 117 ".././lcd_u.h"
+extern void lcd_initCG();
+extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
+extern uint8_t lcd_cursorIsOn;
+
+
 extern void lcd_write_nibble(uint8_t data);
 extern void lcd_write_command(uint8_t data);
 extern void lcd_write_character(uint8_t data);
@@ -165,6 +170,9 @@ extern void lcd_message_clear();
 extern uint8_t lcd_cursorPos;
 extern uint8_t lcd_buffer[4*20];
 extern uint8_t lcd_displayingMessage;
+
+extern void lcd_cursoroff();
+extern void lcd_cursosblink();
 # 9 ".././lcd_u.c" 2
 # 29 ".././lcd_u.c"
 # 1 "c:\\program files (x86)\\atmel\\studio\\7.0\\toolchain\\avr8\\avr8-gnu-toolchain\\avr\\include\\avr\\io.h" 1 3
@@ -716,22 +724,14 @@ typedef union{
  uint8_t byteval[2];
  } Word_t;
 
-extern uint8_t lcd_cursorIsOn;
-
 extern uint8_t nibbleToChr(uint8_t myNibble);
 
-
-
-extern void lcd_initCG();
-extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
 extern void lcd_wordout(uint16_t hexNumber);
 extern void lcd_hexout(uint8_t hexNumber);
 extern void lcd_ManualOut(uint8_t manual);
 extern void lcd_ManualOutDec(uint8_t manual);
 extern void lcd_ChannelOut(uint8_t channel);
 extern void lcd_longout();
-extern void lcd_cursoroff();
-extern void lcd_cursosblink();
 extern void lcd_blank(uint8_t count);
 extern void lcd_dec2out(uint8_t val);
 extern void lcd_clrEol();
@@ -754,7 +754,7 @@ extern char* putString_Prog(char* pOutput, uint8_t progNr);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 76 ".././utils.h"
+# 68 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -774,13 +774,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 104 ".././utils.h"
+# 96 ".././utils.h"
 extern char string_Buf[64];
 
 extern const char cr_lf [] 
-# 106 ".././utils.h" 3
+# 98 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 106 ".././utils.h"
+# 98 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -1240,102 +1240,104 @@ extern void pipe_off(uint8_t bitNr, uint8_t moduleMask);
 uint8_t lcd_cursorPos;
 uint8_t lcd_buffer[4*20];
 
+uint8_t lcd_cursorIsOn;
+
 
 
 void lcd_init(void)
 {
 
  uint8_t debugSave = (
-# 46 ".././lcd_u.c" 3
+# 48 ".././lcd_u.c" 3
                     (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 46 ".././lcd_u.c"
+# 48 ".././lcd_u.c"
                     & ((1 << 5) | (1 << 4)));
  
-# 47 ".././lcd_u.c" 3
+# 49 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 47 ".././lcd_u.c"
+# 49 ".././lcd_u.c"
 = (
-# 47 ".././lcd_u.c" 3
+# 49 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 47 ".././lcd_u.c"
+# 49 ".././lcd_u.c"
 & (~(((1 << 5) | (1 << 4))))) | (1 << 4);
  lcd_displayingMessage = 0x00;
 
  
-# 50 ".././lcd_u.c" 3
+# 52 ".././lcd_u.c" 3
 (*(volatile uint8_t *)(0x101)) 
-# 50 ".././lcd_u.c"
+# 52 ".././lcd_u.c"
            |= (1<<
-# 50 ".././lcd_u.c" 3
+# 52 ".././lcd_u.c" 3
                   4
-# 50 ".././lcd_u.c"
+# 52 ".././lcd_u.c"
                             );
  
-# 51 ".././lcd_u.c" 3
+# 53 ".././lcd_u.c" 3
 (*(volatile uint8_t *)(0x101)) 
-# 51 ".././lcd_u.c"
+# 53 ".././lcd_u.c"
            |= (1<<
-# 51 ".././lcd_u.c" 3
+# 53 ".././lcd_u.c" 3
                   3
-# 51 ".././lcd_u.c"
+# 53 ".././lcd_u.c"
                             );
  
-# 52 ".././lcd_u.c" 3
+# 54 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x0D) + 0x20)) 
-# 52 ".././lcd_u.c"
+# 54 ".././lcd_u.c"
            |= (1<<
-# 52 ".././lcd_u.c" 3
+# 54 ".././lcd_u.c" 3
                   3
-# 52 ".././lcd_u.c"
+# 54 ".././lcd_u.c"
                             );
  
-# 53 ".././lcd_u.c" 3
+# 55 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x13) + 0x20)) 
-# 53 ".././lcd_u.c"
+# 55 ".././lcd_u.c"
            |= (1<<
-# 53 ".././lcd_u.c" 3
+# 55 ".././lcd_u.c" 3
                   5
-# 53 ".././lcd_u.c"
+# 55 ".././lcd_u.c"
                             );
 
  
-# 55 ".././lcd_u.c" 3
+# 57 ".././lcd_u.c" 3
 (*(volatile uint8_t *)(0x101)) 
-# 55 ".././lcd_u.c"
+# 57 ".././lcd_u.c"
           |= (1<<
-# 55 ".././lcd_u.c" 3
+# 57 ".././lcd_u.c" 3
                  6
-# 55 ".././lcd_u.c"
+# 57 ".././lcd_u.c"
                           );
  
-# 56 ".././lcd_u.c" 3
+# 58 ".././lcd_u.c" 3
 (*(volatile uint8_t *)(0x101)) 
-# 56 ".././lcd_u.c"
+# 58 ".././lcd_u.c"
            |= (1<<
-# 56 ".././lcd_u.c" 3
+# 58 ".././lcd_u.c" 3
                   5
-# 56 ".././lcd_u.c"
+# 58 ".././lcd_u.c"
                             );
 
     _delay_ms(100);
-# 74 ".././lcd_u.c"
+# 76 ".././lcd_u.c"
     
-# 74 ".././lcd_u.c" 3
+# 76 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 74 ".././lcd_u.c"
+# 76 ".././lcd_u.c"
                &= ~(1<<
-# 74 ".././lcd_u.c" 3
+# 76 ".././lcd_u.c" 3
                        5
-# 74 ".././lcd_u.c"
+# 76 ".././lcd_u.c"
                                  );
     
-# 75 ".././lcd_u.c" 3
+# 77 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 75 ".././lcd_u.c"
+# 77 ".././lcd_u.c"
               &= ~(1<<
-# 75 ".././lcd_u.c" 3
+# 77 ".././lcd_u.c" 3
                       6
-# 75 ".././lcd_u.c"
+# 77 ".././lcd_u.c"
                                );
 
 
@@ -1368,97 +1370,97 @@ void lcd_init(void)
 
     lcd_write_command(0b00001100);
  
-# 106 ".././lcd_u.c" 3
+# 108 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 106 ".././lcd_u.c"
-= (
-# 106 ".././lcd_u.c" 3
+# 108 ".././lcd_u.c"
+= 
+# 108 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 106 ".././lcd_u.c"
-& ((1 << 5) | (1 << 4))) | (debugSave);
+# 108 ".././lcd_u.c"
+& (~((1 << 5) | (1 << 4))) | (debugSave);
 }
-# 117 ".././lcd_u.c"
+# 119 ".././lcd_u.c"
 void lcd_write_character(uint8_t data)
 {
  uint8_t debugSave = (
-# 119 ".././lcd_u.c" 3
+# 121 ".././lcd_u.c" 3
                     (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 119 ".././lcd_u.c"
+# 121 ".././lcd_u.c"
                     & ((1 << 5) | (1 << 4)));
  
-# 120 ".././lcd_u.c" 3
+# 122 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 120 ".././lcd_u.c"
+# 122 ".././lcd_u.c"
 = (
-# 120 ".././lcd_u.c" 3
+# 122 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 120 ".././lcd_u.c"
+# 122 ".././lcd_u.c"
 & (~(((1 << 5) | (1 << 4))))) | (1 << 4);
     
-# 121 ".././lcd_u.c" 3
+# 123 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 121 ".././lcd_u.c"
+# 123 ".././lcd_u.c"
                |= (1<<
-# 121 ".././lcd_u.c" 3
+# 123 ".././lcd_u.c" 3
                       5
-# 121 ".././lcd_u.c"
+# 123 ".././lcd_u.c"
                                 );
     
-# 122 ".././lcd_u.c" 3
+# 124 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 122 ".././lcd_u.c"
+# 124 ".././lcd_u.c"
               &= ~(1<<
-# 122 ".././lcd_u.c" 3
+# 124 ".././lcd_u.c" 3
                       6
-# 122 ".././lcd_u.c"
+# 124 ".././lcd_u.c"
                                );
     lcd_write_nibble(data);
     lcd_write_nibble(data << 4);
  _delay_us(64);
  
-# 126 ".././lcd_u.c" 3
+# 128 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 126 ".././lcd_u.c"
-= (
-# 126 ".././lcd_u.c" 3
+# 128 ".././lcd_u.c"
+= 
+# 128 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 126 ".././lcd_u.c"
-& ((1 << 5) | (1 << 4))) | (debugSave);
+# 128 ".././lcd_u.c"
+& (~((1 << 5) | (1 << 4))) | (debugSave);
 }
-# 136 ".././lcd_u.c"
+# 138 ".././lcd_u.c"
 void lcd_write_command(uint8_t data)
 {
  uint8_t debugSave = (
-# 138 ".././lcd_u.c" 3
+# 140 ".././lcd_u.c" 3
                     (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 138 ".././lcd_u.c"
+# 140 ".././lcd_u.c"
                     & ((1 << 5) | (1 << 4)));
  
-# 139 ".././lcd_u.c" 3
+# 141 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 139 ".././lcd_u.c"
+# 141 ".././lcd_u.c"
 = (
-# 139 ".././lcd_u.c" 3
+# 141 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 139 ".././lcd_u.c"
+# 141 ".././lcd_u.c"
 & (~(((1 << 5) | (1 << 4))))) | (1 << 4);
     
-# 140 ".././lcd_u.c" 3
+# 142 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 140 ".././lcd_u.c"
+# 142 ".././lcd_u.c"
                &= ~(1<<
-# 140 ".././lcd_u.c" 3
+# 142 ".././lcd_u.c" 3
                        5
-# 140 ".././lcd_u.c"
+# 142 ".././lcd_u.c"
                                  );
     
-# 141 ".././lcd_u.c" 3
+# 143 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 141 ".././lcd_u.c"
+# 143 ".././lcd_u.c"
               &= ~(1<<
-# 141 ".././lcd_u.c" 3
+# 143 ".././lcd_u.c" 3
                       6
-# 141 ".././lcd_u.c"
+# 143 ".././lcd_u.c"
                                );
     lcd_write_nibble(data);
     lcd_write_nibble(data << 4);
@@ -1468,121 +1470,121 @@ void lcd_write_command(uint8_t data)
   _delay_us(64);
  }
  
-# 149 ".././lcd_u.c" 3
+# 151 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 149 ".././lcd_u.c"
-= (
-# 149 ".././lcd_u.c" 3
+# 151 ".././lcd_u.c"
+= 
+# 151 ".././lcd_u.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 149 ".././lcd_u.c"
-& ((1 << 5) | (1 << 4))) | (debugSave);
+# 151 ".././lcd_u.c"
+& (~((1 << 5) | (1 << 4))) | (debugSave);
 }
-# 162 ".././lcd_u.c"
+# 164 ".././lcd_u.c"
 void lcd_write_nibble(uint8_t data)
 {
     if (data & 1<<7) {
   
-# 165 ".././lcd_u.c" 3
+# 167 ".././lcd_u.c" 3
  (*(volatile uint8_t *)(0x102)) 
-# 165 ".././lcd_u.c"
+# 167 ".././lcd_u.c"
              |= (1<<
-# 165 ".././lcd_u.c" 3
+# 167 ".././lcd_u.c" 3
                     4
-# 165 ".././lcd_u.c"
+# 167 ".././lcd_u.c"
                               );
  } else {
      
-# 167 ".././lcd_u.c" 3
+# 169 ".././lcd_u.c" 3
     (*(volatile uint8_t *)(0x102)) 
-# 167 ".././lcd_u.c"
+# 169 ".././lcd_u.c"
                 &= ~(1<<
-# 167 ".././lcd_u.c" 3
+# 169 ".././lcd_u.c" 3
                         4
-# 167 ".././lcd_u.c"
+# 169 ".././lcd_u.c"
                                   );
  }
     if (data & 1<<6) {
   
-# 170 ".././lcd_u.c" 3
+# 172 ".././lcd_u.c" 3
  (*(volatile uint8_t *)(0x102)) 
-# 170 ".././lcd_u.c"
+# 172 ".././lcd_u.c"
              |= (1<<
-# 170 ".././lcd_u.c" 3
+# 172 ".././lcd_u.c" 3
                     3
-# 170 ".././lcd_u.c"
+# 172 ".././lcd_u.c"
                               );
  } else {
   
-# 172 ".././lcd_u.c" 3
+# 174 ".././lcd_u.c" 3
  (*(volatile uint8_t *)(0x102)) 
-# 172 ".././lcd_u.c"
+# 174 ".././lcd_u.c"
              &= ~(1<<
-# 172 ".././lcd_u.c" 3
+# 174 ".././lcd_u.c" 3
                      3
-# 172 ".././lcd_u.c"
+# 174 ".././lcd_u.c"
                                );
  }
     if (data & 1<<5) {
   
-# 175 ".././lcd_u.c" 3
+# 177 ".././lcd_u.c" 3
  (*(volatile uint8_t *)((0x0E) + 0x20)) 
-# 175 ".././lcd_u.c"
+# 177 ".././lcd_u.c"
              |= (1<<
-# 175 ".././lcd_u.c" 3
+# 177 ".././lcd_u.c" 3
                     3
-# 175 ".././lcd_u.c"
+# 177 ".././lcd_u.c"
                               );
  } else {
   
-# 177 ".././lcd_u.c" 3
+# 179 ".././lcd_u.c" 3
  (*(volatile uint8_t *)((0x0E) + 0x20)) 
-# 177 ".././lcd_u.c"
+# 179 ".././lcd_u.c"
              &= ~(1<<
-# 177 ".././lcd_u.c" 3
+# 179 ".././lcd_u.c" 3
                      3
-# 177 ".././lcd_u.c"
+# 179 ".././lcd_u.c"
                                );
  }
     if (data & 1<<4) {
   
-# 180 ".././lcd_u.c" 3
+# 182 ".././lcd_u.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 180 ".././lcd_u.c"
+# 182 ".././lcd_u.c"
              |= (1<<
-# 180 ".././lcd_u.c" 3
+# 182 ".././lcd_u.c" 3
                     5
-# 180 ".././lcd_u.c"
+# 182 ".././lcd_u.c"
                               );
  } else {
   
-# 182 ".././lcd_u.c" 3
+# 184 ".././lcd_u.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 182 ".././lcd_u.c"
+# 184 ".././lcd_u.c"
              &= ~(1<<
-# 182 ".././lcd_u.c" 3
+# 184 ".././lcd_u.c" 3
                      5
-# 182 ".././lcd_u.c"
+# 184 ".././lcd_u.c"
                                );
  }
 
     
-# 185 ".././lcd_u.c" 3
+# 187 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 185 ".././lcd_u.c"
+# 187 ".././lcd_u.c"
               |= (1<<
-# 185 ".././lcd_u.c" 3
+# 187 ".././lcd_u.c" 3
                      6
-# 185 ".././lcd_u.c"
+# 187 ".././lcd_u.c"
                               );
     _delay_us(1);
     
-# 187 ".././lcd_u.c" 3
+# 189 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
-# 187 ".././lcd_u.c"
+# 189 ".././lcd_u.c"
               &= ~(1<<
-# 187 ".././lcd_u.c" 3
+# 189 ".././lcd_u.c" 3
                       6
-# 187 ".././lcd_u.c"
+# 189 ".././lcd_u.c"
                                );
     _delay_us(1);
 }
@@ -1692,9 +1694,9 @@ void lcd_putc(char c)
 void lcd_puts(const char *s)
 {
  if (s != 
-# 295 ".././lcd_u.c" 3 4
+# 297 ".././lcd_u.c" 3 4
          ((void *)0)
-# 295 ".././lcd_u.c"
+# 297 ".././lcd_u.c"
              ){
   register char c;
 
@@ -1712,19 +1714,19 @@ void lcd_puts(const char *s)
 void lcd_puts_P(const char *progmem_s)
 {
  if (progmem_s != 
-# 311 ".././lcd_u.c" 3 4
+# 313 ".././lcd_u.c" 3 4
                  ((void *)0)
-# 311 ".././lcd_u.c"
+# 313 ".././lcd_u.c"
                      ){
   register char c;
   while ((c=
-# 313 ".././lcd_u.c" 3
+# 315 ".././lcd_u.c" 3
            (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 313 ".././lcd_u.c"
+# 315 ".././lcd_u.c"
            progmem_s++
-# 313 ".././lcd_u.c" 3
+# 315 ".././lcd_u.c" 3
            )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 313 ".././lcd_u.c"
+# 315 ".././lcd_u.c"
                                      ))
   lcd_putc(c);
  }
@@ -1733,9 +1735,12 @@ void lcd_puts_P(const char *progmem_s)
 
 
 uint8_t lcd_displayingMessage;
+uint8_t lcd_saveCursorIsOn;
 
 void lcd_message(const char *pMessage){
+
  uint8_t saveCursor = lcd_cursorPos;
+ lcd_saveCursorIsOn = lcd_cursorIsOn;
  uint8_t textLen = get_StrLen(pMessage);
  lcd_goto(0x40);
  uint8_t pos = 0;
@@ -1753,14 +1758,15 @@ void lcd_message(const char *pMessage){
  lcd_goto(saveCursor);
  lcd_displayingMessage = 0xFF;
  
-# 340 ".././lcd_u.c" 3
+# 345 ".././lcd_u.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 340 ".././lcd_u.c"
+# 345 ".././lcd_u.c"
 {swTimer[7].counter = 2000 / 20; swTimer[7].prescaler = (2000 % 20) / 4;};;
 }
 
 void lcd_message_P(const char *pMessage_P){
  uint8_t saveCursor = lcd_cursorPos;
+ lcd_saveCursorIsOn = lcd_cursorIsOn;
  uint8_t textLen = get_StrLenP(pMessage_P);
  lcd_goto(0x40);
  uint8_t pos = 0;
@@ -1769,22 +1775,22 @@ void lcd_message_P(const char *pMessage_P){
   pos++;
  }
  while (
-# 352 ".././lcd_u.c" 3
+# 358 ".././lcd_u.c" 3
        (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 352 ".././lcd_u.c"
+# 358 ".././lcd_u.c"
        pMessage_P
-# 352 ".././lcd_u.c" 3
+# 358 ".././lcd_u.c" 3
        )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; })) 
-# 352 ".././lcd_u.c"
+# 358 ".././lcd_u.c"
                                  != 0){
   lcd_write_character(
-# 353 ".././lcd_u.c" 3
+# 359 ".././lcd_u.c" 3
                      (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 353 ".././lcd_u.c"
+# 359 ".././lcd_u.c"
                      pMessage_P++
-# 353 ".././lcd_u.c" 3
+# 359 ".././lcd_u.c" 3
                      )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 353 ".././lcd_u.c"
+# 359 ".././lcd_u.c"
                                                 );
   pos++;
  }
@@ -1794,14 +1800,15 @@ void lcd_message_P(const char *pMessage_P){
  lcd_goto(saveCursor);
  lcd_displayingMessage = 0xFF;
  
-# 361 ".././lcd_u.c" 3
+# 367 ".././lcd_u.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 361 ".././lcd_u.c"
+# 367 ".././lcd_u.c"
 {swTimer[7].counter = 2000 / 20; swTimer[7].prescaler = (2000 % 20) / 4;};;
 }
 
 
 void lcd_message_clear(){
+
  uint8_t saveCursor = lcd_cursorPos;
  uint8_t lcdBufferPos = getCursorFromLCDRAMcursor(0x40);
  lcd_goto(0x40);
@@ -1823,5 +1830,196 @@ void lcd_message_clear(){
   lcd_write_character(stored_char);
  }
  lcd_goto(saveCursor);
+ if (lcd_saveCursorIsOn == 0xFF){
+  lcd_cursosblink();
+ } else {
+  lcd_cursoroff();
+ }
  lcd_displayingMessage = 0x00;
+}
+
+
+
+const uint8_t cgPattern_Up [8] 
+# 404 ".././lcd_u.c" 3
+                              __attribute__((__progmem__)) 
+# 404 ".././lcd_u.c"
+                                      = {
+
+ 0b00000100,
+ 0b00001110,
+ 0b00010101,
+ 0b00000100,
+ 0b00000100,
+ 0b00000100,
+ 0b00000100,
+ 0
+};
+
+const uint8_t cgPattern_Down [8] 
+# 416 ".././lcd_u.c" 3
+                                __attribute__((__progmem__)) 
+# 416 ".././lcd_u.c"
+                                        = {
+
+ 0b00000100,
+ 0b00000100,
+ 0b00000100,
+ 0b00000100,
+ 0b00010101,
+ 0b00001110,
+ 0b00000100,
+ 0
+};
+
+const uint8_t cgPattern_Block [8] 
+# 428 ".././lcd_u.c" 3
+                                 __attribute__((__progmem__)) 
+# 428 ".././lcd_u.c"
+                                         = {
+
+ 0b00000000,
+ 0b00000000,
+ 0b00001110,
+ 0b00001110,
+ 0b00001110,
+ 0b00001110,
+ 0b00000000,
+ 0
+};
+
+const uint8_t cgPattern_RegOff [8] 
+# 440 ".././lcd_u.c" 3
+                                  __attribute__((__progmem__)) 
+# 440 ".././lcd_u.c"
+                                          = {
+
+ 0b00011000,
+ 0b00011000,
+ 0b00000000,
+ 0b00000000,
+ 0b00000000,
+ 0b00000000,
+ 0b00000000,
+ 0
+};
+
+const uint8_t cgPattern_RegOn [8] 
+# 452 ".././lcd_u.c" 3
+                                 __attribute__((__progmem__)) 
+# 452 ".././lcd_u.c"
+                                         = {
+
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0
+};
+
+const uint8_t cgPattern_RegOffOff [8] 
+# 464 ".././lcd_u.c" 3
+                                     __attribute__((__progmem__)) 
+# 464 ".././lcd_u.c"
+                                             = {
+
+ 0b00011011,
+ 0b00011011,
+ 0b00000000,
+ 0b00000000,
+ 0b00000000,
+ 0b00000000,
+ 0b00000000,
+ 0
+};
+
+const uint8_t cgPattern_RegOffOn [8] 
+# 476 ".././lcd_u.c" 3
+                                    __attribute__((__progmem__)) 
+# 476 ".././lcd_u.c"
+                                            = {
+
+ 0b00011011,
+ 0b00011011,
+ 0b00000011,
+ 0b00000011,
+ 0b00000011,
+ 0b00000011,
+ 0b00000011,
+ 0
+};
+
+const uint8_t cgPattern_RegOnOff [8] 
+# 488 ".././lcd_u.c" 3
+                                    __attribute__((__progmem__)) 
+# 488 ".././lcd_u.c"
+                                            = {
+
+ 0b00011011,
+ 0b00011011,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0b00011000,
+ 0
+};
+
+const uint8_t cgPattern_RegOnOn [8] 
+# 500 ".././lcd_u.c" 3
+                                   __attribute__((__progmem__)) 
+# 500 ".././lcd_u.c"
+                                           = {
+
+ 0b00011011,
+ 0b00011011,
+ 0b00011011,
+ 0b00011011,
+ 0b00011011,
+ 0b00011011,
+ 0b00011011,
+ 0
+};
+
+void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr){
+ lcd_write_command(0b01000000 | (charNr << 3));
+ for (uint8_t i = 0; i < 8; i++){
+  lcd_write_character(
+# 515 ".././lcd_u.c" 3
+                     (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
+# 515 ".././lcd_u.c"
+                     patternPtr++
+# 515 ".././lcd_u.c" 3
+                     )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
+# 515 ".././lcd_u.c"
+                                                );
+ }
+}
+
+void lcd_initCG(){
+ lcd_setCG(0,cgPattern_Up);
+ lcd_setCG(1,cgPattern_Down);
+
+ lcd_setCG(2,cgPattern_RegOff);
+ lcd_setCG(3,cgPattern_RegOn);
+ lcd_setCG(4,cgPattern_RegOffOff);
+ lcd_setCG(5,cgPattern_RegOffOn);
+ lcd_setCG(6,cgPattern_RegOnOff);
+ lcd_setCG(7,cgPattern_RegOnOn);
+
+}
+
+
+
+void lcd_cursosblink(){
+ lcd_write_command((1 << 3) | (1 << 2) | (1 << 0));
+ lcd_cursorIsOn = 0xFF;
+}
+
+void lcd_cursoroff(){
+ lcd_write_command((1 << 3) | (1 << 2));
+ lcd_cursorIsOn = 0x00;
 }

@@ -682,22 +682,14 @@ typedef union{
  uint8_t byteval[2];
  } Word_t;
 
-extern uint8_t lcd_cursorIsOn;
-
 extern uint8_t nibbleToChr(uint8_t myNibble);
 
-
-
-extern void lcd_initCG();
-extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
 extern void lcd_wordout(uint16_t hexNumber);
 extern void lcd_hexout(uint8_t hexNumber);
 extern void lcd_ManualOut(uint8_t manual);
 extern void lcd_ManualOutDec(uint8_t manual);
 extern void lcd_ChannelOut(uint8_t channel);
 extern void lcd_longout();
-extern void lcd_cursoroff();
-extern void lcd_cursosblink();
 extern void lcd_blank(uint8_t count);
 extern void lcd_dec2out(uint8_t val);
 extern void lcd_clrEol();
@@ -720,7 +712,7 @@ extern char* putString_Prog(char* pOutput, uint8_t progNr);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 76 ".././utils.h"
+# 68 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -740,13 +732,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 104 ".././utils.h"
+# 96 ".././utils.h"
 extern char string_Buf[64];
 
 extern const char cr_lf [] 
-# 106 ".././utils.h" 3
+# 98 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 106 ".././utils.h"
+# 98 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -755,6 +747,11 @@ extern uint8_t reverse_Bits(uint8_t val);
 # 13 ".././utils.c" 2
 # 1 ".././lcd_u.h" 1
 # 117 ".././lcd_u.h"
+extern void lcd_initCG();
+extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
+extern uint8_t lcd_cursorIsOn;
+
+
 extern void lcd_write_nibble(uint8_t data);
 extern void lcd_write_command(uint8_t data);
 extern void lcd_write_character(uint8_t data);
@@ -775,6 +772,9 @@ extern void lcd_message_clear();
 extern uint8_t lcd_cursorPos;
 extern uint8_t lcd_buffer[4*20];
 extern uint8_t lcd_displayingMessage;
+
+extern void lcd_cursoroff();
+extern void lcd_cursosblink();
 # 14 ".././utils.c" 2
 # 1 ".././hwtimer.h" 1
 # 14 ".././hwtimer.h"
@@ -1107,7 +1107,6 @@ char string_Buf[64];
 
 Longint_t editLong;
 uint8_t editByte;
-uint8_t lcd_cursorIsOn;
 
 uint8_t nibbleToChr(uint8_t myNibble){
  if (myNibble > 9){
@@ -1117,177 +1116,7 @@ uint8_t nibbleToChr(uint8_t myNibble){
  }
 }
 
-const uint8_t cgPattern_Up [8] 
-# 34 ".././utils.c" 3
-                              __attribute__((__progmem__)) 
-# 34 ".././utils.c"
-                                      = {
 
- 0b00000100,
- 0b00001110,
- 0b00010101,
- 0b00000100,
- 0b00000100,
- 0b00000100,
- 0b00000100,
- 0
-};
-
-const uint8_t cgPattern_Down [8] 
-# 46 ".././utils.c" 3
-                                __attribute__((__progmem__)) 
-# 46 ".././utils.c"
-                                        = {
-
- 0b00000100,
- 0b00000100,
- 0b00000100,
- 0b00000100,
- 0b00010101,
- 0b00001110,
- 0b00000100,
- 0
-};
-
-const uint8_t cgPattern_Block [8] 
-# 58 ".././utils.c" 3
-                                 __attribute__((__progmem__)) 
-# 58 ".././utils.c"
-                                         = {
-
- 0b00000000,
- 0b00000000,
- 0b00001110,
- 0b00001110,
- 0b00001110,
- 0b00001110,
- 0b00000000,
- 0
-};
-
-const uint8_t cgPattern_RegOff [8] 
-# 70 ".././utils.c" 3
-                                  __attribute__((__progmem__)) 
-# 70 ".././utils.c"
-                                          = {
-
- 0b00011000,
- 0b00011000,
- 0b00000000,
- 0b00000000,
- 0b00000000,
- 0b00000000,
- 0b00000000,
- 0
-};
-
-const uint8_t cgPattern_RegOn [8] 
-# 82 ".././utils.c" 3
-                                 __attribute__((__progmem__)) 
-# 82 ".././utils.c"
-                                         = {
-
- 0b00011000,
- 0b00011000,
- 0b00011000,
- 0b00011000,
- 0b00011000,
- 0b00011000,
- 0b00011000,
- 0
-};
-
-const uint8_t cgPattern_RegOffOff [8] 
-# 94 ".././utils.c" 3
-                                     __attribute__((__progmem__)) 
-# 94 ".././utils.c"
-                                             = {
-
- 0b00011011,
- 0b00011011,
- 0b00000000,
- 0b00000000,
- 0b00000000,
- 0b00000000,
- 0b00000000,
- 0
-};
-
-const uint8_t cgPattern_RegOffOn [8] 
-# 106 ".././utils.c" 3
-                                    __attribute__((__progmem__)) 
-# 106 ".././utils.c"
-                                            = {
-
- 0b00011011,
- 0b00011011,
- 0b00000011,
- 0b00000011,
- 0b00000011,
- 0b00000011,
- 0b00000011,
- 0
-};
-
-const uint8_t cgPattern_RegOnOff [8] 
-# 118 ".././utils.c" 3
-                                    __attribute__((__progmem__)) 
-# 118 ".././utils.c"
-                                            = {
-
- 0b00011011,
- 0b00011011,
- 0b00011000,
- 0b00011000,
- 0b00011000,
- 0b00011000,
- 0b00011000,
- 0
-};
-
-const uint8_t cgPattern_RegOnOn [8] 
-# 130 ".././utils.c" 3
-                                   __attribute__((__progmem__)) 
-# 130 ".././utils.c"
-                                           = {
-
- 0b00011011,
- 0b00011011,
- 0b00011011,
- 0b00011011,
- 0b00011011,
- 0b00011011,
- 0b00011011,
- 0
-};
-
-void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr){
- lcd_write_command(0b01000000 | (charNr << 3));
- for (uint8_t i = 0; i < 8; i++){
-  lcd_write_character(
-# 145 ".././utils.c" 3
-                     (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 145 ".././utils.c"
-                     patternPtr++
-# 145 ".././utils.c" 3
-                     )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 145 ".././utils.c"
-                                                );
- }
-}
-
-void lcd_initCG(){
- lcd_setCG(0,cgPattern_Up);
- lcd_setCG(1,cgPattern_Down);
-
- lcd_setCG(2,cgPattern_RegOff);
- lcd_setCG(3,cgPattern_RegOn);
- lcd_setCG(4,cgPattern_RegOffOff);
- lcd_setCG(5,cgPattern_RegOffOn);
- lcd_setCG(6,cgPattern_RegOnOff);
- lcd_setCG(7,cgPattern_RegOnOn);
-
-}
 
 void lcd_hexout(uint8_t hexNumber){
  uint8_t nibble = hexNumber >> 4;
@@ -1650,16 +1479,6 @@ void lcd_clrEol(){
   && (lcd_cursorPos != (20+20)) && (lcd_cursorPos != (0x40+20+20)) && (i++ < 20)){
   lcd_putc(' ');
  }
-}
-
-void lcd_cursosblink(){
- lcd_write_command((1 << 3) | (1 << 2) | (1 << 0));
- lcd_cursorIsOn = 0xFF;
-}
-
-void lcd_cursoroff(){
- lcd_write_command((1 << 3) | (1 << 2));
- lcd_cursorIsOn = 0x00;
 }
 
 void lcd_waitSymbolOn(){

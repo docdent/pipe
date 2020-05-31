@@ -9,7 +9,7 @@
 #define F_CPU 16000000UL
 #endif
 
-#define SHOW_INOUT_ON_LCD
+#define SHOW_INOUT_ON_LCD // show MIDI in and out on top status line left and rigth corner
 
 #include <util/delay.h>
 #include <avr/io.h>
@@ -47,53 +47,55 @@ int main(void)
 	#ifdef DEBUG_ON_PINS
 	DEBUG_OUT_MAIN
 	#endif
-	init_log();
-	init_Serial0SerUSB();
-	init_message();
-	init_HwTimer();
-	init_Timers();
-	init_ADC();
-	init_Pipe();
-	init_Serial1MIDI();
-	init_PipeModules();
-	init_Midi2Manual();
-	init_Manual2Midi();
-	init_Midi();
-	init_Registers();
-	init_RegOut();
-	init_Manual2Module();
-	init_SoftKeys();
+	init_log();	// init error and event log
+	init_Serial0SerUSB(); // serial port to PC
+	init_message(); // init keyboard message handling
+	init_HwTimer(); // init timer interrupts and ports for module IO
+	init_Timers(); // init timers
+	init_ADC(); // init ADC variable and ports (for keyboard polling)
+	init_Pipe(); // init ports and vars for module IO
+	init_Serial1MIDI(); // init serial IO for MIDI
+	init_PipeModules(); // find out which modules are working
+	init_Midi2Manual(); // init mapping midi in -> manuals
+	init_Manual2Midi(); // init mapping manuals -> midi out
+	init_Midi(); //  init midi handling
+	init_Registers(); // init mapping registers - modules
+	init_RegOut(); // init mapping registers - display of registers
+	init_Manual2Module(); // init mapping manuals - modules
+	init_SoftKeys(); // init softkeys
 	eeprom_UpdateALL(); // save all current settings (eventually defaults) to eeprom
-	INIT_MENU
+	INIT_MENU // reset menu
 
 
 	// BOOT MESSAGE
 
-	lcd_init ();
-	lcd_initCG();
-	lcd_clrscr ();
+	lcd_init (); // init lcd
+	lcd_initCG(); // init Character generator RAM in LCD
+	lcd_clrscr (); // display boot message
 	lcd_goto(LCD_LINE1+3);
 	lcd_puts_P(prog_name);
 	lcd_goto(LCD_LINE2+7);
 	lcd_puts_P(sw_version);
-	sei();
-	_delay_ms(1200);
+	sei(); // start timer, module handling, keyboard polling
+	_delay_ms(1200); // time to show booot message
 	init_Serial3SerESP(); // activate serial from esp8266 not to early to ignore it's scrambled boot messages
 	lcd_clrscr ();
 
 	// TURN ON POWER
 
-	module_StartPowerOn();
-	MESSAGE_PIPE_HANDLING_ON
+	module_StartPowerOn(); // does not turn power on, but start power on cycle
+	MESSAGE_PIPE_HANDLING_ON // from now handle events of modules (key press etc)
 
-	menuNotActive = TRUE;
-	// menu_Init(NULL, NULL); // menu initaliszed but not displayed -> now alter when displayed
+	menuNotActive = TRUE; // showing main screen
 	uint8_t updateStatus = TRUE;
 	messageFromESP = SER_ESP_SEND_LCD; // for first transfer
     while (1)
     {
+		#ifdef DEBUG_ON_PINS
 		DEBUG_OUT_MAIN
+		#endif
 		// V0.60 read message from usart3 (esp)
+		// --------------------------- ESP MESSAGE HANDLING --------------------------------------
 		if SER_ESP_RX_BUFFER_NONEMPTY {
 			uint8_t esp_message = serial3SER_ESPReadRx();
 			messageFromESP = esp_message; // save for later transfer of LCD
@@ -139,9 +141,14 @@ int main(void)
 				}
 			} // TODO further ESP message to handle
 		}
-		// ---------------------- KEYBOARD AND MENU ----------------------
+		// ---------------------- KEYBOARD AND MENU HANDLING ----------------------
 		if MESSAGE_PENDING {
+			// key press has to be processed
 			DEBUG_OUT_MENU
+			if (lcd_displayingMessage == TRUE) {
+				// if message is beeing displayed: first clear message
+				lcd_message_clear();
+			}
 			uint8_t keyMessage = message_get();
 			if (keyMessage == (MESSAGE_KEY_LONGPRESSED | MESSAGE_KEY_ESC)){
 				// PANIC BUTTON
@@ -197,20 +204,15 @@ int main(void)
 			}
 		} else {
 			// Menu is beeing displayed
-			updateStatus = TRUE; // show status eventiually after next menu exit
+			updateStatus = TRUE; // show status eventually after next menu exit
 		}
+		#ifdef DEBUG_ON_PINS
 		DEBUG_OUT_MAIN
-		// ------------------------- TIMER_MENUDATA_LCDCLEAR ----------------
-		if TIMER_ELAPSED(TIMER_MENUDATA_LCDCLEAR) {
-// 			// if (! menuNotActive) {
-// 				// currently: always check timer, not only when menu active menu
-// 				uint8_t saveCursor = lcd_cursorPos;
-// 				menu_deleteMessage();
-// 				prog_UpdDisplay = TRUE; // to update reg display
-// 				lcd_goto(saveCursor);
-// 			 //}
+		#endif
+		// ------------------------- TIMER_MESSAGE_LCDCLEAR ----------------
+		if TIMER_ELAPSED(TIMER_MESSAGE_LCDCLEAR) {
 			lcd_message_clear();
-			TIMER_DEACTIVATE(TIMER_MENUDATA_LCDCLEAR)
+			TIMER_DEACTIVATE(TIMER_MESSAGE_LCDCLEAR)
 		}
 
 		// ------------------------ TIMER TEST MODULE -----------------------
@@ -224,7 +226,7 @@ int main(void)
 
 		// ----------------------------- TIMER POWER ------------------------
 		if TIMER_ELAPSED(TIMER_POWER) {
-			module_PowerControl();
+			module_PowerControl(); //
 			menu_showPowerState();
 			if (menuNotActive == TRUE) {
 				// start screeen showing, display message
@@ -259,15 +261,16 @@ int main(void)
 		messageFromESP = SER_ESP_MESSAGE_NONE;
 
 		// ------------------------- ACTIVE SENSE ----------------------------
-		midi_CheckTxActiveSense(); // out going active Sense?
-		midi_CheckRxActiveSense(); // check for Error of incoming Active Sense
+		midi_CheckTxActiveSense(); // must we send active Sense if midi out was inactive for some time?
+		midi_CheckRxActiveSense(); // check for Error of missing incoming Active Sense
 
 		// ------------------------ TOP STATUS LINE --------------------------
 		#ifdef SHOW_INOUT_ON_LCD
 		uint8_t oldcursor = lcd_cursorPos;
+		// status line lin0 left corner: midi in display
 		// V0.69 do not update midi in display while displaying last value
 		if (TIMER_ELAPSED(TIMER_MIDIIN_DISP) || TIMER_NOTSTARTED(TIMER_MIDIIN_DISP)){
-			if (prog_Display == PROGR_NONE) {
+			if (prog_Display > PROGR_MAX) {
 				// only if timer for midi in is not running at all (or just has elapsed)
 				if (midiLastInNote != MIDI_NOTE_NONE) {
 					// V0.72 only if no program is to be displayed
@@ -309,6 +312,7 @@ int main(void)
 				}
 			}
 		}
+		// status line lin0 right corner: midi out display
 		// V0.69 do not update midi in display while displaying last value
 		if (TIMER_NOTSTARTED(TIMER_MIDIOUT_DISP) || TIMER_ELAPSED(TIMER_MIDIOUT_DISP)) {
 			if (midiLastOutNote != MIDI_NOTE_NONE){
@@ -325,9 +329,9 @@ int main(void)
 				// register change has top priority in display so it is processed later (!) and will overwrite previos note display
 				lcd_goto(MENU_LCD_CURSOR_STAT_MIDIOUT);
 				lcd_putc('R');
-				lcd_dec2out(midi_RegisterChanged & ~REGISTER_WAS_SET); // remove MSB
+				lcd_dec2out((midi_RegisterChanged & ~REGISTER_WAS_SET)+1); // remove MSB, add 1 for user register numbers
 				// V 0.60 changed: down = Register ON!
-				lcd_putc((midi_RegisterChanged & REGISTER_WAS_SET) == 0 ?  LCD_CHAR_ARROW_UP : LCD_CHAR_ARROW_DOWN); // MSB = register was set
+				lcd_putc((midi_RegisterChanged & REGISTER_WAS_SET) == 0 ?  LCD_CHAR_REG_OFF : LCD_CHAR_REG_ON); // MSB = register was set
 				lcd_putc(' ');
 				lcd_goto(oldcursor);
 				midi_RegisterChanged = REGISTER_NONE;
@@ -342,21 +346,25 @@ int main(void)
 			}
 		}
 		#endif
-		//----------------------- program display ------------------------
+		//----------------------- program display line0 left corner------------------------
 		if ((menuNotActive == TRUE) &&((prog_UpdDisplay == TRUE) || (TIMER_ELAPSED(TIMER_REGDISPLAY)))) {
 			// 0.77: only if menu is not active!
 			prog_UpdDisplay = FALSE;
 			TIMER_SET(TIMER_REGDISPLAY,TIMER_REGDISPLAY_MS)
 			lcd_goto(MENU_LCD_CURSOR_PROG);
 			prog_toLcd();
-			if (prog_Display != PROGR_NONE) {
-				reg_toLCD(regShowHW);
-				regShowHW = ~regShowHW;
-			} else {
-				reg_ClearOnLCD();
+			if (pipe_PowerStatus != POWERSTATE_WAIT_FOR_KEY_REALEASE) {
+				// only if not displaying message to release keys
+				if (prog_Display <= PROGR_MAX) {
+					// show register settings
+					reg_toLCD(regShowHW);
+					regShowHW = ~regShowHW; // alternate between SW output and HW read registers
+				} else {
+					reg_ClearOnLCD();
+				}
 			}
 		}
-		//------------------------- every second ----------------------------
+		//------------------------- every second clock update line0 center ----------------------------
 		if (time_UpTimeUpdated == TRUE) {
 			time_UpTimeUpdated = FALSE;
 			// --- clock ---
@@ -422,7 +430,7 @@ int main(void)
 		}
 		//----------------------- MIDI OUT -----------------------------
 		if MESSAGE_PIPE_PENDING	{
-			midiKeyPress_Process(pipeMsgGet());
+			midiKeyPress_Process(pipeMsgGet()); // events from module read (->midi out, couplers)
 		}
 
     }

@@ -26,22 +26,14 @@ typedef union{
 	uint8_t byteval[2];
 	} Word_t;
 
-extern uint8_t lcd_cursorIsOn;
-
 extern uint8_t nibbleToChr(uint8_t myNibble);
 
-#define LCD_CHAR_WAIT_CURSOR LCD_LINE0+12
-
-extern void lcd_initCG();
-extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
 extern void lcd_wordout(uint16_t hexNumber);
 extern void lcd_hexout(uint8_t hexNumber);
 extern void lcd_ManualOut(uint8_t manual);
 extern void lcd_ManualOutDec(uint8_t manual);
 extern void lcd_ChannelOut(uint8_t channel);
 extern void lcd_longout();
-extern void lcd_cursoroff();
-extern void lcd_cursosblink();
 extern void lcd_blank(uint8_t count);
 extern void lcd_dec2out(uint8_t val);
 extern void lcd_clrEol();

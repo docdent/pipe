@@ -722,7 +722,7 @@ void prog_set(uint8_t prog){
 }
 
 void prog_toLcd(){
-	if (prog_Display != PROGR_NONE) {
+	if (prog_Display <= PROGR_MAX) {
 		lcd_putc('P');
 		lcd_putc('-');
 		lcd_putc('A' + ((prog_Display >> 3) & 0x07));

@@ -1898,8 +1898,8 @@ prog_toLcd:
 .L__stack_usage = 0
 	.loc 1 725 0
 	lds r24,prog_Display
-	cpi r24,lo8(-1)
-	breq .L121
+	cpi r24,lo8(64)
+	brsh .L121
 	.loc 1 726 0
 	ldi r24,lo8(80)
 	call lcd_putc
@@ -8757,14 +8757,14 @@ cplInfo:
 	.long	.LASF216
 	.long	.LASF216
 	.byte	0xc
-	.byte	0x7f
+	.byte	0x84
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF217
 	.long	.LASF217
 	.byte	0x4
-	.byte	0x2d
+	.byte	0x25
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
@@ -8778,7 +8778,7 @@ cplInfo:
 	.long	.LASF219
 	.long	.LASF219
 	.byte	0xc
-	.byte	0x7e
+	.byte	0x83
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1

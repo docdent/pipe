@@ -3812,7 +3812,7 @@ __vector_55:
 	.uleb128 0x2e
 	.long	.LASF65
 	.byte	0x7
-	.byte	0x6a
+	.byte	0x62
 	.long	0xcea
 	.byte	0x1
 	.byte	0x1
@@ -4222,7 +4222,7 @@ __vector_55:
 	.long	.LASF104
 	.long	.LASF104
 	.byte	0x7
-	.byte	0x1f
+	.byte	0x1d
 	.uleb128 0x32
 	.byte	0x1
 	.byte	0x1

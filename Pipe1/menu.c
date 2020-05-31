@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.78";
+const char sw_version [] PROGMEM = "V0.80";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -719,8 +719,9 @@ uint8_t softKeyPrP(uint8_t arg){
 		// longpress: set
 		if (prog_Display <= PROGR_MAX){
 			// there is a program active: program current register set to program -> also resets current prog HW output
-			menuDisplaySaveMessage(register_toProgram(prog_Display, TRUE),prog_Display);
-			prog_Display != 0x80; // set MSB to deactivate display but still keep prog nr
+			uint8_t newProg = prog_Display | 0x80; // set MSB to deactivate display but still keep prog nr
+			menuDisplaySaveMessage(register_toProgram(prog_Display, TRUE),prog_Display); // also reset prog_Display
+			prog_set(newProg); 
 		}
 	} else if (arg != 0) {
 		// shortpress: PROGR_MAX program
@@ -732,8 +733,9 @@ uint8_t softKeyPrP(uint8_t arg){
 
 uint8_t softKeyPrM(uint8_t arg){
 	if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
+		uint8_t newProg = prog_Display | 0x80; // set MSB to deactivate display but still keep prog nr
 		midi_resetRegisters();
-		prog_set(PROGR_NONE);
+		prog_set(newProg);  // set MSB to deactivate display but still keep prog nr
 	} else if (arg != 0) {
 		// shortpress: PROGR_MAX program
 		progDec();
@@ -743,8 +745,10 @@ uint8_t softKeyPrM(uint8_t arg){
 }
 
 uint8_t softKeyPrSet(uint8_t arg) {
-	if ((arg != 0) && (prog_Display != PROGR_NONE)) {
-			menuDisplaySaveMessage(register_toProgram(prog_Display, TRUE),prog_Display);
+	if ((arg != 0) && (prog_Display <= PROGR_MAX)) {
+		uint8_t newProg = prog_Display | 0x80; // set MSB to deactivate display but still keep prog nr
+		menuDisplaySaveMessage(register_toProgram(prog_Display, TRUE),prog_Display);
+		prog_set(newProg); 
 	}
 	return 0;
 }
@@ -753,7 +757,7 @@ uint8_t softKeyPrInc(uint8_t arg){
 	if (arg != 0) {
 		if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
 			// longpress: bank increment (8 program steps)
-			if (prog_Display != PROGR_NONE){
+			if (prog_Display <= PROGR_MAX){
 				// there is a program active: program current register set to program
 				prog_Display = (prog_Display + 8) & 0x38;
 			}
@@ -769,7 +773,7 @@ uint8_t softKeyPrDec(uint8_t arg){
 	if (arg != 0) {
 		if ((arg & MESSAGE_KEY_LONGPRESSED) != 0){
 			// longpress: bank increment (8 program steps)
-			if (prog_Display != PROGR_NONE){
+			if (prog_Display <= PROGR_MAX){
 				// there is a program active: program current register set to program
 				prog_Display = (prog_Display - 8) & 0x38;
 			}
@@ -2672,7 +2676,7 @@ void menu_DisplayMainMessage(const char* pMessage){
 	lcd_puts(pMessage);
 	lcd_blank(MENU_LCD_CURSOR_MAINMESSAGE + MENU_LCD_LEN_MAINMESSAGE - lcd_cursorPos);
 	lcd_goto(saveCursor);
-	TIMER_SET(TIMER_MENUDATA_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
+	TIMER_SET(TIMER_MESSAGE_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
 	displayMessageArea = MENU_DISPLAY_AREA_MAIN;
 }
 

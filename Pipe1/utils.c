@@ -21,7 +21,6 @@ char string_Buf[STRINGBUFLEN];
 
 Longint_t editLong;
 uint8_t editByte;
-uint8_t lcd_cursorIsOn;
 
 uint8_t nibbleToChr(uint8_t myNibble){
 	if (myNibble > 9){
@@ -31,133 +30,7 @@ uint8_t nibbleToChr(uint8_t myNibble){
 	}
 }
 
-const uint8_t cgPattern_Up [8] PROGMEM = {
-	// arrow up
-	0b00000100,
-	0b00001110,
-	0b00010101,
-	0b00000100,
-	0b00000100,
-	0b00000100,
-	0b00000100,
-	0
-};
 
-const uint8_t cgPattern_Down [8] PROGMEM = {
-	// arrow down
-	0b00000100,
-	0b00000100,
-	0b00000100,
-	0b00000100,
-	0b00010101,
-	0b00001110,
-	0b00000100,
-	0
-};
-
-const uint8_t cgPattern_Block [8] PROGMEM = {
-	// block
-	0b00000000,
-	0b00000000,
-	0b00001110,
-	0b00001110,
-	0b00001110,
-	0b00001110,
-	0b00000000,
-	0
-};
-
-const uint8_t cgPattern_RegOff [8] PROGMEM = {
-	// block
-	0b00011000,
-	0b00011000,
-	0b00000000,
-	0b00000000,
-	0b00000000,
-	0b00000000,
-	0b00000000,
-	0
-};
-
-const uint8_t cgPattern_RegOn [8] PROGMEM = {
-	// block
-	0b00011000,
-	0b00011000,
-	0b00011000,
-	0b00011000,
-	0b00011000,
-	0b00011000,
-	0b00011000,
-	0
-};
-
-const uint8_t cgPattern_RegOffOff [8] PROGMEM = {
-	// block
-	0b00011011,
-	0b00011011,
-	0b00000000,
-	0b00000000,
-	0b00000000,
-	0b00000000,
-	0b00000000,
-	0
-};
-
-const uint8_t cgPattern_RegOffOn [8] PROGMEM = {
-	// block
-	0b00011011,
-	0b00011011,
-	0b00000011,
-	0b00000011,
-	0b00000011,
-	0b00000011,
-	0b00000011,
-	0
-};
-
-const uint8_t cgPattern_RegOnOff [8] PROGMEM = {
-	// block
-	0b00011011,
-	0b00011011,
-	0b00011000,
-	0b00011000,
-	0b00011000,
-	0b00011000,
-	0b00011000,
-	0
-};
-
-const uint8_t cgPattern_RegOnOn [8] PROGMEM = {
-	// block
-	0b00011011,
-	0b00011011,
-	0b00011011,
-	0b00011011,
-	0b00011011,
-	0b00011011,
-	0b00011011,
-	0
-};
-
-void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr){
-	lcd_write_command(LCD_SETCGRAMADR | (charNr << 3));
-	for (uint8_t i = 0; i < 8; i++){
-		lcd_write_character(pgm_read_byte(patternPtr++));
-	}
-}
-
-void lcd_initCG(){
-	lcd_setCG(0,cgPattern_Up); // 0x08 = Arrow Up
-	lcd_setCG(1,cgPattern_Down); // 0x09 = Arrow Down
-	// old: 0x0A = Block = State On
-	lcd_setCG(2,cgPattern_RegOff); // 0x0A = Single Reg Off
-	lcd_setCG(3,cgPattern_RegOn); // 0x0B = Single Reg Off
-	lcd_setCG(4,cgPattern_RegOffOff); // 0x0C = Reg Off Off
-	lcd_setCG(5,cgPattern_RegOffOn); // 0x0D = Reg Off On
-	lcd_setCG(6,cgPattern_RegOnOff); // 0x0E = Reg On Off
-	lcd_setCG(7,cgPattern_RegOnOn); // 0x0F = Reg On On
-
-}
 
 void lcd_hexout(uint8_t hexNumber){
 	uint8_t nibble = hexNumber >> 4;
@@ -520,16 +393,6 @@ void lcd_clrEol(){
 		&& (lcd_cursorPos != LCD_EOLINE2) && (lcd_cursorPos != LCD_EOLINE3) && (i++ < 20)){
 		lcd_putc(' ');
 	}
-}
-
-void lcd_cursosblink(){
-	lcd_write_command((1 << LCD_DISPLAYMODE) | (1 << LCD_DISPLAYMODE_ON) | (1 << LCD_DISPLAYMODE_BLINK));
-	lcd_cursorIsOn = TRUE;
-}
-
-void lcd_cursoroff(){
-	lcd_write_command((1 << LCD_DISPLAYMODE) | (1 << LCD_DISPLAYMODE_ON));
-	lcd_cursorIsOn = FALSE;
 }
 
 void lcd_waitSymbolOn(){

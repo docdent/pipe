@@ -137,7 +137,7 @@
 #define DEBUG_OUT_MIDI			DEBUG_PORT = (DEBUG_PORT & (~(DEBUG_MASK))) | (1 << DEBUG_PIN_1); // 5/4: 10
 #define DEBUG_OUT_MENU			DEBUG_PORT |= (DEBUG_MASK); // 5/4: 11
 #define DEBUG_GET_OUT			(DEBUG_PORT & DEBUG_MASK)
-#define DEBUG_SET_OUT(out)		DEBUG_PORT = (DEBUG_PORT & DEBUG_MASK) | (out);
+#define DEBUG_SET_OUT(out)		DEBUG_PORT = DEBUG_PORT & (~DEBUG_MASK) | (out);
 
 //************************ BIT MACROS *************************
 

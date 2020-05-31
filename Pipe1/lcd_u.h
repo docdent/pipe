@@ -112,6 +112,11 @@
 #define LCD_WAIT_CMD 64 // us
 #define LCD_WAIT_CLRHOME 2500 // us
 
+#define LCD_CHAR_WAIT_CURSOR LCD_LINE0+12
+
+extern void lcd_initCG();
+extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
+extern uint8_t lcd_cursorIsOn;
 
 // Function Prototypes
 extern void lcd_write_nibble(uint8_t data);
@@ -134,4 +139,8 @@ extern void lcd_message_clear();
 extern uint8_t lcd_cursorPos;
 extern uint8_t lcd_buffer[LCD_LINE_COUNT*LCD_LINE_LEN]; // sorted, does not match weird LCD RAM
 extern uint8_t lcd_displayingMessage; // true if message is beeing displayd -> no outut to lcd in rande
+
+extern void lcd_cursoroff();
+extern void lcd_cursosblink();
+
 #endif /* LCD_U_H_ */

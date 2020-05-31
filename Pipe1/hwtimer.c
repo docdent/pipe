@@ -299,17 +299,18 @@ void module_StartPowerOn(){
 void module_PowerControl(){
 	// call when timer is elapsed
 	if (pipe_PowerStatus == POWERSTATE_WAIT_FOR_KEY_REALEASE) {
-		// now check inputs
+		// part1: now check inputs
 		if (module_TestAllInputs() == 0){
-			// all inputs are low, start power on and wait a little bit
+			// all inputs are low, no key is pressed, no register active, start power on and wait a little bit
 			POWER_ON
 			pipe_PowerStatus = POWERSTATE_WAIT_FOR_POWERON;
 			TIMER_SET(TIMER_POWER,TIMER_POWER_CHECK_MS)
 		} else {
-			// keys are not released
+			// keys are not released: wait some time and then test again
 			TIMER_SET(TIMER_POWER,TIMER_POWER_TEST_REPEAT_MS)
 		}
 	} else if (pipe_PowerStatus == POWERSTATE_WAIT_FOR_POWERON) {
+		// part2: power is on for some time, test if every input is still inactive
 		uint8_t testResult = module_TestAllInputs();
 		if (testResult == 0){
 			// inputs still off, seems ok

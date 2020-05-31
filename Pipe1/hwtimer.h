@@ -48,7 +48,7 @@ extern volatile uint8_t time_Uptime[4]; // 0: prescaler cycles @ 4ms, 1: seconds
 #define TIMER_TX_ACTIVESENSE_MS 200 // 300 per defintion, 50% reserve
 
 // when elapsed: clear menu data line in lcd in main
-#define TIMER_MENUDATA_LCDCLEAR 7
+#define TIMER_MESSAGE_LCDCLEAR 7
 #define TIMER_MENUDATA_LCDCLEAR_MS 2000
 
 // when elapsed: start next module test loop in main

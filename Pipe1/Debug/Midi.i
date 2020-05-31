@@ -548,6 +548,11 @@ typedef struct
 # 117 ".././lcd_u.h"
 
 # 117 ".././lcd_u.h"
+extern void lcd_initCG();
+extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
+extern uint8_t lcd_cursorIsOn;
+
+
 extern void lcd_write_nibble(uint8_t data);
 extern void lcd_write_command(uint8_t data);
 extern void lcd_write_character(uint8_t data);
@@ -568,6 +573,9 @@ extern void lcd_message_clear();
 extern uint8_t lcd_cursorPos;
 extern uint8_t lcd_buffer[4*20];
 extern uint8_t lcd_displayingMessage;
+
+extern void lcd_cursoroff();
+extern void lcd_cursosblink();
 # 13 ".././Midi.c" 2
 # 1 ".././initio.h" 1
 # 14 ".././initio.h"
@@ -715,22 +723,14 @@ typedef union{
  uint8_t byteval[2];
  } Word_t;
 
-extern uint8_t lcd_cursorIsOn;
-
 extern uint8_t nibbleToChr(uint8_t myNibble);
 
-
-
-extern void lcd_initCG();
-extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
 extern void lcd_wordout(uint16_t hexNumber);
 extern void lcd_hexout(uint8_t hexNumber);
 extern void lcd_ManualOut(uint8_t manual);
 extern void lcd_ManualOutDec(uint8_t manual);
 extern void lcd_ChannelOut(uint8_t channel);
 extern void lcd_longout();
-extern void lcd_cursoroff();
-extern void lcd_cursosblink();
 extern void lcd_blank(uint8_t count);
 extern void lcd_dec2out(uint8_t val);
 extern void lcd_clrEol();
@@ -753,7 +753,7 @@ extern char* putString_Prog(char* pOutput, uint8_t progNr);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 76 ".././utils.h"
+# 68 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -773,13 +773,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 104 ".././utils.h"
+# 96 ".././utils.h"
 extern char string_Buf[64];
 
 extern const char cr_lf [] 
-# 106 ".././utils.h" 3
+# 98 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 106 ".././utils.h"
+# 98 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -2548,7 +2548,7 @@ void prog_set(uint8_t prog){
 }
 
 void prog_toLcd(){
- if (prog_Display != 0xFF) {
+ if (prog_Display <= 63) {
   lcd_putc('P');
   lcd_putc('-');
   lcd_putc('A' + ((prog_Display >> 3) & 0x07));

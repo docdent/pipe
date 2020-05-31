@@ -543,6 +543,11 @@ typedef struct
 # 117 ".././lcd_u.h"
 
 # 117 ".././lcd_u.h"
+extern void lcd_initCG();
+extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
+extern uint8_t lcd_cursorIsOn;
+
+
 extern void lcd_write_nibble(uint8_t data);
 extern void lcd_write_command(uint8_t data);
 extern void lcd_write_character(uint8_t data);
@@ -563,6 +568,9 @@ extern void lcd_message_clear();
 extern uint8_t lcd_cursorPos;
 extern uint8_t lcd_buffer[4*20];
 extern uint8_t lcd_displayingMessage;
+
+extern void lcd_cursoroff();
+extern void lcd_cursosblink();
 # 20 ".././main.c" 2
 # 1 ".././initio.h" 1
 # 14 ".././initio.h"
@@ -710,22 +718,14 @@ typedef union{
  uint8_t byteval[2];
  } Word_t;
 
-extern uint8_t lcd_cursorIsOn;
-
 extern uint8_t nibbleToChr(uint8_t myNibble);
 
-
-
-extern void lcd_initCG();
-extern void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr);
 extern void lcd_wordout(uint16_t hexNumber);
 extern void lcd_hexout(uint8_t hexNumber);
 extern void lcd_ManualOut(uint8_t manual);
 extern void lcd_ManualOutDec(uint8_t manual);
 extern void lcd_ChannelOut(uint8_t channel);
 extern void lcd_longout();
-extern void lcd_cursoroff();
-extern void lcd_cursosblink();
 extern void lcd_blank(uint8_t count);
 extern void lcd_dec2out(uint8_t val);
 extern void lcd_clrEol();
@@ -748,7 +748,7 @@ extern char* putString_Prog(char* pOutput, uint8_t progNr);
 
 extern uint8_t lcd_edit_longint(uint8_t cursor);
 extern uint8_t lcd_edit_byte(uint8_t cursor);
-# 76 ".././utils.h"
+# 68 ".././utils.h"
 extern const __flash char keylabel_plus [] ;
 extern const __flash char keylabel_minus [] ;
 extern const __flash char keylabel_up [] ;
@@ -768,13 +768,13 @@ extern void keylabel_set(uint8_t keyNr, const __flash char* labelPStr);
 extern void keylabel_toLCD();
 extern void keylabel_clr(uint8_t keyNr);
 extern uint8_t keylabel_statcheck(uint8_t keyNr, uint8_t status);
-# 104 ".././utils.h"
+# 96 ".././utils.h"
 extern char string_Buf[64];
 
 extern const char cr_lf [] 
-# 106 ".././utils.h" 3
+# 98 ".././utils.h" 3
                           __attribute__((__progmem__))
-# 106 ".././utils.h"
+# 98 ".././utils.h"
                                  ;
 
 extern uint8_t get_StrLenP(const __flash char* pString);
@@ -1921,6 +1921,7 @@ __asm__ __volatile__ ("sei" ::: "memory")
 # 95 ".././main.c"
  &= ~(((1 << 5) | (1 << 4)));
 
+
   if (serESPRxInIndex != serESPRxOutIndex) {
    uint8_t esp_message = serial3SER_ESPReadRx();
    messageFromESP = esp_message;
@@ -1968,11 +1969,16 @@ __asm__ __volatile__ ("sei" ::: "memory")
   }
 
   if (message_status() != 0x00) {
+
    
-# 144 ".././main.c" 3
+# 146 ".././main.c" 3
   (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 144 ".././main.c"
+# 146 ".././main.c"
   |= (((1 << 5) | (1 << 4)));
+   if (lcd_displayingMessage == 0xFF) {
+
+    lcd_message_clear();
+   }
    uint8_t keyMessage = message_get();
    if (keyMessage == (0x80 | 6)){
 
@@ -1984,9 +1990,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
     midiRxBuffUsage = 0;
     midiTxBuffUsage = 0;
     
-# 155 ".././main.c" 3
+# 161 ".././main.c" 3
    (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 155 ".././main.c"
+# 161 ".././main.c"
    |= 1 << 6;
     pipe_PowerStatus = 0x13;
     lcd_message_P(panicString);
@@ -1999,13 +2005,13 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
 
      menu_Init(
-# 166 ".././main.c" 3 4
+# 172 ".././main.c" 3 4
               ((void *)0)
-# 166 ".././main.c"
+# 172 ".././main.c"
                   , 
-# 166 ".././main.c" 3 4
+# 172 ".././main.c" 3 4
                     ((void *)0)
-# 166 ".././main.c"
+# 172 ".././main.c"
                         );
      menu_InitLCD();
      menuNotActive = 0x00;
@@ -2043,19 +2049,12 @@ __asm__ __volatile__ ("sei" ::: "memory")
    updateStatus = 0xFF;
   }
   
-# 202 ".././main.c" 3
+# 208 ".././main.c" 3
  (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 202 ".././main.c"
+# 208 ".././main.c"
  &= ~(((1 << 5) | (1 << 4)));
 
   if (swTimer[7].counter == 0x00) {
-
-
-
-
-
-
-
    lcd_message_clear();
    swTimer[7].counter = 0xFF;
   }
@@ -2113,8 +2112,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
   uint8_t oldcursor = lcd_cursorPos;
 
+
   if ((swTimer[4].counter == 0x00) || (swTimer[4].counter == 0xFF)){
-   if (prog_Display == 0xFF) {
+   if (prog_Display > 63) {
 
     if (midiLastInNote != 0xFF) {
 
@@ -2165,6 +2165,7 @@ __asm__ __volatile__ ("sei" ::: "memory")
    }
   }
 
+
   if ((swTimer[5].counter == 0xFF) || (swTimer[5].counter == 0x00)) {
    if (midiLastOutNote != 0xFF){
 
@@ -2176,24 +2177,24 @@ __asm__ __volatile__ ("sei" ::: "memory")
     lcd_goto(oldcursor);
     midiLastOutNote = 0xFF;
     
-# 323 ".././main.c" 3
+# 324 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 323 ".././main.c"
+# 324 ".././main.c"
    {swTimer[5].counter = 800 / 20; swTimer[5].prescaler = (800 % 20) / 4;};
    } else if (midi_RegisterChanged != 0xFF) {
 
     lcd_goto((0 +20-5));
     lcd_putc('R');
-    lcd_dec2out(midi_RegisterChanged & ~0x80);
+    lcd_dec2out((midi_RegisterChanged & ~0x80)+1);
 
-    lcd_putc((midi_RegisterChanged & 0x80) == 0 ? 0x08 : 0x09);
+    lcd_putc((midi_RegisterChanged & 0x80) == 0 ? 0x0A : 0x0B);
     lcd_putc(' ');
     lcd_goto(oldcursor);
     midi_RegisterChanged = 0xFF;
     
-# 334 ".././main.c" 3
+# 335 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 334 ".././main.c"
+# 335 ".././main.c"
    {swTimer[5].counter = 800 / 20; swTimer[5].prescaler = (800 % 20) / 4;};
    } else if ((swTimer[5].counter == 0x00)) {
 
@@ -2210,17 +2211,21 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
    prog_UpdDisplay = 0x00;
    
-# 349 ".././main.c" 3
+# 350 ".././main.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 349 ".././main.c"
+# 350 ".././main.c"
   {swTimer[9].counter = 400 / 20; swTimer[9].prescaler = (400 % 20) / 4;};
    lcd_goto((0 +0));
    prog_toLcd();
-   if (prog_Display != 0xFF) {
-    reg_toLCD(regShowHW);
-    regShowHW = ~regShowHW;
-   } else {
-    reg_ClearOnLCD();
+   if (pipe_PowerStatus != 0x01) {
+
+    if (prog_Display <= 63) {
+
+     reg_toLCD(regShowHW);
+     regShowHW = ~regShowHW;
+    } else {
+     reg_ClearOnLCD();
+    }
    }
   }
 
@@ -2271,16 +2276,16 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
    if ((swTimer[4].counter == 0xFF)) {
     
-# 406 ".././main.c" 3
+# 411 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 406 ".././main.c"
+# 411 ".././main.c"
    {swTimer[4].counter = 2500 / 20; swTimer[4].prescaler = (2500 % 20) / 4;};
    }
    if ((swTimer[5].counter == 0xFF)) {
     
-# 409 ".././main.c" 3
+# 414 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 409 ".././main.c"
+# 414 ".././main.c"
    {swTimer[5].counter = 2500 / 20; swTimer[5].prescaler = (2500 % 20) / 4;};
    }
   }
@@ -2291,13 +2296,13 @@ __asm__ __volatile__ ("sei" ::: "memory")
    log_putError(4, 0, 0);
   }
   
-# 418 ".././main.c" 3
+# 423 ".././main.c" 3
  (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 418 ".././main.c"
+# 423 ".././main.c"
  = (
-# 418 ".././main.c" 3
+# 423 ".././main.c" 3
  (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 418 ".././main.c"
+# 423 ".././main.c"
  & (~(((1 << 5) | (1 << 4))))) | (1 << 5);
 
   if (midiRxInIndex != midiRxOutIndex) {
