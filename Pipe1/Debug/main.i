@@ -1910,16 +1910,17 @@ __asm__ __volatile__ ("sei" ::: "memory")
  msgPipe_Handling = 0xFF;
 
  menuNotActive = 0xFF;
-
  uint8_t updateStatus = 0xFF;
  messageFromESP = 0xFE;
     while (1)
     {
+
   
 # 95 ".././main.c" 3
  (*(volatile uint8_t *)((0x05) + 0x20)) 
 # 95 ".././main.c"
  &= ~(((1 << 5) | (1 << 4)));
+
 
 
   if (serESPRxInIndex != serESPRxOutIndex) {
@@ -1971,9 +1972,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
   if (message_status() != 0x00) {
 
    
-# 146 ".././main.c" 3
+# 147 ".././main.c" 3
   (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 146 ".././main.c"
+# 147 ".././main.c"
   |= (((1 << 5) | (1 << 4)));
    if (lcd_displayingMessage == 0xFF) {
 
@@ -1990,9 +1991,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
     midiRxBuffUsage = 0;
     midiTxBuffUsage = 0;
     
-# 161 ".././main.c" 3
+# 162 ".././main.c" 3
    (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 161 ".././main.c"
+# 162 ".././main.c"
    |= 1 << 6;
     pipe_PowerStatus = 0x13;
     lcd_message_P(panicString);
@@ -2005,13 +2006,13 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
 
      menu_Init(
-# 172 ".././main.c" 3 4
+# 173 ".././main.c" 3 4
               ((void *)0)
-# 172 ".././main.c"
+# 173 ".././main.c"
                   , 
-# 172 ".././main.c" 3 4
+# 173 ".././main.c" 3 4
                     ((void *)0)
-# 172 ".././main.c"
+# 173 ".././main.c"
                         );
      menu_InitLCD();
      menuNotActive = 0x00;
@@ -2048,11 +2049,13 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
    updateStatus = 0xFF;
   }
+
   
-# 208 ".././main.c" 3
+# 210 ".././main.c" 3
  (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 208 ".././main.c"
+# 210 ".././main.c"
  &= ~(((1 << 5) | (1 << 4)));
+
 
   if (swTimer[7].counter == 0x00) {
    lcd_message_clear();
@@ -2139,21 +2142,23 @@ __asm__ __volatile__ ("sei" ::: "memory")
      midiLastInNote = 0xFF;
 
      
-# 294 ".././main.c" 3
+# 297 ".././main.c" 3
     for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 294 ".././main.c"
+# 297 ".././main.c"
     {swTimer[4].counter = 700 / 20; swTimer[4].prescaler = (700 % 20) / 4;};
     } else if (midiLastProgram != 0xFF) {
 
      lcd_goto((0 +0));
      lcd_putc('p');
-     lcd_dec2out(midiLastProgram);
+     lcd_putc('A'+((midiLastProgram >> 3) & 0x07));
+     lcd_putc('1'+(midiLastProgram & 0x07));
+
      lcd_putc(0x7E);
      midiLastProgram = 0xFF;
      
-# 302 ".././main.c" 3
+# 307 ".././main.c" 3
     for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 302 ".././main.c"
+# 307 ".././main.c"
     {swTimer[4].counter = 700 / 20; swTimer[4].prescaler = (700 % 20) / 4;};
     } else if ((swTimer[4].counter == 0x00) ) {
 
@@ -2177,9 +2182,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
     lcd_goto(oldcursor);
     midiLastOutNote = 0xFF;
     
-# 324 ".././main.c" 3
+# 329 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 324 ".././main.c"
+# 329 ".././main.c"
    {swTimer[5].counter = 800 / 20; swTimer[5].prescaler = (800 % 20) / 4;};
    } else if (midi_RegisterChanged != 0xFF) {
 
@@ -2192,9 +2197,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
     lcd_goto(oldcursor);
     midi_RegisterChanged = 0xFF;
     
-# 335 ".././main.c" 3
+# 340 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 335 ".././main.c"
+# 340 ".././main.c"
    {swTimer[5].counter = 800 / 20; swTimer[5].prescaler = (800 % 20) / 4;};
    } else if ((swTimer[5].counter == 0x00)) {
 
@@ -2211,9 +2216,9 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
    prog_UpdDisplay = 0x00;
    
-# 350 ".././main.c" 3
+# 355 ".././main.c" 3
   for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 350 ".././main.c"
+# 355 ".././main.c"
   {swTimer[9].counter = 400 / 20; swTimer[9].prescaler = (400 % 20) / 4;};
    lcd_goto((0 +0));
    prog_toLcd();
@@ -2276,16 +2281,16 @@ __asm__ __volatile__ ("sei" ::: "memory")
 
    if ((swTimer[4].counter == 0xFF)) {
     
-# 411 ".././main.c" 3
+# 416 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 411 ".././main.c"
+# 416 ".././main.c"
    {swTimer[4].counter = 2500 / 20; swTimer[4].prescaler = (2500 % 20) / 4;};
    }
    if ((swTimer[5].counter == 0xFF)) {
     
-# 414 ".././main.c" 3
+# 419 ".././main.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 414 ".././main.c"
+# 419 ".././main.c"
    {swTimer[5].counter = 2500 / 20; swTimer[5].prescaler = (2500 % 20) / 4;};
    }
   }
@@ -2296,13 +2301,13 @@ __asm__ __volatile__ ("sei" ::: "memory")
    log_putError(4, 0, 0);
   }
   
-# 423 ".././main.c" 3
+# 428 ".././main.c" 3
  (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 423 ".././main.c"
+# 428 ".././main.c"
  = (
-# 423 ".././main.c" 3
+# 428 ".././main.c" 3
  (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 423 ".././main.c"
+# 428 ".././main.c"
  & (~(((1 << 5) | (1 << 4))))) | (1 << 5);
 
   if (midiRxInIndex != midiRxOutIndex) {

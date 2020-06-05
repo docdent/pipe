@@ -299,7 +299,9 @@ int main(void)
 					// no midi not but a program change to be displayed
 					lcd_goto(MENU_LCD_CURSOR_STAT_MIDIIN);
 					lcd_putc('p');
-					lcd_dec2out(midiLastProgram); // here max 0..99 displayed, but Prog Change currently accepts only 0..63 anyway
+					lcd_putc('A'+((midiLastProgram >> 3) & 0x07));
+					lcd_putc('1'+(midiLastProgram & 0x07)); // V 0.81 show Prog Nr and Bank
+					//lcd_dec2out(midiLastProgram); // here max 0..99 displayed, but Prog Change currently accepts only 0..63 anyway
 					lcd_putc(LCD_CHAR_ARROW_RIGHT);
 					midiLastProgram = MIDI_PROGRAM_NONE; // we are done, don't display again
 					TIMER_SET(TIMER_MIDIIN_DISP,TIMER_MIDIIN_DISP_MS)

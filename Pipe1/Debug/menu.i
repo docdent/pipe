@@ -1517,7 +1517,7 @@ const char sw_version []
 # 24 ".././menu.c" 3
                         __attribute__((__progmem__)) 
 # 24 ".././menu.c"
-                                = "V0.80";
+                                = "V0.81";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -2862,15 +2862,15 @@ const __flash Menu_t menu_register[] = {
                                                           ((void *)0)
 # 288 ".././menu.c"
                                                               ,menuOnExitRegisterEdit},
- {10 | 0xC0,0,"Reg.55-64",
+ {14 | 0xC0,0,"Reg.55-64",
 # 289 ".././menu.c" 3 4
-                                                 ((void *)0)
+                                                    ((void *)0)
 # 289 ".././menu.c"
-                                                     ,{&menuVRegisters[7]},
+                                                        ,{&menuVRegisters[7]},
 # 289 ".././menu.c" 3 4
-                                                                           ((void *)0)
+                                                                              ((void *)0)
 # 289 ".././menu.c"
-                                                                               ,menuOnExitRegisterEdit},
+                                                                                  ,menuOnExitRegisterEdit},
 };
 
 
@@ -4746,8 +4746,8 @@ void dataToNibbles(){
   }
   break;
  case 12:
-  nibble[0] = (dataEntry & 7) + 1;
-  nibble[1] = (dataEntry >> 3) + 1;
+  nibble[0] = (dataEntry >> 3) + 1;
+  nibble[1] = (dataEntry & 7) + 1;
   break;
  case 13:
 
@@ -4880,8 +4880,8 @@ void nibbleToLCDstring(){
   }
   break;
  case 12:
-  lcdData[0] = '0' +nibble[0];
-  lcdData[1] = '@' +nibble[1];
+  lcdData[0] = '@' +nibble[0];
+  lcdData[1] = '0' +nibble[1];
   lcdData[2] = '\0';
   break;
  case 13:
@@ -5171,7 +5171,7 @@ void nibbleToData(){
   }
   break;
  case 12:
-  dataEntry = (nibble[0]-1) | ((nibble[1]-1) << 3);
+  dataEntry = (nibble[1]-1) | ((nibble[0]-1) << 3);
   break;
  case 13:
   dataEntry = (nibble[0] * 10 + nibble[1]) - 1;

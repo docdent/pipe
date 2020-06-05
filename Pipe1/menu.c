@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.80";
+const char sw_version [] PROGMEM = "V0.81";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -286,7 +286,7 @@ const __flash Menu_t menu_register[] = {
 	{MENU_T_VARBINREG,0,"Reg.33-40",NULL,{&menuVRegisters[4]},NULL,menuOnExitRegisterEdit},
 	{MENU_T_VARBINREG,0,"Reg.41-48",NULL,{&menuVRegisters[5]},NULL,menuOnExitRegisterEdit},
 	{MENU_T_VARBINREG,0,"Reg.49-54",NULL,{&menuVRegisters[6]},NULL,menuOnExitRegisterEdit},
-	{MENU_T_VARBIN | MENU_T_RIGHTBOUND,0,"Reg.55-64",NULL,{&menuVRegisters[7]},NULL,menuOnExitRegisterEdit},
+	{MENU_T_VARBINREG | MENU_T_RIGHTBOUND,0,"Reg.55-64",NULL,{&menuVRegisters[7]},NULL,menuOnExitRegisterEdit},
 };
 
 // --- MAIN --- MANUAL ----
@@ -721,7 +721,7 @@ uint8_t softKeyPrP(uint8_t arg){
 			// there is a program active: program current register set to program -> also resets current prog HW output
 			uint8_t newProg = prog_Display | 0x80; // set MSB to deactivate display but still keep prog nr
 			menuDisplaySaveMessage(register_toProgram(prog_Display, TRUE),prog_Display); // also reset prog_Display
-			prog_set(newProg); 
+			prog_set(newProg);
 		}
 	} else if (arg != 0) {
 		// shortpress: PROGR_MAX program
@@ -748,7 +748,7 @@ uint8_t softKeyPrSet(uint8_t arg) {
 	if ((arg != 0) && (prog_Display <= PROGR_MAX)) {
 		uint8_t newProg = prog_Display | 0x80; // set MSB to deactivate display but still keep prog nr
 		menuDisplaySaveMessage(register_toProgram(prog_Display, TRUE),prog_Display);
-		prog_set(newProg); 
+		prog_set(newProg);
 	}
 	return 0;
 }
@@ -1722,8 +1722,8 @@ void dataToNibbles(){
 		}
 		break;
 	case MENU_T_VARPROG:
-		nibble[0] = (dataEntry & 7) + 1;
-		nibble[1] = (dataEntry >> 3) + 1;
+		nibble[0] = (dataEntry >> 3) + 1;
+		nibble[1] = (dataEntry & 7) + 1;
 		break;
 	case MENU_T_VARREG:
 		// 0...63,0xFF -> 1...64,0
@@ -1879,8 +1879,8 @@ void nibbleToLCDstring(){
 		}
 		break;
 	case MENU_T_VARPROG:
-		lcdData[0] = '0' +nibble[0];
-		lcdData[1] = '@' +nibble[1];
+		lcdData[0] = '@' +nibble[0];
+		lcdData[1] = '0' +nibble[1];
 		lcdData[2] = '\0';
 		break;
 	case MENU_T_VARREG:
@@ -2170,7 +2170,7 @@ void nibbleToData(){
 		}
 		break;
 	case MENU_T_VARPROG:
-		dataEntry = (nibble[0]-1) | ((nibble[1]-1) << 3);
+		dataEntry = (nibble[1]-1) | ((nibble[0]-1) << 3);
 		break;
 	case MENU_T_VARREG:
 		dataEntry = (nibble[0] * 10 + nibble[1]) - 1;

@@ -4383,13 +4383,13 @@ dataToNibbles:
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
 	mov r25,r24
-	andi r25,lo8(7)
+	lsr r25
+	lsr r25
+	lsr r25
 	subi r25,lo8(-(1))
 	st Z,r25
 	.loc 1 1726 0
-	lsr r24
-	lsr r24
-	lsr r24
+	andi r24,lo8(7)
 	subi r24,lo8(-(1))
 	std Z+1,r24
 	.loc 1 1727 0
@@ -4882,12 +4882,12 @@ nibbleToLCDstring:
 	ld r24,X
 	ldi r30,lo8(lcdData)
 	ldi r31,hi8(lcdData)
-	subi r24,lo8(-(48))
+	subi r24,lo8(-(64))
 	st Z,r24
 	.loc 1 1883 0
 	adiw r26,1
 	ld r24,X
-	subi r24,lo8(-(64))
+	subi r24,lo8(-(48))
 	std Z+1,r24
 	.loc 1 1884 0
 	std Z+2,__zero_reg__
@@ -6045,8 +6045,8 @@ nibbleToData:
 	.loc 1 2173 0
 	ldi r30,lo8(nibble)
 	ldi r31,hi8(nibble)
-	ld r18,Z
-	ldd r25,Z+1
+	ldd r18,Z+1
+	ld r25,Z
 	mov r24,r25
 	ldi r25,0
 	sbiw r24,1
@@ -10591,7 +10591,7 @@ menu_register:
 	.word	menuVRegisters+6
 	.word	0
 	.word	gs(menuOnExitRegisterEdit)
-	.byte	-54
+	.byte	-50
 	.byte	0
 	.string	"Reg.55-64"
 	.word	0
@@ -11767,7 +11767,7 @@ menu_USBser:
 	.type	sw_version, @object
 	.size	sw_version, 6
 sw_version:
-	.string	"V0.80"
+	.string	"V0.81"
 	.comm	lcdData,10,1
 	.text
 .Letext0:

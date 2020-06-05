@@ -1157,20 +1157,20 @@ module_PowerControl:
 	cpi r24,lo8(18)
 	brne .L58
 .LBB110:
-	.loc 1 313 0
+	.loc 1 314 0
 	call module_TestAllInputs
 .LVL107:
-	.loc 1 314 0
+	.loc 1 315 0
 	cpse r24,__zero_reg__
 	rjmp .L59
-	.loc 1 316 0
+	.loc 1 317 0
 	ldi r24,lo8(20)
 .LVL108:
 	sts pipe_PowerStatus,r24
 	rjmp .L60
 .LVL109:
 .L59:
-	.loc 1 319 0
+	.loc 1 320 0
 	mov r20,r24
 	ldi r21,0
 	ldi r22,0
@@ -1178,21 +1178,21 @@ module_PowerControl:
 .LVL110:
 	call log_putError
 .LVL111:
-	.loc 1 320 0
+	.loc 1 321 0
 	in r24,0x5
 	andi r24,lo8(-65)
 	out 0x5,r24
-	.loc 1 321 0
+	.loc 1 322 0
 	ldi r24,lo8(-128)
 	sts pipe_PowerStatus,r24
 .L60:
-	.loc 1 324 0
+	.loc 1 325 0
 	ldi r24,lo8(-1)
 	sts swTimer+2,r24
 .LBE110:
 	ret
 .L58:
-	.loc 1 326 0
+	.loc 1 327 0
 	ldi r24,lo8(-1)
 	sts swTimer+2,r24
 	ret
@@ -1204,7 +1204,7 @@ module_PowerControl:
 	.type	softKey_WantLong, @function
 softKey_WantLong:
 .LFB31:
-	.loc 1 485 0
+	.loc 1 486 0
 	.cfi_startproc
 .LVL112:
 /* prologue: function */
@@ -1212,15 +1212,15 @@ softKey_WantLong:
 /* stack size = 0 */
 .L__stack_usage = 0
 .LBB111:
-	.loc 1 487 0
+	.loc 1 488 0
 	ldi r25,0
 	rjmp .L62
 .LVL113:
 .L65:
-	.loc 1 489 0
+	.loc 1 490 0
 	cpi r25,lo8(4)
 	brsh .L63
-	.loc 1 490 0
+	.loc 1 491 0
 	mov r30,r25
 	ldi r31,0
 	cpse r24,__zero_reg__
@@ -1230,21 +1230,21 @@ softKey_WantLong:
 .L66:
 	ldi r18,lo8(6)
 .L64:
-	.loc 1 490 0 is_stmt 0 discriminator 4
+	.loc 1 491 0 is_stmt 0 discriminator 4
 	subi r30,lo8(-(keyWants))
 	sbci r31,hi8(-(keyWants))
 	st Z,r18
 .L63:
-	.loc 1 487 0 is_stmt 1 discriminator 2
+	.loc 1 488 0 is_stmt 1 discriminator 2
 	subi r25,lo8(-(1))
 .LVL114:
 .L62:
-	.loc 1 487 0 is_stmt 0 discriminator 1
+	.loc 1 488 0 is_stmt 0 discriminator 1
 	cpi r25,lo8(6)
 	brlo .L65
 /* epilogue start */
 .LBE111:
-	.loc 1 494 0 is_stmt 1
+	.loc 1 495 0 is_stmt 1
 	ret
 	.cfi_endproc
 .LFE31:
@@ -1254,7 +1254,7 @@ softKey_WantLong:
 	.type	__vector_21, @function
 __vector_21:
 .LFB34:
-	.loc 1 590 0
+	.loc 1 591 0
 	.cfi_startproc
 	push r1
 .LCFI0:
@@ -1345,11 +1345,11 @@ __vector_21:
 /* frame size = 0 */
 /* stack size = 22 */
 .L__stack_usage = 22
-	.loc 1 592 0
+	.loc 1 593 0
 	in r24,0x5
 	ori r24,lo8(-128)
 	out 0x5,r24
-	.loc 1 594 0
+	.loc 1 595 0
 	lds r24,msecCtr
 	subi r24,lo8(-(1))
 	sts msecCtr,r24
@@ -1368,17 +1368,17 @@ __vector_21:
 .L70:
 .LBB130:
 .LBB131:
-	.loc 1 382 0
+	.loc 1 383 0
 	lds r24,adcNr
 	cpse r24,__zero_reg__
 	rjmp .L73
-	.loc 1 382 0
+	.loc 1 383 0
 	lds r25,122
-	.loc 1 382 0
+	.loc 1 383 0
 	sbrc r25,6
 	rjmp .L73
 .LBB132:
-	.loc 1 386 0
+	.loc 1 387 0
 	mov r18,r24
 	ldi r19,0
 	movw r30,r18
@@ -1392,24 +1392,24 @@ __vector_21:
 	sbci r31,hi8(-(adcKeys))
 	ldd r25,Z+1
 .LVL115:
-	.loc 1 387 0
+	.loc 1 388 0
 	lds r20,121
 .LVL116:
-	.loc 1 388 0
+	.loc 1 389 0
 	std Z+1,r20
 .LVL117:
 .LBB133:
 .LBB134:
-	.loc 1 335 0
+	.loc 1 336 0
 	cp r20,r25
 	brsh .L74
-	.loc 1 336 0
+	.loc 1 337 0
 	sub r25,r20
 .LVL118:
 	rjmp .L75
 .LVL119:
 .L74:
-	.loc 1 338 0
+	.loc 1 339 0
 	mov r21,r20
 	sub r21,r25
 	mov r25,r21
@@ -1417,65 +1417,65 @@ __vector_21:
 .L75:
 .LBE134:
 .LBE133:
-	.loc 1 389 0
+	.loc 1 390 0
 	cpi r25,lo8(4)
 	brlo .+2
 	rjmp .L73
 .LBB135:
-	.loc 1 392 0
+	.loc 1 393 0
 	cpse r24,__zero_reg__
 	rjmp .L103
-	.loc 1 395 0
+	.loc 1 396 0
 	cpi r20,lo8(34)
 	brlo .L95
-	.loc 1 397 0
+	.loc 1 398 0
 	cpi r20,lo8(63)
 	brlo .L96
-	.loc 1 399 0
+	.loc 1 400 0
 	cpi r20,lo8(104)
 	brlo .L97
-	.loc 1 401 0
+	.loc 1 402 0
 	cpi r20,lo8(-106)
 	brlo .L98
-	.loc 1 403 0
+	.loc 1 404 0
 	cpi r20,lo8(-65)
 	brlo .L99
-	.loc 1 405 0
+	.loc 1 406 0
 	cpi r20,lo8(-24)
 	brsh .L100
-	.loc 1 406 0
+	.loc 1 407 0
 	ldi r28,lo8(6)
 	rjmp .L76
 .L103:
-	.loc 1 413 0
+	.loc 1 414 0
 	ldi r28,lo8(-1)
 	rjmp .L76
 .L95:
-	.loc 1 396 0
+	.loc 1 397 0
 	ldi r28,lo8(4)
 	rjmp .L76
 .L96:
-	.loc 1 398 0
+	.loc 1 399 0
 	ldi r28,lo8(3)
 	rjmp .L76
 .L97:
-	.loc 1 400 0
+	.loc 1 401 0
 	ldi r28,lo8(5)
 	rjmp .L76
 .L98:
-	.loc 1 402 0
+	.loc 1 403 0
 	ldi r28,lo8(1)
 	rjmp .L76
 .L99:
-	.loc 1 404 0
+	.loc 1 405 0
 	ldi r28,lo8(2)
 	rjmp .L76
 .L100:
-	.loc 1 408 0
+	.loc 1 409 0
 	ldi r28,lo8(-1)
 .L76:
 .LVL121:
-	.loc 1 415 0
+	.loc 1 416 0
 	movw r30,r18
 	lsl r30
 	rol r31
@@ -1487,20 +1487,20 @@ __vector_21:
 	sbci r31,hi8(-(adcKeys))
 	ldd r29,Z+2
 .LVL122:
-	.loc 1 416 0
+	.loc 1 417 0
 	cp r29,r28
 	brne .+2
 	rjmp .L78
-	.loc 1 418 0
+	.loc 1 419 0
 	cpi r29,lo8(-1)
 	breq .L79
 	cpi r28,lo8(-1)
 	breq .L79
-	.loc 1 420 0
+	.loc 1 421 0
 	ldi r28,lo8(-1)
 .LVL123:
 .L79:
-	.loc 1 422 0
+	.loc 1 423 0
 	movw r30,r18
 	lsl r30
 	rol r31
@@ -1511,10 +1511,10 @@ __vector_21:
 	subi r30,lo8(-(adcKeys))
 	sbci r31,hi8(-(adcKeys))
 	std Z+2,r28
-	.loc 1 423 0
+	.loc 1 424 0
 	cpi r29,lo8(-1)
 	brne .L80
-	.loc 1 425 0
+	.loc 1 426 0
 	movw r24,r18
 	lsl r24
 	rol r25
@@ -1527,7 +1527,7 @@ __vector_21:
 	sbci r31,hi8(-(adcKeys))
 	std Z+5,__zero_reg__
 	std Z+4,__zero_reg__
-	.loc 1 426 0
+	.loc 1 427 0
 	movw r30,r24
 	add r30,r18
 	adc r31,r19
@@ -1536,7 +1536,7 @@ __vector_21:
 	subi r30,lo8(-(adcKeys))
 	sbci r31,hi8(-(adcKeys))
 	std Z+3,__zero_reg__
-	.loc 1 427 0
+	.loc 1 428 0
 	mov r30,r28
 	ldi r31,0
 	subi r30,lo8(-(keyWants-1))
@@ -1544,14 +1544,14 @@ __vector_21:
 	ld r24,Z
 	sbrs r24,0
 	rjmp .L73
-	.loc 1 428 0
+	.loc 1 429 0
 	mov r24,r28
 	call message_push
 .LVL124:
 	rjmp .L73
 .LVL125:
 .L80:
-	.loc 1 432 0
+	.loc 1 433 0
 	mov r30,r29
 	ldi r31,0
 	subi r30,lo8(-(keyWants-1))
@@ -1559,7 +1559,7 @@ __vector_21:
 	ld r24,Z
 	sbrs r24,1
 	rjmp .L73
-	.loc 1 433 0
+	.loc 1 434 0
 	movw r30,r18
 	lsl r30
 	rol r31
@@ -1573,18 +1573,18 @@ __vector_21:
 	andi r24,lo8(3)
 	breq .+2
 	rjmp .L73
-	.loc 1 435 0
+	.loc 1 436 0
 	mov r24,r29
 	call message_push
 .LVL126:
 	rjmp .L73
 .LVL127:
 .L78:
-	.loc 1 441 0
+	.loc 1 442 0
 	cpi r28,lo8(-1)
 	brne .+2
 	rjmp .L73
-	.loc 1 443 0
+	.loc 1 444 0
 	movw r30,r18
 	lsl r30
 	rol r31
@@ -1604,14 +1604,14 @@ __vector_21:
 	st X,r25
 	st -X,r24
 	sbiw r26,4
-	.loc 1 444 0
+	.loc 1 445 0
 	movw r30,r26
 	ldd r24,Z+4
 	ldd r25,Z+5
 	cpi r24,75
 	cpc r25,__zero_reg__
 	brne .L81
-	.loc 1 446 0
+	.loc 1 447 0
 	mov r30,r29
 	ldi r31,0
 	subi r30,lo8(-(keyWants-1))
@@ -1619,12 +1619,12 @@ __vector_21:
 	ld r24,Z
 	sbrs r24,2
 	rjmp .L81
-	.loc 1 447 0
+	.loc 1 448 0
 	mov r24,r28
 	ori r24,lo8(-128)
 	call message_push
 .LVL128:
-	.loc 1 448 0
+	.loc 1 449 0
 	lds r30,adcNr
 	ldi r24,lo8(6)
 	mul r30,r24
@@ -1635,7 +1635,7 @@ __vector_21:
 	ldi r24,lo8(2)
 	std Z+3,r24
 .L81:
-	.loc 1 451 0
+	.loc 1 452 0
 	mov r30,r29
 	ldi r31,0
 	subi r30,lo8(-(keyWants-1))
@@ -1643,7 +1643,7 @@ __vector_21:
 	ld r24,Z
 	sbrs r24,3
 	rjmp .L73
-	.loc 1 452 0
+	.loc 1 453 0
 	lds r24,adcNr
 	ldi r25,0
 	movw r30,r24
@@ -1658,7 +1658,7 @@ __vector_21:
 	ldd r18,Z+3
 	cpse r18,__zero_reg__
 	rjmp .L82
-	.loc 1 453 0
+	.loc 1 454 0
 	movw r30,r24
 	lsl r30
 	rol r31
@@ -1673,7 +1673,7 @@ __vector_21:
 	cpi r18,50
 	cpc r19,__zero_reg__
 	brne .L73
-	.loc 1 455 0
+	.loc 1 456 0
 	ldi r18,lo8(6)
 	mul r18,r24
 	movw r30,r0
@@ -1684,16 +1684,16 @@ __vector_21:
 	sbci r31,hi8(-(adcKeys))
 	ldi r24,lo8(1)
 	std Z+3,r24
-	.loc 1 456 0
+	.loc 1 457 0
 	std Z+5,__zero_reg__
 	std Z+4,__zero_reg__
-	.loc 1 457 0
+	.loc 1 458 0
 	mov r24,r28
 	call message_push
 .LVL129:
 	rjmp .L73
 .L82:
-	.loc 1 459 0
+	.loc 1 460 0
 	movw r30,r24
 	lsl r30
 	rol r31
@@ -1719,7 +1719,7 @@ __vector_21:
 	cpi r18,12
 	cpc r19,__zero_reg__
 	brne .L73
-	.loc 1 461 0
+	.loc 1 462 0
 	ldi r18,lo8(6)
 	mul r18,r24
 	movw r30,r0
@@ -1730,27 +1730,27 @@ __vector_21:
 	sbci r31,hi8(-(adcKeys))
 	std Z+5,__zero_reg__
 	std Z+4,__zero_reg__
-	.loc 1 462 0
+	.loc 1 463 0
 	mov r24,r28
 	call message_push
 .LVL130:
 .L73:
 .LBE135:
 .LBE132:
-	.loc 1 470 0
+	.loc 1 471 0
 	lds r24,adcNr
 	subi r24,lo8(-(1))
 	sts adcNr,r24
 	cpi r24,lo8(4)
 	brlo .L83
-	.loc 1 471 0
+	.loc 1 472 0
 	sts adcNr,__zero_reg__
 .L83:
-	.loc 1 474 0
+	.loc 1 475 0
 	lds r24,adcNr
 	cpse r24,__zero_reg__
 	rjmp .L102
-	.loc 1 475 0
+	.loc 1 476 0
 	ldi r25,0
 	movw r30,r24
 	lsl r30
@@ -1766,20 +1766,20 @@ __vector_21:
 	rjmp .L84
 .LVL132:
 .L102:
-	.loc 1 478 0
+	.loc 1 479 0
 	ldi r24,lo8(31)
 .L84:
 .LVL133:
-	.loc 1 480 0
+	.loc 1 481 0
 	mov r25,r24
 	andi r25,lo8(31)
 	ori r25,lo8(96)
 	sts 124,r25
-	.loc 1 481 0
+	.loc 1 482 0
 	ldi r30,lo8(123)
 	ldi r31,0
 	ld r18,Z
-	.loc 1 481 0
+	.loc 1 482 0
 	andi r24,lo8(32)
 .LVL134:
 	ldi r25,0
@@ -1787,12 +1787,12 @@ __vector_21:
 	ror r24
 	asr r25
 	ror r24
-	.loc 1 481 0
+	.loc 1 482 0
 	mov r25,r18
 	andi r25,lo8(-33)
 	or r24,r25
 	st Z,r24
-	.loc 1 482 0
+	.loc 1 483 0
 	ldi r30,lo8(122)
 	ldi r31,0
 	ld r24,Z
@@ -1802,23 +1802,23 @@ __vector_21:
 .L69:
 .LBE131:
 .LBE130:
-	.loc 1 597 0
+	.loc 1 598 0
 	lds r24,pipeProcessing
 	cpi r24,lo8(-128)
 	brne .+2
 	rjmp .L68
 .LBB136:
 .LBB137:
-	.loc 1 559 0
+	.loc 1 560 0
 	in r24,0x14
 	ori r24,lo8(7)
 	out 0x14,r24
-	.loc 1 560 0
+	.loc 1 561 0
 	in r24,0x14
 	andi r24,lo8(-5)
 	out 0x14,r24
 .LVL135:
-	.loc 1 562 0
+	.loc 1 563 0
 	lds r18,pipe_Module+1
 	com r18
 .LVL136:
@@ -1832,81 +1832,81 @@ __vector_21:
 .LVL137:
 .LBE139:
 .LBE138:
-	.loc 1 565 0
+	.loc 1 566 0
 	in r24,0x14
 	ori r24,lo8(4)
 	out 0x14,r24
-	.loc 1 563 0
+	.loc 1 564 0
 	ldi r25,lo8(32)
-	.loc 1 561 0
+	.loc 1 562 0
 	ldi r30,lo8(pipe+248)
 	ldi r31,hi8(pipe+248)
 .LVL138:
 .L85:
-	.loc 1 567 0
+	.loc 1 568 0
 	ldd r24,Z+3
 	std Z+2,r24
-	.loc 1 568 0
+	.loc 1 569 0
 	ldd r24,Z+4
 	std Z+3,r24
-	.loc 1 569 0
+	.loc 1 570 0
 	in r24,0x14
 	ori r24,lo8(1)
 	out 0x14,r24
-	.loc 1 570 0
+	.loc 1 571 0
 	ldd r24,Z+1
 	or r24,r18
 	out 0x8,r24
-	.loc 1 571 0
+	.loc 1 572 0
 	ldd r24,Z+5
 	std Z+4,r24
-	.loc 1 572 0
+	.loc 1 573 0
 	ldd r24,Z+6
 	std Z+5,r24
-	.loc 1 573 0
-	in r24,0
-	.loc 1 573 0
-	std Z+6,r24
 	.loc 1 574 0
+	in r24,0
+	.loc 1 574 0
+	std Z+6,r24
+	.loc 1 575 0
 	in r24,0x14
 	andi r24,lo8(-2)
 	out 0x14,r24
-	.loc 1 575 0
+	.loc 1 576 0
 	sbiw r30,8
 .LVL139:
-	.loc 1 576 0
+	.loc 1 577 0
 	subi r25,lo8(-(-1))
 .LVL140:
 	brne .L85
-	.loc 1 577 0
-/* #APP */
- ;  577 ".././hwtimer.c" 1
-	nop
- ;  0 "" 2
 	.loc 1 578 0
+/* #APP */
  ;  578 ".././hwtimer.c" 1
 	nop
  ;  0 "" 2
 	.loc 1 579 0
+ ;  579 ".././hwtimer.c" 1
+	nop
+ ;  0 "" 2
+	.loc 1 580 0
 /* #NOAPP */
 	in r24,0x14
 	ori r24,lo8(1)
 	out 0x14,r24
-	.loc 1 580 0
+	.loc 1 581 0
 	in r24,0x14
 	andi r24,lo8(-3)
 	out 0x14,r24
-	.loc 1 581 0
+	.loc 1 582 0
 	lds r24,pipeProcessing
 	ori r24,lo8(2)
 	sts pipeProcessing,r24
-	.loc 1 582 0
-	out 0x8,__zero_reg__
 	.loc 1 583 0
+	out 0x8,__zero_reg__
+	.loc 1 584 0
 	in r24,0xb
 	ori r24,lo8(-128)
 	out 0xb,r24
-	.loc 1 584 0
+	.loc 1 585 0
 	in r24,0x14
 	ori r24,lo8(2)
 	out 0x14,r24
@@ -1918,35 +1918,35 @@ __vector_21:
 .LBB140:
 .LBB141:
 .LBB142:
-	.loc 1 348 0
+	.loc 1 349 0
 	ld r24,Z
 	subi r24,lo8(-(-1))
 	cpi r24,lo8(-2)
 	brsh .L86
 .LBB143:
-	.loc 1 349 0
+	.loc 1 350 0
 	ldd r18,Z+1
 	subi r18,lo8(-(1))
 .LVL142:
-	.loc 1 350 0
+	.loc 1 351 0
 	cpi r18,lo8(5)
 	brlo .L87
 .LVL143:
-	.loc 1 353 0
+	.loc 1 354 0
 	st Z,r24
-	.loc 1 352 0
+	.loc 1 353 0
 	ldi r18,0
 .LVL144:
 .L87:
-	.loc 1 355 0
+	.loc 1 356 0
 	std Z+1,r18
 .LVL145:
 .L86:
 .LBE143:
-	.loc 1 357 0
+	.loc 1 358 0
 	adiw r30,2
 .LVL146:
-	.loc 1 347 0
+	.loc 1 348 0
 	subi r25,lo8(-(1))
 .LVL147:
 	rjmp .L71
@@ -1954,18 +1954,18 @@ __vector_21:
 .L93:
 	ldi r25,0
 .LBE142:
-	.loc 1 346 0
+	.loc 1 347 0
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
 .L71:
 .LVL149:
 .LBB144:
-	.loc 1 347 0
+	.loc 1 348 0
 	cpi r25,lo8(10)
 	brlo .L88
 .LVL150:
 .LBE144:
-	.loc 1 360 0
+	.loc 1 361 0
 	ldi r30,lo8(time_Uptime)
 	ldi r31,hi8(time_Uptime)
 .LVL151:
@@ -1975,13 +1975,13 @@ __vector_21:
 	cpi r24,lo8(-6)
 	breq .+2
 	rjmp .L68
-	.loc 1 362 0
+	.loc 1 363 0
 	ldi r24,lo8(-1)
 	sts time_UpTimeUpdated,r24
 .LVL152:
-	.loc 1 363 0
-	st Z,__zero_reg__
 	.loc 1 364 0
+	st Z,__zero_reg__
+	.loc 1 365 0
 	ldd r24,Z+1
 	subi r24,lo8(-(1))
 	std Z+1,r24
@@ -1989,9 +1989,9 @@ __vector_21:
 	brsh .+2
 	rjmp .L68
 .LVL153:
-	.loc 1 366 0
-	std Z+1,__zero_reg__
 	.loc 1 367 0
+	std Z+1,__zero_reg__
+	.loc 1 368 0
 	ldd r24,Z+2
 	subi r24,lo8(-(1))
 	std Z+2,r24
@@ -1999,39 +1999,39 @@ __vector_21:
 	brsh .+2
 	rjmp .L68
 .LVL154:
-	.loc 1 369 0
-	std Z+2,__zero_reg__
 	.loc 1 370 0
+	std Z+2,__zero_reg__
+	.loc 1 371 0
 	ldd r24,Z+3
 	subi r24,lo8(-(1))
 	std Z+3,r24
 	cpi r24,lo8(100)
 	brsh .+2
 	rjmp .L68
-	.loc 1 372 0
+	.loc 1 373 0
 	sts time_Uptime+3,__zero_reg__
 	rjmp .L68
 .LVL155:
 .L72:
 .LBE141:
 .LBE140:
-	.loc 1 602 0
+	.loc 1 603 0
 	lds r24,pipeProcessing
 	cpi r24,lo8(-128)
 	breq .L68
 .LVL156:
 .LBB145:
 .LBB146:
-	.loc 1 502 0
+	.loc 1 503 0
 	lds r14,pipe_Module
 	lds r24,pipe_ModuleTested
 	and r14,r24
 .LVL157:
 .LBB147:
-	.loc 1 503 0
+	.loc 1 504 0
 	mov r15,__zero_reg__
 .LBE147:
-	.loc 1 500 0
+	.loc 1 501 0
 	ldi r16,lo8(pipe)
 	ldi r17,hi8(pipe)
 	rjmp .L89
@@ -2039,66 +2039,66 @@ __vector_21:
 .L92:
 .LBB149:
 .LBB148:
-	.loc 1 524 0
+	.loc 1 525 0
 	movw r30,r16
 	ldd r28,Z+2
 .LVL159:
-	.loc 1 526 0
+	.loc 1 527 0
 	ldd r24,Z+3
 	mov r25,r28
 	and r25,r24
 .LVL160:
-	.loc 1 527 0
+	.loc 1 528 0
 	or r28,r24
 .LVL161:
-	.loc 1 528 0
+	.loc 1 529 0
 	ldd r24,Z+4
 	and r25,r24
 .LVL162:
-	.loc 1 529 0
+	.loc 1 530 0
 	or r28,r24
 .LVL163:
-	.loc 1 530 0
+	.loc 1 531 0
 	ldd r18,Z+5
 	and r25,r18
 .LVL164:
-	.loc 1 531 0
+	.loc 1 532 0
 	or r28,r18
 .LVL165:
-	.loc 1 532 0
+	.loc 1 533 0
 	ldd r24,Z+6
 	and r25,r24
 .LVL166:
-	.loc 1 533 0
+	.loc 1 534 0
 	or r28,r24
 .LVL167:
-	.loc 1 534 0
+	.loc 1 535 0
 	ldd r29,Z+7
 .LVL168:
-	.loc 1 535 0
+	.loc 1 536 0
 	and r28,r29
 .LVL169:
 	or r28,r25
 .LVL170:
-	.loc 1 536 0
+	.loc 1 537 0
 	std Z+7,r28
-	.loc 1 538 0
+	.loc 1 539 0
 	mov r24,r29
 .LVL171:
 	com r24
 	and r24,r28
 	and r24,r14
 .LVL172:
-	.loc 1 539 0
+	.loc 1 540 0
 	breq .L90
-	.loc 1 543 0
+	.loc 1 544 0
 	mov r25,r15
 .LVL173:
 	ori r25,lo8(32)
 	call pipeMsgPush
 .LVL174:
 .L90:
-	.loc 1 545 0
+	.loc 1 546 0
 	com r28
 .LVL175:
 	and r28,r29
@@ -2106,23 +2106,23 @@ __vector_21:
 	mov r24,r28
 	and r24,r14
 .LVL177:
-	.loc 1 546 0
+	.loc 1 547 0
 	breq .L91
-	.loc 1 550 0
+	.loc 1 551 0
 	mov r25,r15
 	call pipeMsgPush
 .LVL178:
 .L91:
-	.loc 1 552 0
+	.loc 1 553 0
 	subi r16,-8
 	sbci r17,-1
 .LVL179:
-	.loc 1 553 0
+	.loc 1 554 0
 	lds r24,pipeProcessing
 	ori r24,lo8(1)
 	sts pipeProcessing,r24
 .LBE148:
-	.loc 1 503 0
+	.loc 1 504 0
 	inc r15
 .LVL180:
 .L89:
@@ -2134,12 +2134,12 @@ __vector_21:
 .LBE149:
 .LBE146:
 .LBE145:
-	.loc 1 607 0
+	.loc 1 608 0
 	in r24,0x5
 	andi r24,lo8(127)
 	out 0x5,r24
 /* epilogue start */
-	.loc 1 609 0
+	.loc 1 610 0
 	pop r31
 	pop r30
 	pop r29
@@ -2173,14 +2173,14 @@ __vector_21:
 	.type	pipe_on, @function
 pipe_on:
 .LFB35:
-	.loc 1 613 0
+	.loc 1 614 0
 	.cfi_startproc
 .LVL182:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 614 0
+	.loc 1 615 0
 	mov r30,r24
 	ldi r31,0
 	lsl r30
@@ -2207,14 +2207,14 @@ pipe_on:
 	.type	pipe_off, @function
 pipe_off:
 .LFB36:
-	.loc 1 617 0
+	.loc 1 618 0
 	.cfi_startproc
 .LVL186:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 618 0
+	.loc 1 619 0
 	mov r30,r24
 	ldi r31,0
 	lsl r30
@@ -2579,7 +2579,7 @@ adcNr:
 	.uleb128 0x12
 	.long	.LASF114
 	.byte	0x1
-	.word	0x14d
+	.word	0x14e
 	.byte	0x1
 	.long	0x30
 	.byte	0x3
@@ -2587,12 +2587,12 @@ adcNr:
 	.uleb128 0x13
 	.long	.LASF38
 	.byte	0x1
-	.word	0x14d
+	.word	0x14e
 	.long	0x30
 	.uleb128 0x13
 	.long	.LASF39
 	.byte	0x1
-	.word	0x14d
+	.word	0x14e
 	.long	0x30
 	.byte	0
 	.uleb128 0x14
@@ -3326,7 +3326,7 @@ adcNr:
 	.uleb128 0x28
 	.long	.LASF60
 	.byte	0x1
-	.word	0x139
+	.word	0x13a
 	.long	0x30
 	.long	.LLST66
 	.uleb128 0x1e
@@ -3355,7 +3355,7 @@ adcNr:
 	.byte	0x1
 	.long	.LASF62
 	.byte	0x1
-	.word	0x1e5
+	.word	0x1e6
 	.byte	0x1
 	.long	.LFB31
 	.long	.LFE31
@@ -3368,7 +3368,7 @@ adcNr:
 	.uleb128 0x2f
 	.long	.LASF64
 	.byte	0x1
-	.word	0x1e5
+	.word	0x1e6
 	.long	0x30
 	.byte	0x1
 	.byte	0x68
@@ -3378,7 +3378,7 @@ adcNr:
 	.uleb128 0x29
 	.string	"i"
 	.byte	0x1
-	.word	0x1e7
+	.word	0x1e8
 	.long	0x30
 	.long	.LLST67
 	.byte	0
@@ -3386,35 +3386,35 @@ adcNr:
 	.uleb128 0x30
 	.long	.LASF70
 	.byte	0x1
-	.word	0x17d
+	.word	0x17e
 	.byte	0x3
 	.long	0xa14
 	.uleb128 0x10
 	.long	.LASF65
 	.byte	0x1
-	.word	0x1d9
+	.word	0x1da
 	.long	0x30
 	.uleb128 0x31
 	.uleb128 0x10
 	.long	.LASF66
 	.byte	0x1
-	.word	0x181
+	.word	0x182
 	.long	0x30
 	.uleb128 0x10
 	.long	.LASF67
 	.byte	0x1
-	.word	0x183
+	.word	0x184
 	.long	0x30
 	.uleb128 0x31
 	.uleb128 0x10
 	.long	.LASF68
 	.byte	0x1
-	.word	0x187
+	.word	0x188
 	.long	0x30
 	.uleb128 0x10
 	.long	.LASF69
 	.byte	0x1
-	.word	0x19f
+	.word	0x1a0
 	.long	0x30
 	.byte	0
 	.byte	0
@@ -3422,52 +3422,52 @@ adcNr:
 	.uleb128 0x30
 	.long	.LASF71
 	.byte	0x1
-	.word	0x22d
+	.word	0x22e
 	.byte	0x3
 	.long	0xa44
 	.uleb128 0x10
 	.long	.LASF72
 	.byte	0x1
-	.word	0x22e
+	.word	0x22f
 	.long	0x550
 	.uleb128 0x10
 	.long	.LASF73
 	.byte	0x1
-	.word	0x232
+	.word	0x233
 	.long	0x30
 	.uleb128 0x32
 	.string	"i"
 	.byte	0x1
-	.word	0x233
+	.word	0x234
 	.long	0x30
 	.byte	0
 	.uleb128 0x30
 	.long	.LASF74
 	.byte	0x1
-	.word	0x158
+	.word	0x159
 	.byte	0x3
 	.long	0xa84
 	.uleb128 0x10
 	.long	.LASF75
 	.byte	0x1
-	.word	0x159
+	.word	0x15a
 	.long	0xa84
 	.uleb128 0x10
 	.long	.LASF76
 	.byte	0x1
-	.word	0x167
+	.word	0x168
 	.long	0x201
 	.uleb128 0x31
 	.uleb128 0x32
 	.string	"i"
 	.byte	0x1
-	.word	0x15b
+	.word	0x15c
 	.long	0x30
 	.uleb128 0x31
 	.uleb128 0x10
 	.long	.LASF77
 	.byte	0x1
-	.word	0x15d
+	.word	0x15e
 	.long	0x30
 	.byte	0
 	.byte	0
@@ -3478,60 +3478,60 @@ adcNr:
 	.uleb128 0x30
 	.long	.LASF78
 	.byte	0x1
-	.word	0x1f2
+	.word	0x1f3
 	.byte	0x3
 	.long	0xb14
 	.uleb128 0x10
 	.long	.LASF72
 	.byte	0x1
-	.word	0x1f3
+	.word	0x1f4
 	.long	0x550
 	.uleb128 0x10
 	.long	.LASF79
-	.byte	0x1
-	.word	0x1f6
-	.long	0x30
-	.uleb128 0x31
-	.uleb128 0x10
-	.long	.LASF80
 	.byte	0x1
 	.word	0x1f7
 	.long	0x30
 	.uleb128 0x31
 	.uleb128 0x10
+	.long	.LASF80
+	.byte	0x1
+	.word	0x1f8
+	.long	0x30
+	.uleb128 0x31
+	.uleb128 0x10
 	.long	.LASF81
 	.byte	0x1
-	.word	0x1f9
+	.word	0x1fa
 	.long	0xb8
 	.uleb128 0x10
 	.long	.LASF82
 	.byte	0x1
-	.word	0x209
+	.word	0x20a
 	.long	0x30
 	.uleb128 0x10
 	.long	.LASF83
 	.byte	0x1
-	.word	0x20a
+	.word	0x20b
 	.long	0x30
 	.uleb128 0x10
 	.long	.LASF84
 	.byte	0x1
-	.word	0x20b
+	.word	0x20c
 	.long	0x201
 	.uleb128 0x10
 	.long	.LASF85
 	.byte	0x1
-	.word	0x216
+	.word	0x217
 	.long	0x30
 	.uleb128 0x10
 	.long	.LASF86
 	.byte	0x1
-	.word	0x217
+	.word	0x218
 	.long	0x30
 	.uleb128 0x10
 	.long	.LASF87
 	.byte	0x1
-	.word	0x21a
+	.word	0x21b
 	.long	0x30
 	.byte	0
 	.byte	0
@@ -3540,7 +3540,7 @@ adcNr:
 	.byte	0x1
 	.long	.LASF88
 	.byte	0x1
-	.word	0x24d
+	.word	0x24e
 	.byte	0x1
 	.long	.LFB34
 	.long	.LFE34
@@ -3552,7 +3552,7 @@ adcNr:
 	.long	.LBB130
 	.long	.LBE130
 	.byte	0x1
-	.word	0x254
+	.word	0x255
 	.long	0xc19
 	.uleb128 0x17
 	.long	.LBB131
@@ -3574,7 +3574,7 @@ adcNr:
 	.long	.LBB133
 	.long	.LBE133
 	.byte	0x1
-	.word	0x185
+	.word	0x186
 	.long	0xb97
 	.uleb128 0x1c
 	.long	0x274
@@ -3658,7 +3658,7 @@ adcNr:
 	.long	.LBB136
 	.long	.LBE136
 	.byte	0x1
-	.word	0x256
+	.word	0x257
 	.long	0xc89
 	.uleb128 0x17
 	.long	.LBB137
@@ -3677,7 +3677,7 @@ adcNr:
 	.long	.LBB138
 	.long	.LBE138
 	.byte	0x1
-	.word	0x234
+	.word	0x235
 	.uleb128 0x1c
 	.long	0x220
 	.long	.LLST79
@@ -3699,7 +3699,7 @@ adcNr:
 	.long	.LBB140
 	.long	.LBE140
 	.byte	0x1
-	.word	0x259
+	.word	0x25a
 	.long	0xcd8
 	.uleb128 0x17
 	.long	.LBB141
@@ -3729,7 +3729,7 @@ adcNr:
 	.long	.LBB145
 	.long	.LBE145
 	.byte	0x1
-	.word	0x25b
+	.word	0x25c
 	.uleb128 0x17
 	.long	.LBB146
 	.long	.LBE146
@@ -3782,7 +3782,7 @@ adcNr:
 	.byte	0x1
 	.long	.LASF89
 	.byte	0x1
-	.word	0x265
+	.word	0x266
 	.byte	0x1
 	.long	.LFB35
 	.long	.LFE35
@@ -3795,13 +3795,13 @@ adcNr:
 	.uleb128 0x37
 	.long	.LASF52
 	.byte	0x1
-	.word	0x265
+	.word	0x266
 	.long	0x30
 	.long	.LLST94
 	.uleb128 0x37
 	.long	.LASF90
 	.byte	0x1
-	.word	0x265
+	.word	0x266
 	.long	0x30
 	.long	.LLST95
 	.byte	0
@@ -3809,7 +3809,7 @@ adcNr:
 	.byte	0x1
 	.long	.LASF91
 	.byte	0x1
-	.word	0x269
+	.word	0x26a
 	.byte	0x1
 	.long	.LFB36
 	.long	.LFE36
@@ -3822,13 +3822,13 @@ adcNr:
 	.uleb128 0x37
 	.long	.LASF52
 	.byte	0x1
-	.word	0x269
+	.word	0x26a
 	.long	0x30
 	.long	.LLST96
 	.uleb128 0x37
 	.long	.LASF90
 	.byte	0x1
-	.word	0x269
+	.word	0x26a
 	.long	0x30
 	.long	.LLST97
 	.byte	0

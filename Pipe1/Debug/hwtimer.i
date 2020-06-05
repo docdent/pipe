@@ -2257,6 +2257,7 @@ void module_PowerControl(){
   {swTimer[1].counter = 250 / 20; swTimer[1].prescaler = (250 % 20) / 4;};
   }
  } else if (pipe_PowerStatus == 0x12) {
+
   uint8_t testResult = module_TestAllInputs();
   if (testResult == 0){
 
@@ -2265,9 +2266,9 @@ void module_PowerControl(){
 
    log_putError(5,0,testResult);
    
-# 320 ".././hwtimer.c" 3
+# 321 ".././hwtimer.c" 3
   (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 320 ".././hwtimer.c"
+# 321 ".././hwtimer.c"
   &= ~(1 << 6);
    pipe_PowerStatus = 0x80;
   }
@@ -2331,22 +2332,22 @@ static inline void timerTimers(){
 
 static inline void timerADC(){
  if ((adcNr < 1) && ((
-# 382 ".././hwtimer.c" 3
+# 383 ".././hwtimer.c" 3
                                  (*(volatile uint8_t *)(0x7A)) 
-# 382 ".././hwtimer.c"
+# 383 ".././hwtimer.c"
                                         & (1 << 
-# 382 ".././hwtimer.c" 3
+# 383 ".././hwtimer.c" 3
                                                 6
-# 382 ".././hwtimer.c"
+# 383 ".././hwtimer.c"
                                                     )) == 0)){
 
 
   uint8_t oldADC;
   oldADC = adcKeys[adcNr].ADCval;
   uint8_t newADC = 
-# 387 ".././hwtimer.c" 3
+# 388 ".././hwtimer.c" 3
                   (*(volatile uint8_t *)(0x79))
-# 387 ".././hwtimer.c"
+# 388 ".././hwtimer.c"
                       ;
   adcKeys[adcNr].ADCval = newADC;
   if (absDifference(oldADC,newADC) < 4) {
@@ -2441,35 +2442,35 @@ static inline void timerADC(){
   newMux = 0x1F;
  }
  
-# 480 ".././hwtimer.c" 3
+# 481 ".././hwtimer.c" 3
 (*(volatile uint8_t *)(0x7C)) 
-# 480 ".././hwtimer.c"
+# 481 ".././hwtimer.c"
       = ((1 << 
-# 480 ".././hwtimer.c" 3
+# 481 ".././hwtimer.c" 3
         6
-# 480 ".././hwtimer.c"
+# 481 ".././hwtimer.c"
         ) | (1 << 
-# 480 ".././hwtimer.c" 3
+# 481 ".././hwtimer.c" 3
         5
-# 480 ".././hwtimer.c"
+# 481 ".././hwtimer.c"
         )) | (newMux & 0x1F);
  
-# 481 ".././hwtimer.c" 3
+# 482 ".././hwtimer.c" 3
 (*(volatile uint8_t *)(0x7B)) 
-# 481 ".././hwtimer.c"
+# 482 ".././hwtimer.c"
        = (
-# 481 ".././hwtimer.c" 3
+# 482 ".././hwtimer.c" 3
           (*(volatile uint8_t *)(0x7B)) 
-# 481 ".././hwtimer.c"
+# 482 ".././hwtimer.c"
                  & ~0x20) | ((newMux & 0x20) >> 2);
  
-# 482 ".././hwtimer.c" 3
+# 483 ".././hwtimer.c" 3
 (*(volatile uint8_t *)(0x7A)) 
-# 482 ".././hwtimer.c"
+# 483 ".././hwtimer.c"
        |= (1 << 
-# 482 ".././hwtimer.c" 3
+# 483 ".././hwtimer.c" 3
                 6
-# 482 ".././hwtimer.c"
+# 483 ".././hwtimer.c"
                     );
 }
 
@@ -2494,7 +2495,7 @@ static inline void timerPipeProcess(){
  for (uint8_t shiftBitNr = 0; shiftBitNr < 32; shiftBitNr++) {
 
   PipeMessage_t myMessage;
-# 521 ".././hwtimer.c"
+# 522 ".././hwtimer.c"
   uint8_t newOnState = 0xFF;
   uint8_t newOffState = 0;
   uint8_t* pInByte = &(curPipe->pipeInM16);
@@ -2534,94 +2535,94 @@ static inline void timerPipeProcess(){
 static inline void timerPipeIO(){
  Pipe_t *curPipe;
  
-# 559 ".././hwtimer.c" 3
-(*(volatile uint8_t *)((0x14) + 0x20)) 
-# 559 ".././hwtimer.c"
-              |= ((1 << 0) | (1 << 1) | (1 << 2));
- 
 # 560 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
 # 560 ".././hwtimer.c"
+              |= ((1 << 0) | (1 << 1) | (1 << 2));
+ 
+# 561 ".././hwtimer.c" 3
+(*(volatile uint8_t *)((0x14) + 0x20)) 
+# 561 ".././hwtimer.c"
 &= ~(1 << 2);
  curPipe = &pipe[32 -1];
  uint8_t local_pipe_ModuleAssnWrite = ~pipe_Module.AssnWrite;
  uint8_t i = 32;
  _delay_us(0.5);
  
-# 565 ".././hwtimer.c" 3
+# 566 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 565 ".././hwtimer.c"
+# 566 ".././hwtimer.c"
 |= (1 << 2);
  do {
   curPipe->pipeInM16 = curPipe->pipeInM12;
   curPipe->pipeInM12 = curPipe->pipeInM8;
   
-# 569 ".././hwtimer.c" 3
+# 570 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 569 ".././hwtimer.c"
+# 570 ".././hwtimer.c"
  |= (1 << 0);
   
-# 570 ".././hwtimer.c" 3
+# 571 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 570 ".././hwtimer.c"
+# 571 ".././hwtimer.c"
               = curPipe->pipeOut | local_pipe_ModuleAssnWrite;
   curPipe->pipeInM8 = curPipe->pipeInM4;
   curPipe->pipeInM4 = curPipe->pipeIn;
   curPipe->pipeIn = 
-# 573 ".././hwtimer.c" 3
+# 574 ".././hwtimer.c" 3
                    (*(volatile uint8_t *)((0X00) + 0x20))
-# 573 ".././hwtimer.c"
+# 574 ".././hwtimer.c"
                              ;
   
-# 574 ".././hwtimer.c" 3
+# 575 ".././hwtimer.c" 3
  (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 574 ".././hwtimer.c"
+# 575 ".././hwtimer.c"
  &= ~(1 << 0);
   curPipe--;
  } while (--i > 0);
  asm("nop");
  asm("nop");
  
-# 579 ".././hwtimer.c" 3
-(*(volatile uint8_t *)((0x14) + 0x20)) 
-# 579 ".././hwtimer.c"
-|= (1 << 0);
- 
 # 580 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
 # 580 ".././hwtimer.c"
+|= (1 << 0);
+ 
+# 581 ".././hwtimer.c" 3
+(*(volatile uint8_t *)((0x14) + 0x20)) 
+# 581 ".././hwtimer.c"
 &= ~(1 << 1);
  pipeProcessing |= 0x02;
  
-# 582 ".././hwtimer.c" 3
+# 583 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 582 ".././hwtimer.c"
+# 583 ".././hwtimer.c"
              = 0;
  
-# 583 ".././hwtimer.c" 3
+# 584 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x0B) + 0x20)) 
-# 583 ".././hwtimer.c"
+# 584 ".././hwtimer.c"
 |= (1 << 7);
  
-# 584 ".././hwtimer.c" 3
+# 585 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x14) + 0x20)) 
-# 584 ".././hwtimer.c"
+# 585 ".././hwtimer.c"
 |= (1 << 1);
 }
 
 
 
 
-# 589 ".././hwtimer.c" 3
+# 590 ".././hwtimer.c" 3
 void __vector_21 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_21 (void)
 
-# 590 ".././hwtimer.c"
+# 591 ".././hwtimer.c"
 {
 
  
-# 592 ".././hwtimer.c" 3
+# 593 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 592 ".././hwtimer.c"
+# 593 ".././hwtimer.c"
          |= (1 << 7);
 
  switch (++msecCtr & 0x03) {
@@ -2638,9 +2639,9 @@ void __vector_21 (void) __attribute__ ((signal,used, externally_visible)) ; void
    break;
  }
  
-# 607 ".././hwtimer.c" 3
+# 608 ".././hwtimer.c" 3
 (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 607 ".././hwtimer.c"
+# 608 ".././hwtimer.c"
          &= ~(1 << 7);
 
 }
