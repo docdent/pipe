@@ -933,6 +933,15 @@ extern uint8_t count_Registers(uint8_t mode);
 
 
 
+typedef struct {
+ uint8_t ccInRegOn;
+ uint8_t ccInRegOff;
+ uint8_t ccOutRegOn;
+ uint8_t ccOutRegOff;
+} MidiCCreg_t;
+
+extern MidiCCreg_t midi_ccReg;
+
 
 
 
@@ -985,7 +994,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 265 ".././Midi.h"
+# 274 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{

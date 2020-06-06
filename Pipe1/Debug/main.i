@@ -1135,6 +1135,15 @@ extern uint8_t count_Registers(uint8_t mode);
 
 
 
+typedef struct {
+ uint8_t ccInRegOn;
+ uint8_t ccInRegOff;
+ uint8_t ccOutRegOn;
+ uint8_t ccOutRegOff;
+} MidiCCreg_t;
+
+extern MidiCCreg_t midi_ccReg;
+
 
 
 
@@ -1187,7 +1196,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 265 ".././Midi.h"
+# 274 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1595,6 +1604,7 @@ extern uint8_t eeprom_ReadRegOut();
 extern uint8_t eeprom_ReadProg();
 extern uint8_t eeprom_ReadSoftkeys();
 extern uint8_t eeprom_ReadMidiThrough();
+extern uint8_t eeprom_ReadCCreg();
 
 extern void eeprom_UpdateManualMap();
 extern void eeprom_UpdateMidiInMap();
@@ -1606,19 +1616,11 @@ extern void eeprom_UpdateRegOut();
 extern void eeprom_UpdateProg();
 extern void eeprom_UpdateSoftkeys();
 extern void eeprom_UpdateMidiThrough();
-
+extern void eeprom_UpdateCCreg();
 extern void eeprom_Backup();
 extern void eeprom_Restore();
 extern void eeprom_UpdateALL();
-# 86 ".././ee_prom.h"
-typedef struct{
- uint8_t label;
- uint8_t version;
- uint16_t sizeData;
- uint16_t crcData;
- uint8_t data;
-} ee_dataBlockBasic;
-
+# 96 ".././ee_prom.h"
 typedef struct{
  uint8_t label;
  uint8_t version;
@@ -1663,6 +1665,9 @@ typedef struct{
  uint8_t charRegOut;
  RegOut_t reg_Out[8];
  uint16_t regOut_crc;
+ uint8_t charMidiCCreg;
+ MidiCCreg_t midi_CCreg;
+ uint16_t midiCCreg_crc;
  uint8_t charEnd;
 } Ee_t;
 
@@ -1679,11 +1684,11 @@ typedef struct{
 } EECompl_t;
 
 extern 
-# 153 ".././ee_prom.h" 3
+# 158 ".././ee_prom.h" 3
       __attribute__((section(".eeprom"))) 
-# 153 ".././ee_prom.h"
+# 158 ".././ee_prom.h"
             EECompl_t ee;
-# 165 ".././ee_prom.h"
+# 170 ".././ee_prom.h"
 extern uint8_t ee_initError;
 # 29 ".././main.c" 2
 # 1 ".././log.h" 1
@@ -1827,7 +1832,7 @@ typedef struct{
  uint8_t errNr;
  char text[16];
  } ErrorText_t;
-# 89 ".././log.h"
+# 91 ".././log.h"
 extern uint8_t log_unreadErrors;
 # 30 ".././main.c" 2
 

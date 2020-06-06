@@ -38,6 +38,7 @@ extern uint8_t eeprom_ReadRegOut();
 extern uint8_t eeprom_ReadProg();
 extern uint8_t eeprom_ReadSoftkeys();
 extern uint8_t eeprom_ReadMidiThrough();
+extern uint8_t eeprom_ReadCCreg();
 
 extern void eeprom_UpdateManualMap();
 extern void eeprom_UpdateMidiInMap();
@@ -49,7 +50,7 @@ extern void eeprom_UpdateRegOut();
 extern void eeprom_UpdateProg();
 extern void eeprom_UpdateSoftkeys();
 extern void eeprom_UpdateMidiThrough();
-
+extern void eeprom_UpdateCCreg();
 extern void eeprom_Backup();
 extern void eeprom_Restore();
 extern void eeprom_UpdateALL();
@@ -69,6 +70,7 @@ extern void eeprom_UpdateALL();
 #define EE_CHAR_SOFTKEYS 'K'
 #define EE_CHAR_MIDITHROUGH 'T'
 #define EE_CHAR_REGOUT 'r'
+#define EE_CHAR_CC 'C'
 #define EE_NR_MANUALMAP 0
 #define EE_NR_MIDIINMAP 1
 #define EE_NR_MIDIOUTMAP 2
@@ -83,13 +85,13 @@ extern void eeprom_UpdateALL();
 
 
 // startcode; (label, version, size16(data), crc(data), data),  (label, version, size16(data), crc(data), data)... endcode
-typedef struct{
-	uint8_t label;
-	uint8_t version;
-	uint16_t sizeData;
-	uint16_t crcData;
-	uint8_t data; // [0...sizeData-1]
-} ee_dataBlockBasic; // caution: struct is supposed as is and hard coded in functions!
+// typedef struct{
+// 	uint8_t label;
+// 	uint8_t version;
+// 	uint16_t sizeData;
+// 	uint16_t crcData;
+// 	uint8_t data; // [0...sizeData-1]
+// } ee_dataBlockBasic; // caution: struct is supposed as is and hard coded in functions!
 
 typedef struct{
 	uint8_t label;
@@ -135,6 +137,9 @@ typedef struct{
 	uint8_t charRegOut;
 	RegOut_t reg_Out[REGOUT_LEN];
 	uint16_t regOut_crc;
+	uint8_t charMidiCCreg;
+	MidiCCreg_t midi_CCreg;
+	uint16_t midiCCreg_crc;
 	uint8_t charEnd; // only for debugging
 } Ee_t;
 

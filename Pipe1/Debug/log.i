@@ -280,7 +280,7 @@ typedef struct{
  uint8_t errNr;
  char text[16];
  } ErrorText_t;
-# 89 ".././log.h"
+# 91 ".././log.h"
 extern uint8_t log_unreadErrors;
 # 10 ".././log.c" 2
 # 1 ".././hwtimer.h" 1
@@ -815,6 +815,7 @@ const __flash ErrorText_t ErrorText[] = {
  {1,6, "EE:Programs"},
  {1,7, "EE:Softkeys"},
  {1,8, "EE:MidiThru"},
+ {1,9, "EE:RegOut"},
  {2,0, "Mod:Fail"},
  {2,1, "Mod:UnknowInp"},
  {3,0, "OVFL:MidiIn"},
@@ -833,9 +834,9 @@ const __flash char* log_getErrorText(uint8_t logNr){
  LogList_t* pLogEntry;
  pLogEntry = log_getLog(logNr);
  if (pLogEntry != 
-# 49 ".././log.c" 3 4
+# 50 ".././log.c" 3 4
                  ((void *)0)
-# 49 ".././log.c"
+# 50 ".././log.c"
                      ){
   uint8_t errCat = pLogEntry->logCategory;
   uint8_t errNr = pLogEntry->logNr;
@@ -846,9 +847,9 @@ const __flash char* log_getErrorText(uint8_t logNr){
   }
  }
  return 
-# 58 ".././log.c" 3 4
+# 59 ".././log.c" 3 4
        ((void *)0)
-# 58 ".././log.c"
+# 59 ".././log.c"
            ;
 }
 
@@ -865,9 +866,9 @@ void log_putInfo(uint8_t LogCat, uint8_t LogNr, uint16_t LogInfo){
 }
 
 const char stringLog [] 
-# 73 ".././log.c" 3
+# 74 ".././log.c" 3
                        __attribute__((__progmem__)) 
-# 73 ".././log.c"
+# 74 ".././log.c"
                                = "Log: ";
 
 void log_put(uint8_t LogCat, uint8_t LogNr, uint16_t LogInfo, uint8_t logType){
@@ -909,9 +910,9 @@ LogList_t* log_getLog(uint8_t index) {
  if (index >= log_count()) {
 
   return 
-# 113 ".././log.c" 3 4
+# 114 ".././log.c" 3 4
         ((void *)0)
-# 113 ".././log.c"
+# 114 ".././log.c"
             ;
  } else {
   if (pLogStart + index <= &(log_List[40 -1])) {
@@ -931,9 +932,9 @@ void logCheckUnreadErrorLogs(){
   while (nrOfMEssage-- > 0) {
    pLog = log_getLog(nrOfMEssage);
    if ((pLog != 
-# 131 ".././log.c" 3 4
+# 132 ".././log.c" 3 4
                ((void *)0)
-# 131 ".././log.c"
+# 132 ".././log.c"
                    ) && (pLog->logStatus != 0x20) && (pLog->logType == 'E')) {
 
     log_unreadErrors = 0xFF;
@@ -947,9 +948,9 @@ char* log_getShortTextFromPtr(LogList_t* pLogEntry, char changeNotifyStatus){
  char* pChar;
  pChar = &(Log_TextBuff[0]);
  if (pLogEntry != 
-# 143 ".././log.c" 3 4
+# 144 ".././log.c" 3 4
                  ((void *)0)
-# 143 ".././log.c"
+# 144 ".././log.c"
                      ){
 
   if (pLogEntry->uptime[3] != 0) {
@@ -1017,18 +1018,18 @@ char* log_getShortTextFromPtr(LogList_t* pLogEntry, char changeNotifyStatus){
 }
 
 const char nullLog [] 
-# 209 ".././log.c" 3
+# 210 ".././log.c" 3
                      __attribute__((__progmem__)) 
-# 209 ".././log.c"
+# 210 ".././log.c"
                              = "-";
 
 char* log_getShortTextFromIndex(uint8_t index, char changeNotifyStatus){
  LogList_t* pLogEntry;
  pLogEntry = log_getLog(index);
  if (pLogEntry != 
-# 214 ".././log.c" 3 4
+# 215 ".././log.c" 3 4
                  ((void *)0)
-# 214 ".././log.c"
+# 215 ".././log.c"
                      ){
   return log_getShortTextFromPtr(pLogEntry,changeNotifyStatus);
  } else {

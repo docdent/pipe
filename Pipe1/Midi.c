@@ -54,6 +54,7 @@ uint8_t registerCount; // nr of valid registers
 ProgramInfo_t programMap[PROGRAM_COUNT]; // for each register one bit
 MidiThrough_t midiThrough;
 uint8_t midi_RegisterChanged;
+MidiCCreg_t midi_ccReg; // store MIDI CC number for register on/off midi commands
 
 // ------------------------------------ M I D I   G E N E R A L --------------------------------------
 
@@ -416,6 +417,14 @@ void init_Registers(){
 		}
 		log_putError(LOG_CAT_EE,LOG_CATEE_PROGRAM,0);
 	}
+	// try to get MIDI cc for Register On/Off
+	if (eeprom_ReadCCreg() == EE_LOAD_ERROR){
+		midi_ccReg.ccInRegOff = 0xFF;
+		midi_ccReg.ccInRegOn = 0xFF;
+		midi_ccReg.ccOutRegOff = 0xFF;
+		midi_ccReg.ccOutRegOn= 0xFF;
+		log_putError(LOG_CAT_EE,LOG_CATEE_CCREG,0);
+	}
 }
 
 ModulBitError_t regNr_to_moduleBit(uint8_t regNr){
@@ -740,7 +749,7 @@ RegOut_t reg_Out[REGOUT_LEN] = {{LCD_LINE1+1,'1',10,14},{LCD_LINE1+6,' ',15,18},
 void init_RegOut(){
 	if (eeprom_ReadRegOut() == EE_LOAD_ERROR) {
 		// load some default values for my organ -> alredy done in array declaration
-	}
+		log_putError(LOG_CAT_EE,LOG_CATEE_REGOUT,0);	}
 }
 
 void reg_toLCD(uint8_t readHWonly){

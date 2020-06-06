@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.81";
+const char sw_version [] PROGMEM = "V0.82";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -200,6 +200,13 @@ const __flash Menu_t menu_key[] =
 {MENU_T_MENU,MENU_FLAG_ENTER_STORED_MENU,MENUTEXT_KEY3,menu_selFunc,{.tag=MENU_VAL_KEY3},menuOnEnterKey,menuOnExitKey},
 {MENU_T_MENU_R,MENU_FLAG_ENTER_STORED_MENU,MENUTEXT_KEY4,menu_selFunc,{.tag=MENU_VAL_KEY4},menuOnEnterKey,menuOnExitKey}};
 
+// --- MAIN --- MIDI --- CCREG
+const __flash Menu_t menu_midiCCreg[] =
+{{MENU_T_VARBYTE | MENU_T_LEFTBOUND,0,"RegOn_I",NULL,{&(midi_ccReg.ccInRegOn)},NULL,NULL},
+{MENU_T_VARBYTE, 0,"RegOff_I",NULL,{&(midi_ccReg.ccInRegOff)},NULL,NULL},
+{MENU_T_VARBYTE, 0,"RegOn_O",NULL,{&(midi_ccReg.ccOutRegOn)},NULL,NULL},
+{MENU_T_VARBYTE | MENU_T_RIGHTBOUND,0,"RegOff_O",NULL,{&(midi_ccReg.ccOutRegOff)},NULL,NULL}};
+
 // --- MAIN --- MIDI --- MIDIIN --- CHANNEL --- SECTION ---
 const __flash Menu_t menu_midiInVar[] =
 {{MENU_T_VARMANUAL | MENU_T_LEFTBOUND,MENU_FLAG_DATAOFFSET | MENU_FLAG_ALLOWINVALD,"Manual",NULL,{&(midiInMap[0][0].manual)},NULL,NULL},
@@ -241,6 +248,7 @@ uint8_t menuOnExitMidiIn(uint8_t arg);
 uint8_t menuOnExitMidiOut(uint8_t arg);
 uint8_t menu_OnEnterMidiPanic(uint8_t arg);
 uint8_t menuOnExitMidiActiveSense(uint8_t arg);
+uint8_t menuOnExitMidiCCreg(uint8_t arg);
 const __flash Menu_t menu_midi[] =
 	{{MENU_T_MENU_L,0,"NotesOff",NULL,{NULL},menu_OnEnterMidiPanic,NULL},
 	{MENU_T_MENU,0,"MIDIin",menu_midiIn,{NULL},NULL,menuOnExitMidiIn},
@@ -250,6 +258,7 @@ const __flash Menu_t menu_midi[] =
 	{MENU_T_VARONOFF,0,"Accept PC",NULL,{&(midi_Setting.AcceptProgChange)},NULL,menuOnExitMidiActiveSense},
 	{MENU_T_VARONOFF,0,"Act.Sense",NULL,{&(midi_Setting.TxActivceSense)},NULL,menuOnExitMidiActiveSense},
 	{MENU_T_VARONOFF,0,"VelZ4Off",NULL,{&(midi_Setting.VelZero4Off)},NULL,menuOnExitMidiActiveSense},
+	{MENU_T_MENU,0,"MIDI-CC",menu_midiCCreg,{NULL},NULL,menuOnExitMidiCCreg},
 	{MENU_T_VARDEC,MENU_FLAG_READONLY,"RxBufUse",NULL,{&(midiRxBuffUsage)},NULL,NULL},	// V0.70 midi buffer usage
 	{MENU_T_VARDEC | MENU_T_RIGHTBOUND,MENU_FLAG_READONLY,"TxBufUse",NULL,{&(midiTxBuffUsage)},NULL,NULL}};
 
@@ -466,6 +475,13 @@ uint8_t displayMenuMessage_P(const __flash char* pMessage);
 void menuCheckArrowDown();
 
 //*************************** I N D I V I D U A L   S O F T K E Y   F U N C T I O N S ******************************
+
+uint8_t menuOnExitMidiCCreg(uint8_t arg){
+	(void) arg;
+	eeprom_UpdateCCreg();
+	return 0;
+}
+
 
 uint8_t menuOnExitRegisterOut(uint8_t arg){
 	(void) arg;

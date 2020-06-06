@@ -29,6 +29,7 @@ const __flash ErrorText_t ErrorText[] = {
 	{LOG_CAT_EE,LOG_CATEE_PROGRAM,				"EE:Programs"},
 	{LOG_CAT_EE,LOG_CATEE_SOFTKEY,				"EE:Softkeys"},
 	{LOG_CAT_EE,LOG_CATEE_MIDITHROUGH,			"EE:MidiThru"},
+	{LOG_CAT_EE,LOG_CATEE_REGOUT,				"EE:RegOut"},
 	{LOG_CAT_MODULES,LOG_CATMODULES_NOTWORKING,	"Mod:Fail"},
 	{LOG_CAT_MODULES,LOG_CATMODULES_UNKNOWNINP,	"Mod:UnknowInp"},
 	{LOG_CAT_SERIAL,LOG_CAT_SERIALMIDIINOVFL,	"OVFL:MidiIn"},
@@ -143,7 +144,7 @@ char* log_getShortTextFromPtr(LogList_t* pLogEntry,  char changeNotifyStatus){
 	if (pLogEntry != NULL){
 		// 0..4: xxhxx, xxmxx, xxsxx
 		if (pLogEntry->uptime[3] != 0) {
-			// hout entry
+			// hour entry
 			pChar = putChar_Dec2(pLogEntry->uptime[3], pChar);
 			*(pChar++) = 'h';
 			pChar = putChar_Dec2(pLogEntry->uptime[2], pChar);

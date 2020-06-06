@@ -199,6 +199,7 @@ uint8_t eeprom_ReadMidiOutMap(){
 uint8_t eeprom_ReadModules(){
 	if ((eeprom_read_word(&ee.eeData.ee.moduleInstalled_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.moduleAssignRead, sizeof (ee.eeData.ee.moduleAssignRead))
 		&& eeprom_read_byte(&ee.eeData.ee.charModInst) == EE_CHAR_MODULEINSTALLED))  {
+		// flaw: crc ist for moduleAssignRead only ?
 		// stored crc16 is ok
 		pipe_Module.AssnRead = eeprom_read_byte(&ee.eeData.ee.moduleAssignRead);
 		pipe_Module.AssnWrite = eeprom_read_byte(&ee.eeData.ee.moduleAssignWrite);
@@ -280,6 +281,18 @@ uint8_t eeprom_ReadRegOut(){
 		return (EE_LOAD_ERROR);
 	}
 }
+
+uint8_t eeprom_ReadCCreg(){
+	if ((eeprom_read_word(&ee.eeData.ee.midiCCreg_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.midi_CCreg, sizeof (midi_ccReg)))){
+		// stored crc is ok
+		eeprom_read_block((uint8_t*) &midi_ccReg, (uint8_t*) &ee.eeData.ee.midi_CCreg, sizeof (ee.eeData.ee.midi_CCreg));
+		return(EE_LOAD_OK);
+	} else {
+		ee_initError |= EE_ERROR_REG;
+		return (EE_LOAD_ERROR);
+	}
+}
+
 
 void eepromWriteSignature(){
 	eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charStart),EE_CHAR_START);
@@ -391,6 +404,17 @@ void eeprom_UpdateRegOut(){
 	lcd_waitSymbolOff();
 }
 
+void eeprom_UpdateCCreg(){
+	uint16_t crc = crc16_ram((uint8_t*) &midi_ccReg, sizeof(midi_ccReg));
+	lcd_waitSymbolOn();
+	eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charMidiCCreg), EE_CHAR_CC);
+	eeprom_update_block((uint8_t*) &midi_ccReg, (uint8_t*) &ee.eeData.ee.midi_CCreg, sizeof(midi_ccReg));
+	eeprom_update_word(&(ee.eeData.ee.midiCCreg_crc), crc);
+	eepromWriteSignature();
+	lcd_waitSymbolOff();
+}
+
+
 void eeprom_UpdateALL(){
 	eeprom_UpdateManualMap();
 	eeprom_UpdateMidiInMap();
@@ -402,6 +426,7 @@ void eeprom_UpdateALL(){
 	eeprom_UpdateSoftkeys();
 	eeprom_UpdateMidiThrough();
 	eeprom_UpdateRegOut();
+	eeprom_UpdateCCreg();
 }
 
 

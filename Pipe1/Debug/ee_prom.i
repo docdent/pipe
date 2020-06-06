@@ -1009,6 +1009,15 @@ extern uint8_t count_Registers(uint8_t mode);
 
 
 
+typedef struct {
+ uint8_t ccInRegOn;
+ uint8_t ccInRegOff;
+ uint8_t ccOutRegOn;
+ uint8_t ccOutRegOff;
+} MidiCCreg_t;
+
+extern MidiCCreg_t midi_ccReg;
+
 
 
 
@@ -1061,7 +1070,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 265 ".././Midi.h"
+# 274 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1219,6 +1228,7 @@ extern uint8_t eeprom_ReadRegOut();
 extern uint8_t eeprom_ReadProg();
 extern uint8_t eeprom_ReadSoftkeys();
 extern uint8_t eeprom_ReadMidiThrough();
+extern uint8_t eeprom_ReadCCreg();
 
 extern void eeprom_UpdateManualMap();
 extern void eeprom_UpdateMidiInMap();
@@ -1230,19 +1240,11 @@ extern void eeprom_UpdateRegOut();
 extern void eeprom_UpdateProg();
 extern void eeprom_UpdateSoftkeys();
 extern void eeprom_UpdateMidiThrough();
-
+extern void eeprom_UpdateCCreg();
 extern void eeprom_Backup();
 extern void eeprom_Restore();
 extern void eeprom_UpdateALL();
-# 86 ".././ee_prom.h"
-typedef struct{
- uint8_t label;
- uint8_t version;
- uint16_t sizeData;
- uint16_t crcData;
- uint8_t data;
-} ee_dataBlockBasic;
-
+# 96 ".././ee_prom.h"
 typedef struct{
  uint8_t label;
  uint8_t version;
@@ -1287,6 +1289,9 @@ typedef struct{
  uint8_t charRegOut;
  RegOut_t reg_Out[8];
  uint16_t regOut_crc;
+ uint8_t charMidiCCreg;
+ MidiCCreg_t midi_CCreg;
+ uint16_t midiCCreg_crc;
  uint8_t charEnd;
 } Ee_t;
 
@@ -1303,11 +1308,11 @@ typedef struct{
 } EECompl_t;
 
 extern 
-# 153 ".././ee_prom.h" 3
+# 158 ".././ee_prom.h" 3
       __attribute__((section(".eeprom"))) 
-# 153 ".././ee_prom.h"
+# 158 ".././ee_prom.h"
             EECompl_t ee;
-# 165 ".././ee_prom.h"
+# 170 ".././ee_prom.h"
 extern uint8_t ee_initError;
 # 16 ".././ee_prom.c" 2
 # 31 ".././ee_prom.c"
@@ -1487,6 +1492,7 @@ uint8_t eeprom_ReadModules(){
  if ((eeprom_read_word(&ee.eeData.ee.moduleInstalled_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.moduleAssignRead, sizeof (ee.eeData.ee.moduleAssignRead))
   && eeprom_read_byte(&ee.eeData.ee.charModInst) == 'i')) {
 
+
   pipe_Module.AssnRead = eeprom_read_byte(&ee.eeData.ee.moduleAssignRead);
   pipe_Module.AssnWrite = eeprom_read_byte(&ee.eeData.ee.moduleAssignWrite);
   return (0x00);
@@ -1567,6 +1573,18 @@ uint8_t eeprom_ReadRegOut(){
   return (0xFF);
  }
 }
+
+uint8_t eeprom_ReadCCreg(){
+ if ((eeprom_read_word(&ee.eeData.ee.midiCCreg_crc) == crc16_eeprom((uint8_t*) &ee.eeData.ee.midi_CCreg, sizeof (midi_ccReg)))){
+
+  eeprom_read_block((uint8_t*) &midi_ccReg, (uint8_t*) &ee.eeData.ee.midi_CCreg, sizeof (ee.eeData.ee.midi_CCreg));
+  return(0x00);
+ } else {
+  ee_initError |= 0x20;;
+  return (0xFF);
+ }
+}
+
 
 void eepromWriteSignature(){
  eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charStart),0);
@@ -1678,6 +1696,17 @@ void eeprom_UpdateRegOut(){
  lcd_waitSymbolOff();
 }
 
+void eeprom_UpdateCCreg(){
+ uint16_t crc = crc16_ram((uint8_t*) &midi_ccReg, sizeof(midi_ccReg));
+ lcd_waitSymbolOn();
+ eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charMidiCCreg), 'C');
+ eeprom_update_block((uint8_t*) &midi_ccReg, (uint8_t*) &ee.eeData.ee.midi_CCreg, sizeof(midi_ccReg));
+ eeprom_update_word(&(ee.eeData.ee.midiCCreg_crc), crc);
+ eepromWriteSignature();
+ lcd_waitSymbolOff();
+}
+
+
 void eeprom_UpdateALL(){
  eeprom_UpdateManualMap();
  eeprom_UpdateMidiInMap();
@@ -1689,6 +1718,7 @@ void eeprom_UpdateALL(){
  eeprom_UpdateSoftkeys();
  eeprom_UpdateMidiThrough();
  eeprom_UpdateRegOut();
+ eeprom_UpdateCCreg();
 }
 
 

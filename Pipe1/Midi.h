@@ -194,6 +194,15 @@ extern uint8_t count_Registers(uint8_t mode);
 
 #define REGISTER_GROUP_COUNT 8
 
+typedef struct {
+	uint8_t ccInRegOn;
+	uint8_t ccInRegOff;
+	uint8_t ccOutRegOn;
+	uint8_t ccOutRegOff;	
+} MidiCCreg_t;
+
+extern MidiCCreg_t midi_ccReg;
+
 //----------------------- PROGRAM ---------------------
 #define PROGR_NONE 0xFF
 #define PROGR_MAX 63

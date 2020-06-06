@@ -430,7 +430,7 @@ int main(void)
 		if MIDI_RX_BUFFER_NONEMPTY {
 			midiIn_Process(serial1MIDIReadRx());
 		}
-		//----------------------- MIDI OUT -----------------------------
+		//----------------------- PIPE KEY PROCESSING -> MIDI OUT -----------------------------
 		if MESSAGE_PIPE_PENDING	{
 			midiKeyPress_Process(pipeMsgGet()); // events from module read (->midi out, couplers)
 		}
