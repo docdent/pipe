@@ -59,10 +59,6 @@ init_iopins:
 	in r24,0x5
 	andi r24,lo8(-65)
 	out 0x5,r24
-	.loc 1 25 0
-	in r24,0x4
-	ori r24,lo8(48)
-	out 0x4,r24
 	ret
 	.cfi_endproc
 .LFE0:

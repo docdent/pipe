@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.82";
+const char sw_version [] PROGMEM = "V0.84";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -651,9 +651,9 @@ void send_progrChange_toMidiThru(uint8_t program){
 		// check if it is a valid program nr
 		if (midiThrough.OutChannel != MIDI_CHANNEL_NONE) {
 			// only if out channel is valid: do as in midiKeyPress_Process
-			serial1MIDISend(MIDI_PRGCHG | midiThrough.OutChannel);
+			serial1MIDISendCmd(MIDI_PRGCHG,midiThrough.OutChannel);
 			// if note off: use note on an velocity = 0 to turn off note (less bytes !)
-			serial1MIDISend(program);
+			serial1MIDISendData(program);
 		} // maybe chekc if invalid program nr should be sent as all tones of?
 	}
 }

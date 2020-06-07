@@ -776,6 +776,9 @@ extern volatile uint16_t midiRxBytesCount;
 # 143 ".././serial.h"
 extern void init_Serial1MIDI();
 extern void serial1MIDISend(uint8_t data);
+extern void serial1MIDISendCmd(uint8_t cmd, uint8_t channel);
+extern void serial1MIDISendData(uint8_t data);
+
 extern uint8_t serial1MIDIReadRx();
 
 extern volatile uint8_t midiRxInIndex;
@@ -793,7 +796,7 @@ extern volatile uint8_t midiRxBuffUsage;
 extern volatile uint8_t midiTxBuffUsage;
 
 extern volatile uint8_t midiTxLastCmd;
-# 173 ".././serial.h"
+# 176 ".././serial.h"
 extern uint8_t midi_ExtraBuffer[3];
 # 13 ".././log.c" 2
 
@@ -816,6 +819,7 @@ const __flash ErrorText_t ErrorText[] = {
  {1,7, "EE:Softkeys"},
  {1,8, "EE:MidiThru"},
  {1,9, "EE:RegOut"},
+ {1,10, "EE:MidiRegCC"},
  {2,0, "Mod:Fail"},
  {2,1, "Mod:UnknowInp"},
  {3,0, "OVFL:MidiIn"},
@@ -834,9 +838,9 @@ const __flash char* log_getErrorText(uint8_t logNr){
  LogList_t* pLogEntry;
  pLogEntry = log_getLog(logNr);
  if (pLogEntry != 
-# 50 ".././log.c" 3 4
+# 51 ".././log.c" 3 4
                  ((void *)0)
-# 50 ".././log.c"
+# 51 ".././log.c"
                      ){
   uint8_t errCat = pLogEntry->logCategory;
   uint8_t errNr = pLogEntry->logNr;
@@ -847,9 +851,9 @@ const __flash char* log_getErrorText(uint8_t logNr){
   }
  }
  return 
-# 59 ".././log.c" 3 4
+# 60 ".././log.c" 3 4
        ((void *)0)
-# 59 ".././log.c"
+# 60 ".././log.c"
            ;
 }
 
@@ -866,9 +870,9 @@ void log_putInfo(uint8_t LogCat, uint8_t LogNr, uint16_t LogInfo){
 }
 
 const char stringLog [] 
-# 74 ".././log.c" 3
+# 75 ".././log.c" 3
                        __attribute__((__progmem__)) 
-# 74 ".././log.c"
+# 75 ".././log.c"
                                = "Log: ";
 
 void log_put(uint8_t LogCat, uint8_t LogNr, uint16_t LogInfo, uint8_t logType){
@@ -910,9 +914,9 @@ LogList_t* log_getLog(uint8_t index) {
  if (index >= log_count()) {
 
   return 
-# 114 ".././log.c" 3 4
+# 115 ".././log.c" 3 4
         ((void *)0)
-# 114 ".././log.c"
+# 115 ".././log.c"
             ;
  } else {
   if (pLogStart + index <= &(log_List[40 -1])) {
@@ -932,9 +936,9 @@ void logCheckUnreadErrorLogs(){
   while (nrOfMEssage-- > 0) {
    pLog = log_getLog(nrOfMEssage);
    if ((pLog != 
-# 132 ".././log.c" 3 4
+# 133 ".././log.c" 3 4
                ((void *)0)
-# 132 ".././log.c"
+# 133 ".././log.c"
                    ) && (pLog->logStatus != 0x20) && (pLog->logType == 'E')) {
 
     log_unreadErrors = 0xFF;
@@ -948,9 +952,9 @@ char* log_getShortTextFromPtr(LogList_t* pLogEntry, char changeNotifyStatus){
  char* pChar;
  pChar = &(Log_TextBuff[0]);
  if (pLogEntry != 
-# 144 ".././log.c" 3 4
+# 145 ".././log.c" 3 4
                  ((void *)0)
-# 144 ".././log.c"
+# 145 ".././log.c"
                      ){
 
   if (pLogEntry->uptime[3] != 0) {
@@ -1018,18 +1022,18 @@ char* log_getShortTextFromPtr(LogList_t* pLogEntry, char changeNotifyStatus){
 }
 
 const char nullLog [] 
-# 210 ".././log.c" 3
+# 211 ".././log.c" 3
                      __attribute__((__progmem__)) 
-# 210 ".././log.c"
+# 211 ".././log.c"
                              = "-";
 
 char* log_getShortTextFromIndex(uint8_t index, char changeNotifyStatus){
  LogList_t* pLogEntry;
  pLogEntry = log_getLog(index);
  if (pLogEntry != 
-# 215 ".././log.c" 3 4
+# 216 ".././log.c" 3 4
                  ((void *)0)
-# 215 ".././log.c"
+# 216 ".././log.c"
                      ){
   return log_getShortTextFromPtr(pLogEntry,changeNotifyStatus);
  } else {

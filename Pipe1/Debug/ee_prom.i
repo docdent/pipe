@@ -872,6 +872,9 @@ extern volatile uint16_t midiRxBytesCount;
 # 143 ".././serial.h"
 extern void init_Serial1MIDI();
 extern void serial1MIDISend(uint8_t data);
+extern void serial1MIDISendCmd(uint8_t cmd, uint8_t channel);
+extern void serial1MIDISendData(uint8_t data);
+
 extern uint8_t serial1MIDIReadRx();
 
 extern volatile uint8_t midiRxInIndex;
@@ -889,7 +892,7 @@ extern volatile uint8_t midiRxBuffUsage;
 extern volatile uint8_t midiTxBuffUsage;
 
 extern volatile uint8_t midiTxLastCmd;
-# 173 ".././serial.h"
+# 176 ".././serial.h"
 extern uint8_t midi_ExtraBuffer[3];
 # 13 ".././ee_prom.c" 2
 # 1 ".././Midi.h" 1
@@ -1021,6 +1024,8 @@ extern MidiCCreg_t midi_ccReg;
 
 
 
+
+
 extern uint8_t prog_Display;
 extern uint8_t prog_UpdDisplay;
 extern void prog_set(uint8_t prog);
@@ -1070,7 +1075,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 274 ".././Midi.h"
+# 276 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{

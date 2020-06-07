@@ -14,18 +14,18 @@ __zero_reg__ = 1
 init_log:
 .LFB6:
 	.file 1 ".././log.c"
-	.loc 1 41 0
+	.loc 1 42 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 42 0
+	.loc 1 43 0
 	ldi r24,lo8(log_List)
 	ldi r25,hi8(log_List)
 	sts pLogStart+1,r25
 	sts pLogStart,r24
-	.loc 1 43 0
+	.loc 1 44 0
 	sts pLogEnd+1,r25
 	sts pLogEnd,r24
 	ret
@@ -37,13 +37,13 @@ init_log:
 	.type	log_count, @function
 log_count:
 .LFB12:
-	.loc 1 103 0
+	.loc 1 104 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 104 0
+	.loc 1 105 0
 	lds r24,pLogEnd
 	lds r25,pLogEnd+1
 	lds r18,pLogStart
@@ -51,7 +51,7 @@ log_count:
 	cp r24,r18
 	cpc r25,r19
 	brlo .L3
-	.loc 1 105 0
+	.loc 1 106 0
 	sub r24,r18
 	sbc r25,r19
 	asr r25
@@ -62,7 +62,7 @@ log_count:
 	clr r1
 	ret
 .L3:
-	.loc 1 107 0
+	.loc 1 108 0
 	subi r24,112
 	sbci r25,-2
 	sub r24,r18
@@ -73,7 +73,7 @@ log_count:
 	mul r24,r25
 	mov r24,r0
 	clr r1
-	.loc 1 109 0
+	.loc 1 110 0
 	ret
 	.cfi_endproc
 .LFE12:
@@ -83,7 +83,7 @@ log_count:
 	.type	log_getLog, @function
 log_getLog:
 .LFB13:
-	.loc 1 111 0
+	.loc 1 112 0
 	.cfi_startproc
 .LVL0:
 	push r28
@@ -95,12 +95,12 @@ log_getLog:
 /* stack size = 1 */
 .L__stack_usage = 1
 	mov r28,r24
-	.loc 1 112 0
+	.loc 1 113 0
 	call log_count
 .LVL1:
 	cp r28,r24
 	brsh .L7
-	.loc 1 116 0
+	.loc 1 117 0
 	lds r20,pLogStart
 	lds r21,pLogStart+1
 	mov r24,r28
@@ -124,7 +124,7 @@ log_getLog:
 	cpc r25,r22
 	breq .L6
 	brlo .L6
-	.loc 1 119 0
+	.loc 1 120 0
 	subi r18,-112
 	sbci r19,1
 	movw r24,r20
@@ -132,12 +132,12 @@ log_getLog:
 	adc r25,r19
 	rjmp .L6
 .L7:
-	.loc 1 114 0
+	.loc 1 115 0
 	ldi r24,0
 	ldi r25,0
 .L6:
 /* epilogue start */
-	.loc 1 122 0
+	.loc 1 123 0
 	pop r28
 .LVL2:
 	ret
@@ -149,34 +149,34 @@ log_getLog:
 	.type	log_getErrorText, @function
 log_getErrorText:
 .LFB7:
-	.loc 1 47 0
+	.loc 1 48 0
 	.cfi_startproc
 .LVL3:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 49 0
+	.loc 1 50 0
 	call log_getLog
 .LVL4:
-	.loc 1 50 0
+	.loc 1 51 0
 	sbiw r24,0
 	breq .L13
 .LBB2:
-	.loc 1 51 0
+	.loc 1 52 0
 	movw r30,r24
 	ldd r19,Z+6
 .LVL5:
-	.loc 1 52 0
+	.loc 1 53 0
 	ldd r22,Z+7
 .LVL6:
 .LBB3:
-	.loc 1 53 0
+	.loc 1 54 0
 	ldi r18,0
 	rjmp .L10
 .LVL7:
 .L12:
-	.loc 1 54 0
+	.loc 1 55 0
 	mov r20,r18
 	ldi r21,0
 	movw r30,r20
@@ -196,7 +196,7 @@ log_getErrorText:
 	lpm r24,Z
 	cpse r19,r24
 	rjmp .L11
-	.loc 1 54 0 is_stmt 0 discriminator 1
+	.loc 1 55 0 is_stmt 0 discriminator 1
 	movw r30,r20
 	lsl r30
 	rol r31
@@ -214,7 +214,7 @@ log_getErrorText:
 	lpm r24,Z
 	cpse r22,r24
 	rjmp .L11
-	.loc 1 55 0 is_stmt 1
+	.loc 1 56 0 is_stmt 1
 	lsl r20
 	rol r21
 	movw r24,r20
@@ -231,16 +231,16 @@ log_getErrorText:
 	sbci r25,hi8(-(ErrorText+2))
 	ret
 .L11:
-	.loc 1 53 0 discriminator 2
+	.loc 1 54 0 discriminator 2
 	subi r18,lo8(-(1))
 .LVL8:
 .L10:
-	.loc 1 53 0 is_stmt 0 discriminator 1
-	cpi r18,lo8(17)
+	.loc 1 54 0 is_stmt 0 discriminator 1
+	cpi r18,lo8(18)
 	brlo .L12
 .LBE3:
 .LBE2:
-	.loc 1 59 0 is_stmt 1
+	.loc 1 60 0 is_stmt 1
 	ldi r24,0
 	ldi r25,0
 .LBB5:
@@ -253,7 +253,7 @@ log_getErrorText:
 	ldi r24,0
 	ldi r25,0
 .LVL10:
-	.loc 1 60 0
+	.loc 1 61 0
 	ret
 	.cfi_endproc
 .LFE7:
@@ -263,7 +263,7 @@ log_getErrorText:
 	.type	logCheckUnreadErrorLogs, @function
 logCheckUnreadErrorLogs:
 .LFB14:
-	.loc 1 124 0
+	.loc 1 125 0
 	.cfi_startproc
 	push r28
 .LCFI1:
@@ -273,39 +273,39 @@ logCheckUnreadErrorLogs:
 /* frame size = 0 */
 /* stack size = 1 */
 .L__stack_usage = 1
-	.loc 1 125 0
+	.loc 1 126 0
 	call log_count
 .LVL11:
-	.loc 1 127 0
-	sts log_unreadErrors,__zero_reg__
 	.loc 1 128 0
+	sts log_unreadErrors,__zero_reg__
+	.loc 1 129 0
 	cpse r24,__zero_reg__
 	rjmp .L15
 	rjmp .L14
 .LVL12:
 .L17:
-	.loc 1 131 0
+	.loc 1 132 0
 	mov r24,r28
 	call log_getLog
 .LVL13:
-	.loc 1 132 0
+	.loc 1 133 0
 	sbiw r24,0
 	breq .L18
-	.loc 1 132 0 discriminator 1
+	.loc 1 133 0 discriminator 1
 	movw r30,r24
 	ldd r18,Z+4
 	cpi r18,lo8(32)
 	breq .L19
-	.loc 1 132 0 is_stmt 0 discriminator 2
+	.loc 1 133 0 is_stmt 0 discriminator 2
 	ldd r25,Z+5
 	mov r24,r28
 .LVL14:
 	cpi r25,lo8(69)
 	brne .L15
-	.loc 1 134 0 is_stmt 1
+	.loc 1 135 0 is_stmt 1
 	ldi r24,lo8(-1)
 	sts log_unreadErrors,r24
-	.loc 1 135 0
+	.loc 1 136 0
 	rjmp .L14
 .LVL15:
 .L18:
@@ -317,7 +317,7 @@ logCheckUnreadErrorLogs:
 	mov r24,r28
 .LVL18:
 .L15:
-	.loc 1 130 0
+	.loc 1 131 0
 	ldi r28,lo8(-1)
 	add r28,r24
 .LVL19:
@@ -326,7 +326,7 @@ logCheckUnreadErrorLogs:
 .LVL20:
 .L14:
 /* epilogue start */
-	.loc 1 139 0
+	.loc 1 140 0
 	pop r28
 	ret
 	.cfi_endproc
@@ -337,7 +337,7 @@ logCheckUnreadErrorLogs:
 	.type	log_getShortTextFromPtr, @function
 log_getShortTextFromPtr:
 .LFB15:
-	.loc 1 141 0
+	.loc 1 142 0
 	.cfi_startproc
 .LVL21:
 	push r17
@@ -357,24 +357,24 @@ log_getShortTextFromPtr:
 /* stack size = 3 */
 .L__stack_usage = 3
 .LVL22:
-	.loc 1 144 0
+	.loc 1 145 0
 	sbiw r24,0
 	brne .+2
 	rjmp .L21
 	mov r17,r22
 	movw r28,r24
-	.loc 1 146 0
+	.loc 1 147 0
 	ldd r24,Y+3
 .LVL23:
 	tst r24
 	breq .L22
-	.loc 1 148 0
+	.loc 1 149 0
 	ldi r22,lo8(Log_TextBuff)
 	ldi r23,hi8(Log_TextBuff)
 .LVL24:
 	call putChar_Dec2
 .LVL25:
-	.loc 1 149 0
+	.loc 1 150 0
 	movw r22,r24
 	subi r22,-1
 	sbci r23,-1
@@ -382,7 +382,7 @@ log_getShortTextFromPtr:
 	ldi r18,lo8(104)
 	movw r30,r24
 	st Z,r18
-	.loc 1 150 0
+	.loc 1 151 0
 	ldd r24,Y+2
 	call putChar_Dec2
 .LVL27:
@@ -391,16 +391,16 @@ log_getShortTextFromPtr:
 	rjmp .L23
 .LVL29:
 .L22:
-	.loc 1 151 0
+	.loc 1 152 0
 	ldd r24,Y+2
 	tst r24
 	breq .L24
-	.loc 1 153 0
+	.loc 1 154 0
 	ldi r22,lo8(Log_TextBuff)
 	ldi r23,hi8(Log_TextBuff)
 	call putChar_Dec2
 .LVL30:
-	.loc 1 154 0
+	.loc 1 155 0
 	movw r22,r24
 	subi r22,-1
 	sbci r23,-1
@@ -408,7 +408,7 @@ log_getShortTextFromPtr:
 	ldi r18,lo8(109)
 	movw r30,r24
 	st Z,r18
-	.loc 1 155 0
+	.loc 1 156 0
 	ldd r24,Y+1
 	call putChar_Dec2
 .LVL32:
@@ -418,7 +418,7 @@ log_getShortTextFromPtr:
 .LVL34:
 .L24:
 .LBB6:
-	.loc 1 157 0
+	.loc 1 158 0
 	ldi r22,lo8(Log_TextBuff)
 	ldi r23,hi8(Log_TextBuff)
 	ldd r24,Y+1
@@ -426,56 +426,56 @@ log_getShortTextFromPtr:
 .LVL35:
 	movw r30,r24
 .LVL36:
-	.loc 1 158 0
+	.loc 1 159 0
 	ldi r24,lo8(115)
 .LVL37:
 	st Z,r24
-	.loc 1 159 0
+	.loc 1 160 0
 	ld r25,Y
 	lsl r25
 .LVL38:
-	.loc 1 160 0
-	ldi r18,0
 	.loc 1 161 0
+	ldi r18,0
+	.loc 1 162 0
 	rjmp .L25
 .LVL39:
 .L26:
-	.loc 1 162 0
+	.loc 1 163 0
 	subi r25,lo8(-(-25))
 .LVL40:
-	.loc 1 163 0
+	.loc 1 164 0
 	subi r18,lo8(-(1))
 .LVL41:
 .L25:
-	.loc 1 161 0
+	.loc 1 162 0
 	cpi r25,lo8(25)
 	brsh .L26
 .LVL42:
-	.loc 1 165 0
+	.loc 1 166 0
 	subi r18,lo8(-(48))
 .LVL43:
 	std Z+1,r18
 .LVL44:
-	.loc 1 167 0
+	.loc 1 168 0
 	lsl r25
 .LVL45:
-	.loc 1 166 0
+	.loc 1 167 0
 	ldi r18,0
-	.loc 1 168 0
+	.loc 1 169 0
 	rjmp .L27
 .LVL46:
 .L28:
-	.loc 1 169 0
+	.loc 1 170 0
 	subi r25,lo8(-(-5))
 .LVL47:
-	.loc 1 170 0
+	.loc 1 171 0
 	subi r18,lo8(-(1))
 .LVL48:
 .L27:
-	.loc 1 168 0
+	.loc 1 169 0
 	cpi r25,lo8(5)
 	brsh .L28
-	.loc 1 172 0
+	.loc 1 173 0
 	movw r26,r30
 	adiw r26,3
 .LVL49:
@@ -485,7 +485,7 @@ log_getShortTextFromPtr:
 .LVL51:
 .L23:
 .LBE6:
-	.loc 1 175 0
+	.loc 1 176 0
 	ldd r25,Y+4
 	cpi r25,lo8(64)
 	breq .L30
@@ -495,61 +495,61 @@ log_getShortTextFromPtr:
 	brne .L35
 	rjmp .L32
 .L31:
-	.loc 1 177 0
+	.loc 1 178 0
 	movw r30,r26
 	adiw r30,1
 .LVL52:
 	ldi r24,lo8(42)
 	st X,r24
-	.loc 1 178 0
+	.loc 1 179 0
 	rjmp .L33
 .LVL53:
 .L30:
-	.loc 1 180 0
+	.loc 1 181 0
 	movw r30,r26
 	adiw r30,1
 .LVL54:
 	ldi r24,lo8(-91)
 	st X,r24
-	.loc 1 181 0
+	.loc 1 182 0
 	rjmp .L33
 .LVL55:
 .L32:
-	.loc 1 183 0
+	.loc 1 184 0
 	movw r30,r26
 	adiw r30,1
 .LVL56:
 	ldi r24,lo8(32)
 	st X,r24
-	.loc 1 184 0
+	.loc 1 185 0
 	rjmp .L33
 .LVL57:
 .L35:
-	.loc 1 186 0
+	.loc 1 187 0
 	movw r30,r26
 	adiw r30,1
 .LVL58:
 	ldi r24,lo8(63)
 	st X,r24
 .L33:
-	.loc 1 190 0
+	.loc 1 191 0
 	movw r22,r30
 	subi r22,-1
 	sbci r23,-1
 .LVL59:
 	ldd r24,Y+5
 	st Z,r24
-	.loc 1 192 0
+	.loc 1 193 0
 	ldd r24,Y+6
 	call putChar_hex
 .LVL60:
-	.loc 1 193 0
+	.loc 1 194 0
 	movw r22,r24
 	ldd r24,Y+7
 .LVL61:
 	call putChar_hex
 .LVL62:
-	.loc 1 194 0
+	.loc 1 195 0
 	movw r22,r24
 	subi r22,-1
 	sbci r23,-1
@@ -557,36 +557,36 @@ log_getShortTextFromPtr:
 	ldi r18,lo8(45)
 	movw r30,r24
 	st Z,r18
-	.loc 1 195 0
+	.loc 1 196 0
 	ldd r24,Y+8
 	ldd r25,Y+9
 	call putChar_word
 .LVL64:
-	.loc 1 196 0
+	.loc 1 197 0
 	movw r30,r24
 	st Z,__zero_reg__
-	.loc 1 197 0
+	.loc 1 198 0
 	cpi r17,lo8(-1)
 	breq .L34
-	.loc 1 199 0
+	.loc 1 200 0
 	std Y+4,r17
-	.loc 1 201 0
+	.loc 1 202 0
 	call logCheckUnreadErrorLogs
 .LVL65:
 	rjmp .L34
 .LVL66:
 .L21:
-	.loc 1 204 0
+	.loc 1 205 0
 	ldi r30,lo8(Log_TextBuff)
 	ldi r31,hi8(Log_TextBuff)
 	ldi r24,lo8(45)
 .LVL67:
 	st Z,r24
-	.loc 1 205 0
+	.loc 1 206 0
 	std Z+1,__zero_reg__
 .LVL68:
 .L34:
-	.loc 1 208 0
+	.loc 1 209 0
 	ldi r24,lo8(Log_TextBuff)
 	ldi r25,hi8(Log_TextBuff)
 /* epilogue start */
@@ -602,61 +602,61 @@ log_getShortTextFromPtr:
 	.type	log_put, @function
 log_put:
 .LFB11:
-	.loc 1 76 0
+	.loc 1 77 0
 	.cfi_startproc
 .LVL69:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 77 0
+	.loc 1 78 0
 	lds r30,pLogEnd
 	lds r31,pLogEnd+1
 	ldi r26,lo8(time_Uptime)
 	ldi r27,hi8(time_Uptime)
 	ld r25,X
 	st Z,r25
-	.loc 1 78 0
+	.loc 1 79 0
 	lds r30,pLogEnd
 	lds r31,pLogEnd+1
 	adiw r26,1
 	ld r25,X
 	sbiw r26,1
 	std Z+1,r25
-	.loc 1 79 0
+	.loc 1 80 0
 	lds r30,pLogEnd
 	lds r31,pLogEnd+1
 	adiw r26,2
 	ld r25,X
 	sbiw r26,2
 	std Z+2,r25
-	.loc 1 80 0
+	.loc 1 81 0
 	adiw r26,3
 	ld r25,X
 	std Z+3,r25
-	.loc 1 81 0
-	std Z+5,r18
 	.loc 1 82 0
-	std Z+6,r24
+	std Z+5,r18
 	.loc 1 83 0
-	std Z+7,r22
+	std Z+6,r24
 	.loc 1 84 0
+	std Z+7,r22
+	.loc 1 85 0
 	std Z+9,r21
 	std Z+8,r20
-	.loc 1 85 0
+	.loc 1 86 0
 	ldi r24,lo8(-128)
 .LVL70:
 	std Z+4,r24
-	.loc 1 86 0
+	.loc 1 87 0
 	lds r24,serUSB_Active
 	cpi r24,lo8(-1)
 	brne .L37
-	.loc 1 87 0
+	.loc 1 88 0
 	ldi r24,lo8(stringLog)
 	ldi r25,hi8(stringLog)
 	call serial0SER_USB_sendStringP
 .LVL71:
-	.loc 1 88 0
+	.loc 1 89 0
 	ldi r22,lo8(-1)
 	lds r24,pLogEnd
 	lds r25,pLogEnd+1
@@ -664,30 +664,30 @@ log_put:
 .LVL72:
 	call serial0SER_USB_sendString
 .LVL73:
-	.loc 1 89 0
+	.loc 1 90 0
 	ldi r24,lo8(cr_lf)
 	ldi r25,hi8(cr_lf)
 	call serial0SER_USB_sendStringP
 .LVL74:
 .L37:
-	.loc 1 91 0
+	.loc 1 92 0
 	lds r24,pLogEnd
 	lds r25,pLogEnd+1
 	adiw r24,10
 	sts pLogEnd+1,r25
 	sts pLogEnd,r24
-	.loc 1 92 0
+	.loc 1 93 0
 	subi r24,lo8(log_List+390)
 	sbci r25,hi8(log_List+390)
 	breq .L38
 	brlo .L38
-	.loc 1 93 0
+	.loc 1 94 0
 	ldi r24,lo8(log_List)
 	ldi r25,hi8(log_List)
 	sts pLogEnd+1,r25
 	sts pLogEnd,r24
 .L38:
-	.loc 1 95 0
+	.loc 1 96 0
 	lds r18,pLogEnd
 	lds r19,pLogEnd+1
 	lds r24,pLogStart
@@ -695,16 +695,16 @@ log_put:
 	cp r18,r24
 	cpc r19,r25
 	brne .L36
-	.loc 1 96 0
+	.loc 1 97 0
 	adiw r24,10
 	sts pLogStart+1,r25
 	sts pLogStart,r24
-	.loc 1 97 0
+	.loc 1 98 0
 	subi r24,lo8(log_List+390)
 	sbci r25,hi8(log_List+390)
 	breq .L36
 	brlo .L36
-	.loc 1 98 0
+	.loc 1 99 0
 	ldi r24,lo8(log_List)
 	ldi r25,hi8(log_List)
 	sts pLogStart+1,r25
@@ -719,18 +719,18 @@ log_put:
 	.type	log_putError, @function
 log_putError:
 .LFB8:
-	.loc 1 62 0
+	.loc 1 63 0
 	.cfi_startproc
 .LVL75:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 63 0
+	.loc 1 64 0
 	ldi r18,lo8(69)
 	call log_put
 .LVL76:
-	.loc 1 64 0
+	.loc 1 65 0
 	ldi r24,lo8(-1)
 	sts log_unreadErrors,r24
 	ret
@@ -742,14 +742,14 @@ log_putError:
 	.type	log_putWarning, @function
 log_putWarning:
 .LFB9:
-	.loc 1 67 0
+	.loc 1 68 0
 	.cfi_startproc
 .LVL77:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 68 0
+	.loc 1 69 0
 	ldi r18,lo8(87)
 	call log_put
 .LVL78:
@@ -762,14 +762,14 @@ log_putWarning:
 	.type	log_putInfo, @function
 log_putInfo:
 .LFB10:
-	.loc 1 70 0
+	.loc 1 71 0
 	.cfi_startproc
 .LVL79:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 71 0
+	.loc 1 72 0
 	ldi r18,lo8(73)
 	call log_put
 .LVL80:
@@ -782,7 +782,7 @@ log_putInfo:
 	.type	log_getShortTextFromIndex, @function
 log_getShortTextFromIndex:
 .LFB16:
-	.loc 1 212 0
+	.loc 1 213 0
 	.cfi_startproc
 .LVL81:
 	push r28
@@ -794,32 +794,32 @@ log_getShortTextFromIndex:
 /* stack size = 1 */
 .L__stack_usage = 1
 	mov r28,r22
-	.loc 1 214 0
+	.loc 1 215 0
 	call log_getLog
 .LVL82:
-	.loc 1 215 0
+	.loc 1 216 0
 	sbiw r24,0
 	breq .L44
-	.loc 1 216 0
+	.loc 1 217 0
 	mov r22,r28
 	call log_getShortTextFromPtr
 .LVL83:
 	rjmp .L45
 .LVL84:
 .L44:
-	.loc 1 218 0
+	.loc 1 219 0
 	ldi r30,lo8(Log_TextBuff)
 	ldi r31,hi8(Log_TextBuff)
 	ldi r24,lo8(45)
 .LVL85:
 	st Z,r24
-	.loc 1 219 0
-	std Z+1,__zero_reg__
 	.loc 1 220 0
+	std Z+1,__zero_reg__
+	.loc 1 221 0
 	movw r24,r30
 .L45:
 /* epilogue start */
-	.loc 1 222 0
+	.loc 1 223 0
 	pop r28
 .LVL86:
 	ret
@@ -841,7 +841,7 @@ stringLog:
 .global	ErrorText
 	.section	.progmem.data.ErrorText,"a",@progbits
 	.type	ErrorText, @object
-	.size	ErrorText, 306
+	.size	ErrorText, 324
 ErrorText:
 	.byte	0
 	.byte	0
@@ -887,6 +887,10 @@ ErrorText:
 	.byte	9
 	.string	"EE:RegOut"
 	.zero	6
+	.byte	1
+	.byte	10
+	.string	"EE:MidiRegCC"
+	.zero	3
 	.byte	2
 	.byte	0
 	.string	"Mod:Fail"
@@ -1058,7 +1062,7 @@ ErrorText:
 	.byte	0x1
 	.long	.LASF57
 	.byte	0x1
-	.byte	0x29
+	.byte	0x2a
 	.long	.LFB6
 	.long	.LFE6
 	.byte	0x3
@@ -1070,7 +1074,7 @@ ErrorText:
 	.byte	0x1
 	.long	.LASF58
 	.byte	0x1
-	.byte	0x67
+	.byte	0x68
 	.long	0x3e
 	.long	.LFB12
 	.long	.LFE12
@@ -1083,7 +1087,7 @@ ErrorText:
 	.byte	0x1
 	.long	.LASF18
 	.byte	0x1
-	.byte	0x6f
+	.byte	0x70
 	.byte	0x1
 	.long	0x162
 	.long	.LFB13
@@ -1094,7 +1098,7 @@ ErrorText:
 	.uleb128 0xc
 	.long	.LASF20
 	.byte	0x1
-	.byte	0x6f
+	.byte	0x70
 	.long	0x3e
 	.long	.LLST1
 	.uleb128 0xd
@@ -1108,7 +1112,7 @@ ErrorText:
 	.byte	0x1
 	.long	.LASF19
 	.byte	0x1
-	.byte	0x2f
+	.byte	0x30
 	.byte	0x1
 	.long	0x1f1
 	.long	.LFB7
@@ -1122,13 +1126,13 @@ ErrorText:
 	.uleb128 0xc
 	.long	.LASF13
 	.byte	0x1
-	.byte	0x2f
+	.byte	0x30
 	.long	0x3e
 	.long	.LLST2
 	.uleb128 0x10
 	.long	.LASF21
 	.byte	0x1
-	.byte	0x30
+	.byte	0x31
 	.long	0x162
 	.long	.LLST3
 	.uleb128 0x11
@@ -1137,13 +1141,13 @@ ErrorText:
 	.uleb128 0x10
 	.long	.LASF22
 	.byte	0x1
-	.byte	0x33
+	.byte	0x34
 	.long	0x3e
 	.long	.LLST4
 	.uleb128 0x10
 	.long	.LASF23
 	.byte	0x1
-	.byte	0x34
+	.byte	0x35
 	.long	0x3e
 	.long	.LLST5
 	.uleb128 0x12
@@ -1151,7 +1155,7 @@ ErrorText:
 	.uleb128 0x13
 	.string	"i"
 	.byte	0x1
-	.byte	0x35
+	.byte	0x36
 	.long	0x3e
 	.long	.LLST6
 	.byte	0
@@ -1178,7 +1182,7 @@ ErrorText:
 	.byte	0x1
 	.long	.LASF59
 	.byte	0x1
-	.byte	0x7c
+	.byte	0x7d
 	.long	.LFB14
 	.long	.LFE14
 	.long	.LLST7
@@ -1187,13 +1191,13 @@ ErrorText:
 	.uleb128 0x10
 	.long	.LASF24
 	.byte	0x1
-	.byte	0x7d
+	.byte	0x7e
 	.long	0x3e
 	.long	.LLST8
 	.uleb128 0x10
 	.long	.LASF25
 	.byte	0x1
-	.byte	0x7e
+	.byte	0x7f
 	.long	0x162
 	.long	.LLST9
 	.uleb128 0xd
@@ -1214,7 +1218,7 @@ ErrorText:
 	.byte	0x1
 	.long	.LASF26
 	.byte	0x1
-	.byte	0x8d
+	.byte	0x8e
 	.byte	0x1
 	.long	0x34c
 	.long	.LFB15
@@ -1225,19 +1229,19 @@ ErrorText:
 	.uleb128 0xc
 	.long	.LASF21
 	.byte	0x1
-	.byte	0x8d
+	.byte	0x8e
 	.long	0x162
 	.long	.LLST11
 	.uleb128 0xc
 	.long	.LASF27
 	.byte	0x1
-	.byte	0x8d
+	.byte	0x8e
 	.long	0xf6
 	.long	.LLST12
 	.uleb128 0x10
 	.long	.LASF28
 	.byte	0x1
-	.byte	0x8e
+	.byte	0x8f
 	.long	0x34c
 	.long	.LLST13
 	.uleb128 0x19
@@ -1247,13 +1251,13 @@ ErrorText:
 	.uleb128 0x13
 	.string	"val"
 	.byte	0x1
-	.byte	0x9f
+	.byte	0xa0
 	.long	0x3e
 	.long	.LLST14
 	.uleb128 0x10
 	.long	.LASF29
 	.byte	0x1
-	.byte	0xa0
+	.byte	0xa1
 	.long	0x3e
 	.long	.LLST15
 	.uleb128 0x14
@@ -1330,7 +1334,7 @@ ErrorText:
 	.byte	0x1
 	.long	.LASF33
 	.byte	0x1
-	.byte	0x4c
+	.byte	0x4d
 	.byte	0x1
 	.long	.LFB11
 	.long	.LFE11
@@ -1343,25 +1347,25 @@ ErrorText:
 	.uleb128 0xc
 	.long	.LASF30
 	.byte	0x1
-	.byte	0x4c
+	.byte	0x4d
 	.long	0x3e
 	.long	.LLST16
 	.uleb128 0xc
 	.long	.LASF31
 	.byte	0x1
-	.byte	0x4c
+	.byte	0x4d
 	.long	0x3e
 	.long	.LLST17
 	.uleb128 0xc
 	.long	.LASF32
 	.byte	0x1
-	.byte	0x4c
+	.byte	0x4d
 	.long	0x50
 	.long	.LLST18
 	.uleb128 0xc
 	.long	.LASF11
 	.byte	0x1
-	.byte	0x4c
+	.byte	0x4d
 	.long	0x3e
 	.long	.LLST19
 	.uleb128 0x1a
@@ -1402,7 +1406,7 @@ ErrorText:
 	.byte	0x1
 	.long	.LASF34
 	.byte	0x1
-	.byte	0x3e
+	.byte	0x3f
 	.byte	0x1
 	.long	.LFB8
 	.long	.LFE8
@@ -1415,19 +1419,19 @@ ErrorText:
 	.uleb128 0xc
 	.long	.LASF30
 	.byte	0x1
-	.byte	0x3e
+	.byte	0x3f
 	.long	0x3e
 	.long	.LLST20
 	.uleb128 0xc
 	.long	.LASF31
 	.byte	0x1
-	.byte	0x3e
+	.byte	0x3f
 	.long	0x3e
 	.long	.LLST21
 	.uleb128 0xc
 	.long	.LASF32
 	.byte	0x1
-	.byte	0x3e
+	.byte	0x3f
 	.long	0x50
 	.long	.LLST22
 	.uleb128 0x14
@@ -1471,7 +1475,7 @@ ErrorText:
 	.byte	0x1
 	.long	.LASF35
 	.byte	0x1
-	.byte	0x43
+	.byte	0x44
 	.byte	0x1
 	.long	.LFB9
 	.long	.LFE9
@@ -1484,19 +1488,19 @@ ErrorText:
 	.uleb128 0xc
 	.long	.LASF30
 	.byte	0x1
-	.byte	0x43
+	.byte	0x44
 	.long	0x3e
 	.long	.LLST23
 	.uleb128 0xc
 	.long	.LASF31
 	.byte	0x1
-	.byte	0x43
+	.byte	0x44
 	.long	0x3e
 	.long	.LLST24
 	.uleb128 0xc
 	.long	.LASF32
 	.byte	0x1
-	.byte	0x43
+	.byte	0x44
 	.long	0x50
 	.long	.LLST25
 	.uleb128 0x14
@@ -1540,7 +1544,7 @@ ErrorText:
 	.byte	0x1
 	.long	.LASF36
 	.byte	0x1
-	.byte	0x46
+	.byte	0x47
 	.byte	0x1
 	.long	.LFB10
 	.long	.LFE10
@@ -1553,19 +1557,19 @@ ErrorText:
 	.uleb128 0xc
 	.long	.LASF30
 	.byte	0x1
-	.byte	0x46
+	.byte	0x47
 	.long	0x3e
 	.long	.LLST26
 	.uleb128 0xc
 	.long	.LASF31
 	.byte	0x1
-	.byte	0x46
+	.byte	0x47
 	.long	0x3e
 	.long	.LLST27
 	.uleb128 0xc
 	.long	.LASF32
 	.byte	0x1
-	.byte	0x46
+	.byte	0x47
 	.long	0x50
 	.long	.LLST28
 	.uleb128 0x14
@@ -1609,7 +1613,7 @@ ErrorText:
 	.byte	0x1
 	.long	.LASF37
 	.byte	0x1
-	.byte	0xd4
+	.byte	0xd5
 	.byte	0x1
 	.long	0x34c
 	.long	.LFB16
@@ -1620,19 +1624,19 @@ ErrorText:
 	.uleb128 0xc
 	.long	.LASF20
 	.byte	0x1
-	.byte	0xd4
+	.byte	0xd5
 	.long	0x3e
 	.long	.LLST30
 	.uleb128 0xc
 	.long	.LASF27
 	.byte	0x1
-	.byte	0xd4
+	.byte	0xd5
 	.long	0xf6
 	.long	.LLST31
 	.uleb128 0x10
 	.long	.LASF21
 	.byte	0x1
-	.byte	0xd5
+	.byte	0xd6
 	.long	0x162
 	.long	.LLST32
 	.uleb128 0x1a
@@ -1776,7 +1780,7 @@ ErrorText:
 	.uleb128 0x1c
 	.long	.LASF47
 	.byte	0x1
-	.byte	0x4a
+	.byte	0x4b
 	.long	0x6b2
 	.byte	0x1
 	.byte	0x5
@@ -1794,7 +1798,7 @@ ErrorText:
 	.uleb128 0x1c
 	.long	.LASF48
 	.byte	0x1
-	.byte	0xd2
+	.byte	0xd3
 	.long	0x6d9
 	.byte	0x1
 	.byte	0x5

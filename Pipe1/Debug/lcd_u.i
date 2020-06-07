@@ -945,6 +945,8 @@ extern MidiCCreg_t midi_ccReg;
 
 
 
+
+
 extern uint8_t prog_Display;
 extern uint8_t prog_UpdDisplay;
 extern void prog_set(uint8_t prog);
@@ -994,7 +996,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 274 ".././Midi.h"
+# 276 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1256,20 +1258,8 @@ uint8_t lcd_cursorIsOn;
 void lcd_init(void)
 {
 
- uint8_t debugSave = (
-# 48 ".././lcd_u.c" 3
-                    (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 48 ".././lcd_u.c"
-                    & ((1 << 5) | (1 << 4)));
- 
-# 49 ".././lcd_u.c" 3
-(*(volatile uint8_t *)((0x05) + 0x20)) 
-# 49 ".././lcd_u.c"
-= (
-# 49 ".././lcd_u.c" 3
-(*(volatile uint8_t *)((0x05) + 0x20)) 
-# 49 ".././lcd_u.c"
-& (~(((1 << 5) | (1 << 4))))) | (1 << 4);
+ uint8_t debugSave = 0;
+
  lcd_displayingMessage = 0x00;
 
  
@@ -1378,33 +1368,13 @@ void lcd_init(void)
 
 
     lcd_write_command(0b00001100);
- 
-# 108 ".././lcd_u.c" 3
-(*(volatile uint8_t *)((0x05) + 0x20)) 
-# 108 ".././lcd_u.c"
-= 
-# 108 ".././lcd_u.c" 3
-(*(volatile uint8_t *)((0x05) + 0x20)) 
-# 108 ".././lcd_u.c"
-& (~((1 << 5) | (1 << 4))) | (debugSave);
+
 }
 # 119 ".././lcd_u.c"
 void lcd_write_character(uint8_t data)
 {
- uint8_t debugSave = (
-# 121 ".././lcd_u.c" 3
-                    (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 121 ".././lcd_u.c"
-                    & ((1 << 5) | (1 << 4)));
- 
-# 122 ".././lcd_u.c" 3
-(*(volatile uint8_t *)((0x05) + 0x20)) 
-# 122 ".././lcd_u.c"
-= (
-# 122 ".././lcd_u.c" 3
-(*(volatile uint8_t *)((0x05) + 0x20)) 
-# 122 ".././lcd_u.c"
-& (~(((1 << 5) | (1 << 4))))) | (1 << 4);
+ uint8_t debugSave = 0;
+
     
 # 123 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
@@ -1426,33 +1396,13 @@ void lcd_write_character(uint8_t data)
     lcd_write_nibble(data);
     lcd_write_nibble(data << 4);
  _delay_us(64);
- 
-# 128 ".././lcd_u.c" 3
-(*(volatile uint8_t *)((0x05) + 0x20)) 
-# 128 ".././lcd_u.c"
-= 
-# 128 ".././lcd_u.c" 3
-(*(volatile uint8_t *)((0x05) + 0x20)) 
-# 128 ".././lcd_u.c"
-& (~((1 << 5) | (1 << 4))) | (debugSave);
+
 }
 # 138 ".././lcd_u.c"
 void lcd_write_command(uint8_t data)
 {
- uint8_t debugSave = (
-# 140 ".././lcd_u.c" 3
-                    (*(volatile uint8_t *)((0x05) + 0x20)) 
-# 140 ".././lcd_u.c"
-                    & ((1 << 5) | (1 << 4)));
- 
-# 141 ".././lcd_u.c" 3
-(*(volatile uint8_t *)((0x05) + 0x20)) 
-# 141 ".././lcd_u.c"
-= (
-# 141 ".././lcd_u.c" 3
-(*(volatile uint8_t *)((0x05) + 0x20)) 
-# 141 ".././lcd_u.c"
-& (~(((1 << 5) | (1 << 4))))) | (1 << 4);
+ uint8_t debugSave = 0;
+
     
 # 142 ".././lcd_u.c" 3
    (*(volatile uint8_t *)(0x102)) 
@@ -1478,15 +1428,7 @@ void lcd_write_command(uint8_t data)
  } else {
   _delay_us(64);
  }
- 
-# 151 ".././lcd_u.c" 3
-(*(volatile uint8_t *)((0x05) + 0x20)) 
-# 151 ".././lcd_u.c"
-= 
-# 151 ".././lcd_u.c" 3
-(*(volatile uint8_t *)((0x05) + 0x20)) 
-# 151 ".././lcd_u.c"
-& (~((1 << 5) | (1 << 4))) | (debugSave);
+
 }
 # 164 ".././lcd_u.c"
 void lcd_write_nibble(uint8_t data)

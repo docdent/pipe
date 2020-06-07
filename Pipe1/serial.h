@@ -142,6 +142,9 @@ extern volatile uint16_t midiRxBytesCount; // total bytes received
 //----------- external defs -------------
 extern void init_Serial1MIDI();
 extern void serial1MIDISend(uint8_t data);
+extern void serial1MIDISendCmd(uint8_t cmd, uint8_t channel);
+extern void serial1MIDISendData(uint8_t data);
+
 extern uint8_t serial1MIDIReadRx();
 
 extern volatile uint8_t midiRxInIndex;
@@ -160,7 +163,7 @@ extern volatile uint8_t midiTxBuffUsage; // max used lenght of Midi Tx Buffer
 
 extern volatile uint8_t midiTxLastCmd;
 #define MIDI_TX_LASTCMD_NONE 0x00 // valid commands are 0x80...0xFF only
-#define MIDI_TXT_RESET_LASTCMD midiTxLastCmd = MIDI_TX_LASTCMD_NONE;
+#define MIDI_TX_RESET_LASTCMD midiTxLastCmd = MIDI_TX_LASTCMD_NONE;
 
 #define MIDI_RX_BUFFER_EMPTY (midiRxInIndex == midiRxOutIndex)
 #define MIDI_TX_BUFFER_EMPTY (midiTxOutIndex == midiTxInIndex)
@@ -176,6 +179,7 @@ extern uint8_t midi_ExtraBuffer[MIDI_EXTRA_BUFFER_SIZE];
 //--------- MIDI Defs -----------
 // alle Commands excepo 0xF0..0x0FF include Channel in lower nibble
 #define MIDI_LOWEST_CMD 0x80
+#define MIDI_MAX_OMITTED 0xBF // only note on/off and cc are omitted if repeated
 // 2 Data bytes following
 #define MIDI_NOTEOFF 0x80
 #define MIDI_NOTEON 0x90
@@ -194,6 +198,8 @@ extern uint8_t midi_ExtraBuffer[MIDI_EXTRA_BUFFER_SIZE];
 #define MIDI_SENSE 0xFE
 // wird beim Empfang ignoriert!
 #define MIDI_CTRL_ALLNOTESOFF 0x7B
+#define MIDI_CTRL_ALLSOUNDSOFF 0x78
+#define MIDI_CTRL_ALLCTRLOFF 0x79
 #define MIDI_SYSEX 0xF0
 #define MIDI_CLOCK 0xF8
 #define MIDI_REALTIME_FIRST 0xF8

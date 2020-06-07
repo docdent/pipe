@@ -950,6 +950,8 @@ extern MidiCCreg_t midi_ccReg;
 
 
 
+
+
 extern uint8_t prog_Display;
 extern uint8_t prog_UpdDisplay;
 extern void prog_set(uint8_t prog);
@@ -999,7 +1001,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 274 ".././Midi.h"
+# 276 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -2085,7 +2087,15 @@ void init_PipeModules(){
 (*(volatile uint8_t *)((0x14) + 0x20)) 
 # 187 ".././hwtimer.c"
 |= (1 << 1);
-# 197 ".././hwtimer.c"
+
+
+
+
+ if ((pipe_ModuleTested ^ (pipe_Module.AssnWrite | pipe_Module.AssnRead)) != 0) {
+
+  log_putError(2,0,pipe_Module.AssnRead<<8 | pipe_ModuleTested);
+ }
+
 }
 
 

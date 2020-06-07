@@ -681,6 +681,9 @@ extern volatile uint16_t midiRxBytesCount;
 # 143 ".././serial.h"
 extern void init_Serial1MIDI();
 extern void serial1MIDISend(uint8_t data);
+extern void serial1MIDISendCmd(uint8_t cmd, uint8_t channel);
+extern void serial1MIDISendData(uint8_t data);
+
 extern uint8_t serial1MIDIReadRx();
 
 extern volatile uint8_t midiRxInIndex;
@@ -698,7 +701,7 @@ extern volatile uint8_t midiRxBuffUsage;
 extern volatile uint8_t midiTxBuffUsage;
 
 extern volatile uint8_t midiTxLastCmd;
-# 173 ".././serial.h"
+# 176 ".././serial.h"
 extern uint8_t midi_ExtraBuffer[3];
 # 17 ".././menu.c" 2
 # 1 ".././menu.h" 1
@@ -840,6 +843,8 @@ extern MidiCCreg_t midi_ccReg;
 
 
 
+
+
 extern uint8_t prog_Display;
 extern uint8_t prog_UpdDisplay;
 extern void prog_set(uint8_t prog);
@@ -889,7 +894,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 274 ".././Midi.h"
+# 276 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1522,7 +1527,7 @@ const char sw_version []
 # 24 ".././menu.c" 3
                         __attribute__((__progmem__)) 
 # 24 ".././menu.c"
-                                = "V0.82";
+                                = "V0.83";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -3620,9 +3625,9 @@ void send_progrChange_toMidiThru(uint8_t program){
 
   if (midiThrough.OutChannel != 0xFF) {
 
-   serial1MIDISend(0xC0 | midiThrough.OutChannel);
+   serial1MIDISendCmd(0xC0,midiThrough.OutChannel);
 
-   serial1MIDISend(program);
+   serial1MIDISendData(program);
   }
  }
 }

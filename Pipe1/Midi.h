@@ -203,6 +203,8 @@ typedef struct {
 
 extern MidiCCreg_t midi_ccReg;
 
+#define REGISTER_MAX_CC 0x7F // CC for register change are vaild 0...127
+
 //----------------------- PROGRAM ---------------------
 #define PROGR_NONE 0xFF
 #define PROGR_MAX 63

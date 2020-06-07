@@ -125,24 +125,35 @@
 
 //************************ DEBUG PORTS *************************
 // B4,5
-#define DEBUG_ON_PINS
-#define DEBUG_DDR				DDRB
-#define DEBUG_PORT				PORTB
-#define DEBUG_PIN_1				5
-#define DEBUG_PIN_0				4
-#define DEBUG_MASK				((1 << DEBUG_PIN_1) | (1 << DEBUG_PIN_0))
-#define DEBUG_PORT_INIT			DEBUG_DDR |= DEBUG_MASK;
-#define DEBUG_OUT_MAIN			DEBUG_PORT &= ~(DEBUG_MASK); // 5/4: 00
-#define DEBUG_OUT_LCD			DEBUG_PORT = (DEBUG_PORT & (~(DEBUG_MASK))) | (1 << DEBUG_PIN_0); // 5/4: 01
-#define DEBUG_OUT_MIDI			DEBUG_PORT = (DEBUG_PORT & (~(DEBUG_MASK))) | (1 << DEBUG_PIN_1); // 5/4: 10
-#define DEBUG_OUT_MENU			DEBUG_PORT |= (DEBUG_MASK); // 5/4: 11
-#define DEBUG_GET_OUT			(DEBUG_PORT & DEBUG_MASK)
-#define DEBUG_SET_OUT(out)		DEBUG_PORT = DEBUG_PORT & (~DEBUG_MASK) | (out);
+#undef DEBUG_ON_PINS
+#ifdef DEBUG_ON_PINS
+	// Port B: 5, 4 are used as debug pins to show where program is in real time
+	#define DEBUG_DDR				DDRB
+	#define DEBUG_PORT				PORTB
+	#define DEBUG_PIN_1				5
+	#define DEBUG_PIN_0				4
+	#define DEBUG_MASK				((1 << DEBUG_PIN_1) | (1 << DEBUG_PIN_0))
+	#define DEBUG_PORT_INIT			DEBUG_DDR |= DEBUG_MASK;
+	#define DEBUG_OUT_MAIN			DEBUG_PORT &= ~(DEBUG_MASK); // 5/4: 00
+	#define DEBUG_OUT_LCD			DEBUG_PORT = (DEBUG_PORT & (~DEBUG_MASK)) | (1 << DEBUG_PIN_0); // 5/4: 01
+	#define DEBUG_OUT_MIDI			DEBUG_PORT = (DEBUG_PORT & (~DEBUG_MASK)) | (1 << DEBUG_PIN_1); // 5/4: 10
+	#define DEBUG_OUT_MENU			DEBUG_PORT |= (DEBUG_MASK); // 5/4: 11
+	#define DEBUG_GET_OUT			(DEBUG_PORT & DEBUG_MASK)
+	#define DEBUG_SET_OUT(out)		DEBUG_PORT = (DEBUG_PORT & (~DEBUG_MASK)) | (out);
+#else
+	#define DEBUG_PORT_INIT			
+	#define DEBUG_OUT_MAIN			
+	#define DEBUG_OUT_LCD			
+	#define DEBUG_OUT_MIDI			
+	#define DEBUG_OUT_MENU			
+	#define DEBUG_SET_OUT(out)	
+	#define DEBUG_GET_OUT 0	
+#endif	
 
 //************************ BIT MACROS *************************
 
 //------------------------- DEBUG ----------------------------
-#define IGNORE_MODULE_TESTRESULT
+#undef IGNORE_MODULE_TESTRESULT
 // true if module testing shall be skipped in init
 
 #endif /* HW_DEFS_H_ */

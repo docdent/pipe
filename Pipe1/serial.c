@@ -79,25 +79,56 @@ void init_Serial1MIDI() {
 	midiTxOvflCount = 0;
 	midiRxBuffUsage = 0; // max used lenght of Midi Rx Buffer
 	midiTxBuffUsage = 0; // max used lenght of Midi Tx Buffer
-	MIDI_TXT_RESET_LASTCMD
+	MIDI_TX_RESET_LASTCMD
+}
+
+void serial1MIDISendCmd(uint8_t cmd, uint8_t channel){
+	if (cmd >= MIDI_LOWEST_CMD) {
+		// commands in range 0x80...0xFF only are sent!
+		if (channel <= MIDI_CHANNEL_16){
+			// only valid channels are used
+			cmd = cmd | channel;
+		}
+		if (midi_Setting.VelZero4Off) {
+			// check if commands already sent can be omitted
+			if (cmd <= MIDI_MAX_OMITTED){
+				// only for 0x80 ... 0xBF
+				if (cmd == midiTxLastCmd){
+					return; // do not sent command again as already sent!
+				} else {
+					midiTxLastCmd = cmd;
+				}
+			} else {
+				MIDI_TX_RESET_LASTCMD
+			}
+		}
+		serial1MIDISend(cmd);
+	}
+}
+
+void serial1MIDISendData(uint8_t data){
+	serial1MIDISend(data & 0x7F); // will send data allways but make sure MSB is zero
 }
 
 void serial1MIDISend(uint8_t data){
 	// V 0.63 save last sent midi command
 	// V 0.64 handle last command only if Send Vel=0 for Note Off is set, because only then abrevation shall be activated
-	if ((midi_Setting.VelZero4Off) && (data >= MIDI_LOWEST_CMD)){
-		if(data == midiTxLastCmd){
-			return;
-		}
-		if (data < MIDI_POLYAFTT){	// currently save last command  only for noteon/off
-			midiTxLastCmd = data;
-		} else { // otherwise do not save this command but reset command so that all other commands are sent allways
-			MIDI_TXT_RESET_LASTCMD // midiTxLastCmd set to 0 means it does never match command byte to be sent, because cmd will be > 0x7F
-		}
-	}
+// 	if ((midi_Setting.VelZero4Off) && (data >= MIDI_LOWEST_CMD)){
+// 		if(data == midiTxLastCmd){
+// 			return;
+// 		}
+// 		if (data < MIDI_POLYAFTT){	// currently save last command  only for noteon/off
+// 			midiTxLastCmd = data;
+// 		} else { // otherwise do not save this command but reset command so that all other commands are sent allways
+// 			MIDI_TX_RESET_LASTCMD // midiTxLastCmd set to 0 means it does never match command byte to be sent, because cmd will be > 0x7F
+// 		}
+// 	}
 	// 0.67 resete active sense tx timer with every midi byte sent
 	TIMER_SET(TIMER_TX_ACTIVESENSE,TIMER_TX_ACTIVESENSE_MS) // as we sent midi data here, active sense timer can be reset
 	UCSR1B &= ~(1 << UDRIE1);	// Interrupt abschalten für "Senderegister leer", damit Sendewarteschlange bearbeitet werden kann
+	if (data == 0xFF){
+		sei();
+	}
 	serial0USB_logMIDIout(data); // log sent data byte to USB if selected
 	midiTxBuffer[midiTxInIndex] = data; 
 	uint8_t newIndex = (midiTxInIndex+1) & MIDI_TX_BUFFER_MASK; // V 0.69 do not update midiTxInIndex on overflow

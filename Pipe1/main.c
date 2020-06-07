@@ -44,9 +44,7 @@ int main(void)
 	// INIT
 
 	init_iopins (); // default only: all inputs with pullup
-	#ifdef DEBUG_ON_PINS
 	DEBUG_OUT_MAIN
-	#endif
 	init_log();	// init error and event log
 	init_Serial0SerUSB(); // serial port to PC
 	init_message(); // init keyboard message handling
@@ -91,9 +89,7 @@ int main(void)
 	messageFromESP = SER_ESP_SEND_LCD; // for first transfer
     while (1)
     {
-		#ifdef DEBUG_ON_PINS
 		DEBUG_OUT_MAIN
-		#endif
 		// V0.60 read message from usart3 (esp)
 		// --------------------------- ESP MESSAGE HANDLING --------------------------------------
 		if SER_ESP_RX_BUFFER_NONEMPTY {
@@ -206,9 +202,7 @@ int main(void)
 			// Menu is beeing displayed
 			updateStatus = TRUE; // show status eventually after next menu exit
 		}
-		#ifdef DEBUG_ON_PINS
 		DEBUG_OUT_MAIN
-		#endif
 		// ------------------------- TIMER_MESSAGE_LCDCLEAR ----------------
 		if TIMER_ELAPSED(TIMER_MESSAGE_LCDCLEAR) {
 			lcd_message_clear();

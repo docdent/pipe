@@ -982,6 +982,9 @@ extern volatile uint16_t midiRxBytesCount;
 # 143 ".././serial.h"
 extern void init_Serial1MIDI();
 extern void serial1MIDISend(uint8_t data);
+extern void serial1MIDISendCmd(uint8_t cmd, uint8_t channel);
+extern void serial1MIDISendData(uint8_t data);
+
 extern uint8_t serial1MIDIReadRx();
 
 extern volatile uint8_t midiRxInIndex;
@@ -999,7 +1002,7 @@ extern volatile uint8_t midiRxBuffUsage;
 extern volatile uint8_t midiTxBuffUsage;
 
 extern volatile uint8_t midiTxLastCmd;
-# 173 ".././serial.h"
+# 176 ".././serial.h"
 extern uint8_t midi_ExtraBuffer[3];
 # 18 ".././Midi.c" 2
 # 1 ".././test.h" 1
@@ -1152,6 +1155,8 @@ extern MidiCCreg_t midi_ccReg;
 
 
 
+
+
 extern uint8_t prog_Display;
 extern uint8_t prog_UpdDisplay;
 extern void prog_set(uint8_t prog);
@@ -1201,7 +1206,7 @@ extern void midi_CheckTxActiveSense();
 extern void midi_CouplerReset();
 extern Word_t getAllCouplers();
 extern void setAllCouplers(Word_t couplers);
-# 274 ".././Midi.h"
+# 276 ".././Midi.h"
 extern uint8_t midi_Couplers[12];
 
 typedef struct{
@@ -1977,9 +1982,9 @@ void midiAllNotesOff(uint8_t channel){
    uint8_t midiChanel = midiOutMap[manual].hw_channel;
    if (midiChanel <= 15){
 
-    serial1MIDISend(0xB0 | midiChanel);
-    serial1MIDISend(0x7B);
-    serial1MIDISend(0);
+    serial1MIDISendCmd(0xB0, midiChanel);
+    serial1MIDISendData(0x7B);
+    serial1MIDISendData(0);
 
    }
   }
@@ -2001,9 +2006,9 @@ void midi_ManualOff(uint8_t manual){
  uint8_t midiChanel = midiOutMap[manual].hw_channel;
  if (midiChanel <= 15){
 
-  serial1MIDISend(0xB0 | midiChanel);
-  serial1MIDISend(0x7B);
-  serial1MIDISend(0);
+  serial1MIDISendCmd(0xB0,midiChanel);
+  serial1MIDISendData(0x7B);
+  serial1MIDISendData(0);
 
  }
 }
@@ -2146,6 +2151,13 @@ void midiIn_Process(uint8_t midiByte){
      case 0xB0:
       if (midiDataByte[0] == 0x7B) {
        midiAllNotesOff(channel);
+      } else if (midiDataByte[0] == midi_ccReg.ccInRegOn) {
+
+       register_onOff(midiDataByte[1], 0x01);
+      } else if (midiDataByte[0] == midi_ccReg.ccInRegOff) {
+       register_onOff(midiDataByte[1], 0x00);
+      } else if (midiDataByte[0] == 0x79){
+       midi_resetRegisters();
       }
       break;
      case 0xC0:
@@ -2376,9 +2388,9 @@ uint8_t read_allRegister(uint8_t* resultPtr){
   if ((regNr & 0x07) == 0x07) {
 
    if (resultPtr != 
-# 551 ".././Midi.c" 3 4
+# 558 ".././Midi.c" 3 4
                    ((void *)0)
-# 551 ".././Midi.c"
+# 558 ".././Midi.c"
                        ) {
     *resultPtr++ = mask;
    }
@@ -2463,9 +2475,9 @@ void midi_ProgramChange(uint8_t channel, uint8_t program){
 
   if (midiThrough.OutChannel != 0xFF) {
 
-   serial1MIDISend(0xC0 | midiThrough.OutChannel);
+   serial1MIDISendCmd(0xC0, midiThrough.OutChannel);
 
-   serial1MIDISend(program);
+   serial1MIDISendData(program);
   }
 
 }
@@ -2549,6 +2561,23 @@ uint8_t midi_CountRegisterInProgram(uint8_t program){
  return result;
 
 }
+
+void midiSendRegOn(uint8_t regNr){
+ if ((midi_ccReg.ccOutRegOn <= 0x7F) && (midiThrough.OutChannel <= 15)){
+  serial1MIDISendCmd(0xB0,midiThrough.OutChannel);
+  serial1MIDISendData(midi_ccReg.ccOutRegOn);
+  serial1MIDISendData(regNr);
+ }
+}
+
+void midiSendRegOff(uint8_t regNr){
+ if ((midi_ccReg.ccOutRegOff <= 0x7F) && (midiThrough.OutChannel <= 15)){
+  serial1MIDISendCmd(0xB0,midiThrough.OutChannel);
+  serial1MIDISendData(midi_ccReg.ccOutRegOff);
+  serial1MIDISendData(regNr);
+ }
+}
+
 
 
 uint8_t prog_Display;
@@ -2728,11 +2757,11 @@ void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff){
 
   if (midiThrough.OutChannel != 0xFF) {
 
-   serial1MIDISend(((onOff == 0x01) || (midi_Setting.VelZero4Off) ? 0x90 : 0x80) | midiThrough.OutChannel);
+   serial1MIDISendCmd(((onOff == 0x01) || (midi_Setting.VelZero4Off) ? 0x90 : 0x80),midiThrough.OutChannel);
 
-   serial1MIDISend(note);
+   serial1MIDISendData(note);
 
-   serial1MIDISend(((onOff == 0x00) && (midi_Setting.VelZero4Off)) ? 0 : 64);
+   serial1MIDISendData(((onOff == 0x00) && (midi_Setting.VelZero4Off)) ? 0 : 64);
   }
  }
 }
@@ -2852,11 +2881,14 @@ ManualNote_t moduleBit_to_manualNote(uint8_t moduleBit){
  uint8_t manual = 0;
  do {
   for (uint8_t i = 4; i > 0; i--){
-   if ((moduleBit >= pRange->bitStart) && (moduleBit <= pRange->bitStart + (pRange->endNote - pRange->startNote))) {
+   if (pRange->startNote != 0xFF){
 
-    result.manual = manual;
-    result.note = pRange->startNote + (moduleBit - pRange->bitStart);
-    return(result);
+    if ((moduleBit >= pRange->bitStart) && (moduleBit <= pRange->bitStart + (pRange->endNote - pRange->startNote))) {
+
+     result.manual = manual;
+     result.note = pRange->startNote + (moduleBit - pRange->bitStart);
+     return(result);
+    }
    }
    pRange++;
   }
@@ -2897,10 +2929,10 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
  if (midiOutMap[manual].sw_channel != 0xFF){
 
 
-  serial1MIDISend(((onOff == 0x01) || (midi_Setting.VelZero4Off) ? 0x90 : 0x80) | midiOutMap[manual].sw_channel);
-  serial1MIDISend(note);
+  serial1MIDISendCmd(((onOff == 0x01) || (midi_Setting.VelZero4Off) ? 0x90 : 0x80),midiOutMap[manual].sw_channel);
+  serial1MIDISendData(note);
 
-  serial1MIDISend(((onOff == 0x00)) ? 0 : 64);
+  serial1MIDISendData(((onOff == 0x00)) ? 0 : 64);
 
 
  }
@@ -2927,19 +2959,26 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 
 
      chanNote = Manual_to_MidiNote(manualNote.manual, manualNote.note);
-     if (chanNote.hw_channel != 0xFF){
-
-      serial1MIDISend(((command == 0x20) || (midi_Setting.VelZero4Off) ? 0x90 : 0x80) | chanNote.hw_channel);
-
-      serial1MIDISend(chanNote.note);
-
-      serial1MIDISend(((command == 0x00) && (midi_Setting.VelZero4Off)) ? 0 : 64);
+     if (chanNote.hw_channel <= 15){
 
       if (command == 0x20) {
 
+       serial1MIDISendCmd(0x90,chanNote.hw_channel);
+       serial1MIDISendData(chanNote.note);
+       serial1MIDISendData(64);
        midiLastOutManual = manualNote.manual;
        midiLastOutNote = manualNote.note;
+      } else if (midi_Setting.VelZero4Off) {
+
+       serial1MIDISendCmd(0x90,chanNote.hw_channel);
+       serial1MIDISendData(chanNote.note);
+       serial1MIDISendData(0);
+      } else {
+       serial1MIDISendCmd(0x80,chanNote.hw_channel);
+       serial1MIDISendData(chanNote.note);
+       serial1MIDISendData(0);
       }
+# 1156 ".././Midi.c"
      }
 
      uint8_t noteOnOff = (command == 0x20 ? 0x01 : 0x00);
@@ -2987,7 +3026,20 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
      }
     }
 
-    midi_RegisterChanged = moduleBit_to_registerNr(((i << 5) | (shiftBit))) | (command == 0x20 ? 0x80 : 0);
+
+
+
+    uint8_t regNr = moduleBit_to_registerNr(((i << 5) | (shiftBit)));
+    if (regNr < 64){
+
+     if (command == 0x20){
+      midiSendRegOn(regNr);
+      regNr |= 0x80;
+     } else {
+      midiSendRegOff(regNr);
+     }
+     midi_RegisterChanged = regNr;
+    }
 
    }
    moduleBits >>= 1;
@@ -2999,13 +3051,13 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 
 void midiSendAllNotesOff(){
  if (midiThrough.OutChannel <= 15) {
-  serial1MIDISend(0xB0 | (midiThrough.OutChannel));
-  serial1MIDISend(0x7B);
-  serial1MIDISend(0);
+  serial1MIDISendCmd(0xB0,midiThrough.OutChannel);
+  serial1MIDISendData(0x7B);
+  serial1MIDISendData(0);
  }
-# 1183 ".././Midi.c"
+# 1240 ".././Midi.c"
 }
 
 void midi_SendActiveSense(){
- serial1MIDISend(0xFE);
+ serial1MIDISendCmd(0xFE,0);
 }
