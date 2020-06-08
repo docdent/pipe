@@ -644,12 +644,12 @@ extern uint8_t msgPipe_Handling;
 # 16 ".././hwtimer.h" 2
 # 31 ".././hwtimer.h"
 extern volatile uint8_t time_Uptime[4];
-# 83 ".././hwtimer.h"
+# 87 ".././hwtimer.h"
 typedef struct {
  uint8_t counter;
  uint8_t prescaler;
 } Timer;
-extern volatile Timer swTimer[10];
+extern volatile Timer swTimer[11];
 extern volatile uint8_t time_Uptime[4];
 extern volatile uint8_t time_UpTimeUpdated;
 
@@ -657,7 +657,7 @@ extern void init_HwTimer();
 extern void init_Timers();
 extern void init_ADC();
 extern void init_Pipe();
-# 136 ".././hwtimer.h"
+# 140 ".././hwtimer.h"
 typedef struct {
  uint8_t mux;
  uint8_t ADCval;
@@ -669,7 +669,7 @@ typedef struct {
 extern volatile KeyInfo adcKeys[1];
 
 extern uint8_t keyWants[6];
-# 169 ".././hwtimer.h"
+# 173 ".././hwtimer.h"
 typedef struct {
  uint8_t pipeOutM4;
  uint8_t pipeOut;
@@ -697,7 +697,7 @@ typedef struct {
 } Pipe_Module_t;
 
 extern Pipe_Module_t pipe_Module;
-# 204 ".././hwtimer.h"
+# 208 ".././hwtimer.h"
 extern uint8_t pipe_PowerStatus;
 
 
@@ -825,7 +825,7 @@ const __flash ErrorText_t ErrorText[] = {
  {3,0, "OVFL:MidiIn"},
  {3,1, "OVFL:MidiOut"},
  {4,0, "OVFL:PipeMsg"},
- {5,0, "Pwr:OuptutOn"},
+ {5,0, "Pwr:OutputOn"},
 };
 
 void init_log(){

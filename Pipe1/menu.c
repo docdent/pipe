@@ -21,7 +21,7 @@
 
 //********************************************* C O N S T ******************************************
 
-const char sw_version [] PROGMEM = "V0.84";
+const char sw_version [] PROGMEM = "V0.85";
 
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
@@ -1355,10 +1355,11 @@ uint8_t menuOnEnterEERestore(uint8_t arg){
 
 uint8_t menuOnEnterEEUpdate(uint8_t arg){
 	(void) arg;
-	lcd_puts_P(msg_programming1);
 	lcd_goto(MENU_LCD_CURSOR_DATA);
+	lcd_puts_P(msg_programming1);
 	eeprom_UpdateALL();
-	menuLCDwriteOK();
+	lcd_goto(MENU_LCD_CURSOR_DATA);
+	lcd_puts_P(msg_programming2);
 	return 0;
 }
 
@@ -1409,6 +1410,8 @@ const char usbHWmidiIn [] PROGMEM = "Midi-In:";
 const char usbHWmidiOut [] PROGMEM = "Midi-Out:";
 const char usbHWmidiThru [] PROGMEM = "Midi-Thru: ";
 const char usbHWnone [] PROGMEM = "none";
+const char usbHWRegLayout [] PROGMEM = "Register Layout:\r\n";
+const char usbHWCC [] PROGMEM = "Register On/Off CC for MIDI In/Out:\r\n";
 
 uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 	(void) arg;
@@ -1515,6 +1518,28 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 		}
 		serial0SER_USB_sendCRLF();
 	}
+	serial0SER_USB_sendStringP(usbHWRegLayout);
+	for (uint8_t i = 0; i < REGOUT_LEN; i++){
+		if (reg_Out[i].regStart < REGISTER_COUNT){
+			// valid entry
+			buffer = string_Buf;
+			*buffer++ = '@';
+			buffer = putChar_hex(reg_Out[i].cursor,buffer);
+			*buffer++ = ' ';
+			if (reg_Out[i].manualChar > ' ' && reg_Out[i].manualChar < 0x7F){
+				*buffer++ = reg_Out[i].manualChar;
+			} else {
+				*buffer++ = ' ';
+			}
+			*buffer++ = ' ';
+			buffer = putChar_Dec2(reg_Out[i].regStart+1,buffer);
+			*buffer++ = '-';
+			buffer = putChar_Dec2(reg_Out[i].regEnd+1,buffer);
+			buffer = '\0';
+			serial0SER_USB_sendString(string_Buf);
+			serial0SER_USB_sendCRLF();
+		}
+	}
 	// MIDI
 	serial0SER_USB_sendCRLF();
  	serial0SER_USB_sendStringP(usbHWmidiIn);
@@ -1573,7 +1598,23 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 	*buffer++= '\0';
 	serial0SER_USB_sendString(string_Buf);
 	serial0SER_USB_sendCRLF();
-
+	// Register CC On/Off In/Out
+	serial0SER_USB_sendStringP(usbHWCC);
+	buffer = string_Buf;
+	*buffer++ = 'I';
+	*buffer++ = ':';
+	buffer = putChar_hex(midi_ccReg.ccInRegOn,buffer);
+	*buffer++ = ',';
+	buffer = putChar_hex(midi_ccReg.ccInRegOff,buffer);
+	*buffer++ = ' ';
+	*buffer++ = 'O';
+	*buffer++ = ':';
+	buffer = putChar_hex(midi_ccReg.ccOutRegOn,buffer);
+	*buffer++ = ',';
+	buffer = putChar_hex(midi_ccReg.ccOutRegOff,buffer);
+	*buffer++= '\0';
+	serial0SER_USB_sendString(string_Buf);
+	serial0SER_USB_sendCRLF();
 	return 0;
 }
 

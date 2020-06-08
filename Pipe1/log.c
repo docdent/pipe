@@ -36,7 +36,7 @@ const __flash ErrorText_t ErrorText[] = {
 	{LOG_CAT_SERIAL,LOG_CAT_SERIALMIDIINOVFL,	"OVFL:MidiIn"},
 	{LOG_CAT_SERIAL,LOG_CAT_SERIALMIDIOUTOVFL,	"OVFL:MidiOut"},
 	{LOG_CAT_MESSAGE,LOG_CATMESSAGE_PIPEOVFL,	"OVFL:PipeMsg"},
-	{LOG_CAT_POWER,LOG_CATPOWER_OUTPUTSON,		"Pwr:OuptutOn"},
+	{LOG_CAT_POWER,LOG_CATPOWER_OUTPUTSON,		"Pwr:OutputOn"},
 };
 
 void init_log(){ // init Log Vars

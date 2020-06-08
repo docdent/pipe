@@ -1532,12 +1532,12 @@ eprom_ok:
 	.uleb128 0x5
 	.byte	0x2
 	.byte	0x5
-	.byte	0x53
+	.byte	0x57
 	.long	0xae
 	.uleb128 0x6
 	.long	.LASF11
 	.byte	0x5
-	.byte	0x54
+	.byte	0x58
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -1545,7 +1545,7 @@ eprom_ok:
 	.uleb128 0x6
 	.long	.LASF12
 	.byte	0x5
-	.byte	0x55
+	.byte	0x59
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -1554,7 +1554,7 @@ eprom_ok:
 	.uleb128 0x2
 	.long	.LASF13
 	.byte	0x5
-	.byte	0x56
+	.byte	0x5a
 	.long	0x89
 	.uleb128 0x7
 	.long	0x3b
@@ -2901,7 +2901,7 @@ eprom_ok:
 	.uleb128 0x21
 	.long	.LASF44
 	.byte	0x5
-	.byte	0x58
+	.byte	0x5c
 	.long	0xca8
 	.byte	0x1
 	.byte	0x1
@@ -2912,14 +2912,14 @@ eprom_ok:
 	.long	0xcbd
 	.uleb128 0x8
 	.long	0x82
-	.byte	0x9
+	.byte	0xa
 	.byte	0
 	.uleb128 0x22
 	.long	0xae
 	.uleb128 0x21
 	.long	.LASF45
 	.byte	0x5
-	.byte	0x57
+	.byte	0x5b
 	.long	0xccf
 	.byte	0x1
 	.byte	0x1
@@ -2928,14 +2928,14 @@ eprom_ok:
 	.uleb128 0x21
 	.long	.LASF46
 	.byte	0x5
-	.byte	0x59
+	.byte	0x5d
 	.long	0xc79
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x21
 	.long	.LASF47
 	.byte	0x5
-	.byte	0xcc
+	.byte	0xd0
 	.long	0x3b
 	.byte	0x1
 	.byte	0x1
@@ -3303,7 +3303,7 @@ eprom_ok:
 	.long	.LASF89
 	.long	.LASF89
 	.byte	0x5
-	.byte	0xd4
+	.byte	0xd8
 	.uleb128 0x27
 	.byte	0x1
 	.byte	0x1
@@ -3464,7 +3464,7 @@ eprom_ok:
 	.long	.LASF112
 	.long	.LASF112
 	.byte	0x5
-	.byte	0xd3
+	.byte	0xd7
 	.uleb128 0x28
 	.byte	0x1
 	.byte	0x1
@@ -3590,28 +3590,28 @@ eprom_ok:
 	.long	.LASF130
 	.long	.LASF130
 	.byte	0x5
-	.byte	0x5b
+	.byte	0x5f
 	.uleb128 0x27
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF131
 	.long	.LASF131
 	.byte	0x5
-	.byte	0x5c
+	.byte	0x60
 	.uleb128 0x27
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF132
 	.long	.LASF132
 	.byte	0x5
-	.byte	0x5d
+	.byte	0x61
 	.uleb128 0x27
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF133
 	.long	.LASF133
 	.byte	0x5
-	.byte	0x5e
+	.byte	0x62
 	.uleb128 0x27
 	.byte	0x1
 	.byte	0x1
@@ -3625,7 +3625,7 @@ eprom_ok:
 	.long	.LASF135
 	.long	.LASF135
 	.byte	0x5
-	.byte	0xd6
+	.byte	0xda
 	.uleb128 0x27
 	.byte	0x1
 	.byte	0x1
@@ -3716,7 +3716,7 @@ eprom_ok:
 	.long	.LASF148
 	.long	.LASF148
 	.byte	0x5
-	.byte	0xd2
+	.byte	0xd6
 	.byte	0
 	.section	.debug_abbrev,"",@progbits
 .Ldebug_abbrev0:

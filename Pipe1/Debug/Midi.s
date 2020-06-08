@@ -3112,11 +3112,11 @@ moduleBit_to_manualNote:
 	.loc 1 1060 0
 	cpi r23,lo8(5)
 	brlo .L191
-	.loc 1 1064 0
+	.loc 1 1062 0
 	ldi r24,lo8(-1)
 .LVL328:
 	ldi r25,0
-	.loc 1 1065 0
+	.loc 1 1063 0
 	ret
 	.cfi_endproc
 .LFE60:
@@ -3126,7 +3126,7 @@ moduleBit_to_manualNote:
 	.type	manual_NoteOnOff, @function
 manual_NoteOnOff:
 .LFB61:
-	.loc 1 1067 0
+	.loc 1 1065 0
 	.cfi_startproc
 .LVL329:
 	push r14
@@ -3160,10 +3160,10 @@ manual_NoteOnOff:
 	mov r28,r24
 	mov r16,r22
 	mov r29,r20
-	.loc 1 1069 0
+	.loc 1 1067 0
 	call manualNote_to_moduleBit
 .LVL330:
-	.loc 1 1071 0
+	.loc 1 1069 0
 	mov r20,r25
 	swap r20
 	lsr r20
@@ -3179,25 +3179,25 @@ manual_NoteOnOff:
 	dec r20
 	brpl 1b
 .LVL331:
-	.loc 1 1072 0
+	.loc 1 1070 0
 	mov r17,r25
 	andi r17,lo8(31)
 .LVL332:
-	.loc 1 1073 0
+	.loc 1 1071 0
 	cpse r24,__zero_reg__
 	rjmp .L193
-	.loc 1 1074 0
+	.loc 1 1072 0
 	lds r24,pipe_Module+1
 	and r24,r14
 	brne .L194
-	.loc 1 1074 0 is_stmt 0 discriminator 1
+	.loc 1 1072 0 is_stmt 0 discriminator 1
 	tst r29
 	brlt .L194
 .LBB75:
-	.loc 1 1076 0 is_stmt 1
+	.loc 1 1074 0 is_stmt 1
 	andi r29,lo8(127)
 .LVL333:
-	.loc 1 1079 0
+	.loc 1 1077 0
 	cpi r29,lo8(1)
 	brne .L200
 	ldi r25,lo8(32)
@@ -3205,32 +3205,32 @@ manual_NoteOnOff:
 .L200:
 	ldi r25,0
 .L195:
-	.loc 1 1080 0 discriminator 4
+	.loc 1 1078 0 discriminator 4
 	mov r24,r14
 	or r25,r17
 	call pipeMsgPush
 .LVL334:
 .L194:
 .LBE75:
-	.loc 1 1082 0
+	.loc 1 1080 0
 	andi r29,lo8(127)
 .LVL335:
-	.loc 1 1083 0
+	.loc 1 1081 0
 	brne .L196
-	.loc 1 1085 0
+	.loc 1 1083 0
 	mov r22,r14
 	mov r24,r17
 	call pipe_off
 .LVL336:
 	rjmp .L193
 .L196:
-	.loc 1 1088 0
+	.loc 1 1086 0
 	mov r22,r14
 	mov r24,r17
 	call pipe_on
 .LVL337:
 .L193:
-	.loc 1 1093 0
+	.loc 1 1091 0
 	mov r30,r28
 	ldi r31,0
 	lsl r30
@@ -3240,14 +3240,14 @@ manual_NoteOnOff:
 	ldd r22,Z+1
 	cpi r22,lo8(-1)
 	breq .L192
-	.loc 1 1096 0
+	.loc 1 1094 0
 	cpi r29,lo8(1)
 	breq .L201
-	.loc 1 1096 0 is_stmt 0 discriminator 2
+	.loc 1 1094 0 is_stmt 0 discriminator 2
 	lds r24,midi_Setting+1
 	tst r24
 	breq .L202
-	.loc 1 1096 0
+	.loc 1 1094 0
 	ldi r24,lo8(-112)
 	rjmp .L198
 .L201:
@@ -3256,28 +3256,28 @@ manual_NoteOnOff:
 .L202:
 	ldi r24,lo8(-128)
 .L198:
-	.loc 1 1096 0 discriminator 6
+	.loc 1 1094 0 discriminator 6
 	call serial1MIDISendCmd
 .LVL338:
-	.loc 1 1097 0 is_stmt 1 discriminator 6
+	.loc 1 1095 0 is_stmt 1 discriminator 6
 	mov r24,r16
 	call serial1MIDISendData
 .LVL339:
-	.loc 1 1099 0 discriminator 6
+	.loc 1 1097 0 discriminator 6
 	cpse r29,__zero_reg__
 	rjmp .L203
-	.loc 1 1099 0 is_stmt 0
+	.loc 1 1097 0 is_stmt 0
 	ldi r24,0
 	rjmp .L199
 .L203:
 	ldi r24,lo8(64)
 .L199:
-	.loc 1 1099 0 discriminator 4
+	.loc 1 1097 0 discriminator 4
 	call serial1MIDISendData
 .LVL340:
 .L192:
 /* epilogue start */
-	.loc 1 1103 0 is_stmt 1
+	.loc 1 1101 0 is_stmt 1
 	pop r29
 .LVL341:
 	pop r28
@@ -4281,129 +4281,147 @@ proc_ESPmidi:
 	.type	midiKeyPress_Process, @function
 midiKeyPress_Process:
 .LFB62:
-	.loc 1 1107 0
+	.loc 1 1105 0
 	.cfi_startproc
 .LVL455:
-	push r11
+	push r9
 .LCFI66:
 	.cfi_def_cfa_offset 4
-	.cfi_offset 11, -3
-	push r12
+	.cfi_offset 9, -3
+	push r10
 .LCFI67:
 	.cfi_def_cfa_offset 5
-	.cfi_offset 12, -4
-	push r13
+	.cfi_offset 10, -4
+	push r11
 .LCFI68:
 	.cfi_def_cfa_offset 6
-	.cfi_offset 13, -5
-	push r14
+	.cfi_offset 11, -5
+	push r12
 .LCFI69:
 	.cfi_def_cfa_offset 7
-	.cfi_offset 14, -6
-	push r15
+	.cfi_offset 12, -6
+	push r13
 .LCFI70:
 	.cfi_def_cfa_offset 8
-	.cfi_offset 15, -7
-	push r16
+	.cfi_offset 13, -7
+	push r14
 .LCFI71:
 	.cfi_def_cfa_offset 9
-	.cfi_offset 16, -8
-	push r17
+	.cfi_offset 14, -8
+	push r15
 .LCFI72:
 	.cfi_def_cfa_offset 10
-	.cfi_offset 17, -9
-	push r28
+	.cfi_offset 15, -9
+	push r16
 .LCFI73:
 	.cfi_def_cfa_offset 11
-	.cfi_offset 28, -10
-	push r29
+	.cfi_offset 16, -10
+	push r17
 .LCFI74:
 	.cfi_def_cfa_offset 12
-	.cfi_offset 29, -11
+	.cfi_offset 17, -11
+	push r28
+.LCFI75:
+	.cfi_def_cfa_offset 13
+	.cfi_offset 28, -12
+	push r29
+.LCFI76:
+	.cfi_def_cfa_offset 14
+	.cfi_offset 29, -13
 /* prologue: function */
 /* frame size = 0 */
-/* stack size = 9 */
-.L__stack_usage = 9
+/* stack size = 11 */
+.L__stack_usage = 11
 	mov r29,r24
 	mov r28,r25
-	.loc 1 1108 0
+	.loc 1 1106 0
 	call serial0USB_logPipeIn
 .LVL456:
-	.loc 1 1109 0
-	mov r16,r28
-	andi r16,lo8(-32)
+	.loc 1 1107 0
+	mov r24,r28
+	andi r24,lo8(-32)
+	mov r10,r24
 .LVL457:
-	.loc 1 1110 0
+	.loc 1 1108 0
 	andi r28,lo8(31)
-	mov r12,r28
+	mov r13,r28
 .LVL458:
-	.loc 1 1114 0
-	cpi r16,lo8(32)
-	brne .+2
-	rjmp .L292
-	.loc 1 1114 0 is_stmt 0 discriminator 1
-	tst r16
+	.loc 1 1113 0
+	ldi r25,lo8(32)
+	cp r24,r25
 	brne .+2
 	rjmp .L293
+	.loc 1 1113 0 is_stmt 0 discriminator 1
+	tst r24
+	brne .+2
+	rjmp .L294
 .LBB91:
 	rjmp .L269
 .LVL459:
-.L291:
-	.loc 1 1118 0 is_stmt 1
+.L292:
+	.loc 1 1117 0 is_stmt 1
 	sbrs r29,0
 	rjmp .L272
-.LBB92:
-	.loc 1 1120 0
-	ldi r18,lo8(32)
-	mul r28,r18
-	movw r24,r0
-	clr __zero_reg__
-	mov r15,r12
-	or r15,r24
-	mov r24,r15
+	.loc 1 1119 0
+	mov r14,r28
+	mov r15,__zero_reg__
+	movw r24,r14
+	lsl r24
+	rol r25
+	swap r24
+	swap r25
+	andi r25,0xf0
+	eor r25,r24
+	andi r24,0xf0
+	eor r25,r24
+	mov r17,r13
+	or r17,r24
+	mov r24,r17
 	call moduleBit_to_manualNote
 .LVL460:
-	mov r11,r24
+	mov r12,r24
 .LVL461:
-	mov r14,r25
-	.loc 1 1122 0
-	mov r17,r24
+	mov r9,r25
+	.loc 1 1121 0
+	mov r16,r24
 	cpi r24,lo8(-1)
 	brne .+2
 	rjmp .L273
-.LBB93:
+.LVL462:
+.LBB92:
 	.loc 1 1125 0
 	mov r22,r25
 	call Manual_to_MidiNote
-.LVL462:
-	mov r13,r25
 .LVL463:
+	mov r17,r25
+.LVL464:
 	.loc 1 1126 0
 	cpi r24,lo8(16)
 	brsh .L274
 	.loc 1 1128 0
-	cpi r16,lo8(32)
-	brne .L275
+	ldi r25,lo8(32)
+	cpse r10,r25
+	rjmp .L275
 	.loc 1 1130 0
 	mov r22,r24
 	ldi r24,lo8(-112)
 	call serial1MIDISendCmd
-.LVL464:
-	.loc 1 1131 0
-	mov r24,r13
-	call serial1MIDISendData
 .LVL465:
+	.loc 1 1131 0
+	mov r24,r17
+	call serial1MIDISendData
+.LVL466:
 	.loc 1 1132 0
 	ldi r24,lo8(64)
 	call serial1MIDISendData
-.LVL466:
-	.loc 1 1133 0
-	sts midiLastOutManual,r11
 .LVL467:
-	.loc 1 1134 0
-	sts midiLastOutNote,r14
-	rjmp .L274
+	.loc 1 1133 0
+	sts midiLastOutManual,r12
 .LVL468:
+	.loc 1 1134 0
+	sts midiLastOutNote,r9
+	rjmp .L274
+.LVL469:
 .L275:
 	.loc 1 1135 0
 	lds r25,midi_Setting+1
@@ -4413,255 +4431,318 @@ midiKeyPress_Process:
 	mov r22,r24
 	ldi r24,lo8(-112)
 	call serial1MIDISendCmd
-.LVL469:
-	.loc 1 1138 0
-	mov r24,r13
-	call serial1MIDISendData
 .LVL470:
+	.loc 1 1138 0
+	mov r24,r17
+	call serial1MIDISendData
+.LVL471:
 	.loc 1 1139 0
 	ldi r24,0
 	call serial1MIDISendData
-.LVL471:
+.LVL472:
 	rjmp .L274
 .L276:
 	.loc 1 1141 0
 	mov r22,r24
 	ldi r24,lo8(-128)
 	call serial1MIDISendCmd
-.LVL472:
-	.loc 1 1142 0
-	mov r24,r13
-	call serial1MIDISendData
 .LVL473:
+	.loc 1 1142 0
+	mov r24,r17
+	call serial1MIDISendData
+.LVL474:
 	.loc 1 1143 0
 	ldi r24,0
 	call serial1MIDISendData
-.LVL474:
+.LVL475:
 .L274:
-	.loc 1 1158 0
+	.loc 1 1147 0
 	ldi r20,lo8(1)
-	cpi r16,lo8(32)
-	breq .L277
+	ldi r24,lo8(32)
+.LVL476:
+	cpse r10,r24
 	ldi r20,0
 .L277:
-	mov r13,r20
-.LVL475:
-	.loc 1 1160 0
-	cpse r17,__zero_reg__
+	mov r17,r20
+.LVL477:
+	.loc 1 1149 0
+	cpse r16,__zero_reg__
 	rjmp .L278
-	.loc 1 1161 0
+	.loc 1 1150 0
 	lds r24,midi_Couplers
 	cpi r24,lo8(-1)
 	brne .L279
-	.loc 1 1162 0
-	mov r22,r14
+	.loc 1 1151 0
+	mov r22,r9
 	ldi r24,lo8(1)
 	call manual_NoteOnOff
-.LVL476:
+.LVL478:
 .L279:
-	.loc 1 1164 0
+	.loc 1 1153 0
 	lds r24,midi_Couplers+1
 	cpi r24,lo8(-1)
 	brne .L280
-	.loc 1 1165 0
-	mov r20,r13
-	mov r22,r14
-	ldi r24,lo8(2)
-	call manual_NoteOnOff
-.LVL477:
-.L280:
-	.loc 1 1167 0
-	lds r24,midi_Couplers+3
-	cpi r24,lo8(-1)
-	breq .+2
-	rjmp .L273
-	.loc 1 1168 0
-	mov r20,r13
-	mov r22,r14
-	ldi r24,lo8(3)
-	call manual_NoteOnOff
-.LVL478:
-	rjmp .L273
-.L278:
-	.loc 1 1170 0
-	cpi r17,lo8(1)
-	brne .L281
-	.loc 1 1171 0
-	lds r24,midi_Couplers+2
-	cpi r24,lo8(-1)
-	brne .L282
-	.loc 1 1172 0
-	mov r22,r14
+	.loc 1 1154 0
+	mov r20,r17
+	mov r22,r9
 	ldi r24,lo8(2)
 	call manual_NoteOnOff
 .LVL479:
-.L282:
-	.loc 1 1174 0
-	lds r24,midi_Couplers+4
+.L280:
+	.loc 1 1156 0
+	lds r24,midi_Couplers+3
 	cpi r24,lo8(-1)
-	brne .L283
-	.loc 1 1175 0
-	mov r20,r13
-	mov r22,r14
+	breq .+2
+	rjmp .L295
+	.loc 1 1157 0
+	mov r20,r17
+	mov r22,r9
 	ldi r24,lo8(3)
 	call manual_NoteOnOff
 .LVL480:
-.L283:
-	.loc 1 1177 0
-	lds r24,midi_Couplers+6
+	.loc 1 1124 0
+	clr r11
+	dec r11
+	rjmp .L281
+.L278:
+	.loc 1 1159 0
+	cpi r16,lo8(1)
+	brne .L282
+	.loc 1 1160 0
+	lds r24,midi_Couplers+2
 	cpi r24,lo8(-1)
-	breq .+2
-	rjmp .L273
-	.loc 1 1178 0
-	mov r20,r13
-	mov r22,r14
-	ldi r24,0
+	brne .L283
+	.loc 1 1161 0
+	mov r22,r9
+	ldi r24,lo8(2)
 	call manual_NoteOnOff
 .LVL481:
-	rjmp .L273
-.L281:
-	.loc 1 1180 0
-	cpi r17,lo8(2)
-	brne .L284
-	.loc 1 1181 0
-	lds r24,midi_Couplers+5
+.L283:
+	.loc 1 1163 0
+	lds r24,midi_Couplers+4
 	cpi r24,lo8(-1)
-	brne .L285
-	.loc 1 1182 0
-	mov r22,r14
+	brne .L284
+	.loc 1 1164 0
+	mov r20,r17
+	mov r22,r9
 	ldi r24,lo8(3)
 	call manual_NoteOnOff
 .LVL482:
-.L285:
-	.loc 1 1184 0
-	lds r24,midi_Couplers+7
+.L284:
+	.loc 1 1166 0
+	lds r24,midi_Couplers+6
 	cpi r24,lo8(-1)
-	brne .L286
-	.loc 1 1185 0
-	mov r20,r13
-	mov r22,r14
+	breq .+2
+	rjmp .L296
+	.loc 1 1167 0
+	mov r20,r17
+	mov r22,r9
 	ldi r24,0
 	call manual_NoteOnOff
 .LVL483:
-.L286:
-	.loc 1 1187 0
-	lds r24,midi_Couplers+8
+	.loc 1 1124 0
+	clr r11
+	dec r11
+	rjmp .L281
+.L282:
+	.loc 1 1169 0
+	cpi r16,lo8(2)
+	brne .L285
+	.loc 1 1170 0
+	lds r24,midi_Couplers+5
 	cpi r24,lo8(-1)
-	brne .L273
-	.loc 1 1188 0
-	mov r20,r13
-	mov r22,r14
-	ldi r24,lo8(1)
+	brne .L286
+	.loc 1 1171 0
+	mov r22,r9
+	ldi r24,lo8(3)
 	call manual_NoteOnOff
 .LVL484:
-	rjmp .L273
-.L284:
-	.loc 1 1190 0
-	cpi r17,lo8(3)
-	brne .L273
-	.loc 1 1191 0
-	lds r24,midi_Couplers+9
+.L286:
+	.loc 1 1173 0
+	lds r24,midi_Couplers+7
 	cpi r24,lo8(-1)
 	brne .L287
-	.loc 1 1192 0
-	mov r22,r14
+	.loc 1 1174 0
+	mov r20,r17
+	mov r22,r9
 	ldi r24,0
 	call manual_NoteOnOff
 .LVL485:
 .L287:
-	.loc 1 1194 0
-	lds r24,midi_Couplers+10
+	.loc 1 1176 0
+	lds r24,midi_Couplers+8
 	cpi r24,lo8(-1)
-	brne .L288
-	.loc 1 1195 0
-	mov r20,r13
-	mov r22,r14
+	breq .+2
+	rjmp .L297
+	.loc 1 1177 0
+	mov r20,r17
+	mov r22,r9
 	ldi r24,lo8(1)
 	call manual_NoteOnOff
 .LVL486:
-.L288:
-	.loc 1 1197 0
-	lds r24,midi_Couplers+11
+	.loc 1 1124 0
+	clr r11
+	dec r11
+	rjmp .L281
+.L285:
+	.loc 1 1179 0
+	cpi r16,lo8(3)
+	brne .L298
+	.loc 1 1180 0
+	lds r24,midi_Couplers+9
 	cpi r24,lo8(-1)
-	brne .L273
-	.loc 1 1198 0
-	mov r20,r13
-	mov r22,r14
-	ldi r24,lo8(2)
+	brne .L288
+	.loc 1 1181 0
+	mov r22,r9
+	ldi r24,0
 	call manual_NoteOnOff
 .LVL487:
-.L273:
-.LBE93:
-	.loc 1 1206 0
-	mov r24,r15
-	call moduleBit_to_registerNr
-.LVL488:
-	mov r17,r24
-.LVL489:
-	.loc 1 1207 0
-	cpi r24,lo8(64)
-	brsh .L272
-	.loc 1 1209 0
-	cpi r16,lo8(32)
+.L288:
+	.loc 1 1183 0
+	lds r24,midi_Couplers+10
+	cpi r24,lo8(-1)
 	brne .L289
-	.loc 1 1210 0
-	call midiSendRegOn
-.LVL490:
-	.loc 1 1211 0
-	ori r17,lo8(-128)
-.LVL491:
-	rjmp .L290
+	.loc 1 1184 0
+	mov r20,r17
+	mov r22,r9
+	ldi r24,lo8(1)
+	call manual_NoteOnOff
+.LVL488:
 .L289:
-	.loc 1 1213 0
-	call midiSendRegOff
-.LVL492:
-.L290:
-	.loc 1 1215 0
-	sts midi_RegisterChanged,r17
-.LVL493:
-.L272:
+	.loc 1 1186 0
+	lds r24,midi_Couplers+11
+	cpi r24,lo8(-1)
+	brne .L299
+	.loc 1 1187 0
+	mov r20,r17
+	mov r22,r9
+	ldi r24,lo8(2)
+	call manual_NoteOnOff
+.LVL489:
+	.loc 1 1124 0
+	clr r11
+	dec r11
+	rjmp .L281
+.LVL490:
+.L273:
 .LBE92:
-	.loc 1 1219 0 discriminator 2
-	lsr r29
+.LBB93:
+	.loc 1 1192 0
+	mov r24,r17
+	call moduleBit_to_registerNr
+.LVL491:
+	mov r17,r24
+.LVL492:
+	.loc 1 1193 0
+	cpi r24,lo8(64)
+	brsh .L281
+.LVL493:
+	.loc 1 1197 0
+	ldi r25,lo8(32)
+	cpse r10,r25
+	rjmp .L290
+	.loc 1 1198 0
+	call midiSendRegOn
 .LVL494:
-	.loc 1 1116 0 discriminator 2
-	subi r28,lo8(-(1))
+	.loc 1 1199 0
+	ori r17,lo8(-128)
 .LVL495:
-	rjmp .L270
+	rjmp .L291
+.L290:
+	.loc 1 1201 0
+	call midiSendRegOff
 .LVL496:
-.L292:
+.L291:
+	.loc 1 1203 0
+	sts midi_RegisterChanged,r17
+	.loc 1 1195 0
+	clr r11
+	dec r11
+	rjmp .L281
+.LVL497:
+.L295:
+.LBE93:
+.LBB94:
+	.loc 1 1124 0
+	clr r11
+	dec r11
+	rjmp .L281
+.L296:
+	clr r11
+	dec r11
+	rjmp .L281
+.L297:
+	clr r11
+	dec r11
+	rjmp .L281
+.L298:
+	clr r11
+	dec r11
+	rjmp .L281
+.L299:
+	clr r11
+	dec r11
+.LVL498:
+.L281:
+.LBE94:
+	.loc 1 1206 0
+	cpse r11,__zero_reg__
+	rjmp .L272
+	.loc 1 1208 0
+	mov r21,r14
+	clr r20
+	or r20,r13
+	ldi r22,lo8(1)
+	ldi r24,lo8(2)
+	call log_putWarning
+.LVL499:
+.L272:
+	.loc 1 1211 0 discriminator 2
+	lsr r29
+.LVL500:
+	.loc 1 1115 0 discriminator 2
+	subi r28,lo8(-(1))
+.LVL501:
+	rjmp .L270
+.LVL502:
+.L293:
 .LBE91:
 	ldi r28,0
-.LVL497:
+.LVL503:
+	mov r11,__zero_reg__
 	rjmp .L270
-.LVL498:
-.L293:
+.LVL504:
+.L294:
 	ldi r28,0
-.LVL499:
+.LVL505:
+	mov r11,__zero_reg__
+.LVL506:
 .L270:
-.LBB94:
-	.loc 1 1116 0 is_stmt 0 discriminator 1
+.LBB95:
+	.loc 1 1115 0 is_stmt 0 discriminator 1
 	cpi r28,lo8(8)
 	brsh .+2
-	rjmp .L291
-.LVL500:
+	rjmp .L292
+.LVL507:
 .L269:
 /* epilogue start */
-.LBE94:
-	.loc 1 1222 0 is_stmt 1
+.LBE95:
+	.loc 1 1214 0 is_stmt 1
 	pop r29
-.LVL501:
+.LVL508:
 	pop r28
 	pop r17
 	pop r16
-.LVL502:
 	pop r15
 	pop r14
-.LVL503:
 	pop r13
+.LVL509:
 	pop r12
-.LVL504:
+.LVL510:
 	pop r11
+	pop r10
+.LVL511:
+	pop r9
 	ret
 	.cfi_endproc
 .LFE62:
@@ -4671,29 +4752,29 @@ midiKeyPress_Process:
 	.type	midiSendAllNotesOff, @function
 midiSendAllNotesOff:
 .LFB63:
-	.loc 1 1226 0
+	.loc 1 1218 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1227 0
+	.loc 1 1219 0
 	lds r22,midiThrough+1
 	cpi r22,lo8(16)
-	brsh .L294
-	.loc 1 1228 0
+	brsh .L300
+	.loc 1 1220 0
 	ldi r24,lo8(-80)
 	call serial1MIDISendCmd
-.LVL505:
-	.loc 1 1229 0
+.LVL512:
+	.loc 1 1221 0
 	ldi r24,lo8(123)
 	call serial1MIDISendData
-.LVL506:
-	.loc 1 1230 0
+.LVL513:
+	.loc 1 1222 0
 	ldi r24,0
 	call serial1MIDISendData
-.LVL507:
-.L294:
+.LVL514:
+.L300:
 	ret
 	.cfi_endproc
 .LFE63:
@@ -4703,17 +4784,17 @@ midiSendAllNotesOff:
 	.type	midi_SendActiveSense, @function
 midi_SendActiveSense:
 .LFB64:
-	.loc 1 1242 0
+	.loc 1 1234 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 1243 0
+	.loc 1 1235 0
 	ldi r22,0
 	ldi r24,lo8(-2)
 	call serial1MIDISendCmd
-.LVL508:
+.LVL515:
 	ret
 	.cfi_endproc
 .LFE64:
@@ -4732,67 +4813,67 @@ midi_CheckTxActiveSense:
 	.loc 1 215 0
 	lds r24,swTimer+16
 	tst r24
-	breq .L298
+	breq .L304
 	.loc 1 215 0 is_stmt 0 discriminator 1
 	lds r24,swTimer+16
 	cpi r24,lo8(-1)
-	brne .L297
-.L298:
-.LBB95:
+	brne .L303
+.L304:
+.LBB96:
 	.loc 1 217 0 is_stmt 1
 	in r25,__SREG__
-.LVL509:
-.LBB96:
+.LVL516:
 .LBB97:
+.LBB98:
 	.loc 2 50 0
 /* #APP */
  ;  50 "c:\program files (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\atomic.h" 1
 	cli
  ;  0 "" 2
 /* #NOAPP */
+.LBE98:
 .LBE97:
-.LBE96:
 	.loc 1 217 0
 	ldi r24,lo8(1)
-	rjmp .L300
-.LVL510:
-.L301:
+	rjmp .L306
+.LVL517:
+.L307:
 	.loc 1 217 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
 	ldi r24,lo8(10)
-.LVL511:
+.LVL518:
 	std Z+16,r24
 	std Z+17,__zero_reg__
-.LVL512:
+.LVL519:
 	.loc 1 217 0 discriminator 3
 	ldi r24,0
-.LVL513:
-.L300:
+.LVL520:
+.L306:
 	.loc 1 217 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
-	rjmp .L301
-.LVL514:
-.LBB98:
+	rjmp .L307
+.LVL521:
 .LBB99:
+.LBB100:
 	.loc 2 70 0 is_stmt 1
 	out __SREG__,r25
 	.loc 2 71 0
-.LVL515:
+.LVL522:
+.LBE100:
 .LBE99:
-.LBE98:
-.LBE95:
+.LBE96:
 	.loc 1 218 0
 	lds r24,midi_Setting
-.LVL516:
+.LVL523:
 	cpse r24,__zero_reg__
 	.loc 1 219 0
 	call midi_SendActiveSense
-.LVL517:
-.L302:
+.LVL524:
+.L308:
 	.loc 1 222 0
 	sts midiTxLastCmd,__zero_reg__
-.L297:
+.L303:
 	ret
 	.cfi_endproc
 .LFE27:
@@ -4949,16 +5030,16 @@ cplInfo:
 	.file 12 ".././lcd_u.h"
 	.section	.debug_info,"",@progbits
 .Ldebug_info0:
-	.long	0x236f
+	.long	0x23a5
 	.word	0x2
 	.long	.Ldebug_abbrev0
 	.byte	0x4
 	.uleb128 0x1
-	.long	.LASF236
-	.byte	0xc
-	.long	.LASF237
 	.long	.LASF238
-	.long	.Ldebug_ranges0+0x220
+	.byte	0xc
+	.long	.LASF239
+	.long	.LASF240
+	.long	.Ldebug_ranges0+0x238
 	.long	0
 	.long	0
 	.long	.Ldebug_line0
@@ -5065,12 +5146,12 @@ cplInfo:
 	.uleb128 0x9
 	.byte	0x2
 	.byte	0x6
-	.byte	0x53
+	.byte	0x57
 	.long	0x112
 	.uleb128 0xa
 	.long	.LASF17
 	.byte	0x6
-	.byte	0x54
+	.byte	0x58
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -5078,7 +5159,7 @@ cplInfo:
 	.uleb128 0xa
 	.long	.LASF18
 	.byte	0x6
-	.byte	0x55
+	.byte	0x59
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -5087,17 +5168,17 @@ cplInfo:
 	.uleb128 0x2
 	.long	.LASF19
 	.byte	0x6
-	.byte	0x56
+	.byte	0x5a
 	.long	0xed
 	.uleb128 0x9
 	.byte	0x8
 	.byte	0x6
-	.byte	0xa9
+	.byte	0xad
 	.long	0x196
 	.uleb128 0xa
 	.long	.LASF20
 	.byte	0x6
-	.byte	0xaa
+	.byte	0xae
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -5105,7 +5186,7 @@ cplInfo:
 	.uleb128 0xa
 	.long	.LASF21
 	.byte	0x6
-	.byte	0xab
+	.byte	0xaf
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -5113,7 +5194,7 @@ cplInfo:
 	.uleb128 0xa
 	.long	.LASF22
 	.byte	0x6
-	.byte	0xac
+	.byte	0xb0
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -5121,7 +5202,7 @@ cplInfo:
 	.uleb128 0xa
 	.long	.LASF23
 	.byte	0x6
-	.byte	0xad
+	.byte	0xb1
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -5129,7 +5210,7 @@ cplInfo:
 	.uleb128 0xa
 	.long	.LASF24
 	.byte	0x6
-	.byte	0xae
+	.byte	0xb2
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -5137,7 +5218,7 @@ cplInfo:
 	.uleb128 0xa
 	.long	.LASF25
 	.byte	0x6
-	.byte	0xaf
+	.byte	0xb3
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -5145,7 +5226,7 @@ cplInfo:
 	.uleb128 0xa
 	.long	.LASF26
 	.byte	0x6
-	.byte	0xb0
+	.byte	0xb4
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -5153,7 +5234,7 @@ cplInfo:
 	.uleb128 0xa
 	.long	.LASF27
 	.byte	0x6
-	.byte	0xb1
+	.byte	0xb5
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -5162,17 +5243,17 @@ cplInfo:
 	.uleb128 0x2
 	.long	.LASF28
 	.byte	0x6
-	.byte	0xb2
+	.byte	0xb6
 	.long	0x11d
 	.uleb128 0x9
 	.byte	0x2
 	.byte	0x6
-	.byte	0xbe
+	.byte	0xc2
 	.long	0x1c6
 	.uleb128 0xa
 	.long	.LASF29
 	.byte	0x6
-	.byte	0xbf
+	.byte	0xc3
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -5180,7 +5261,7 @@ cplInfo:
 	.uleb128 0xa
 	.long	.LASF30
 	.byte	0x6
-	.byte	0xc0
+	.byte	0xc4
 	.long	0x3b
 	.byte	0x2
 	.byte	0x23
@@ -5189,7 +5270,7 @@ cplInfo:
 	.uleb128 0x2
 	.long	.LASF31
 	.byte	0x6
-	.byte	0xc1
+	.byte	0xc5
 	.long	0x1a1
 	.uleb128 0x9
 	.byte	0x2
@@ -5679,14 +5760,14 @@ cplInfo:
 	.byte	0x7
 	.byte	0
 	.uleb128 0xd
-	.long	.LASF239
+	.long	.LASF241
 	.byte	0x2
 	.byte	0x30
 	.byte	0x1
 	.long	0x3b
 	.byte	0x3
 	.uleb128 0xe
-	.long	.LASF240
+	.long	.LASF242
 	.byte	0x2
 	.byte	0x44
 	.byte	0x1
@@ -5838,7 +5919,7 @@ cplInfo:
 	.long	0x69e
 	.uleb128 0x14
 	.long	.LVL23
-	.long	0x2261
+	.long	0x228a
 	.byte	0
 	.uleb128 0x19
 	.byte	0x1
@@ -5914,10 +5995,10 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL32
-	.long	0x226e
+	.long	0x2297
 	.uleb128 0x1d
 	.long	.LVL33
-	.long	0x227b
+	.long	0x22a4
 	.long	0x772
 	.uleb128 0x1e
 	.byte	0x1
@@ -5945,10 +6026,10 @@ cplInfo:
 	.long	0x69e
 	.uleb128 0x14
 	.long	.LVL35
-	.long	0x2288
+	.long	0x22b1
 	.uleb128 0x1d
 	.long	.LVL43
-	.long	0x227b
+	.long	0x22a4
 	.long	0x7a6
 	.uleb128 0x1e
 	.byte	0x1
@@ -5973,10 +6054,10 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL44
-	.long	0x2295
+	.long	0x22be
 	.uleb128 0x1f
 	.long	.LVL45
-	.long	0x227b
+	.long	0x22a4
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -6393,10 +6474,10 @@ cplInfo:
 	.long	.LLST44
 	.uleb128 0x14
 	.long	.LVL121
-	.long	0x22a2
+	.long	0x22cb
 	.uleb128 0x14
 	.long	.LVL123
-	.long	0x22af
+	.long	0x22d8
 	.byte	0
 	.uleb128 0x1f
 	.long	.LVL116
@@ -6558,7 +6639,7 @@ cplInfo:
 	.long	.LLST58
 	.uleb128 0x1d
 	.long	.LVL157
-	.long	0x22bc
+	.long	0x22e5
 	.long	0xcf3
 	.uleb128 0x1e
 	.byte	0x1
@@ -6569,10 +6650,10 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL158
-	.long	0x22c9
+	.long	0x22f2
 	.uleb128 0x1f
 	.long	.LVL159
-	.long	0x22c9
+	.long	0x22f2
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -6600,7 +6681,7 @@ cplInfo:
 	.long	.LLST60
 	.uleb128 0x1d
 	.long	.LVL162
-	.long	0x22bc
+	.long	0x22e5
 	.long	0xd4c
 	.uleb128 0x1e
 	.byte	0x1
@@ -6611,10 +6692,10 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL163
-	.long	0x22c9
+	.long	0x22f2
 	.uleb128 0x1f
 	.long	.LVL164
-	.long	0x22c9
+	.long	0x22f2
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -6805,7 +6886,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL200
-	.long	0x22bc
+	.long	0x22e5
 	.long	0xf1c
 	.uleb128 0x1e
 	.byte	0x1
@@ -6816,7 +6897,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x1f
 	.long	.LVL201
-	.long	0x22c9
+	.long	0x22f2
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -6921,13 +7002,13 @@ cplInfo:
 	.long	0xf2d
 	.uleb128 0x14
 	.long	.LVL211
-	.long	0x22d6
+	.long	0x22ff
 	.uleb128 0x14
 	.long	.LVL218
 	.long	0x606
 	.uleb128 0x14
 	.long	.LVL220
-	.long	0x22e3
+	.long	0x230c
 	.byte	0
 	.uleb128 0x19
 	.byte	0x1
@@ -6944,7 +7025,7 @@ cplInfo:
 	.long	0x109c
 	.uleb128 0x1d
 	.long	.LVL223
-	.long	0x22f0
+	.long	0x2319
 	.long	0x1052
 	.uleb128 0x1e
 	.byte	0x1
@@ -6955,7 +7036,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL224
-	.long	0x22f0
+	.long	0x2319
 	.long	0x1066
 	.uleb128 0x1e
 	.byte	0x1
@@ -6966,13 +7047,13 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL225
-	.long	0x22f0
+	.long	0x2319
 	.uleb128 0x14
 	.long	.LVL226
-	.long	0x22f0
+	.long	0x2319
 	.uleb128 0x1d
 	.long	.LVL227
-	.long	0x22f0
+	.long	0x2319
 	.long	0x108c
 	.uleb128 0x1e
 	.byte	0x1
@@ -6983,7 +7064,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x1f
 	.long	.LVL228
-	.long	0x22fd
+	.long	0x2326
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -7006,10 +7087,10 @@ cplInfo:
 	.long	0x10de
 	.uleb128 0x14
 	.long	.LVL229
-	.long	0x230a
+	.long	0x2333
 	.uleb128 0x1f
 	.long	.LVL230
-	.long	0x227b
+	.long	0x22a4
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -7106,7 +7187,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL249
-	.long	0x22f0
+	.long	0x2319
 	.byte	0
 	.uleb128 0x1b
 	.long	.LBB58
@@ -7142,17 +7223,17 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL257
-	.long	0x22f0
+	.long	0x2319
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL234
-	.long	0x2317
+	.long	0x2340
 	.uleb128 0x14
 	.long	.LVL236
-	.long	0x22f0
+	.long	0x2319
 	.uleb128 0x1d
 	.long	.LVL237
-	.long	0x22f0
+	.long	0x2319
 	.long	0x1209
 	.uleb128 0x1e
 	.byte	0x1
@@ -7174,7 +7255,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL240
-	.long	0x22f0
+	.long	0x2319
 	.uleb128 0x1d
 	.long	.LVL241
 	.long	0x942
@@ -7188,10 +7269,10 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL242
-	.long	0x22f0
+	.long	0x2319
 	.uleb128 0x1f
 	.long	.LVL259
-	.long	0x22f0
+	.long	0x2319
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -7238,10 +7319,10 @@ cplInfo:
 	.long	.LLST92
 	.uleb128 0x14
 	.long	.LVL265
-	.long	0x2317
+	.long	0x2340
 	.uleb128 0x14
 	.long	.LVL273
-	.long	0x22fd
+	.long	0x2326
 	.byte	0
 	.byte	0
 	.byte	0
@@ -7276,10 +7357,10 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL280
-	.long	0x2324
+	.long	0x234d
 	.uleb128 0x1d
 	.long	.LVL281
-	.long	0x227b
+	.long	0x22a4
 	.long	0x1332
 	.uleb128 0x1e
 	.byte	0x1
@@ -7304,10 +7385,10 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL282
-	.long	0x2331
+	.long	0x235a
 	.uleb128 0x1f
 	.long	.LVL283
-	.long	0x227b
+	.long	0x22a4
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -7359,10 +7440,10 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL287
-	.long	0x233e
+	.long	0x2367
 	.uleb128 0x1f
 	.long	.LVL288
-	.long	0x227b
+	.long	0x22a4
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -7502,10 +7583,10 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL308
-	.long	0x234b
+	.long	0x2374
 	.uleb128 0x1d
 	.long	.LVL309
-	.long	0x227b
+	.long	0x22a4
 	.long	0x14ec
 	.uleb128 0x1e
 	.byte	0x1
@@ -7637,7 +7718,7 @@ cplInfo:
 	.byte	0x1
 	.long	.LASF150
 	.byte	0x1
-	.word	0x42b
+	.word	0x429
 	.byte	0x1
 	.long	.LFB61
 	.long	.LFE61
@@ -7647,36 +7728,36 @@ cplInfo:
 	.uleb128 0x21
 	.long	.LASF35
 	.byte	0x1
-	.word	0x42b
+	.word	0x429
 	.long	0x3b
 	.long	.LLST112
 	.uleb128 0x21
 	.long	.LASF33
 	.byte	0x1
-	.word	0x42b
+	.word	0x429
 	.long	0x3b
 	.long	.LLST113
 	.uleb128 0x21
 	.long	.LASF108
 	.byte	0x1
-	.word	0x42b
+	.word	0x429
 	.long	0x3b
 	.long	.LLST114
 	.uleb128 0x22
 	.long	.LASF151
 	.byte	0x1
-	.word	0x42c
+	.word	0x42a
 	.long	0x256
 	.uleb128 0x1a
 	.long	.LASF152
 	.byte	0x1
-	.word	0x42f
+	.word	0x42d
 	.long	0x3b
 	.long	.LLST115
 	.uleb128 0x1a
 	.long	.LASF100
 	.byte	0x1
-	.word	0x430
+	.word	0x42e
 	.long	0x3b
 	.long	.LLST116
 	.uleb128 0x1b
@@ -7686,11 +7767,11 @@ cplInfo:
 	.uleb128 0x22
 	.long	.LASF153
 	.byte	0x1
-	.word	0x435
+	.word	0x433
 	.long	0xe2
 	.uleb128 0x14
 	.long	.LVL334
-	.long	0x2358
+	.long	0x2381
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL330
@@ -7711,7 +7792,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL336
-	.long	0x22af
+	.long	0x22d8
 	.long	0x16b2
 	.uleb128 0x1e
 	.byte	0x1
@@ -7728,7 +7809,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL337
-	.long	0x22a2
+	.long	0x22cb
 	.long	0x16cc
 	.uleb128 0x1e
 	.byte	0x1
@@ -7745,10 +7826,10 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL338
-	.long	0x22bc
+	.long	0x22e5
 	.uleb128 0x1d
 	.long	.LVL339
-	.long	0x22c9
+	.long	0x22f2
 	.long	0x16e9
 	.uleb128 0x1e
 	.byte	0x1
@@ -7759,7 +7840,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL340
-	.long	0x22c9
+	.long	0x22f2
 	.byte	0
 	.uleb128 0x2b
 	.byte	0x1
@@ -7831,7 +7912,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL357
-	.long	0x22bc
+	.long	0x22e5
 	.long	0x17a9
 	.uleb128 0x1e
 	.byte	0x1
@@ -7842,7 +7923,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL358
-	.long	0x22c9
+	.long	0x22f2
 	.long	0x17bd
 	.uleb128 0x1e
 	.byte	0x1
@@ -7853,7 +7934,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x1f
 	.long	.LVL359
-	.long	0x22c9
+	.long	0x22f2
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -7922,7 +8003,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL370
-	.long	0x22bc
+	.long	0x22e5
 	.long	0x1855
 	.uleb128 0x1e
 	.byte	0x1
@@ -7933,7 +8014,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL371
-	.long	0x22c9
+	.long	0x22f2
 	.long	0x1869
 	.uleb128 0x1e
 	.byte	0x1
@@ -7944,7 +8025,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x1f
 	.long	.LVL372
-	.long	0x22c9
+	.long	0x22f2
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8083,10 +8164,10 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL392
-	.long	0x22bc
+	.long	0x22e5
 	.uleb128 0x1d
 	.long	.LVL393
-	.long	0x22c9
+	.long	0x22f2
 	.long	0x19c3
 	.uleb128 0x1e
 	.byte	0x1
@@ -8097,7 +8178,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL394
-	.long	0x22c9
+	.long	0x22f2
 	.byte	0
 	.uleb128 0x18
 	.byte	0x1
@@ -8271,98 +8352,94 @@ cplInfo:
 	.byte	0x1
 	.long	.LASF171
 	.byte	0x1
-	.word	0x453
+	.word	0x451
 	.byte	0x1
 	.long	.LFB62
 	.long	.LFE62
 	.long	.LLST148
 	.byte	0x1
-	.long	0x1e9d
+	.long	0x1ec6
 	.uleb128 0x21
 	.long	.LASF172
 	.byte	0x1
-	.word	0x453
+	.word	0x451
 	.long	0xe2
 	.long	.LLST149
 	.uleb128 0x1a
 	.long	.LASF173
 	.byte	0x1
-	.word	0x455
+	.word	0x453
 	.long	0x3b
 	.long	.LLST150
 	.uleb128 0x1a
 	.long	.LASF174
 	.byte	0x1
-	.word	0x456
+	.word	0x454
 	.long	0x3b
 	.long	.LLST151
 	.uleb128 0x1a
 	.long	.LASF175
 	.byte	0x1
-	.word	0x457
+	.word	0x455
 	.long	0x3b
 	.long	.LLST152
 	.uleb128 0x1a
-	.long	.LASF47
-	.byte	0x1
-	.word	0x458
-	.long	0x226
-	.long	.LLST153
-	.uleb128 0x1a
 	.long	.LASF176
 	.byte	0x1
-	.word	0x459
-	.long	0x1f6
+	.word	0x456
+	.long	0x3b
+	.long	.LLST153
+	.uleb128 0x1a
+	.long	.LASF47
+	.byte	0x1
+	.word	0x457
+	.long	0x226
 	.long	.LLST154
+	.uleb128 0x1a
+	.long	.LASF177
+	.byte	0x1
+	.word	0x458
+	.long	0x1f6
+	.long	.LLST155
 	.uleb128 0x1c
 	.long	.Ldebug_ranges0+0x208
-	.long	0x1e93
+	.long	0x1ebc
 	.uleb128 0x24
 	.string	"i"
 	.byte	0x1
-	.word	0x45c
-	.long	0x3b
-	.long	.LLST155
-	.uleb128 0x23
-	.long	.LBB92
-	.long	.LBE92
-	.uleb128 0x1a
-	.long	.LASF88
-	.byte	0x1
-	.word	0x4b6
+	.word	0x45b
 	.long	0x3b
 	.long	.LLST156
-	.uleb128 0x1b
-	.long	.LBB93
-	.long	.LBE93
-	.long	0x1e4c
+	.uleb128 0x1c
+	.long	.Ldebug_ranges0+0x220
+	.long	0x1e44
 	.uleb128 0x1a
 	.long	.LASF168
 	.byte	0x1
-	.word	0x486
+	.word	0x47b
 	.long	0x3b
 	.long	.LLST157
 	.uleb128 0x1d
-	.long	.LVL462
+	.long	.LVL463
 	.long	0x13be
-	.long	0x1c3b
+	.long	0x1c2e
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
 	.byte	0x2
-	.byte	0x7b
+	.byte	0x7c
 	.sleb128 0
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x66
 	.byte	0x2
-	.byte	0x7e
+	.byte	0x79
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
-	.long	.LVL464
-	.long	0x22bc
-	.long	0x1c4f
+	.long	.LVL465
+	.long	0x22e5
+	.long	0x1c42
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8371,20 +8448,20 @@ cplInfo:
 	.byte	0x90
 	.byte	0
 	.uleb128 0x1d
-	.long	.LVL465
-	.long	0x22c9
-	.long	0x1c63
+	.long	.LVL466
+	.long	0x22f2
+	.long	0x1c56
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
 	.byte	0x2
-	.byte	0x7d
+	.byte	0x81
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
-	.long	.LVL466
-	.long	0x22c9
-	.long	0x1c77
+	.long	.LVL467
+	.long	0x22f2
+	.long	0x1c6a
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8393,9 +8470,9 @@ cplInfo:
 	.byte	0x40
 	.byte	0
 	.uleb128 0x1d
-	.long	.LVL469
-	.long	0x22bc
-	.long	0x1c8b
+	.long	.LVL470
+	.long	0x22e5
+	.long	0x1c7e
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8404,30 +8481,31 @@ cplInfo:
 	.byte	0x90
 	.byte	0
 	.uleb128 0x1d
-	.long	.LVL470
-	.long	0x22c9
-	.long	0x1c9f
+	.long	.LVL471
+	.long	0x22f2
+	.long	0x1c92
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
 	.byte	0x2
-	.byte	0x7d
+	.byte	0x81
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
-	.long	.LVL471
-	.long	0x22c9
-	.long	0x1cb2
+	.long	.LVL472
+	.long	0x22f2
+	.long	0x1ca6
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
-	.byte	0x1
-	.byte	0x30
+	.byte	0x2
+	.byte	0x7f
+	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
-	.long	.LVL472
-	.long	0x22bc
-	.long	0x1cc6
+	.long	.LVL473
+	.long	0x22e5
+	.long	0x1cba
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8436,96 +8514,53 @@ cplInfo:
 	.byte	0x80
 	.byte	0
 	.uleb128 0x1d
-	.long	.LVL473
-	.long	0x22c9
-	.long	0x1cda
-	.uleb128 0x1e
-	.byte	0x1
-	.byte	0x68
-	.byte	0x2
-	.byte	0x7d
-	.sleb128 0
-	.byte	0
-	.uleb128 0x1d
 	.long	.LVL474
-	.long	0x22c9
-	.long	0x1ced
+	.long	0x22f2
+	.long	0x1cce
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
-	.byte	0x1
-	.byte	0x30
-	.byte	0
-	.uleb128 0x1d
-	.long	.LVL476
-	.long	0x15e4
-	.long	0x1d0c
-	.uleb128 0x1e
-	.byte	0x1
-	.byte	0x68
-	.byte	0x1
-	.byte	0x31
-	.uleb128 0x1e
-	.byte	0x1
-	.byte	0x66
 	.byte	0x2
-	.byte	0x7e
-	.sleb128 0
-	.uleb128 0x1e
-	.byte	0x1
-	.byte	0x64
-	.byte	0x2
-	.byte	0x7d
+	.byte	0x81
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
-	.long	.LVL477
-	.long	0x15e4
-	.long	0x1d2b
+	.long	.LVL475
+	.long	0x22f2
+	.long	0x1ce2
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
-	.byte	0x1
-	.byte	0x32
-	.uleb128 0x1e
-	.byte	0x1
-	.byte	0x66
 	.byte	0x2
-	.byte	0x7e
-	.sleb128 0
-	.uleb128 0x1e
-	.byte	0x1
-	.byte	0x64
-	.byte	0x2
-	.byte	0x7d
+	.byte	0x7f
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL478
 	.long	0x15e4
-	.long	0x1d4a
+	.long	0x1d01
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
 	.byte	0x1
-	.byte	0x33
+	.byte	0x31
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x66
 	.byte	0x2
-	.byte	0x7e
+	.byte	0x79
 	.sleb128 0
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x64
 	.byte	0x2
-	.byte	0x7d
+	.byte	0x81
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL479
 	.long	0x15e4
-	.long	0x1d63
+	.long	0x1d20
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8535,13 +8570,19 @@ cplInfo:
 	.byte	0x1
 	.byte	0x66
 	.byte	0x2
-	.byte	0x7e
+	.byte	0x79
+	.sleb128 0
+	.uleb128 0x1e
+	.byte	0x1
+	.byte	0x64
+	.byte	0x2
+	.byte	0x81
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL480
 	.long	0x15e4
-	.long	0x1d82
+	.long	0x1d3f
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8551,41 +8592,35 @@ cplInfo:
 	.byte	0x1
 	.byte	0x66
 	.byte	0x2
-	.byte	0x7e
+	.byte	0x79
 	.sleb128 0
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x64
 	.byte	0x2
-	.byte	0x7d
+	.byte	0x81
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL481
 	.long	0x15e4
-	.long	0x1da1
+	.long	0x1d58
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
 	.byte	0x1
-	.byte	0x30
+	.byte	0x32
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x66
 	.byte	0x2
-	.byte	0x7e
-	.sleb128 0
-	.uleb128 0x1e
-	.byte	0x1
-	.byte	0x64
-	.byte	0x2
-	.byte	0x7d
+	.byte	0x79
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL482
 	.long	0x15e4
-	.long	0x1dba
+	.long	0x1d77
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8595,73 +8630,81 @@ cplInfo:
 	.byte	0x1
 	.byte	0x66
 	.byte	0x2
-	.byte	0x7e
+	.byte	0x79
+	.sleb128 0
+	.uleb128 0x1e
+	.byte	0x1
+	.byte	0x64
+	.byte	0x2
+	.byte	0x81
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL483
 	.long	0x15e4
-	.long	0x1dd9
+	.long	0x1d97
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
-	.byte	0x1
-	.byte	0x30
+	.byte	0x2
+	.byte	0x7f
+	.sleb128 0
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x66
 	.byte	0x2
-	.byte	0x7e
+	.byte	0x79
 	.sleb128 0
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x64
 	.byte	0x2
-	.byte	0x7d
+	.byte	0x81
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL484
 	.long	0x15e4
-	.long	0x1df8
+	.long	0x1db0
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
 	.byte	0x1
-	.byte	0x31
+	.byte	0x33
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x66
 	.byte	0x2
-	.byte	0x7e
-	.sleb128 0
-	.uleb128 0x1e
-	.byte	0x1
-	.byte	0x64
-	.byte	0x2
-	.byte	0x7d
+	.byte	0x79
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL485
 	.long	0x15e4
-	.long	0x1e11
+	.long	0x1dd0
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
-	.byte	0x1
-	.byte	0x30
+	.byte	0x2
+	.byte	0x7f
+	.sleb128 0
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x66
 	.byte	0x2
-	.byte	0x7e
+	.byte	0x79
+	.sleb128 0
+	.uleb128 0x1e
+	.byte	0x1
+	.byte	0x64
+	.byte	0x2
+	.byte	0x81
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
 	.long	.LVL486
 	.long	0x15e4
-	.long	0x1e30
+	.long	0x1def
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8671,17 +8714,56 @@ cplInfo:
 	.byte	0x1
 	.byte	0x66
 	.byte	0x2
-	.byte	0x7e
+	.byte	0x79
 	.sleb128 0
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x64
 	.byte	0x2
-	.byte	0x7d
+	.byte	0x81
+	.sleb128 0
+	.byte	0
+	.uleb128 0x1d
+	.long	.LVL487
+	.long	0x15e4
+	.long	0x1e09
+	.uleb128 0x1e
+	.byte	0x1
+	.byte	0x68
+	.byte	0x2
+	.byte	0x7f
+	.sleb128 0
+	.uleb128 0x1e
+	.byte	0x1
+	.byte	0x66
+	.byte	0x2
+	.byte	0x79
+	.sleb128 0
+	.byte	0
+	.uleb128 0x1d
+	.long	.LVL488
+	.long	0x15e4
+	.long	0x1e28
+	.uleb128 0x1e
+	.byte	0x1
+	.byte	0x68
+	.byte	0x1
+	.byte	0x31
+	.uleb128 0x1e
+	.byte	0x1
+	.byte	0x66
+	.byte	0x2
+	.byte	0x79
+	.sleb128 0
+	.uleb128 0x1e
+	.byte	0x1
+	.byte	0x64
+	.byte	0x2
+	.byte	0x81
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1f
-	.long	.LVL487
+	.long	.LVL489
 	.long	0x15e4
 	.uleb128 0x1e
 	.byte	0x1
@@ -8692,42 +8774,41 @@ cplInfo:
 	.byte	0x1
 	.byte	0x66
 	.byte	0x2
-	.byte	0x7e
+	.byte	0x79
 	.sleb128 0
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x64
 	.byte	0x2
-	.byte	0x7d
+	.byte	0x81
 	.sleb128 0
 	.byte	0
 	.byte	0
-	.uleb128 0x1d
-	.long	.LVL460
-	.long	0x1570
-	.long	0x1e60
-	.uleb128 0x1e
+	.uleb128 0x1b
+	.long	.LBB93
+	.long	.LBE93
+	.long	0x1e93
+	.uleb128 0x1a
+	.long	.LASF88
 	.byte	0x1
-	.byte	0x68
-	.byte	0x2
-	.byte	0x7f
-	.sleb128 0
-	.byte	0
+	.word	0x4a8
+	.long	0x3b
+	.long	.LLST158
 	.uleb128 0x1d
-	.long	.LVL488
+	.long	.LVL491
 	.long	0x838
-	.long	0x1e74
+	.long	0x1e75
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
 	.byte	0x2
-	.byte	0x7f
+	.byte	0x81
 	.sleb128 0
 	.byte	0
 	.uleb128 0x1d
-	.long	.LVL490
+	.long	.LVL494
 	.long	0xcb4
-	.long	0x1e88
+	.long	0x1e89
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8736,19 +8817,44 @@ cplInfo:
 	.sleb128 0
 	.byte	0
 	.uleb128 0x14
-	.long	.LVL492
+	.long	.LVL496
 	.long	0xd0d
+	.byte	0
+	.uleb128 0x1d
+	.long	.LVL460
+	.long	0x1570
+	.long	0x1ea7
+	.uleb128 0x1e
+	.byte	0x1
+	.byte	0x68
+	.byte	0x2
+	.byte	0x81
+	.sleb128 0
+	.byte	0
+	.uleb128 0x1f
+	.long	.LVL499
+	.long	0x238e
+	.uleb128 0x1e
+	.byte	0x1
+	.byte	0x68
+	.byte	0x1
+	.byte	0x32
+	.uleb128 0x1e
+	.byte	0x1
+	.byte	0x66
+	.byte	0x1
+	.byte	0x31
 	.byte	0
 	.byte	0
 	.uleb128 0x14
 	.long	.LVL456
-	.long	0x2365
+	.long	0x239b
 	.byte	0
 	.uleb128 0x19
 	.byte	0x1
-	.long	.LASF177
+	.long	.LASF178
 	.byte	0x1
-	.word	0x4ca
+	.word	0x4c2
 	.long	.LFB63
 	.long	.LFE63
 	.byte	0x3
@@ -8756,11 +8862,11 @@ cplInfo:
 	.uleb128 0x20
 	.sleb128 3
 	.byte	0x1
-	.long	0x1eef
+	.long	0x1f18
 	.uleb128 0x1d
-	.long	.LVL505
-	.long	0x22bc
-	.long	0x1ecb
+	.long	.LVL512
+	.long	0x22e5
+	.long	0x1ef4
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8769,9 +8875,9 @@ cplInfo:
 	.byte	0xb0
 	.byte	0
 	.uleb128 0x1d
-	.long	.LVL506
-	.long	0x22c9
-	.long	0x1edf
+	.long	.LVL513
+	.long	0x22f2
+	.long	0x1f08
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8780,8 +8886,8 @@ cplInfo:
 	.byte	0x7b
 	.byte	0
 	.uleb128 0x1f
-	.long	.LVL507
-	.long	0x22c9
+	.long	.LVL514
+	.long	0x22f2
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8791,9 +8897,9 @@ cplInfo:
 	.byte	0
 	.uleb128 0x19
 	.byte	0x1
-	.long	.LASF178
+	.long	.LASF179
 	.byte	0x1
-	.word	0x4da
+	.word	0x4d2
 	.long	.LFB64
 	.long	.LFE64
 	.byte	0x3
@@ -8801,10 +8907,10 @@ cplInfo:
 	.uleb128 0x20
 	.sleb128 3
 	.byte	0x1
-	.long	0x1f1f
+	.long	0x1f48
 	.uleb128 0x1f
-	.long	.LVL508
-	.long	0x22bc
+	.long	.LVL515
+	.long	0x22e5
 	.uleb128 0x1e
 	.byte	0x1
 	.byte	0x68
@@ -8820,7 +8926,7 @@ cplInfo:
 	.byte	0
 	.uleb128 0x10
 	.byte	0x1
-	.long	.LASF179
+	.long	.LASF180
 	.byte	0x1
 	.byte	0xd4
 	.long	.LFB27
@@ -8830,115 +8936,115 @@ cplInfo:
 	.uleb128 0x20
 	.sleb128 3
 	.byte	0x1
-	.long	0x1f96
+	.long	0x1fbf
 	.uleb128 0x1b
-	.long	.LBB95
-	.long	.LBE95
-	.long	0x1f8c
+	.long	.LBB96
+	.long	.LBE96
+	.long	0x1fb5
 	.uleb128 0x11
 	.long	.LASF166
 	.byte	0x1
 	.byte	0xd9
 	.long	0x3b
-	.long	.LLST158
+	.long	.LLST159
 	.uleb128 0x11
 	.long	.LASF167
 	.byte	0x1
 	.byte	0xd9
 	.long	0x3b
-	.long	.LLST159
+	.long	.LLST160
 	.uleb128 0x2d
 	.long	0x54d
-	.long	.LBB96
-	.long	.LBE96
+	.long	.LBB97
+	.long	.LBE97
 	.byte	0x1
 	.byte	0xd9
 	.uleb128 0x2e
 	.long	0x55a
-	.long	.LBB98
-	.long	.LBE98
+	.long	.LBB99
+	.long	.LBE99
 	.byte	0x1
 	.byte	0xd9
 	.uleb128 0x2f
 	.long	0x567
-	.long	.LLST160
+	.long	.LLST161
 	.byte	0
 	.byte	0
 	.uleb128 0x14
-	.long	.LVL517
-	.long	0x1eef
+	.long	.LVL524
+	.long	0x1f18
 	.byte	0
 	.uleb128 0x7
-	.long	0x1fa6
-	.long	0x1fa6
+	.long	0x1fcf
+	.long	0x1fcf
 	.uleb128 0x8
 	.long	0x82
-	.byte	0x9
+	.byte	0xa
 	.byte	0
 	.uleb128 0x30
 	.long	0x112
 	.uleb128 0x31
-	.long	.LASF180
+	.long	.LASF181
 	.byte	0x6
-	.byte	0x57
-	.long	0x1fb8
+	.byte	0x5b
+	.long	0x1fe1
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x30
-	.long	0x1f96
+	.long	0x1fbf
 	.uleb128 0x7
 	.long	0x196
-	.long	0x1fcd
+	.long	0x1ff6
 	.uleb128 0x8
 	.long	0x82
 	.byte	0x1f
 	.byte	0
 	.uleb128 0x31
-	.long	.LASF181
+	.long	.LASF182
 	.byte	0x6
-	.byte	0xb3
-	.long	0x1fbd
+	.byte	0xb7
+	.long	0x1fe6
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x31
-	.long	.LASF182
+	.long	.LASF183
 	.byte	0x6
-	.byte	0xba
-	.long	0x1fe7
+	.byte	0xbe
+	.long	0x2010
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x30
 	.long	0x3b
 	.uleb128 0x31
-	.long	.LASF183
+	.long	.LASF184
 	.byte	0x6
-	.byte	0xc3
+	.byte	0xc7
 	.long	0x1c6
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x7
 	.long	0x3b
-	.long	0x2009
+	.long	0x2032
 	.uleb128 0x8
 	.long	0x82
 	.byte	0x2
 	.byte	0
 	.uleb128 0x31
-	.long	.LASF184
+	.long	.LASF185
 	.byte	0x8
 	.byte	0x35
-	.long	0x1ff9
+	.long	0x2022
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x31
-	.long	.LASF185
+	.long	.LASF186
 	.byte	0x8
 	.byte	0xa4
-	.long	0x1fe7
+	.long	0x2010
 	.byte	0x1
 	.byte	0x1
 	.uleb128 0x32
-	.long	.LASF186
+	.long	.LASF187
 	.byte	0x1
 	.byte	0x2d
 	.long	0x4e1
@@ -8948,22 +9054,22 @@ cplInfo:
 	.long	manualMap
 	.uleb128 0x7
 	.long	0x2c4
-	.long	0x2045
+	.long	0x206e
 	.uleb128 0x8
 	.long	0x82
 	.byte	0x3
 	.byte	0
 	.uleb128 0x32
-	.long	.LASF187
+	.long	.LASF188
 	.byte	0x1
 	.byte	0x2e
-	.long	0x2035
+	.long	0x205e
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	ManualNoteRange
 	.uleb128 0x32
-	.long	.LASF188
+	.long	.LASF189
 	.byte	0x1
 	.byte	0x2f
 	.long	0x4f7
@@ -8972,7 +9078,7 @@ cplInfo:
 	.byte	0x3
 	.long	midiInMap
 	.uleb128 0x32
-	.long	.LASF189
+	.long	.LASF190
 	.byte	0x1
 	.byte	0x37
 	.long	0x340
@@ -8981,7 +9087,7 @@ cplInfo:
 	.byte	0x3
 	.long	midiThrough
 	.uleb128 0x32
-	.long	.LASF190
+	.long	.LASF191
 	.byte	0x1
 	.byte	0x30
 	.long	0x50d
@@ -8990,7 +9096,7 @@ cplInfo:
 	.byte	0x3
 	.long	midiOutMap
 	.uleb128 0x32
-	.long	.LASF191
+	.long	.LASF192
 	.byte	0x1
 	.byte	0x34
 	.long	0x51d
@@ -8999,7 +9105,7 @@ cplInfo:
 	.byte	0x3
 	.long	registerMap
 	.uleb128 0x32
-	.long	.LASF192
+	.long	.LASF193
 	.byte	0x1
 	.byte	0x35
 	.long	0x3b
@@ -9008,7 +9114,7 @@ cplInfo:
 	.byte	0x3
 	.long	registerCount
 	.uleb128 0x32
-	.long	.LASF193
+	.long	.LASF194
 	.byte	0x1
 	.byte	0x36
 	.long	0x52d
@@ -9017,7 +9123,7 @@ cplInfo:
 	.byte	0x3
 	.long	programMap
 	.uleb128 0x32
-	.long	.LASF194
+	.long	.LASF195
 	.byte	0x1
 	.byte	0x38
 	.long	0x3b
@@ -9026,7 +9132,7 @@ cplInfo:
 	.byte	0x3
 	.long	midi_RegisterChanged
 	.uleb128 0x33
-	.long	.LASF195
+	.long	.LASF196
 	.byte	0x1
 	.word	0x301
 	.long	0x53d
@@ -9035,7 +9141,7 @@ cplInfo:
 	.byte	0x3
 	.long	reg_Out
 	.uleb128 0x32
-	.long	.LASF196
+	.long	.LASF197
 	.byte	0x1
 	.byte	0x39
 	.long	0x486
@@ -9044,7 +9150,7 @@ cplInfo:
 	.byte	0x3
 	.long	midi_ccReg
 	.uleb128 0x33
-	.long	.LASF197
+	.long	.LASF198
 	.byte	0x1
 	.word	0x2eb
 	.long	0x3b
@@ -9053,7 +9159,7 @@ cplInfo:
 	.byte	0x3
 	.long	prog_Display
 	.uleb128 0x33
-	.long	.LASF198
+	.long	.LASF199
 	.byte	0x1
 	.word	0x2ec
 	.long	0x3b
@@ -9062,7 +9168,7 @@ cplInfo:
 	.byte	0x3
 	.long	prog_UpdDisplay
 	.uleb128 0x32
-	.long	.LASF199
+	.long	.LASF200
 	.byte	0x1
 	.byte	0x31
 	.long	0x3b
@@ -9071,7 +9177,7 @@ cplInfo:
 	.byte	0x3
 	.long	midiRxActivceSensing
 	.uleb128 0x32
-	.long	.LASF200
+	.long	.LASF201
 	.byte	0x1
 	.byte	0x32
 	.long	0x4c4
@@ -9080,7 +9186,7 @@ cplInfo:
 	.byte	0x3
 	.long	midi_Setting
 	.uleb128 0x32
-	.long	.LASF201
+	.long	.LASF202
 	.byte	0x1
 	.byte	0x83
 	.long	0x3b
@@ -9089,7 +9195,7 @@ cplInfo:
 	.byte	0x3
 	.long	midiLastOutNote
 	.uleb128 0x32
-	.long	.LASF202
+	.long	.LASF203
 	.byte	0x1
 	.byte	0x84
 	.long	0x3b
@@ -9098,7 +9204,7 @@ cplInfo:
 	.byte	0x3
 	.long	midiLastOutManual
 	.uleb128 0x32
-	.long	.LASF203
+	.long	.LASF204
 	.byte	0x1
 	.byte	0x85
 	.long	0x3b
@@ -9107,7 +9213,7 @@ cplInfo:
 	.byte	0x3
 	.long	midiLastInNote
 	.uleb128 0x32
-	.long	.LASF204
+	.long	.LASF205
 	.byte	0x1
 	.byte	0x86
 	.long	0x3b
@@ -9116,7 +9222,7 @@ cplInfo:
 	.byte	0x3
 	.long	midiLastInChannel
 	.uleb128 0x32
-	.long	.LASF205
+	.long	.LASF206
 	.byte	0x1
 	.byte	0x87
 	.long	0x3b
@@ -9125,7 +9231,7 @@ cplInfo:
 	.byte	0x3
 	.long	midiLastInManual
 	.uleb128 0x32
-	.long	.LASF206
+	.long	.LASF207
 	.byte	0x1
 	.byte	0x88
 	.long	0x3b
@@ -9135,25 +9241,25 @@ cplInfo:
 	.long	midiLastProgram
 	.uleb128 0x7
 	.long	0x3b
-	.long	0x21c0
+	.long	0x21e9
 	.uleb128 0x8
 	.long	0x82
 	.byte	0xb
 	.byte	0
 	.uleb128 0x32
-	.long	.LASF207
+	.long	.LASF208
 	.byte	0x1
 	.byte	0x1d
-	.long	0x21b0
+	.long	0x21d9
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	midi_Couplers
 	.uleb128 0x32
-	.long	.LASF208
+	.long	.LASF209
 	.byte	0x1
 	.byte	0x1e
-	.long	0x21e4
+	.long	0x220d
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
@@ -9161,22 +9267,22 @@ cplInfo:
 	.uleb128 0x34
 	.uleb128 0x7
 	.long	0x3b
-	.long	0x21f5
+	.long	0x221e
 	.uleb128 0x8
 	.long	0x82
 	.byte	0x9
 	.byte	0
 	.uleb128 0x32
-	.long	.LASF209
+	.long	.LASF210
 	.byte	0x9
 	.byte	0xaf
-	.long	0x21e5
+	.long	0x220e
 	.byte	0x1
 	.byte	0x5
 	.byte	0x3
 	.long	lcdData
 	.uleb128 0x32
-	.long	.LASF210
+	.long	.LASF211
 	.byte	0x1
 	.byte	0x33
 	.long	0x3b
@@ -9185,7 +9291,7 @@ cplInfo:
 	.byte	0x3
 	.long	midiEEPromLoadError
 	.uleb128 0x32
-	.long	.LASF211
+	.long	.LASF212
 	.byte	0x1
 	.byte	0x7e
 	.long	0x3b
@@ -9194,7 +9300,7 @@ cplInfo:
 	.byte	0x3
 	.long	midiLastCommand
 	.uleb128 0x32
-	.long	.LASF212
+	.long	.LASF213
 	.byte	0x1
 	.byte	0x7f
 	.long	0x3de
@@ -9203,7 +9309,7 @@ cplInfo:
 	.byte	0x3
 	.long	midiDataByte
 	.uleb128 0x32
-	.long	.LASF213
+	.long	.LASF214
 	.byte	0x1
 	.byte	0x80
 	.long	0x3b
@@ -9212,7 +9318,7 @@ cplInfo:
 	.byte	0x3
 	.long	midiDataByteCount
 	.uleb128 0x32
-	.long	.LASF214
+	.long	.LASF215
 	.byte	0x1
 	.byte	0x81
 	.long	0x3b
@@ -9223,148 +9329,155 @@ cplInfo:
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF215
-	.long	.LASF215
+	.long	.LASF216
+	.long	.LASF216
 	.byte	0x6
-	.byte	0x5e
+	.byte	0x62
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF216
-	.long	.LASF216
+	.long	.LASF217
+	.long	.LASF217
 	.byte	0xa
 	.byte	0x24
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF217
-	.long	.LASF217
+	.long	.LASF218
+	.long	.LASF218
 	.byte	0xb
 	.byte	0x32
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF218
-	.long	.LASF218
+	.long	.LASF219
+	.long	.LASF219
 	.byte	0xa
 	.byte	0x26
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF219
-	.long	.LASF219
+	.long	.LASF220
+	.long	.LASF220
 	.byte	0xa
 	.byte	0x29
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF220
-	.long	.LASF220
-	.byte	0x6
-	.byte	0xda
-	.uleb128 0x35
-	.byte	0x1
-	.byte	0x1
 	.long	.LASF221
 	.long	.LASF221
 	.byte	0x6
-	.byte	0xdb
+	.byte	0xde
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
 	.long	.LASF222
 	.long	.LASF222
+	.byte	0x6
+	.byte	0xdf
+	.uleb128 0x35
+	.byte	0x1
+	.byte	0x1
+	.long	.LASF223
+	.long	.LASF223
 	.byte	0x8
 	.byte	0x91
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF223
-	.long	.LASF223
+	.long	.LASF224
+	.long	.LASF224
 	.byte	0x8
 	.byte	0x92
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF224
-	.long	.LASF224
+	.long	.LASF225
+	.long	.LASF225
 	.byte	0x6
-	.byte	0xd1
+	.byte	0xd5
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF225
-	.long	.LASF225
+	.long	.LASF226
+	.long	.LASF226
 	.byte	0xa
 	.byte	0x32
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF226
-	.long	.LASF226
+	.long	.LASF227
+	.long	.LASF227
 	.byte	0xc
 	.byte	0x84
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF227
-	.long	.LASF227
+	.long	.LASF228
+	.long	.LASF228
 	.byte	0x4
 	.byte	0x25
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF228
-	.long	.LASF228
+	.long	.LASF229
+	.long	.LASF229
 	.byte	0xa
 	.byte	0x25
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF229
-	.long	.LASF229
+	.long	.LASF230
+	.long	.LASF230
 	.byte	0xc
 	.byte	0x83
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF230
-	.long	.LASF230
+	.long	.LASF231
+	.long	.LASF231
 	.byte	0xa
 	.byte	0x20
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF231
-	.long	.LASF231
+	.long	.LASF232
+	.long	.LASF232
 	.byte	0xa
 	.byte	0x28
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF232
-	.long	.LASF232
+	.long	.LASF233
+	.long	.LASF233
 	.byte	0xa
 	.byte	0x21
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF233
-	.long	.LASF233
+	.long	.LASF234
+	.long	.LASF234
 	.byte	0xa
 	.byte	0x1f
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF234
-	.long	.LASF234
+	.long	.LASF235
+	.long	.LASF235
 	.byte	0x5
 	.byte	0x46
 	.uleb128 0x35
 	.byte	0x1
 	.byte	0x1
-	.long	.LASF235
-	.long	.LASF235
+	.long	.LASF236
+	.long	.LASF236
+	.byte	0xb
+	.byte	0x33
+	.uleb128 0x35
+	.byte	0x1
+	.byte	0x1
+	.long	.LASF237
+	.long	.LASF237
 	.byte	0x8
 	.byte	0x73
 	.byte	0
@@ -12850,11 +12963,23 @@ cplInfo:
 	.uleb128 0x20
 	.sleb128 11
 	.long	.LCFI74
-	.long	.LFE62
+	.long	.LCFI75
 	.word	0x3
 	.byte	0x92
 	.uleb128 0x20
 	.sleb128 12
+	.long	.LCFI75
+	.long	.LCFI76
+	.word	0x3
+	.byte	0x92
+	.uleb128 0x20
+	.sleb128 13
+	.long	.LCFI76
+	.long	.LFE62
+	.word	0x3
+	.byte	0x92
+	.uleb128 0x20
+	.sleb128 14
 	.long	0
 	.long	0
 .LLST149:
@@ -12876,8 +13001,8 @@ cplInfo:
 	.byte	0x6c
 	.byte	0x93
 	.uleb128 0x1
-	.long	.LVL496
-	.long	.LVL497
+	.long	.LVL502
+	.long	.LVL503
 	.word	0x6
 	.byte	0x6d
 	.byte	0x93
@@ -12885,8 +13010,8 @@ cplInfo:
 	.byte	0x6c
 	.byte	0x93
 	.uleb128 0x1
-	.long	.LVL498
-	.long	.LVL499
+	.long	.LVL504
+	.long	.LVL505
 	.word	0x6
 	.byte	0x6d
 	.byte	0x93
@@ -12894,8 +13019,8 @@ cplInfo:
 	.byte	0x6c
 	.byte	0x93
 	.uleb128 0x1
-	.long	.LVL500
-	.long	.LVL501
+	.long	.LVL507
+	.long	.LVL508
 	.word	0x6
 	.byte	0x6d
 	.byte	0x93
@@ -12907,130 +13032,192 @@ cplInfo:
 	.long	0
 .LLST150:
 	.long	.LVL457
-	.long	.LVL502
+	.long	.LVL511
 	.word	0x1
-	.byte	0x60
+	.byte	0x5a
 	.long	0
 	.long	0
 .LLST151:
 	.long	.LVL458
-	.long	.LVL504
+	.long	.LVL509
 	.word	0x1
-	.byte	0x5c
+	.byte	0x5d
 	.long	0
 	.long	0
 .LLST152:
 	.long	.LVL458
-	.long	.LVL500
+	.long	.LVL507
 	.word	0x1
 	.byte	0x6d
 	.long	0
 	.long	0
 .LLST153:
+	.long	.LVL458
 	.long	.LVL459
-	.long	.LVL461
-	.word	0x6
+	.word	0x2
+	.byte	0x30
+	.byte	0x9f
+	.long	.LVL459
+	.long	.LVL462
+	.word	0x1
 	.byte	0x5b
-	.byte	0x93
-	.uleb128 0x1
-	.byte	0x5e
-	.byte	0x93
-	.uleb128 0x1
-	.long	.LVL467
-	.long	.LVL468
-	.word	0x6
+	.long	.LVL462
+	.long	.LVL490
+	.word	0x3
+	.byte	0x9
+	.byte	0xff
+	.byte	0x9f
+	.long	.LVL490
+	.long	.LVL493
+	.word	0x1
 	.byte	0x5b
-	.byte	0x93
-	.uleb128 0x1
-	.byte	0x5e
-	.byte	0x93
-	.uleb128 0x1
-	.long	.LVL474
-	.long	.LVL496
-	.word	0x6
+	.long	.LVL493
+	.long	.LVL498
+	.word	0x3
+	.byte	0x9
+	.byte	0xff
+	.byte	0x9f
+	.long	.LVL498
+	.long	.LVL502
+	.word	0x1
 	.byte	0x5b
-	.byte	0x93
-	.uleb128 0x1
-	.byte	0x5e
-	.byte	0x93
-	.uleb128 0x1
-	.long	.LVL499
-	.long	.LVL503
-	.word	0x6
+	.long	.LVL502
+	.long	.LVL506
+	.word	0x2
+	.byte	0x30
+	.byte	0x9f
+	.long	.LVL506
+	.long	.LVL507
+	.word	0x1
 	.byte	0x5b
-	.byte	0x93
-	.uleb128 0x1
-	.byte	0x5e
-	.byte	0x93
-	.uleb128 0x1
 	.long	0
 	.long	0
 .LLST154:
-	.long	.LVL474
-	.long	.LVL475
+	.long	.LVL459
+	.long	.LVL461
 	.word	0x6
-	.byte	0x68
+	.byte	0x5c
 	.byte	0x93
 	.uleb128 0x1
-	.byte	0x5d
+	.byte	0x59
+	.byte	0x93
+	.uleb128 0x1
+	.long	.LVL468
+	.long	.LVL469
+	.word	0x6
+	.byte	0x5c
+	.byte	0x93
+	.uleb128 0x1
+	.byte	0x59
+	.byte	0x93
+	.uleb128 0x1
+	.long	.LVL475
+	.long	.LVL490
+	.word	0x6
+	.byte	0x5c
+	.byte	0x93
+	.uleb128 0x1
+	.byte	0x59
+	.byte	0x93
+	.uleb128 0x1
+	.long	.LVL497
+	.long	.LVL502
+	.word	0x6
+	.byte	0x5c
+	.byte	0x93
+	.uleb128 0x1
+	.byte	0x59
+	.byte	0x93
+	.uleb128 0x1
+	.long	.LVL506
+	.long	.LVL510
+	.word	0x6
+	.byte	0x5c
+	.byte	0x93
+	.uleb128 0x1
+	.byte	0x59
 	.byte	0x93
 	.uleb128 0x1
 	.long	0
 	.long	0
 .LLST155:
-	.long	.LVL459
-	.long	.LVL496
-	.word	0x1
-	.byte	0x6c
-	.long	.LVL499
-	.long	.LVL500
-	.word	0x1
-	.byte	0x6c
+	.long	.LVL475
+	.long	.LVL476
+	.word	0x6
+	.byte	0x68
+	.byte	0x93
+	.uleb128 0x1
+	.byte	0x61
+	.byte	0x93
+	.uleb128 0x1
 	.long	0
 	.long	0
 .LLST156:
-	.long	.LVL489
-	.long	.LVL493
+	.long	.LVL459
+	.long	.LVL462
+	.word	0x1
+	.byte	0x6c
+	.long	.LVL462
+	.long	.LVL499
+	.word	0x1
+	.byte	0x5e
+	.long	.LVL499
+	.long	.LVL502
+	.word	0x1
+	.byte	0x6c
+	.long	.LVL506
+	.long	.LVL507
+	.word	0x1
+	.byte	0x6c
+	.long	0
+	.long	0
+.LLST157:
+	.long	.LVL477
+	.long	.LVL490
+	.word	0x1
+	.byte	0x61
+	.long	.LVL497
+	.long	.LVL498
 	.word	0x1
 	.byte	0x61
 	.long	0
 	.long	0
-.LLST157:
-	.long	.LVL475
-	.long	.LVL487
-	.word	0x1
-	.byte	0x5d
-	.long	0
-	.long	0
 .LLST158:
-	.long	.LVL509
-	.long	.LVL515
+	.long	.LVL492
+	.long	.LVL497
+	.word	0x1
+	.byte	0x61
+	.long	0
+	.long	0
+.LLST159:
+	.long	.LVL516
+	.long	.LVL522
 	.word	0x1
 	.byte	0x69
 	.long	0
 	.long	0
-.LLST159:
-	.long	.LVL510
-	.long	.LVL511
+.LLST160:
+	.long	.LVL517
+	.long	.LVL518
 	.word	0x1
 	.byte	0x68
-	.long	.LVL512
-	.long	.LVL513
+	.long	.LVL519
+	.long	.LVL520
 	.word	0x2
 	.byte	0x30
 	.byte	0x9f
-	.long	.LVL513
-	.long	.LVL516
+	.long	.LVL520
+	.long	.LVL523
 	.word	0x1
 	.byte	0x68
 	.long	0
 	.long	0
-.LLST160:
-	.long	.LVL514
-	.long	.LVL515
+.LLST161:
+	.long	.LVL521
+	.long	.LVL522
 	.word	0x6
 	.byte	0xf2
-	.long	.Ldebug_info0+8005
+	.long	.Ldebug_info0+8046
 	.sleb128 0
 	.long	0
 	.long	0
@@ -13274,6 +13461,12 @@ cplInfo:
 	.long	0
 	.long	.LBB91
 	.long	.LBE91
+	.long	.LBB95
+	.long	.LBE95
+	.long	0
+	.long	0
+	.long	.LBB92
+	.long	.LBE92
 	.long	.LBB94
 	.long	.LBE94
 	.long	0
@@ -13387,7 +13580,7 @@ cplInfo:
 	.string	"midiInSysEx"
 .LASF142:
 	.string	"Manual_to_MidiNote"
-.LASF180:
+.LASF181:
 	.string	"swTimer"
 .LASF42:
 	.string	"bitStart"
@@ -13399,11 +13592,11 @@ cplInfo:
 	.string	"ChannelNote_t"
 .LASF118:
 	.string	"prog_set"
-.LASF239:
+.LASF241:
 	.string	"__iCliRetVal"
-.LASF215:
+.LASF216:
 	.string	"init_Pipe"
-.LASF176:
+.LASF177:
 	.string	"chanNote"
 .LASF91:
 	.string	"pRange"
@@ -13425,25 +13618,25 @@ cplInfo:
 	.string	"midi_RegisterMatchProgram"
 .LASF164:
 	.string	"midiIn_Process"
-.LASF221:
+.LASF222:
 	.string	"pipe_off"
 .LASF9:
 	.string	"long long unsigned int"
-.LASF179:
+.LASF180:
 	.string	"midi_CheckTxActiveSense"
-.LASF194:
+.LASF195:
 	.string	"midi_RegisterChanged"
 .LASF50:
 	.string	"OutChannel"
-.LASF193:
+.LASF194:
 	.string	"programMap"
 .LASF138:
 	.string	"spaceCount"
 .LASF15:
 	.string	"message8"
-.LASF214:
+.LASF215:
 	.string	"midiDataByteExpected"
-.LASF190:
+.LASF191:
 	.string	"midiOutMap"
 .LASF133:
 	.string	"reg_toLCD"
@@ -13459,7 +13652,7 @@ cplInfo:
 	.string	"long long int"
 .LASF2:
 	.string	"signed char"
-.LASF202:
+.LASF203:
 	.string	"midiLastOutManual"
 .LASF88:
 	.string	"regNr"
@@ -13473,29 +13666,29 @@ cplInfo:
 	.string	"midi_AllManualsOff"
 .LASF124:
 	.string	"midi_ProgramChange"
-.LASF236:
+.LASF238:
 	.string	"GNU C99 5.4.0 -mn-flash=4 -mno-skip-bug -mrelax -mmcu=avr6 -g2 -Og -std=gnu99 -funsigned-char -funsigned-bitfields -ffunction-sections -fdata-sections -fpack-struct -fshort-enums"
 .LASF172:
 	.string	"pipeMessage"
 .LASF141:
 	.string	"init_Manual2Midi"
-.LASF211:
+.LASF212:
 	.string	"midiLastCommand"
 .LASF46:
 	.string	"noteRange"
-.LASF213:
+.LASF214:
 	.string	"midiDataByteCount"
-.LASF223:
+.LASF224:
 	.string	"serial1MIDISendData"
 .LASF6:
 	.string	"long int"
 .LASF157:
 	.string	"midi_ManualOff"
-.LASF184:
+.LASF185:
 	.string	"serESPMidiTmp"
 .LASF139:
 	.string	"init_Midi2Manual"
-.LASF199:
+.LASF200:
 	.string	"midiRxActivceSensing"
 .LASF168:
 	.string	"noteOnOff"
@@ -13503,25 +13696,27 @@ cplInfo:
 	.string	"regEnd"
 .LASF149:
 	.string	"moduleBit_to_manualNote"
-.LASF195:
+.LASF196:
 	.string	"reg_Out"
 .LASF131:
 	.string	"prog_toLcd"
 .LASF82:
 	.string	"midiAllReset"
-.LASF188:
+.LASF189:
 	.string	"midiInMap"
 .LASF4:
 	.string	"uint16_t"
 .LASF145:
 	.string	"rangeStart"
-.LASF209:
+.LASF210:
 	.string	"lcdData"
-.LASF185:
+.LASF176:
+	.string	"messageProcessed"
+.LASF186:
 	.string	"midiTxLastCmd"
 .LASF45:
 	.string	"midiNote"
-.LASF196:
+.LASF197:
 	.string	"midi_ccReg"
 .LASF41:
 	.string	"endNote"
@@ -13531,13 +13726,13 @@ cplInfo:
 	.string	"init_RegOut"
 .LASF53:
 	.string	"MidiOutMap_t"
-.LASF220:
+.LASF221:
 	.string	"pipe_on"
 .LASF102:
 	.string	"mask"
 .LASF159:
 	.string	"midi_CheckRxActiveSense"
-.LASF200:
+.LASF201:
 	.string	"midi_Setting"
 .LASF90:
 	.string	"regNr_to_moduleBit"
@@ -13561,11 +13756,11 @@ cplInfo:
 	.string	"init_Midi"
 .LASF5:
 	.string	"unsigned int"
-.LASF224:
+.LASF225:
 	.string	"module_WaitOutputInput2Cycles"
 .LASF130:
 	.string	"SaveEEProm"
-.LASF225:
+.LASF226:
 	.string	"eeprom_UpdateProg"
 .LASF72:
 	.string	"AcceptProgChange"
@@ -13575,21 +13770,21 @@ cplInfo:
 	.string	"command"
 .LASF119:
 	.string	"prog"
-.LASF226:
+.LASF227:
 	.string	"lcd_putc"
 .LASF7:
 	.string	"long unsigned int"
-.LASF232:
+.LASF233:
 	.string	"eeprom_ReadMidiOutMap"
 .LASF153:
 	.string	"myMessage"
-.LASF187:
+.LASF188:
 	.string	"ManualNoteRange"
-.LASF212:
+.LASF213:
 	.string	"midiDataByte"
 .LASF57:
 	.string	"registers"
-.LASF177:
+.LASF178:
 	.string	"midiSendAllNotesOff"
 .LASF166:
 	.string	"sreg_save"
@@ -13605,7 +13800,7 @@ cplInfo:
 	.string	"manualChar"
 .LASF32:
 	.string	"hw_channel"
-.LASF208:
+.LASF209:
 	.string	"cplInfo"
 .LASF80:
 	.string	"getAllCouplers"
@@ -13629,7 +13824,7 @@ cplInfo:
 	.string	"midi_resetRegisters"
 .LASF38:
 	.string	"moduleBit"
-.LASF227:
+.LASF228:
 	.string	"lcd_blank"
 .LASF19:
 	.string	"Timer"
@@ -13649,7 +13844,7 @@ cplInfo:
 	.string	"myChar"
 .LASF122:
 	.string	"regBytePtr"
-.LASF210:
+.LASF211:
 	.string	"midiEEPromLoadError"
 .LASF99:
 	.string	"modBit"
@@ -13665,9 +13860,9 @@ cplInfo:
 	.string	"Midi_updateManualRange"
 .LASF26:
 	.string	"pipeIn"
-.LASF192:
+.LASF193:
 	.string	"registerCount"
-.LASF231:
+.LASF232:
 	.string	"eeprom_ReadMidiThrough"
 .LASF89:
 	.string	"set_Coupler"
@@ -13675,11 +13870,11 @@ cplInfo:
 	.string	"cursor"
 .LASF20:
 	.string	"pipeOutM4"
-.LASF230:
+.LASF231:
 	.string	"eeprom_ReadMidiInMap"
 .LASF121:
 	.string	"regBits"
-.LASF228:
+.LASF229:
 	.string	"eeprom_ReadRegOut"
 .LASF73:
 	.string	"MidiSetting_t"
@@ -13697,41 +13892,41 @@ cplInfo:
 	.string	"midiBytesTransferred"
 .LASF58:
 	.string	"couplers"
-.LASF178:
+.LASF179:
 	.string	"midi_SendActiveSense"
-.LASF238:
+.LASF240:
 	.string	"E:\\\\Users\\\\Anwender\\\\Sync\\\\Atmel Studio\\\\Pipe1\\\\Pipe1\\\\Debug"
 .LASF94:
 	.string	"pSection"
 .LASF66:
 	.string	"ccInRegOff"
-.LASF218:
+.LASF219:
 	.string	"eeprom_ReadProg"
-.LASF235:
+.LASF237:
 	.string	"serial0USB_logPipeIn"
 .LASF3:
 	.string	"unsigned char"
 .LASF76:
 	.string	"midi_CouplerReset"
-.LASF189:
+.LASF190:
 	.string	"midiThrough"
 .LASF69:
 	.string	"MidiCCreg_t"
-.LASF217:
+.LASF218:
 	.string	"log_putError"
 .LASF17:
 	.string	"counter"
-.LASF234:
+.LASF235:
 	.string	"pipeMsgPush"
 .LASF115:
 	.string	"midi_CountRegisterInProgram"
-.LASF233:
+.LASF234:
 	.string	"eeprom_ReadManualMap"
 .LASF116:
 	.string	"midiSendRegOn"
 .LASF56:
 	.string	"RegisterMap_t"
-.LASF205:
+.LASF206:
 	.string	"midiLastInManual"
 .LASF51:
 	.string	"MidiThrough_t"
@@ -13739,37 +13934,39 @@ cplInfo:
 	.string	"channel"
 .LASF134:
 	.string	"readHWonly"
-.LASF201:
+.LASF202:
 	.string	"midiLastOutNote"
-.LASF216:
+.LASF217:
 	.string	"eeprom_ReadReg"
-.LASF207:
+.LASF208:
 	.string	"midi_Couplers"
 .LASF13:
 	.string	"Word_t"
 .LASF117:
 	.string	"midiSendRegOff"
-.LASF182:
+.LASF183:
 	.string	"pipeProcessing"
-.LASF204:
+.LASF205:
 	.string	"midiLastInChannel"
 .LASF12:
 	.string	"byteval"
+.LASF236:
+	.string	"log_putWarning"
 .LASF74:
 	.string	"char"
-.LASF222:
+.LASF223:
 	.string	"serial1MIDISendCmd"
 .LASF33:
 	.string	"note"
 .LASF97:
 	.string	"mode"
-.LASF191:
+.LASF192:
 	.string	"registerMap"
 .LASF123:
 	.string	"byteNr"
 .LASF136:
 	.string	"addChar"
-.LASF181:
+.LASF182:
 	.string	"pipe"
 .LASF54:
 	.string	"startReg"
@@ -13779,7 +13976,7 @@ cplInfo:
 	.string	"splitRange"
 .LASF112:
 	.string	"progPtr"
-.LASF229:
+.LASF230:
 	.string	"lcd_goto"
 .LASF104:
 	.string	"count_Registers"
@@ -13787,9 +13984,9 @@ cplInfo:
 	.string	"VelZero4Off"
 .LASF62:
 	.string	"regStart"
-.LASF240:
+.LASF242:
 	.string	"__iRestore"
-.LASF198:
+.LASF199:
 	.string	"prog_UpdDisplay"
 .LASF0:
 	.string	"int8_t"
@@ -13815,9 +14012,9 @@ cplInfo:
 	.string	"endReg"
 .LASF106:
 	.string	"resultPtr"
-.LASF183:
+.LASF184:
 	.string	"pipe_Module"
-.LASF219:
+.LASF220:
 	.string	"eeprom_ReadCCreg"
 .LASF14:
 	.string	"Message16"
@@ -13833,7 +14030,7 @@ cplInfo:
 	.string	"pipeInM12"
 .LASF22:
 	.string	"pipeInM16"
-.LASF186:
+.LASF187:
 	.string	"manualMap"
 .LASF151:
 	.string	"moduleInfo"
@@ -13841,11 +14038,11 @@ cplInfo:
 	.string	"init_Registers"
 .LASF30:
 	.string	"AssnWrite"
-.LASF197:
+.LASF198:
 	.string	"prog_Display"
 .LASF70:
 	.string	"TxActivceSense"
-.LASF203:
+.LASF204:
 	.string	"midiLastInNote"
 .LASF21:
 	.string	"pipeOut"
@@ -13853,11 +14050,11 @@ cplInfo:
 	.string	"moduleBit_to_registerNr"
 .LASF78:
 	.string	"result"
-.LASF237:
+.LASF239:
 	.string	".././Midi.c"
 .LASF129:
 	.string	"register_toProgram"
-.LASF206:
+.LASF207:
 	.string	"midiLastProgram"
 .LASF101:
 	.string	"modulNr"

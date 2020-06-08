@@ -2,7 +2,7 @@
  *
  * Created: 31.01.2019 13:32:04
  *  Author: Anwender
- * Does processing of midi messages to and from organ - handling bytes is not done here (->serial.c)
+ * Does processing of midi messages to and organ key messages from organ - handling bytes is not done here (->serial.c)
  */
 
 #include <util/delay.h>
@@ -308,7 +308,7 @@ void midiIn_Process(uint8_t midiByte){
 						break;
 					case MIDI_NOTEON:
 						if (midiDataByte[1] == 0) {
-							// seldom, used midi spec: velocity = 0 -> note off
+							// midi spec: velocity = 0 -> note off
 							noteOnOff = NOTE_OFF;
 						} else {
 							// regular: note on
@@ -321,7 +321,7 @@ void midiIn_Process(uint8_t midiByte){
 							midiAllNotesOff(channel);
 						} else if (midiDataByte[0] == midi_ccReg.ccInRegOn) {
 							// V 0.83: register on/off by CC
-							register_onOff(midiDataByte[1], REGISTER_ON);	
+							register_onOff(midiDataByte[1], REGISTER_ON);
 						} else if (midiDataByte[0] == midi_ccReg.ccInRegOff) {
 							register_onOff(midiDataByte[1], REGISTER_OFF);
 						} else if (midiDataByte[0] == MIDI_CTRL_ALLCTRLOFF){
@@ -1059,9 +1059,7 @@ ManualNote_t moduleBit_to_manualNote(uint8_t moduleBit){
 		manual++;
 	} while (manual <= MANUAL_COUNT);
 	result.manual = MANUAL_NONE;
-	// V 0.59 removed warning, moduleBiut may be register!
-	// log_putWarning(LOG_CAT_MODULES,LOG_CATMODULES_UNKNOWNINP,moduleBit);
-	return (result); 
+	return (result);
 }
 
 void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
@@ -1109,6 +1107,7 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 	 uint8_t command = pipeMessage.message8[MSG_BYTE_CMD_SHIFTBIT] & MESSAGE_PIPE_CMD_MASK_H; // upper 3 bit
 	 uint8_t shiftBit = pipeMessage.message8[MSG_BYTE_CMD_SHIFTBIT] & MESSAGE_PIPE_SHIFTBIT_MASK_H; // lower 5 bits = BitNr of each module 0..31
 	 uint8_t moduleBits = pipeMessage.message8[MSG_BYTE_MODULEBITS]; // one bit for each module, so one message can countain up to 8 messages for 8 modules
+	 uint8_t messageProcessed = FALSE;
 	 ManualNote_t manualNote;
 	 ChannelNote_t chanNote;
 	 if ((command == MESSAGE_PIPE_ON_HI) || (command == MESSAGE_PIPE_OFF_HI)){
@@ -1118,10 +1117,11 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 			if ((moduleBits & 0x01) != 0) {
 				// LSB==1 -> Module "i" has message
 				manualNote = moduleBit_to_manualNote(MODULE_BIT(i,shiftBit)); // modBit = mmmb bbbb, m = moduleNr, b = bitNr
-				// manual and note for that module/bit
+				// check if manual and note is assigned that module/bit
 				if (manualNote.manual != MANUAL_NONE){
 					// manual is assigned
 					// check midi assigneemnt for this manual/note
+					messageProcessed = TRUE;
 					chanNote = Manual_to_MidiNote(manualNote.manual, manualNote.note);
 					if (chanNote.hw_channel <= MIDI_CHANNEL_16){
 						// midi chan assigned note on/off can be sent
@@ -1142,19 +1142,8 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 							serial1MIDISendData(chanNote.note);
 							serial1MIDISendData(0);
 						}
-// 						serial1MIDISend(((command == MESSAGE_PIPE_ON_HI) || (midi_Setting.VelZero4Off) ? MIDI_NOTEON : MIDI_NOTEOFF) | chanNote.hw_channel);
-// 						// of note off: use note on an velocity = 0 to turn off note (less bytes !)
-// 						serial1MIDISend(chanNote.note);
-// 						// of note off: use note on an velocity = 0 to turn off note (less bytes !):
-// 						serial1MIDISend((command == MESSAGE_PIPE_OFF_HI) && (midi_Setting.VelZero4Off) ? 0 : MIDI_DEFAULT_VELOCITY);
-// 						// V0.56 Show MidiOut on Display only if Channel assigned
-// 						if (command == MESSAGE_PIPE_ON_HI) {
-// 							// note on -> save this info for status display
-// 							midiLastOutManual = manualNote.manual;
-// 							midiLastOutNote = manualNote.note;
-// 						}
 					}
-					// check couplers
+					// now check couplers for that manual
 					uint8_t noteOnOff = (command == MESSAGE_PIPE_ON_HI ? NOTE_ON : NOTE_OFF);
 					// TODO check if Pipe was activated my different event (MIDI, other coupler)
 					if (manualNote.manual == MANUAL_III){
@@ -1198,23 +1187,26 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
 							manual_NoteOnOff(MANUAL_I, manualNote.note, noteOnOff);
 						}
 					}
-				} // if (manualNote.manual != MANUAL_NONE)
-				// no else: modbit can be assigned to manual AND register for test purpose!
-				// now check if modbit is assigned to register 
-				// midi_RegisterChanged = moduleBit_to_registerNr(MODULE_BIT(i,shiftBit)) | (command == MESSAGE_PIPE_ON_HI ? REGISTER_WAS_SET : 0); // processed and reset in main
-				// V 0.83: send RegOn/Off to MIDI out
-				uint8_t regNr = moduleBit_to_registerNr(MODULE_BIT(i,shiftBit));
-				if (regNr < REGISTER_COUNT){
-					// modulebit is assigned to a register
-					if (command == MESSAGE_PIPE_ON_HI){
-						midiSendRegOn(regNr);
-						regNr |= REGISTER_WAS_SET;
-					} else {
-						midiSendRegOff(regNr);
+				} else {
+					// now check if modbit is assigned to register
+					uint8_t regNr = moduleBit_to_registerNr(MODULE_BIT(i,shiftBit));
+					if (regNr < REGISTER_COUNT) {
+						// modulebit is assigned to a register
+						messageProcessed = TRUE;
+						// V 0.83: send RegOn/Off to MIDI out
+						if (command == MESSAGE_PIPE_ON_HI){
+							midiSendRegOn(regNr);
+							regNr |= REGISTER_WAS_SET;
+						} else {
+							midiSendRegOff(regNr);
+						}
+						midi_RegisterChanged = regNr; // for LCD out in main()
 					}
-					midi_RegisterChanged = regNr; // for LCD out in main()
+				} // process future key events here (none definded yet)
+				if (messageProcessed == FALSE) {
+					// ModBit Message was not assigned to a manual or register
+					log_putWarning(LOG_CAT_MODULES,LOG_CATMODULES_UNKNOWNINP,(i << 8) | shiftBit);
 				}
-				// TODO process other than manual/register key events here (none definded yet)
 			}
 			moduleBits >>= 1; // next module
 		} // for

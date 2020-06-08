@@ -269,7 +269,7 @@ uint8_t module_TestAllInputs(){
 	// only for module that are assigned to read,
 	// but also for modules that did NOT pass loop test or that are NOT assigned to write
 	for (uint8_t i = 0; i < PIPE_SHIFTBIT_COUNT; i++){
-		pPipe->pipeOut = 0xFF; // outputs off
+		pPipe->pipeOut = 0xFF; // outputs off -> but should already be off, since read takes some time
 		result |= pPipe->pipeIn;
 		pPipe++;
 	}

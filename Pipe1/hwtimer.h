@@ -21,7 +21,7 @@
 //**********************  TIMER DEFS **********************
 // intern
 // ---------------------- DEFINES ---------------------
-#define TIMER_COUNT 10
+#define TIMER_COUNT 11
 #define TIMER_ENDED 0x00 // should be set to INACTIVE by main when porcessed
 #define TIMER_INACTIVE 0xFF
 #define TIMER_BASE_MS 20	// prescaler 20msec is base for timer, so max delay = 255*0,02 = 5,1sec
@@ -38,6 +38,10 @@ extern volatile uint8_t time_Uptime[4]; // 0: prescaler cycles @ 4ms, 1: seconds
 #define TIMER_NOTSTARTED(N) (swTimer[N].counter == TIMER_INACTIVE)
 #define TIMER_RUNNING(N) ((swTimer[N].counter != TIMER_ENDED) && (swTimer[N].counter != TIMER_INACTIVE))
 #define TIMER_ELAPSED(N) (swTimer[N].counter == TIMER_ENDED)
+
+// for immediate wait operations:
+#define TIMER_WAITNOW 10
+#define TIMER_WAITNOW_MS 50 //
 
 // when elapsed: send active sense
 #define TIMER_REGDISPLAY 9

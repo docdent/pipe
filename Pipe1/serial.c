@@ -113,22 +113,10 @@ void serial1MIDISendData(uint8_t data){
 void serial1MIDISend(uint8_t data){
 	// V 0.63 save last sent midi command
 	// V 0.64 handle last command only if Send Vel=0 for Note Off is set, because only then abrevation shall be activated
-// 	if ((midi_Setting.VelZero4Off) && (data >= MIDI_LOWEST_CMD)){
-// 		if(data == midiTxLastCmd){
-// 			return;
-// 		}
-// 		if (data < MIDI_POLYAFTT){	// currently save last command  only for noteon/off
-// 			midiTxLastCmd = data;
-// 		} else { // otherwise do not save this command but reset command so that all other commands are sent allways
-// 			MIDI_TX_RESET_LASTCMD // midiTxLastCmd set to 0 means it does never match command byte to be sent, because cmd will be > 0x7F
-// 		}
-// 	}
-	// 0.67 resete active sense tx timer with every midi byte sent
+	// V 0.67 reset active sense tx timer with every midi byte sent
+	// V 0.83 last command handling done in ...SendCmd()
 	TIMER_SET(TIMER_TX_ACTIVESENSE,TIMER_TX_ACTIVESENSE_MS) // as we sent midi data here, active sense timer can be reset
 	UCSR1B &= ~(1 << UDRIE1);	// Interrupt abschalten für "Senderegister leer", damit Sendewarteschlange bearbeitet werden kann
-	if (data == 0xFF){
-		sei();
-	}
 	serial0USB_logMIDIout(data); // log sent data byte to USB if selected
 	midiTxBuffer[midiTxInIndex] = data; 
 	uint8_t newIndex = (midiTxInIndex+1) & MIDI_TX_BUFFER_MASK; // V 0.69 do not update midiTxInIndex on overflow
@@ -232,8 +220,7 @@ void init_Serial0SerUSB() {
 	if (serUSB_Active == TRUE){
 		serial0SER_USB_sendStringP(HelloMsg);
 		serial0SER_USB_sendStringP(sw_version);
-		serial0SER_USB_sendCRLF();
-		serial0SER_USB_sendCRLF();
+		serial0SER_USB_sendStringP(cr_lf); // NOT sendCRLF because that waits for sending an interrupts are still disabled!
 	}
 
 }
@@ -302,7 +289,10 @@ void serial0SER_USB_sendString(char *s)
 }
 
 void serial0SER_USB_sendCRLF(){
+	// V 0.85 also wait for sendbuffer empty, or max 20ms = 220 bytes @ 115 000 baud
 	serial0SER_USB_sendStringP(cr_lf);
+	TIMER_SET(TIMER_WAITNOW,20)
+	while (SER_USB_TX_BUFFER_NONEMPTY && TIMER_RUNNING(TIMER_WAITNOW)); // wait until send puffer
 }
 
 void serial0SER_USBSend(uint8_t data){

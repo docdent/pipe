@@ -850,12 +850,12 @@ static __inline__ void __iRestore(const uint8_t *__s)
 
 # 31 ".././hwtimer.h"
 extern volatile uint8_t time_Uptime[4];
-# 83 ".././hwtimer.h"
+# 87 ".././hwtimer.h"
 typedef struct {
  uint8_t counter;
  uint8_t prescaler;
 } Timer;
-extern volatile Timer swTimer[10];
+extern volatile Timer swTimer[11];
 extern volatile uint8_t time_Uptime[4];
 extern volatile uint8_t time_UpTimeUpdated;
 
@@ -863,7 +863,7 @@ extern void init_HwTimer();
 extern void init_Timers();
 extern void init_ADC();
 extern void init_Pipe();
-# 136 ".././hwtimer.h"
+# 140 ".././hwtimer.h"
 typedef struct {
  uint8_t mux;
  uint8_t ADCval;
@@ -875,7 +875,7 @@ typedef struct {
 extern volatile KeyInfo adcKeys[1];
 
 extern uint8_t keyWants[6];
-# 169 ".././hwtimer.h"
+# 173 ".././hwtimer.h"
 typedef struct {
  uint8_t pipeOutM4;
  uint8_t pipeOut;
@@ -903,7 +903,7 @@ typedef struct {
 } Pipe_Module_t;
 
 extern Pipe_Module_t pipe_Module;
-# 204 ".././hwtimer.h"
+# 208 ".././hwtimer.h"
 extern uint8_t pipe_PowerStatus;
 
 
@@ -2895,8 +2895,6 @@ ManualNote_t moduleBit_to_manualNote(uint8_t moduleBit){
   manual++;
  } while (manual <= 4);
  result.manual = 0xFF;
-
-
  return (result);
 }
 
@@ -2945,6 +2943,7 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
   uint8_t command = pipeMessage.message8[1] & 0xE0;
   uint8_t shiftBit = pipeMessage.message8[1] & 0x1F;
   uint8_t moduleBits = pipeMessage.message8[0];
+  uint8_t messageProcessed = 0x00;
   ManualNote_t manualNote;
   ChannelNote_t chanNote;
   if ((command == 0x20) || (command == 0x00)){
@@ -2958,6 +2957,7 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
     if (manualNote.manual != 0xFF){
 
 
+     messageProcessed = 0xFF;
      chanNote = Manual_to_MidiNote(manualNote.manual, manualNote.note);
      if (chanNote.hw_channel <= 15){
 
@@ -2978,7 +2978,6 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
        serial1MIDISendData(chanNote.note);
        serial1MIDISendData(0);
       }
-# 1156 ".././Midi.c"
      }
 
      uint8_t noteOnOff = (command == 0x20 ? 0x01 : 0x00);
@@ -3024,23 +3023,26 @@ void midiKeyPress_Process(PipeMessage_t pipeMessage){
        manual_NoteOnOff(2, manualNote.note, noteOnOff);
       }
      }
-    }
+    } else {
 
+     uint8_t regNr = moduleBit_to_registerNr(((i << 5) | (shiftBit)));
+     if (regNr < 64) {
 
+      messageProcessed = 0xFF;
 
-
-    uint8_t regNr = moduleBit_to_registerNr(((i << 5) | (shiftBit)));
-    if (regNr < 64){
-
-     if (command == 0x20){
-      midiSendRegOn(regNr);
-      regNr |= 0x80;
-     } else {
-      midiSendRegOff(regNr);
+      if (command == 0x20){
+       midiSendRegOn(regNr);
+       regNr |= 0x80;
+      } else {
+       midiSendRegOff(regNr);
+      }
+      midi_RegisterChanged = regNr;
      }
-     midi_RegisterChanged = regNr;
     }
+    if (messageProcessed == 0x00) {
 
+     log_putWarning(2,1,(i << 8) | shiftBit);
+    }
    }
    moduleBits >>= 1;
   }
@@ -3055,7 +3057,7 @@ void midiSendAllNotesOff(){
   serial1MIDISendData(0x7B);
   serial1MIDISendData(0);
  }
-# 1240 ".././Midi.c"
+# 1232 ".././Midi.c"
 }
 
 void midi_SendActiveSense(){

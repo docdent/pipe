@@ -913,7 +913,7 @@ ErrorText:
 	.zero	3
 	.byte	5
 	.byte	0
-	.string	"Pwr:OuptutOn"
+	.string	"Pwr:OutputOn"
 	.zero	3
 	.comm	log_unreadErrors,1,1
 	.comm	Log_TextBuff,40,1
@@ -1729,7 +1729,7 @@ ErrorText:
 	.uleb128 0x1e
 	.long	.LASF42
 	.byte	0x5
-	.byte	0x58
+	.byte	0x5c
 	.long	0x647
 	.byte	0x1
 	.byte	0x1
