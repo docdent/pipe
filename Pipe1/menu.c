@@ -1340,7 +1340,8 @@ uint8_t menuOnEnterEEBackup(uint8_t arg){
 	lcd_goto(MENU_LCD_CURSOR_DATA);
 	lcd_puts_P(msg_programming1);
 	eeprom_Backup();
-	menuLCDwriteOK();
+	lcd_goto(MENU_LCD_CURSOR_DATA);
+	lcd_puts_P(msg_programming2);
 	return 0;
 }
 
@@ -1349,7 +1350,8 @@ uint8_t menuOnEnterEERestore(uint8_t arg){
 	lcd_goto(MENU_LCD_CURSOR_DATA);
 	lcd_puts_P(msg_programming1);
 	eeprom_Restore();
-	menuLCDwriteOK();
+	lcd_goto(MENU_LCD_CURSOR_DATA);
+	lcd_puts_P(msg_programming2);
 	return 0;
 }
 
@@ -1368,6 +1370,7 @@ const char usbLog [] PROGMEM = "Log\r\n";
 
 uint8_t menuOnEnterUSBprotokoll(uint8_t arg){
 	(void) arg;
+	serial0SER_USB_sendCRLF();
 	serial0SER_USB_sendStringP(usbLog);
 	uint8_t count = log_count();
 	if (count == 0) {
@@ -1389,6 +1392,7 @@ uint8_t menuOnExitUSBactive(uint8_t arg){
 	(void) arg;
 	eeprom_UpdateUSB();
 	if (serUSB_Active == TRUE){
+		serial0SER_USB_sendStringP(cr_lf);
 		serial0SER_USB_sendStringP(HelloMsg);
 		serial0SER_USB_sendStringP(sw_version);
 		serial0SER_USB_sendStringP(cr_lf);
@@ -1416,6 +1420,7 @@ const char usbHWCC [] PROGMEM = "Register On/Off CC for MIDI In/Out:\r\n";
 uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 	(void) arg;
 	char* buffer;
+	serial0SER_USB_sendCRLF();
 	serial0SER_USB_sendStringP(usbHWtitel);
 	serial0SER_USB_sendCRLF();
 	serial0SER_USB_sendStringP(usbHWmodulInst);
