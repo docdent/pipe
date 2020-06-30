@@ -15,6 +15,8 @@
 #include "hwtimer.h"
 #include <util/atomic.h>
 
+// handles serial IO for MIDI (Serial 1) USB (Serial 0) and ESP 8266 (Serial 3)
+
 //*********************************** V A R *********************************
 
 uint8_t midiRxBuffer[MIDI_RX_BUFFER_SIZE];
@@ -68,7 +70,7 @@ void init_Serial1MIDI() {
 	UBRR1H = (MIDI_BAUDRATE >> 8);                      // shift the register right by 8 bits
 	UBRR1L = MIDI_BAUDRATE;                           // set baud rate
 	UCSR1B|= (1 << TXEN1) | (1 << RXEN1) | (1 << RXCIE1) ;                // enable receiver and transmitter and (only) rec. interrupt
-	UCSR1C|= (1 << UCSZ10) | (1 << UCSZ11);		// 8bit, 1 Stopbit, 
+	UCSR1C|= (1 << UCSZ10) | (1 << UCSZ11);		// 8bit, 1 Stopbit,
 	midiRxInIndex = 0;
 	midiRxOutIndex = 0;
 	midiTxInIndex = 0;
@@ -118,7 +120,7 @@ void serial1MIDISend(uint8_t data){
 	TIMER_SET(TIMER_TX_ACTIVESENSE,TIMER_TX_ACTIVESENSE_MS) // as we sent midi data here, active sense timer can be reset
 	UCSR1B &= ~(1 << UDRIE1);	// Interrupt abschalten für "Senderegister leer", damit Sendewarteschlange bearbeitet werden kann
 	serial0USB_logMIDIout(data); // log sent data byte to USB if selected
-	midiTxBuffer[midiTxInIndex] = data; 
+	midiTxBuffer[midiTxInIndex] = data;
 	uint8_t newIndex = (midiTxInIndex+1) & MIDI_TX_BUFFER_MASK; // V 0.69 do not update midiTxInIndex on overflow
 	if (newIndex == midiTxOutIndex){
 		// overflow
@@ -220,7 +222,7 @@ void init_Serial0SerUSB() {
 	if (serUSB_Active == TRUE){
 		serial0SER_USB_sendStringP(HelloMsg);
 		serial0SER_USB_sendStringP(sw_version);
-		serial0SER_USB_sendStringP(cr_lf); // NOT sendCRLF because that waits for sending an interrupts are still disabled!
+		serial0SER_USB_sendStringP(cr_lf); // DON'T use sendCRLF() because that would wait for sending - and interrupts are still disabled here!
 	}
 
 }
@@ -313,10 +315,12 @@ void serial0SER_USBSend(uint8_t data){
 	if (index == outIndex) {
 		// ovfl
 		#ifdef SER_USB_WAIT
+			// behavior: if buffer full: wait for free byte in buffer
 			serUSBTxInIndex = index; // write back pointer
 			UCSR0B |= (1 << UDRIE0); // Interrupt einschalten für "Senderegister leer"
 			while (index == serUSBTxOutIndex) {}; // TODO: observe timeout!
 		#else
+			// behavior: never wait, prefer data loss!
 			// forget oldest data: don't update pointer
 			serUSBOvflFlag = SER_OVFL_YES;
 			UCSR0B |= (1 << UDRIE0); // Interrupt einschalten für "Senderegister leer"

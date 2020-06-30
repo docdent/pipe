@@ -198,7 +198,7 @@ typedef struct {
 	uint8_t ccInRegOn;
 	uint8_t ccInRegOff;
 	uint8_t ccOutRegOn;
-	uint8_t ccOutRegOff;	
+	uint8_t ccOutRegOff;
 } MidiCCreg_t;
 
 extern MidiCCreg_t midi_ccReg;
@@ -282,7 +282,7 @@ typedef struct{
 extern const __flash CplInfo_t cplInfo[COUPLER_COUNT];
 
 extern uint8_t set_Coupler(uint8_t); // set must be done via function, reset ca be done directly,
-//returns true if inverse coupler had to bee reset
+//returns manual if inverse coupler had to be reset
 
 
 #endif /* MIDI_H_ */

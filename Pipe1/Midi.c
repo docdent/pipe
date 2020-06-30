@@ -28,6 +28,7 @@
 
 uint8_t midi_Couplers[COUPLER_COUNT];
 const __flash CplInfo_t cplInfo[COUPLER_COUNT] = {
+	// list of all couplers with destination and source manual
 	{MANUAL_II, MANUAL_III},
 	{MANUAL_I, MANUAL_III},
 	{MANUAL_I, MANUAL_II},
@@ -72,13 +73,13 @@ void midi_CouplerReset(){
 	}
 }
 
-// ------------------------------------ C O U P L E R   S E T T I N  G ---------------------------------
+// ------------------------------------ C O U P L E R   S E T ---------------------------------
 
 uint8_t set_Coupler(uint8_t cplNr){
-	// returns MANUAL (!) if corrsponding inverse coupler had to be turned off, or FALSE if no manual should be turned off
+	// returns MANUAL (!) if corrsponding inverse coupler had to be turned off, or MANUAL_NONE if no manual should be turned off
 	if (cplNr < COUPLER_COUNT){
 		midi_Couplers[cplNr] = COUPLER_ON;
-		// calculate inverse Coupler
+		// calculate inverse Coupler in cplNr
 		if (cplNr >= COUPLER_COUNT/2){
 			// 6...11 -> 0...5
 			cplNr = cplNr - COUPLER_COUNT/2;
@@ -92,7 +93,7 @@ uint8_t set_Coupler(uint8_t cplNr){
 			return cplInfo[cplNr].dest; // note to caller that this destination manual should be turned off
 		}
 	}
-	return FALSE;
+	return MANUAL_NONE;
 }
 
 Word_t getAllCouplers(){
@@ -137,6 +138,8 @@ uint8_t midiLastProgram = MIDI_PROGRAM_NONE;
 
 
 void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff);
+
+//--------------------------------- G L O B A L   M I D I  M E S S A G E S ----------------------------------
 
 void midiAllReset(){
 	pipeProcessing = PIPE_IO_DISABLE; // do not process pipe[] now
@@ -185,7 +188,6 @@ void midi_ManualOff(uint8_t manual){
 		serial1MIDISendCmd(MIDI_CTRLCHG,midiChanel);
 		serial1MIDISendData(MIDI_CTRL_ALLNOTESOFF);
 		serial1MIDISendData(0);
-
 	}
 }
 
@@ -193,10 +195,9 @@ void midi_AllManualsOff(){
 	for (uint8_t manual = 0; manual < MANUAL_COUNT; manual++){
 		midi_ManualOff(manual);
 	}
-
-// 	pipeProcessing = PIPE_IO_DISABLE; // do not process pipe[] now
-// 	init_Pipe(); // defines IO, resets pipe[], here pipeProcessing will be activated again
 }
+
+//----------------------------- A C T I V E   S E N S E ----------------------------------
 
 void midi_CheckRxActiveSense(){
 	if (midiRxActivceSensing != 0){
@@ -232,7 +233,7 @@ void midiInSysEx(){
 		// SysEx Command for our device
 		if (((midiDataByte[1] & 0xF0) == MIDI_MYSYSEX_REGISTER_ON) || ((midiDataByte[1] & 0xF0) == MIDI_MYSYSEX_REGISTER_OFF)){
 			// ATTENTION: Midi Channel is ignored by & 0xF0
-			// SysexCmd is register on off but first check follwoing data
+			// SysexCmd is register on off but first check follwing data
 			if ((midiDataByte[3] == MIDI_MYSYSEX_REGISTER_HEADER) && (midiDataByteCount == 4)) {
 				// only if exactly 4 bytes and register MSB is our arbitrary trigger byte
 				// ---> turn on/off register
@@ -244,6 +245,8 @@ void midiInSysEx(){
 }
 
 void midiIn_Process(uint8_t midiByte){
+	// commands are stored in midiLastCommand and set number of expected data bytes in midiDataByteExpected
+	// processing is usually done after number of data bytes has been received
 	if (midiByte > 0x7f) {
 		// command
 		// define data bytes that are awaited (max. - less is possible)
@@ -743,6 +746,7 @@ void midiSendRegOff(uint8_t regNr){
 }
 
 // PROGRAM DISPLAY V 0.71
+// Programm Nr to LCD
 
 uint8_t prog_Display; // Program value 0...63
 uint8_t prog_UpdDisplay; // TRUE if PROGRAM has changed and should be updated
@@ -767,8 +771,8 @@ void prog_toLcd(){
 }
 
 RegOut_t reg_Out[REGOUT_LEN] = {{LCD_LINE1+1,'1',10,14},{LCD_LINE1+6,' ',15,18},
-{LCD_LINE1+10,'2',20,24},{LCD_LINE1+15,' ',25,29},{LCD_LINE2+1,'P',0,4},{LCD_LINE2+6,' ',5,9},
-{0,' ',REGISTER_NONE,REGISTER_NONE},{0,' ',REGISTER_NONE,REGISTER_NONE}};
+	{LCD_LINE1+10,'2',20,24},{LCD_LINE1+15,' ',25,29},{LCD_LINE2+1,'P',0,4},{LCD_LINE2+6,' ',5,9},
+	{0,' ',REGISTER_NONE,REGISTER_NONE},{0,' ',REGISTER_NONE,REGISTER_NONE}}; // default values, can be configured
 
 void init_RegOut(){
 	if (eeprom_ReadRegOut() == EE_LOAD_ERROR) {
@@ -777,7 +781,7 @@ void init_RegOut(){
 }
 
 void reg_toLCD(uint8_t readHWonly){
-	// lcd output register
+	// lcd output all register as short or long lines grouped in manuals
 	for (uint8_t i = 0; i < REGOUT_LEN; i++){
 		lcd_goto(reg_Out[i].cursor);
 		char myChar = reg_Out[i].manualChar;
@@ -817,6 +821,7 @@ void reg_toLCD(uint8_t readHWonly){
 }
 
 void reg_ClearOnLCD(){
+	// clear area that displays register
 	for (uint8_t i = 0; i < REGOUT_LEN; i++){
 		lcd_goto(reg_Out[i].cursor);
 		char myChar = reg_Out[i].manualChar;
@@ -871,11 +876,12 @@ void init_Midi2Manual(){
 }
 
 void init_Manual2Midi(){
-	// reset all
+	// reset all midi out
 	for (uint8_t i = 0; i << MANUAL_COUNT; i++){
 		midiOutMap[i].hw_channel = MIDI_CHANNEL_NONE;
 		midiOutMap[i].sw_channel = MIDI_CHANNEL_NONE;
 	}
+	// try to read from eeprom
 	if (eeprom_ReadMidiOutMap() == EE_LOAD_ERROR){
 		midiEEPromLoadError = EE_LOAD_ERROR;
 		// default entries
@@ -891,6 +897,8 @@ void init_Manual2Midi(){
 }
 
 void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff){
+	// note event in some midi channel has been received
+	// check map for assigned manuals and activate/decativate output to mosfets
 	channel = channel & MIDI_CHANNEL_MASK; //  0..15 only
 	uint8_t found = 0;
 	for (uint8_t i = 0; i < MIDI_SPLIT_COUNT; i++){
@@ -931,6 +939,7 @@ void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff){
 }
 
 ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note){
+	// converts manual and note to midi channel and midi note
 	ChannelNote_t result = {MIDI_CHANNEL_NONE,MIDI_NOTE_NONE};
 	if (manual < MANUAL_COUNT) {
 		if (midiOutMap[manual].hw_channel != MIDI_CHANNEL_NONE) {
@@ -957,10 +966,13 @@ void Midi_updateManualRange(){
 					rangeEnd = manualMap[i][range].endNote;
 				}
 			}
+			// rangeStart and rangeEnd should have values != 0xFF / 0x00
 			if ((rangeEnd == 0) || (rangeStart == 0xFF)){
+				// no, they are not really assigned, then cancel assignement for this range
 				ManualNoteRange[i].startNote = MIDI_NOTE_NONE;
 				ManualNoteRange[i].endNote = MIDI_NOTE_NONE;
 			} else {
+				// yes, they are assigend, store values
 				ManualNoteRange[i].startNote = rangeStart;
 				ManualNoteRange[i].endNote = rangeEnd;
 			}
@@ -1013,7 +1025,7 @@ void init_Manual2Module(){
 }
 
 ModulBitError_t manualNote_to_moduleBit(uint8_t manual, uint8_t note){
-	// returns module+bit_nr in lowByte or 0xFF in HiByte if Note ist not implemented
+	// returns module+bit_nr in lowByte 9x99 in high byte (MODULE_NOERROR) and or 0xFF (MODULE_ERROR) in HiByte if Note ist not implemented
 	ModulBitError_t result;
 	if (manual < MANUAL_COUNT) {
 		// valid manual
@@ -1038,7 +1050,7 @@ ModulBitError_t manualNote_to_moduleBit(uint8_t manual, uint8_t note){
 ManualNote_t moduleBit_to_manualNote(uint8_t moduleBit){
 	// searches map of all manuals and their ranges for this module/bit combination
 	// returns manual in hiByte and note in LowByte
-	// if no note is found for that Bit, return is MODULE_BIT_NONEXISTENT
+	// if no note is found for that Bit, return is MODULE_BIT_NONEXISTENT (0xFF00)
 	ManualNote_t result;
 	ManualMap_t *pRange;
 	pRange = &(manualMap[MANUAL_0][RANGE_0]); // check all Ranges for all manuals
@@ -1063,6 +1075,7 @@ ManualNote_t moduleBit_to_manualNote(uint8_t moduleBit){
 }
 
 void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
+	// turns on/off note (i.e. mosfet) an a certain manual
 	ModulBitError_t moduleInfo;
 	moduleInfo = manualNote_to_moduleBit(manual, note);
 	// returns mmmb bbbb in LowByte
@@ -1103,14 +1116,18 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
 //********************************************* P R O C E S S   P I P E   M E S S A G E ->MIDI, COUPLER *******************************
 
 void midiKeyPress_Process(PipeMessage_t pipeMessage){
+	// pipe message are generated by polling key/pipe magnet lines in timer interrupt
+	// one message contains bit nr and all bits of modules that share rhe same message on the same bit
+	// format cccb bbbb mmmm mmmm c = command bit = bit number m = module mask
+	// example: 0b0010 1001 0010 0000 = line acitvated (001) in bit 9  (0 1001) of module 5 (0010 0000)
 	serial0USB_logPipeIn(pipeMessage);
-	 uint8_t command = pipeMessage.message8[MSG_BYTE_CMD_SHIFTBIT] & MESSAGE_PIPE_CMD_MASK_H; // upper 3 bit
-	 uint8_t shiftBit = pipeMessage.message8[MSG_BYTE_CMD_SHIFTBIT] & MESSAGE_PIPE_SHIFTBIT_MASK_H; // lower 5 bits = BitNr of each module 0..31
-	 uint8_t moduleBits = pipeMessage.message8[MSG_BYTE_MODULEBITS]; // one bit for each module, so one message can countain up to 8 messages for 8 modules
-	 uint8_t messageProcessed = FALSE;
-	 ManualNote_t manualNote;
-	 ChannelNote_t chanNote;
-	 if ((command == MESSAGE_PIPE_ON_HI) || (command == MESSAGE_PIPE_OFF_HI)){
+	uint8_t command = pipeMessage.message8[MSG_BYTE_CMD_SHIFTBIT] & MESSAGE_PIPE_CMD_MASK_H; // upper 3 bit
+	uint8_t shiftBit = pipeMessage.message8[MSG_BYTE_CMD_SHIFTBIT] & MESSAGE_PIPE_SHIFTBIT_MASK_H; // lower 5 bits = BitNr of each module 0..31
+	uint8_t moduleBits = pipeMessage.message8[MSG_BYTE_MODULEBITS]; // one bit for each module, so one message can countain up to 8 messages for 8 modules
+	uint8_t messageProcessed = FALSE;
+	ManualNote_t manualNote;
+	ChannelNote_t chanNote;
+	if ((command == MESSAGE_PIPE_ON_HI) || (command == MESSAGE_PIPE_OFF_HI)){
 		// Note on or off
 		for (uint8_t i = 0; i < 8; i++){
 			// check all 8 bits for 8 modules, so i is number of current Module

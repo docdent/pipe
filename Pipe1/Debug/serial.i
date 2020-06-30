@@ -1908,35 +1908,29 @@ for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile u
   outIndex = (uint8_t*) serUSBTxOutIndex;
  }
  if (index == outIndex) {
-
-
-
-
-
-
-
+# 323 ".././serial.c"
    serUSBOvflFlag = 0xFF;
    
-# 322 ".././serial.c" 3
+# 324 ".././serial.c" 3
   (*(volatile uint8_t *)(0XC1)) 
-# 322 ".././serial.c"
+# 324 ".././serial.c"
          |= (1 << 
-# 322 ".././serial.c" 3
+# 324 ".././serial.c" 3
                   5
-# 322 ".././serial.c"
+# 324 ".././serial.c"
                         );
 
  } else {
 
   serUSBTxInIndex = index;
   
-# 327 ".././serial.c" 3
+# 329 ".././serial.c" 3
  (*(volatile uint8_t *)(0XC1)) 
-# 327 ".././serial.c"
+# 329 ".././serial.c"
         |= (1 << 
-# 327 ".././serial.c" 3
+# 329 ".././serial.c" 3
                  5
-# 327 ".././serial.c"
+# 329 ".././serial.c"
                        );
  }
 }
@@ -1959,16 +1953,16 @@ uint8_t serial0SER_USBReadRx(){
 }
 
 
-# 348 ".././serial.c" 3
+# 350 ".././serial.c" 3
 void __vector_25 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_25 (void) 
-# 348 ".././serial.c"
+# 350 ".././serial.c"
                    {
 
  uint8_t* index = (uint8_t*) serUSBRxInIndex;
  *index++ = 
-# 351 ".././serial.c" 3
+# 353 ".././serial.c" 3
            (*(volatile uint8_t *)(0XC6))
-# 351 ".././serial.c"
+# 353 ".././serial.c"
                ;
  if (index > &serUSBRxBuffer[64 -1]) {
 
@@ -1976,9 +1970,9 @@ void __vector_25 (void) __attribute__ ((signal,used, externally_visible)) ; void
  }
  uint8_t* outIndex;
  
-# 357 ".././serial.c" 3
+# 359 ".././serial.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 )
-# 357 ".././serial.c"
+# 359 ".././serial.c"
                                  {
   outIndex = (uint8_t*) serUSBRxOutIndex;
  }
@@ -1992,17 +1986,17 @@ for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile u
 }
 
 
-# 369 ".././serial.c" 3
+# 371 ".././serial.c" 3
 void __vector_26 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_26 (void) 
-# 369 ".././serial.c"
+# 371 ".././serial.c"
                      {
  uint8_t* index = (uint8_t*) serUSBTxOutIndex;
  if ((serUSBTxInIndex != serUSBTxOutIndex)){
 
   
-# 373 ".././serial.c" 3
+# 375 ".././serial.c" 3
  (*(volatile uint8_t *)(0XC6)) 
-# 373 ".././serial.c"
+# 375 ".././serial.c"
       = *index++;
   if (index > &serUSBTxBuffer[2048 -1]) {
 
@@ -2012,13 +2006,13 @@ void __vector_26 (void) __attribute__ ((signal,used, externally_visible)) ; void
  } else {
 
   
-# 381 ".././serial.c" 3
+# 383 ".././serial.c" 3
  (*(volatile uint8_t *)(0XC1)) 
-# 381 ".././serial.c"
+# 383 ".././serial.c"
         &= ~(1 << 
-# 381 ".././serial.c" 3
+# 383 ".././serial.c" 3
                   5
-# 381 ".././serial.c"
+# 383 ".././serial.c"
                         );
 
  }
@@ -2030,44 +2024,44 @@ void __vector_26 (void) __attribute__ ((signal,used, externally_visible)) ; void
 
 void init_Serial3SerESP(){
  
-# 391 ".././serial.c" 3
+# 393 ".././serial.c" 3
 (*(volatile uint8_t *)(0x135)) 
-# 391 ".././serial.c"
+# 393 ".././serial.c"
        = (((16000000UL +115200*8)/(115200*16)-1)>>8);
  
-# 392 ".././serial.c" 3
+# 394 ".././serial.c" 3
 (*(volatile uint8_t *)(0x134)) 
-# 392 ".././serial.c"
+# 394 ".././serial.c"
        = ((16000000UL +115200*8)/(115200*16)-1);
  
-# 393 ".././serial.c" 3
+# 395 ".././serial.c" 3
 (*(volatile uint8_t *)(0X131))
-# 393 ".././serial.c"
+# 395 ".././serial.c"
       |= (1 << 
-# 393 ".././serial.c" 3
+# 395 ".././serial.c" 3
                3
-# 393 ".././serial.c"
+# 395 ".././serial.c"
                     ) | (1 << 
-# 393 ".././serial.c" 3
+# 395 ".././serial.c" 3
                               4
-# 393 ".././serial.c"
+# 395 ".././serial.c"
                                    ) | (1 << 
-# 393 ".././serial.c" 3
+# 395 ".././serial.c" 3
                                              7
-# 393 ".././serial.c"
+# 395 ".././serial.c"
                                                    ) ;
  
-# 394 ".././serial.c" 3
+# 396 ".././serial.c" 3
 (*(volatile uint8_t *)(0x132))
-# 394 ".././serial.c"
+# 396 ".././serial.c"
       |= (1 << 
-# 394 ".././serial.c" 3
+# 396 ".././serial.c" 3
                1
-# 394 ".././serial.c"
+# 396 ".././serial.c"
                      ) | (1 << 
-# 394 ".././serial.c" 3
+# 396 ".././serial.c" 3
                                2
-# 394 ".././serial.c"
+# 396 ".././serial.c"
                                      );
  serESPRxInIndex = serESPRxBuffer;
  serESPRxOutIndex = serESPRxBuffer;
@@ -2083,13 +2077,13 @@ void init_Serial3SerESP(){
 void serial3SER_ESPSend(uint8_t data){
  uint8_t* index = (uint8_t*) serESPTxInIndex;
  
-# 408 ".././serial.c" 3
+# 410 ".././serial.c" 3
 (*(volatile uint8_t *)(0X131)) 
-# 408 ".././serial.c"
+# 410 ".././serial.c"
        &= ~(1 << 
-# 408 ".././serial.c" 3
+# 410 ".././serial.c" 3
                  5
-# 408 ".././serial.c"
+# 410 ".././serial.c"
                        );
 
  *index++ = data;
@@ -2100,9 +2094,9 @@ void serial3SER_ESPSend(uint8_t data){
 
  uint8_t* outIndex;
  
-# 417 ".././serial.c" 3
+# 419 ".././serial.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 )
-# 417 ".././serial.c"
+# 419 ".././serial.c"
                                  {
   outIndex = (uint8_t*) serESPTxOutIndex;
  }
@@ -2116,26 +2110,26 @@ for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile u
 
    serESPOvflFlag = 0xFF;
    
-# 429 ".././serial.c" 3
+# 431 ".././serial.c" 3
   (*(volatile uint8_t *)(0X131)) 
-# 429 ".././serial.c"
+# 431 ".././serial.c"
          |= (1 << 
-# 429 ".././serial.c" 3
+# 431 ".././serial.c" 3
                   5
-# 429 ".././serial.c"
+# 431 ".././serial.c"
                         );
 
  } else {
 
   serESPTxInIndex = index;
   
-# 434 ".././serial.c" 3
+# 436 ".././serial.c" 3
  (*(volatile uint8_t *)(0X131)) 
-# 434 ".././serial.c"
+# 436 ".././serial.c"
         |= (1 << 
-# 434 ".././serial.c" 3
+# 436 ".././serial.c" 3
                  5
-# 434 ".././serial.c"
+# 436 ".././serial.c"
                        );
  }
 }
@@ -2145,13 +2139,13 @@ void serial3SER_ESP_sendStringP(const char *progmem_s){
  uint8_t count = 255;
  char c;
  while (((c=
-# 442 ".././serial.c" 3
+# 444 ".././serial.c" 3
            (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 442 ".././serial.c"
+# 444 ".././serial.c"
            progmem_s++
-# 442 ".././serial.c" 3
+# 444 ".././serial.c" 3
            )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 442 ".././serial.c"
+# 444 ".././serial.c"
                                      ) != 0) && (! (serESPOvflFlag == 0xFF)) && (count-- > 0)){
   serial3SER_ESPSend(c);
  }
@@ -2187,16 +2181,16 @@ uint8_t serial3SER_ESPReadRx(){
 }
 
 
-# 476 ".././serial.c" 3
+# 478 ".././serial.c" 3
 void __vector_54 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_54 (void) 
-# 476 ".././serial.c"
+# 478 ".././serial.c"
                    {
 
  uint8_t* index = (uint8_t*) serESPRxInIndex;
  uint8_t receivedByte = 
-# 479 ".././serial.c" 3
+# 481 ".././serial.c" 3
                        (*(volatile uint8_t *)(0X136))
-# 479 ".././serial.c"
+# 481 ".././serial.c"
                            ;
  *index++ = receivedByte;
  if (index > &serESPRxBuffer[128 -1]) {
@@ -2205,9 +2199,9 @@ void __vector_54 (void) __attribute__ ((signal,used, externally_visible)) ; void
  }
  uint8_t* outIndex;
  
-# 486 ".././serial.c" 3
+# 488 ".././serial.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 )
-# 486 ".././serial.c"
+# 488 ".././serial.c"
                                  {
   outIndex = (uint8_t*) serESPRxOutIndex;
  }
@@ -2229,17 +2223,17 @@ for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile u
 }
 
 
-# 506 ".././serial.c" 3
+# 508 ".././serial.c" 3
 void __vector_55 (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_55 (void) 
-# 506 ".././serial.c"
+# 508 ".././serial.c"
                      {
  uint8_t* index = (uint8_t*) serESPTxOutIndex;
  if ((serESPTxInIndex != serESPTxOutIndex)){
 
   
-# 510 ".././serial.c" 3
+# 512 ".././serial.c" 3
  (*(volatile uint8_t *)(0X136)) 
-# 510 ".././serial.c"
+# 512 ".././serial.c"
       = *index++;
   if (index > &serESPTxBuffer[512 -1]) {
 
@@ -2249,13 +2243,13 @@ void __vector_55 (void) __attribute__ ((signal,used, externally_visible)) ; void
  } else {
 
   
-# 518 ".././serial.c" 3
+# 520 ".././serial.c" 3
  (*(volatile uint8_t *)(0X131)) 
-# 518 ".././serial.c"
+# 520 ".././serial.c"
         &= ~(1 << 
-# 518 ".././serial.c" 3
+# 520 ".././serial.c" 3
                   5
-# 518 ".././serial.c"
+# 520 ".././serial.c"
                         );
 
  }

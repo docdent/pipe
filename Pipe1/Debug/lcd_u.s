@@ -601,94 +601,94 @@ lcd_putc:
 	cpi r24,lo8(84)
 	brlo .L28
 .L27:
-	.loc 1 260 0
+	.loc 1 261 0
 	mov r24,r29
 	call lcd_write_character
 .LVL59:
 .L28:
-	.loc 1 264 0
+	.loc 1 265 0
 	lds r28,lcd_cursorPos
 	mov r24,r28
 	call getCursorFromLCDRAMcursor
 .LVL60:
-	.loc 1 265 0
+	.loc 1 266 0
 	cpi r24,lo8(-1)
 	breq .L29
 .LVL61:
 .LBB56:
-	.loc 1 267 0
+	.loc 1 268 0
 	cpi r29,lo8(-95)
 	breq .L31
-	.loc 1 269 0
+	.loc 1 270 0
 	cpi r29,lo8(-128)
 	breq .L32
-	.loc 1 271 0
+	.loc 1 272 0
 	cpi r29,lo8(-91)
 	breq .L33
-	.loc 1 273 0
+	.loc 1 274 0
 	cpi r29,lo8(42)
 	breq .L34
-	.loc 1 275 0
+	.loc 1 276 0
 	cpi r29,lo8(-30)
 	breq .L35
-	.loc 1 277 0
+	.loc 1 278 0
 	cpi r29,lo8(-11)
 	breq .L36
-	.loc 1 279 0
+	.loc 1 280 0
 	cpi r29,lo8(-17)
 	breq .L37
-	.loc 1 281 0
+	.loc 1 282 0
 	cpi r29,lo8(-31)
 	brne .L30
 	rjmp .L38
 .L31:
-	.loc 1 268 0
+	.loc 1 269 0
 	ldi r29,lo8(32)
 .LVL62:
 	rjmp .L30
 .LVL63:
 .L32:
-	.loc 1 270 0
+	.loc 1 271 0
 	ldi r29,lo8(32)
 .LVL64:
 	rjmp .L30
 .LVL65:
 .L33:
-	.loc 1 272 0
+	.loc 1 273 0
 	ldi r29,lo8(20)
 .LVL66:
 	rjmp .L30
 .LVL67:
 .L34:
-	.loc 1 274 0
+	.loc 1 275 0
 	ldi r29,lo8(21)
 .LVL68:
 	rjmp .L30
 .LVL69:
 .L35:
-	.loc 1 276 0
+	.loc 1 277 0
 	ldi r29,lo8(19)
 .LVL70:
 	rjmp .L30
 .LVL71:
 .L36:
-	.loc 1 278 0
+	.loc 1 279 0
 	ldi r29,lo8(18)
 .LVL72:
 	rjmp .L30
 .LVL73:
 .L37:
-	.loc 1 280 0
+	.loc 1 281 0
 	ldi r29,lo8(17)
 .LVL74:
 	rjmp .L30
 .LVL75:
 .L38:
-	.loc 1 282 0
+	.loc 1 283 0
 	ldi r29,lo8(16)
 .LVL76:
 .L30:
-	.loc 1 284 0
+	.loc 1 285 0
 	mov r30,r24
 	ldi r31,0
 	subi r30,lo8(-(lcd_buffer))
@@ -697,12 +697,12 @@ lcd_putc:
 .LVL77:
 .L29:
 .LBE56:
-	.loc 1 286 0
+	.loc 1 287 0
 	subi r28,lo8(-(1))
 	andi r28,lo8(127)
 	sts lcd_cursorPos,r28
 /* epilogue start */
-	.loc 1 287 0
+	.loc 1 288 0
 	pop r29
 	pop r28
 	ret
@@ -714,7 +714,7 @@ lcd_putc:
 	.type	lcd_puts, @function
 lcd_puts:
 .LFB21:
-	.loc 1 296 0
+	.loc 1 297 0
 	.cfi_startproc
 .LVL78:
 	push r28
@@ -730,17 +730,17 @@ lcd_puts:
 /* stack size = 2 */
 .L__stack_usage = 2
 	movw r30,r24
-	.loc 1 297 0
+	.loc 1 298 0
 	or r24,r25
 	brne .L40
 .LBB57:
 	rjmp .L39
 .LVL79:
 .L42:
-	.loc 1 301 0
+	.loc 1 302 0
 	call lcd_putc
 .LVL80:
-	.loc 1 300 0
+	.loc 1 301 0
 	movw r30,r28
 .LVL81:
 .L40:
@@ -755,7 +755,7 @@ lcd_puts:
 .L39:
 /* epilogue start */
 .LBE57:
-	.loc 1 303 0
+	.loc 1 304 0
 	pop r29
 	pop r28
 	ret
@@ -767,7 +767,7 @@ lcd_puts:
 	.type	lcd_puts_P, @function
 lcd_puts_P:
 .LFB22:
-	.loc 1 312 0
+	.loc 1 313 0
 	.cfi_startproc
 .LVL85:
 	push r28
@@ -783,41 +783,41 @@ lcd_puts_P:
 /* stack size = 2 */
 .L__stack_usage = 2
 	movw r30,r24
-	.loc 1 313 0
+	.loc 1 314 0
 	or r24,r25
 	brne .L44
 .LBB58:
 	rjmp .L43
 .LVL86:
 .L46:
-	.loc 1 316 0
+	.loc 1 317 0
 	call lcd_putc
 .LVL87:
 .LBB59:
-	.loc 1 315 0
+	.loc 1 316 0
 	movw r30,r28
 .LVL88:
 .L44:
 	movw r28,r30
 	adiw r28,1
 .LVL89:
-	.loc 1 315 0
+	.loc 1 316 0
 /* #APP */
- ;  315 ".././lcd_u.c" 1
+ ;  316 ".././lcd_u.c" 1
 	lpm r24, Z
 	
  ;  0 "" 2
 .LVL90:
 /* #NOAPP */
 .LBE59:
-	.loc 1 315 0
+	.loc 1 316 0
 	cpse r24,__zero_reg__
 	rjmp .L46
 .LVL91:
 .L43:
 /* epilogue start */
 .LBE58:
-	.loc 1 318 0
+	.loc 1 319 0
 	pop r29
 	pop r28
 	ret
@@ -829,7 +829,7 @@ lcd_puts_P:
 	.type	lcd_message, @function
 lcd_message:
 .LFB23:
-	.loc 1 325 0
+	.loc 1 326 0
 	.cfi_startproc
 .LVL92:
 	push r15
@@ -857,39 +857,39 @@ lcd_message:
 /* stack size = 5 */
 .L__stack_usage = 5
 	movw r16,r24
-	.loc 1 327 0
+	.loc 1 329 0
 	lds r15,lcd_cursorPos
 .LVL93:
-	.loc 1 328 0
+	.loc 1 330 0
 	lds r24,lcd_cursorIsOn
 .LVL94:
 	sts lcd_saveCursorIsOn,r24
-	.loc 1 329 0
+	.loc 1 331 0
 	movw r24,r16
 	call get_StrLen
 .LVL95:
 	mov r29,r24
 .LVL96:
-	.loc 1 330 0
+	.loc 1 332 0
 	ldi r24,lo8(64)
 .LVL97:
 	call lcd_goto
 .LVL98:
-	.loc 1 331 0
+	.loc 1 333 0
 	ldi r28,0
-	.loc 1 332 0
+	.loc 1 334 0
 	rjmp .L48
 .LVL99:
 .L49:
-	.loc 1 333 0
+	.loc 1 335 0
 	ldi r24,lo8(32)
 	call lcd_write_character
 .LVL100:
-	.loc 1 334 0
+	.loc 1 336 0
 	subi r28,lo8(-(1))
 .LVL101:
 .L48:
-	.loc 1 332 0
+	.loc 1 334 0
 	mov r18,r28
 	ldi r19,0
 	ldi r24,lo8(20)
@@ -903,17 +903,17 @@ lcd_message:
 	brlt .L49
 	rjmp .L50
 .L51:
-	.loc 1 337 0
+	.loc 1 339 0
 	subi r16,-1
 	sbci r17,-1
 .LVL102:
 	call lcd_write_character
 .LVL103:
-	.loc 1 338 0
+	.loc 1 340 0
 	subi r28,lo8(-(1))
 .LVL104:
 .L50:
-	.loc 1 336 0
+	.loc 1 338 0
 	movw r30,r16
 	ld r24,Z
 	cpse r24,__zero_reg__
@@ -921,11 +921,11 @@ lcd_message:
 	rjmp .L52
 .LVL105:
 .L53:
-	.loc 1 341 0
+	.loc 1 343 0
 	ldi r24,lo8(32)
 	call lcd_write_character
 .LVL106:
-	.loc 1 340 0
+	.loc 1 342 0
 	mov r28,r17
 .LVL107:
 .L52:
@@ -934,15 +934,15 @@ lcd_message:
 .LVL108:
 	cpi r28,lo8(20)
 	brlo .L53
-	.loc 1 343 0
+	.loc 1 345 0
 	mov r24,r15
 	call lcd_goto
 .LVL109:
-	.loc 1 344 0
+	.loc 1 346 0
 	ldi r24,lo8(-1)
 	sts lcd_displayingMessage,r24
 .LBB60:
-	.loc 1 345 0
+	.loc 1 347 0
 	in r25,__SREG__
 .LVL110:
 .LBB61:
@@ -956,12 +956,12 @@ lcd_message:
 /* #NOAPP */
 .LBE62:
 .LBE61:
-	.loc 1 345 0
+	.loc 1 347 0
 	ldi r24,lo8(1)
 	rjmp .L54
 .LVL111:
 .L55:
-	.loc 1 345 0 discriminator 3
+	.loc 1 347 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
 	ldi r24,lo8(100)
@@ -969,11 +969,11 @@ lcd_message:
 	std Z+14,r24
 	std Z+15,__zero_reg__
 .LVL113:
-	.loc 1 345 0 discriminator 3
+	.loc 1 347 0 discriminator 3
 	ldi r24,0
 .LVL114:
 .L54:
-	.loc 1 345 0 is_stmt 0 discriminator 1
+	.loc 1 347 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
 	rjmp .L55
 .LVL115:
@@ -987,7 +987,7 @@ lcd_message:
 .LBE64:
 .LBE63:
 .LBE60:
-	.loc 1 346 0
+	.loc 1 348 0
 	pop r29
 .LVL117:
 	pop r28
@@ -1006,7 +1006,7 @@ lcd_message:
 	.type	lcd_message_P, @function
 lcd_message_P:
 .LFB24:
-	.loc 1 348 0
+	.loc 1 350 0
 	.cfi_startproc
 .LVL121:
 	push r15
@@ -1034,38 +1034,38 @@ lcd_message_P:
 /* stack size = 5 */
 .L__stack_usage = 5
 	movw r16,r24
-	.loc 1 349 0
+	.loc 1 353 0
 	lds r29,lcd_cursorPos
 .LVL122:
-	.loc 1 350 0
+	.loc 1 354 0
 	lds r24,lcd_cursorIsOn
 .LVL123:
 	sts lcd_saveCursorIsOn,r24
-	.loc 1 351 0
+	.loc 1 355 0
 	movw r24,r16
 	call get_StrLenP
 .LVL124:
 	mov r15,r24
 .LVL125:
-	.loc 1 352 0
+	.loc 1 356 0
 	ldi r24,lo8(64)
 	call lcd_goto
 .LVL126:
-	.loc 1 353 0
+	.loc 1 357 0
 	ldi r28,0
-	.loc 1 354 0
+	.loc 1 358 0
 	rjmp .L57
 .LVL127:
 .L58:
-	.loc 1 355 0
+	.loc 1 359 0
 	ldi r24,lo8(32)
 	call lcd_write_character
 .LVL128:
-	.loc 1 356 0
+	.loc 1 360 0
 	subi r28,lo8(-(1))
 .LVL129:
 .L57:
-	.loc 1 354 0
+	.loc 1 358 0
 	mov r18,r28
 	ldi r19,0
 	ldi r24,lo8(20)
@@ -1081,52 +1081,52 @@ lcd_message_P:
 .LVL130:
 .L60:
 .LBB65:
-	.loc 1 359 0
+	.loc 1 363 0
 	subi r16,-1
 	sbci r17,-1
 .LVL131:
-	.loc 1 359 0
+	.loc 1 363 0
 	movw r30,r24
 /* #APP */
- ;  359 ".././lcd_u.c" 1
+ ;  363 ".././lcd_u.c" 1
 	lpm r24, Z
 	
  ;  0 "" 2
 .LVL132:
 /* #NOAPP */
 .LBE65:
-	.loc 1 359 0
+	.loc 1 363 0
 	call lcd_write_character
 .LVL133:
-	.loc 1 360 0
+	.loc 1 364 0
 	subi r28,lo8(-(1))
 .LVL134:
 .L59:
 .LBB66:
-	.loc 1 358 0
+	.loc 1 362 0
 	movw r24,r16
 .LVL135:
-	.loc 1 358 0
+	.loc 1 362 0
 	movw r30,r16
 /* #APP */
- ;  358 ".././lcd_u.c" 1
+ ;  362 ".././lcd_u.c" 1
 	lpm r18, Z
 	
  ;  0 "" 2
 .LVL136:
 /* #NOAPP */
 .LBE66:
-	.loc 1 358 0
+	.loc 1 362 0
 	cpse r18,__zero_reg__
 	rjmp .L60
 	rjmp .L61
 .LVL137:
 .L62:
-	.loc 1 363 0
+	.loc 1 367 0
 	ldi r24,lo8(32)
 	call lcd_write_character
 .LVL138:
-	.loc 1 362 0
+	.loc 1 366 0
 	mov r28,r17
 .LVL139:
 .L61:
@@ -1135,15 +1135,15 @@ lcd_message_P:
 .LVL140:
 	cpi r28,lo8(20)
 	brlo .L62
-	.loc 1 365 0
+	.loc 1 369 0
 	mov r24,r29
 	call lcd_goto
 .LVL141:
-	.loc 1 366 0
+	.loc 1 370 0
 	ldi r24,lo8(-1)
 	sts lcd_displayingMessage,r24
 .LBB67:
-	.loc 1 367 0
+	.loc 1 371 0
 	in r25,__SREG__
 .LVL142:
 .LBB68:
@@ -1156,12 +1156,12 @@ lcd_message_P:
 /* #NOAPP */
 .LBE69:
 .LBE68:
-	.loc 1 367 0
+	.loc 1 371 0
 	ldi r24,lo8(1)
 	rjmp .L63
 .LVL143:
 .L64:
-	.loc 1 367 0 discriminator 3
+	.loc 1 371 0 discriminator 3
 	ldi r30,lo8(swTimer)
 	ldi r31,hi8(swTimer)
 	ldi r24,lo8(100)
@@ -1169,11 +1169,11 @@ lcd_message_P:
 	std Z+14,r24
 	std Z+15,__zero_reg__
 .LVL145:
-	.loc 1 367 0 discriminator 3
+	.loc 1 371 0 discriminator 3
 	ldi r24,0
 .LVL146:
 .L63:
-	.loc 1 367 0 is_stmt 0 discriminator 1
+	.loc 1 371 0 is_stmt 0 discriminator 1
 	cpse r24,__zero_reg__
 	rjmp .L64
 .LVL147:
@@ -1187,7 +1187,7 @@ lcd_message_P:
 .LBE71:
 .LBE70:
 .LBE67:
-	.loc 1 368 0
+	.loc 1 372 0
 	pop r29
 .LVL149:
 	pop r28
@@ -1206,7 +1206,7 @@ lcd_message_P:
 	.type	lcd_setCG, @function
 lcd_setCG:
 .LFB26:
-	.loc 1 512 0
+	.loc 1 516 0
 	.cfi_startproc
 .LVL153:
 	push r14
@@ -1234,7 +1234,7 @@ lcd_setCG:
 /* stack size = 5 */
 .L__stack_usage = 5
 	movw r28,r22
-	.loc 1 513 0
+	.loc 1 517 0
 	ldi r25,0
 	lsl r24
 	rol r25
@@ -1247,46 +1247,46 @@ lcd_setCG:
 	call lcd_write_command
 .LVL155:
 .LBB72:
-	.loc 1 514 0
+	.loc 1 518 0
 	ldi r17,0
 	rjmp .L66
 .LVL156:
 .L67:
 .LBB73:
-	.loc 1 515 0 discriminator 3
+	.loc 1 519 0 discriminator 3
 	movw r14,r28
 	ldi r24,-1
 	sub r14,r24
 	sbc r15,r24
 .LVL157:
-	.loc 1 515 0 discriminator 3
+	.loc 1 519 0 discriminator 3
 	movw r30,r28
 /* #APP */
- ;  515 ".././lcd_u.c" 1
+ ;  519 ".././lcd_u.c" 1
 	lpm r24, Z
 	
  ;  0 "" 2
 .LVL158:
 /* #NOAPP */
 .LBE73:
-	.loc 1 515 0 discriminator 3
+	.loc 1 519 0 discriminator 3
 	call lcd_write_character
 .LVL159:
-	.loc 1 514 0 discriminator 3
+	.loc 1 518 0 discriminator 3
 	subi r17,lo8(-(1))
 .LVL160:
 .LBB74:
-	.loc 1 515 0 discriminator 3
+	.loc 1 519 0 discriminator 3
 	movw r28,r14
 .LVL161:
 .L66:
 .LBE74:
-	.loc 1 514 0 discriminator 1
+	.loc 1 518 0 discriminator 1
 	cpi r17,lo8(8)
 	brlo .L67
 /* epilogue start */
 .LBE72:
-	.loc 1 517 0
+	.loc 1 521 0
 	pop r29
 	pop r28
 .LVL162:
@@ -1303,55 +1303,55 @@ lcd_setCG:
 	.type	lcd_initCG, @function
 lcd_initCG:
 .LFB27:
-	.loc 1 519 0
+	.loc 1 523 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 520 0
+	.loc 1 524 0
 	ldi r22,lo8(cgPattern_Up)
 	ldi r23,hi8(cgPattern_Up)
 	ldi r24,0
 	call lcd_setCG
 .LVL164:
-	.loc 1 521 0
+	.loc 1 525 0
 	ldi r22,lo8(cgPattern_Down)
 	ldi r23,hi8(cgPattern_Down)
 	ldi r24,lo8(1)
 	call lcd_setCG
 .LVL165:
-	.loc 1 523 0
+	.loc 1 527 0
 	ldi r22,lo8(cgPattern_RegOff)
 	ldi r23,hi8(cgPattern_RegOff)
 	ldi r24,lo8(2)
 	call lcd_setCG
 .LVL166:
-	.loc 1 524 0
+	.loc 1 528 0
 	ldi r22,lo8(cgPattern_RegOn)
 	ldi r23,hi8(cgPattern_RegOn)
 	ldi r24,lo8(3)
 	call lcd_setCG
 .LVL167:
-	.loc 1 525 0
+	.loc 1 529 0
 	ldi r22,lo8(cgPattern_RegOffOff)
 	ldi r23,hi8(cgPattern_RegOffOff)
 	ldi r24,lo8(4)
 	call lcd_setCG
 .LVL168:
-	.loc 1 526 0
+	.loc 1 530 0
 	ldi r22,lo8(cgPattern_RegOffOn)
 	ldi r23,hi8(cgPattern_RegOffOn)
 	ldi r24,lo8(5)
 	call lcd_setCG
 .LVL169:
-	.loc 1 527 0
+	.loc 1 531 0
 	ldi r22,lo8(cgPattern_RegOnOff)
 	ldi r23,hi8(cgPattern_RegOnOff)
 	ldi r24,lo8(6)
 	call lcd_setCG
 .LVL170:
-	.loc 1 528 0
+	.loc 1 532 0
 	ldi r22,lo8(cgPattern_RegOnOn)
 	ldi r23,hi8(cgPattern_RegOnOn)
 	ldi r24,lo8(7)
@@ -1366,17 +1366,17 @@ lcd_initCG:
 	.type	lcd_cursosblink, @function
 lcd_cursosblink:
 .LFB28:
-	.loc 1 534 0
+	.loc 1 538 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 535 0
+	.loc 1 539 0
 	ldi r24,lo8(13)
 	call lcd_write_command
 .LVL172:
-	.loc 1 536 0
+	.loc 1 540 0
 	ldi r24,lo8(-1)
 	sts lcd_cursorIsOn,r24
 	ret
@@ -1388,17 +1388,17 @@ lcd_cursosblink:
 	.type	lcd_cursoroff, @function
 lcd_cursoroff:
 .LFB29:
-	.loc 1 539 0
+	.loc 1 543 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 540 0
+	.loc 1 544 0
 	ldi r24,lo8(12)
 	call lcd_write_command
 .LVL173:
-	.loc 1 541 0
+	.loc 1 545 0
 	sts lcd_cursorIsOn,__zero_reg__
 	ret
 	.cfi_endproc
@@ -1409,7 +1409,7 @@ lcd_cursoroff:
 	.type	lcd_message_clear, @function
 lcd_message_clear:
 .LFB25:
-	.loc 1 371 0
+	.loc 1 375 0
 	.cfi_startproc
 	push r16
 .LCFI23:
@@ -1431,28 +1431,28 @@ lcd_message_clear:
 /* frame size = 0 */
 /* stack size = 4 */
 .L__stack_usage = 4
-	.loc 1 373 0
+	.loc 1 377 0
 	lds r16,lcd_cursorPos
 .LVL174:
-	.loc 1 374 0
+	.loc 1 378 0
 	ldi r24,lo8(64)
 	call getCursorFromLCDRAMcursor
 .LVL175:
 	mov r28,r24
 .LVL176:
-	.loc 1 375 0
+	.loc 1 379 0
 	ldi r24,lo8(64)
 .LVL177:
 	call lcd_goto
 .LVL178:
 .LBB75:
-	.loc 1 376 0
+	.loc 1 380 0
 	ldi r29,0
 	rjmp .L72
 .LVL179:
 .L74:
 .LBB76:
-	.loc 1 377 0
+	.loc 1 381 0
 	ldi r17,lo8(1)
 	add r17,r28
 .LVL180:
@@ -1462,98 +1462,98 @@ lcd_message_clear:
 	sbci r31,hi8(-(lcd_buffer))
 	ld r24,Z
 .LVL181:
-	.loc 1 378 0
+	.loc 1 382 0
 	cpi r24,lo8(20)
 	breq .L77
-	.loc 1 380 0
+	.loc 1 384 0
 	cpi r24,lo8(21)
 	breq .L78
-	.loc 1 382 0
+	.loc 1 386 0
 	cpi r24,lo8(19)
 	breq .L79
-	.loc 1 384 0
+	.loc 1 388 0
 	cpi r24,lo8(18)
 	breq .L80
-	.loc 1 386 0
+	.loc 1 390 0
 	cpi r24,lo8(17)
 	breq .L81
-	.loc 1 388 0
+	.loc 1 392 0
 	cpi r24,lo8(16)
 	brne .L73
 	rjmp .L82
 .L77:
-	.loc 1 379 0
+	.loc 1 383 0
 	ldi r24,lo8(-91)
 .LVL182:
 	rjmp .L73
 .LVL183:
 .L78:
-	.loc 1 381 0
+	.loc 1 385 0
 	ldi r24,lo8(42)
 .LVL184:
 	rjmp .L73
 .LVL185:
 .L79:
-	.loc 1 383 0
+	.loc 1 387 0
 	ldi r24,lo8(-30)
 .LVL186:
 	rjmp .L73
 .LVL187:
 .L80:
-	.loc 1 385 0
+	.loc 1 389 0
 	ldi r24,lo8(-11)
 .LVL188:
 	rjmp .L73
 .LVL189:
 .L81:
-	.loc 1 387 0
+	.loc 1 391 0
 	ldi r24,lo8(-17)
 .LVL190:
 	rjmp .L73
 .LVL191:
 .L82:
-	.loc 1 389 0
+	.loc 1 393 0
 	ldi r24,lo8(-31)
 .LVL192:
 .L73:
-	.loc 1 391 0 discriminator 2
+	.loc 1 395 0 discriminator 2
 	call lcd_write_character
 .LVL193:
 .LBE76:
-	.loc 1 376 0 discriminator 2
+	.loc 1 380 0 discriminator 2
 	subi r29,lo8(-(1))
 .LVL194:
 .LBB77:
-	.loc 1 377 0 discriminator 2
+	.loc 1 381 0 discriminator 2
 	mov r28,r17
 .LVL195:
 .L72:
 .LBE77:
-	.loc 1 376 0 discriminator 1
+	.loc 1 380 0 discriminator 1
 	cpi r29,lo8(20)
 	brlo .L74
 .LBE75:
-	.loc 1 393 0
+	.loc 1 397 0
 	mov r24,r16
 	call lcd_goto
 .LVL196:
-	.loc 1 394 0
+	.loc 1 398 0
 	lds r24,lcd_saveCursorIsOn
 	cpi r24,lo8(-1)
 	brne .L75
-	.loc 1 395 0
+	.loc 1 399 0
 	call lcd_cursosblink
 .LVL197:
 	rjmp .L76
 .L75:
-	.loc 1 397 0
+	.loc 1 401 0
 	call lcd_cursoroff
 .LVL198:
 .L76:
-	.loc 1 399 0
+	.loc 1 403 0
 	sts lcd_displayingMessage,__zero_reg__
 /* epilogue start */
-	.loc 1 400 0
+	.loc 1 404 0
 	pop r29
 .LVL199:
 	pop r28
@@ -2501,7 +2501,7 @@ cgPattern_Up:
 	.uleb128 0x23
 	.long	.LASF36
 	.byte	0x1
-	.word	0x108
+	.word	0x109
 	.long	0x30
 	.byte	0x1
 	.byte	0x68
@@ -2512,7 +2512,7 @@ cgPattern_Up:
 	.uleb128 0x25
 	.long	.LASF37
 	.byte	0x1
-	.word	0x10a
+	.word	0x10b
 	.long	0x30
 	.long	.LLST41
 	.byte	0
@@ -2542,7 +2542,7 @@ cgPattern_Up:
 	.byte	0x1
 	.long	.LASF38
 	.byte	0x1
-	.word	0x127
+	.word	0x128
 	.byte	0x1
 	.long	.LFB21
 	.long	.LFE21
@@ -2552,7 +2552,7 @@ cgPattern_Up:
 	.uleb128 0x27
 	.string	"s"
 	.byte	0x1
-	.word	0x127
+	.word	0x128
 	.long	0x730
 	.long	.LLST43
 	.uleb128 0x15
@@ -2561,7 +2561,7 @@ cgPattern_Up:
 	.uleb128 0x28
 	.string	"c"
 	.byte	0x1
-	.word	0x12a
+	.word	0x12b
 	.long	0x8f
 	.long	.LLST44
 	.uleb128 0x29
@@ -2576,7 +2576,7 @@ cgPattern_Up:
 	.byte	0x1
 	.long	.LASF39
 	.byte	0x1
-	.word	0x137
+	.word	0x138
 	.byte	0x1
 	.long	.LFB22
 	.long	.LFE22
@@ -2586,7 +2586,7 @@ cgPattern_Up:
 	.uleb128 0x2a
 	.long	.LASF40
 	.byte	0x1
-	.word	0x137
+	.word	0x138
 	.long	0x730
 	.long	.LLST46
 	.uleb128 0x15
@@ -2595,7 +2595,7 @@ cgPattern_Up:
 	.uleb128 0x28
 	.string	"c"
 	.byte	0x1
-	.word	0x13a
+	.word	0x13b
 	.long	0x8f
 	.long	.LLST47
 	.uleb128 0x24
@@ -2605,13 +2605,13 @@ cgPattern_Up:
 	.uleb128 0x25
 	.long	.LASF41
 	.byte	0x1
-	.word	0x13b
+	.word	0x13c
 	.long	0x49
 	.long	.LLST48
 	.uleb128 0x25
 	.long	.LASF42
 	.byte	0x1
-	.word	0x13b
+	.word	0x13c
 	.long	0x30
 	.long	.LLST47
 	.byte	0
@@ -2624,7 +2624,7 @@ cgPattern_Up:
 	.byte	0x1
 	.long	.LASF43
 	.byte	0x1
-	.word	0x145
+	.word	0x146
 	.byte	0x1
 	.long	.LFB23
 	.long	.LFE23
@@ -2634,25 +2634,25 @@ cgPattern_Up:
 	.uleb128 0x2a
 	.long	.LASF44
 	.byte	0x1
-	.word	0x145
+	.word	0x146
 	.long	0x730
 	.long	.LLST51
 	.uleb128 0x25
 	.long	.LASF45
 	.byte	0x1
-	.word	0x147
+	.word	0x149
 	.long	0x30
 	.long	.LLST52
 	.uleb128 0x25
 	.long	.LASF46
 	.byte	0x1
-	.word	0x149
+	.word	0x14b
 	.long	0x30
 	.long	.LLST53
 	.uleb128 0x28
 	.string	"pos"
 	.byte	0x1
-	.word	0x14b
+	.word	0x14d
 	.long	0x30
 	.long	.LLST54
 	.uleb128 0x24
@@ -2662,13 +2662,13 @@ cgPattern_Up:
 	.uleb128 0x25
 	.long	.LASF47
 	.byte	0x1
-	.word	0x159
+	.word	0x15b
 	.long	0x30
 	.long	.LLST55
 	.uleb128 0x25
 	.long	.LASF48
 	.byte	0x1
-	.word	0x159
+	.word	0x15b
 	.long	0x30
 	.long	.LLST56
 	.uleb128 0x2b
@@ -2676,13 +2676,13 @@ cgPattern_Up:
 	.long	.LBB61
 	.long	.LBE61
 	.byte	0x1
-	.word	0x159
+	.word	0x15b
 	.uleb128 0x2c
 	.long	0x159
 	.long	.LBB63
 	.long	.LBE63
 	.byte	0x1
-	.word	0x159
+	.word	0x15b
 	.uleb128 0x14
 	.long	0x166
 	.long	.LLST57
@@ -2755,7 +2755,7 @@ cgPattern_Up:
 	.byte	0x1
 	.long	.LASF49
 	.byte	0x1
-	.word	0x15c
+	.word	0x15e
 	.byte	0x1
 	.long	.LFB24
 	.long	.LFE24
@@ -2765,25 +2765,25 @@ cgPattern_Up:
 	.uleb128 0x2a
 	.long	.LASF50
 	.byte	0x1
-	.word	0x15c
+	.word	0x15e
 	.long	0x730
 	.long	.LLST59
 	.uleb128 0x25
 	.long	.LASF45
 	.byte	0x1
-	.word	0x15d
+	.word	0x161
 	.long	0x30
 	.long	.LLST60
 	.uleb128 0x25
 	.long	.LASF46
 	.byte	0x1
-	.word	0x15f
+	.word	0x163
 	.long	0x30
 	.long	.LLST61
 	.uleb128 0x28
 	.string	"pos"
 	.byte	0x1
-	.word	0x161
+	.word	0x165
 	.long	0x30
 	.long	.LLST62
 	.uleb128 0x24
@@ -2793,13 +2793,13 @@ cgPattern_Up:
 	.uleb128 0x25
 	.long	.LASF41
 	.byte	0x1
-	.word	0x167
+	.word	0x16b
 	.long	0x49
 	.long	.LLST63
 	.uleb128 0x25
 	.long	.LASF42
 	.byte	0x1
-	.word	0x167
+	.word	0x16b
 	.long	0x30
 	.long	.LLST64
 	.byte	0
@@ -2810,13 +2810,13 @@ cgPattern_Up:
 	.uleb128 0x25
 	.long	.LASF41
 	.byte	0x1
-	.word	0x166
+	.word	0x16a
 	.long	0x49
 	.long	.LLST65
 	.uleb128 0x25
 	.long	.LASF42
 	.byte	0x1
-	.word	0x166
+	.word	0x16a
 	.long	0x30
 	.long	.LLST66
 	.byte	0
@@ -2827,13 +2827,13 @@ cgPattern_Up:
 	.uleb128 0x25
 	.long	.LASF47
 	.byte	0x1
-	.word	0x16f
+	.word	0x173
 	.long	0x30
 	.long	.LLST67
 	.uleb128 0x25
 	.long	.LASF48
 	.byte	0x1
-	.word	0x16f
+	.word	0x173
 	.long	0x30
 	.long	.LLST68
 	.uleb128 0x2b
@@ -2841,13 +2841,13 @@ cgPattern_Up:
 	.long	.LBB68
 	.long	.LBE68
 	.byte	0x1
-	.word	0x16f
+	.word	0x173
 	.uleb128 0x2c
 	.long	0x159
 	.long	.LBB70
 	.long	.LBE70
 	.byte	0x1
-	.word	0x16f
+	.word	0x173
 	.uleb128 0x14
 	.long	0x166
 	.long	.LLST69
@@ -2920,7 +2920,7 @@ cgPattern_Up:
 	.byte	0x1
 	.long	.LASF51
 	.byte	0x1
-	.word	0x200
+	.word	0x204
 	.byte	0x1
 	.long	.LFB26
 	.long	.LFE26
@@ -2930,13 +2930,13 @@ cgPattern_Up:
 	.uleb128 0x2a
 	.long	.LASF52
 	.byte	0x1
-	.word	0x200
+	.word	0x204
 	.long	0x30
 	.long	.LLST71
 	.uleb128 0x2a
 	.long	.LASF53
 	.byte	0x1
-	.word	0x200
+	.word	0x204
 	.long	0x172
 	.long	.LLST72
 	.uleb128 0x24
@@ -2946,7 +2946,7 @@ cgPattern_Up:
 	.uleb128 0x28
 	.string	"i"
 	.byte	0x1
-	.word	0x202
+	.word	0x206
 	.long	0x30
 	.long	.LLST73
 	.uleb128 0x20
@@ -2955,13 +2955,13 @@ cgPattern_Up:
 	.uleb128 0x25
 	.long	.LASF41
 	.byte	0x1
-	.word	0x203
+	.word	0x207
 	.long	0x49
 	.long	.LLST74
 	.uleb128 0x25
 	.long	.LASF42
 	.byte	0x1
-	.word	0x203
+	.word	0x207
 	.long	0x30
 	.long	.LLST75
 	.byte	0
@@ -2977,7 +2977,7 @@ cgPattern_Up:
 	.byte	0x1
 	.long	.LASF54
 	.byte	0x1
-	.word	0x207
+	.word	0x20b
 	.long	.LFB27
 	.long	.LFE27
 	.byte	0x3
@@ -3158,7 +3158,7 @@ cgPattern_Up:
 	.byte	0x1
 	.long	.LASF55
 	.byte	0x1
-	.word	0x216
+	.word	0x21a
 	.long	.LFB28
 	.long	.LFE28
 	.byte	0x3
@@ -3181,7 +3181,7 @@ cgPattern_Up:
 	.byte	0x1
 	.long	.LASF56
 	.byte	0x1
-	.word	0x21b
+	.word	0x21f
 	.long	.LFB29
 	.long	.LFE29
 	.byte	0x3
@@ -3204,7 +3204,7 @@ cgPattern_Up:
 	.byte	0x1
 	.long	.LASF57
 	.byte	0x1
-	.word	0x173
+	.word	0x177
 	.long	.LFB25
 	.long	.LFE25
 	.long	.LLST76
@@ -3213,13 +3213,13 @@ cgPattern_Up:
 	.uleb128 0x25
 	.long	.LASF45
 	.byte	0x1
-	.word	0x175
+	.word	0x179
 	.long	0x30
 	.long	.LLST77
 	.uleb128 0x25
 	.long	.LASF58
 	.byte	0x1
-	.word	0x176
+	.word	0x17a
 	.long	0x30
 	.long	.LLST78
 	.uleb128 0x24
@@ -3229,7 +3229,7 @@ cgPattern_Up:
 	.uleb128 0x28
 	.string	"i"
 	.byte	0x1
-	.word	0x178
+	.word	0x17c
 	.long	0x30
 	.long	.LLST79
 	.uleb128 0x2f
@@ -3237,7 +3237,7 @@ cgPattern_Up:
 	.uleb128 0x25
 	.long	.LASF37
 	.byte	0x1
-	.word	0x179
+	.word	0x17d
 	.long	0x30
 	.long	.LLST80
 	.uleb128 0x29
@@ -3322,7 +3322,7 @@ cgPattern_Up:
 	.uleb128 0x33
 	.long	.LASF62
 	.byte	0x1
-	.word	0x142
+	.word	0x143
 	.long	0x30
 	.byte	0x1
 	.byte	0x5
@@ -3365,7 +3365,7 @@ cgPattern_Up:
 	.uleb128 0x33
 	.long	.LASF65
 	.byte	0x1
-	.word	0x143
+	.word	0x144
 	.long	0x30
 	.byte	0x1
 	.byte	0x5
@@ -3381,7 +3381,7 @@ cgPattern_Up:
 	.uleb128 0x33
 	.long	.LASF66
 	.byte	0x1
-	.word	0x194
+	.word	0x198
 	.long	0xdf4
 	.byte	0x1
 	.byte	0x5
@@ -3392,7 +3392,7 @@ cgPattern_Up:
 	.uleb128 0x33
 	.long	.LASF67
 	.byte	0x1
-	.word	0x1a0
+	.word	0x1a4
 	.long	0xe0c
 	.byte	0x1
 	.byte	0x5
@@ -3403,7 +3403,7 @@ cgPattern_Up:
 	.uleb128 0x33
 	.long	.LASF68
 	.byte	0x1
-	.word	0x1ac
+	.word	0x1b0
 	.long	0xe24
 	.byte	0x1
 	.byte	0x5
@@ -3414,7 +3414,7 @@ cgPattern_Up:
 	.uleb128 0x33
 	.long	.LASF69
 	.byte	0x1
-	.word	0x1b8
+	.word	0x1bc
 	.long	0xe3c
 	.byte	0x1
 	.byte	0x5
@@ -3425,7 +3425,7 @@ cgPattern_Up:
 	.uleb128 0x33
 	.long	.LASF70
 	.byte	0x1
-	.word	0x1c4
+	.word	0x1c8
 	.long	0xe54
 	.byte	0x1
 	.byte	0x5
@@ -3436,7 +3436,7 @@ cgPattern_Up:
 	.uleb128 0x33
 	.long	.LASF71
 	.byte	0x1
-	.word	0x1d0
+	.word	0x1d4
 	.long	0xe6c
 	.byte	0x1
 	.byte	0x5
@@ -3447,7 +3447,7 @@ cgPattern_Up:
 	.uleb128 0x33
 	.long	.LASF72
 	.byte	0x1
-	.word	0x1dc
+	.word	0x1e0
 	.long	0xe84
 	.byte	0x1
 	.byte	0x5
@@ -3458,7 +3458,7 @@ cgPattern_Up:
 	.uleb128 0x33
 	.long	.LASF73
 	.byte	0x1
-	.word	0x1e8
+	.word	0x1ec
 	.long	0xe9c
 	.byte	0x1
 	.byte	0x5
@@ -3469,7 +3469,7 @@ cgPattern_Up:
 	.uleb128 0x33
 	.long	.LASF74
 	.byte	0x1
-	.word	0x1f4
+	.word	0x1f8
 	.long	0xeb4
 	.byte	0x1
 	.byte	0x5

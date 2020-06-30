@@ -2,7 +2,7 @@
  * message.c
  *
  * Created: 04.11.2018 21:35:43
- *  Author: Anwender
+ *  Author: Uwe
  */
 #include <inttypes.h>
 #include <stddef.h>
@@ -10,6 +10,9 @@
 #include <util/atomic.h>
 
 #include "message.h"
+
+// handles messages (keystrokes on operating panel) and pipe messages (status change on lines of organ keys/pipe magnets)
+
 
 // ****************** Regular Messages for Keys -- Type ist MESSAGE_TYP_...
 uint8_t messages [MESSAGE_BUFCOUNT];

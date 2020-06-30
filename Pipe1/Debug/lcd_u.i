@@ -1607,6 +1607,7 @@ void lcd_putc(char c)
 
  if ((lcd_displayingMessage == 0x00) || (lcd_cursorPos < 0x40)
   || (lcd_cursorPos >= 0x40 +20)) {
+
   lcd_write_character(c);
  }
 
@@ -1645,9 +1646,9 @@ void lcd_putc(char c)
 void lcd_puts(const char *s)
 {
  if (s != 
-# 297 ".././lcd_u.c" 3 4
+# 298 ".././lcd_u.c" 3 4
          ((void *)0)
-# 297 ".././lcd_u.c"
+# 298 ".././lcd_u.c"
              ){
   register char c;
 
@@ -1665,19 +1666,19 @@ void lcd_puts(const char *s)
 void lcd_puts_P(const char *progmem_s)
 {
  if (progmem_s != 
-# 313 ".././lcd_u.c" 3 4
+# 314 ".././lcd_u.c" 3 4
                  ((void *)0)
-# 313 ".././lcd_u.c"
+# 314 ".././lcd_u.c"
                      ){
   register char c;
   while ((c=
-# 315 ".././lcd_u.c" 3
+# 316 ".././lcd_u.c" 3
            (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 315 ".././lcd_u.c"
+# 316 ".././lcd_u.c"
            progmem_s++
-# 315 ".././lcd_u.c" 3
+# 316 ".././lcd_u.c" 3
            )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 315 ".././lcd_u.c"
+# 316 ".././lcd_u.c"
                                      ))
   lcd_putc(c);
  }
@@ -1689,6 +1690,7 @@ uint8_t lcd_displayingMessage;
 uint8_t lcd_saveCursorIsOn;
 
 void lcd_message(const char *pMessage){
+
 
  uint8_t saveCursor = lcd_cursorPos;
  lcd_saveCursorIsOn = lcd_cursorIsOn;
@@ -1709,13 +1711,15 @@ void lcd_message(const char *pMessage){
  lcd_goto(saveCursor);
  lcd_displayingMessage = 0xFF;
  
-# 345 ".././lcd_u.c" 3
+# 347 ".././lcd_u.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 345 ".././lcd_u.c"
+# 347 ".././lcd_u.c"
 {swTimer[7].counter = 2000 / 20; swTimer[7].prescaler = (2000 % 20) / 4;};;
 }
 
 void lcd_message_P(const char *pMessage_P){
+
+
  uint8_t saveCursor = lcd_cursorPos;
  lcd_saveCursorIsOn = lcd_cursorIsOn;
  uint8_t textLen = get_StrLenP(pMessage_P);
@@ -1726,22 +1730,22 @@ void lcd_message_P(const char *pMessage_P){
   pos++;
  }
  while (
-# 358 ".././lcd_u.c" 3
+# 362 ".././lcd_u.c" 3
        (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 358 ".././lcd_u.c"
+# 362 ".././lcd_u.c"
        pMessage_P
-# 358 ".././lcd_u.c" 3
+# 362 ".././lcd_u.c" 3
        )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; })) 
-# 358 ".././lcd_u.c"
+# 362 ".././lcd_u.c"
                                  != 0){
   lcd_write_character(
-# 359 ".././lcd_u.c" 3
+# 363 ".././lcd_u.c" 3
                      (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 359 ".././lcd_u.c"
+# 363 ".././lcd_u.c"
                      pMessage_P++
-# 359 ".././lcd_u.c" 3
+# 363 ".././lcd_u.c" 3
                      )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 359 ".././lcd_u.c"
+# 363 ".././lcd_u.c"
                                                 );
   pos++;
  }
@@ -1751,9 +1755,9 @@ void lcd_message_P(const char *pMessage_P){
  lcd_goto(saveCursor);
  lcd_displayingMessage = 0xFF;
  
-# 367 ".././lcd_u.c" 3
+# 371 ".././lcd_u.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 367 ".././lcd_u.c"
+# 371 ".././lcd_u.c"
 {swTimer[7].counter = 2000 / 20; swTimer[7].prescaler = (2000 % 20) / 4;};;
 }
 
@@ -1792,9 +1796,9 @@ void lcd_message_clear(){
 
 
 const uint8_t cgPattern_Up [8] 
-# 404 ".././lcd_u.c" 3
+# 408 ".././lcd_u.c" 3
                               __attribute__((__progmem__)) 
-# 404 ".././lcd_u.c"
+# 408 ".././lcd_u.c"
                                       = {
 
  0b00000100,
@@ -1808,9 +1812,9 @@ const uint8_t cgPattern_Up [8]
 };
 
 const uint8_t cgPattern_Down [8] 
-# 416 ".././lcd_u.c" 3
+# 420 ".././lcd_u.c" 3
                                 __attribute__((__progmem__)) 
-# 416 ".././lcd_u.c"
+# 420 ".././lcd_u.c"
                                         = {
 
  0b00000100,
@@ -1824,9 +1828,9 @@ const uint8_t cgPattern_Down [8]
 };
 
 const uint8_t cgPattern_Block [8] 
-# 428 ".././lcd_u.c" 3
+# 432 ".././lcd_u.c" 3
                                  __attribute__((__progmem__)) 
-# 428 ".././lcd_u.c"
+# 432 ".././lcd_u.c"
                                          = {
 
  0b00000000,
@@ -1840,9 +1844,9 @@ const uint8_t cgPattern_Block [8]
 };
 
 const uint8_t cgPattern_RegOff [8] 
-# 440 ".././lcd_u.c" 3
+# 444 ".././lcd_u.c" 3
                                   __attribute__((__progmem__)) 
-# 440 ".././lcd_u.c"
+# 444 ".././lcd_u.c"
                                           = {
 
  0b00011000,
@@ -1856,9 +1860,9 @@ const uint8_t cgPattern_RegOff [8]
 };
 
 const uint8_t cgPattern_RegOn [8] 
-# 452 ".././lcd_u.c" 3
+# 456 ".././lcd_u.c" 3
                                  __attribute__((__progmem__)) 
-# 452 ".././lcd_u.c"
+# 456 ".././lcd_u.c"
                                          = {
 
  0b00011000,
@@ -1872,9 +1876,9 @@ const uint8_t cgPattern_RegOn [8]
 };
 
 const uint8_t cgPattern_RegOffOff [8] 
-# 464 ".././lcd_u.c" 3
+# 468 ".././lcd_u.c" 3
                                      __attribute__((__progmem__)) 
-# 464 ".././lcd_u.c"
+# 468 ".././lcd_u.c"
                                              = {
 
  0b00011011,
@@ -1888,9 +1892,9 @@ const uint8_t cgPattern_RegOffOff [8]
 };
 
 const uint8_t cgPattern_RegOffOn [8] 
-# 476 ".././lcd_u.c" 3
+# 480 ".././lcd_u.c" 3
                                     __attribute__((__progmem__)) 
-# 476 ".././lcd_u.c"
+# 480 ".././lcd_u.c"
                                             = {
 
  0b00011011,
@@ -1904,9 +1908,9 @@ const uint8_t cgPattern_RegOffOn [8]
 };
 
 const uint8_t cgPattern_RegOnOff [8] 
-# 488 ".././lcd_u.c" 3
+# 492 ".././lcd_u.c" 3
                                     __attribute__((__progmem__)) 
-# 488 ".././lcd_u.c"
+# 492 ".././lcd_u.c"
                                             = {
 
  0b00011011,
@@ -1920,9 +1924,9 @@ const uint8_t cgPattern_RegOnOff [8]
 };
 
 const uint8_t cgPattern_RegOnOn [8] 
-# 500 ".././lcd_u.c" 3
+# 504 ".././lcd_u.c" 3
                                    __attribute__((__progmem__)) 
-# 500 ".././lcd_u.c"
+# 504 ".././lcd_u.c"
                                            = {
 
  0b00011011,
@@ -1939,13 +1943,13 @@ void lcd_setCG(uint8_t charNr, const uint8_t* patternPtr){
  lcd_write_command(0b01000000 | (charNr << 3));
  for (uint8_t i = 0; i < 8; i++){
   lcd_write_character(
-# 515 ".././lcd_u.c" 3
+# 519 ".././lcd_u.c" 3
                      (__extension__({ uint16_t __addr16 = (uint16_t)((uint16_t)(
-# 515 ".././lcd_u.c"
+# 519 ".././lcd_u.c"
                      patternPtr++
-# 515 ".././lcd_u.c" 3
+# 519 ".././lcd_u.c" 3
                      )); uint8_t __result; __asm__ __volatile__ ( "lpm %0, Z" "\n\t" : "=r" (__result) : "z" (__addr16) ); __result; }))
-# 515 ".././lcd_u.c"
+# 519 ".././lcd_u.c"
                                                 );
  }
 }

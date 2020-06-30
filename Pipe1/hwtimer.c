@@ -380,6 +380,8 @@ static inline void timerTimers(){
 //--------------------------------- A D C / K E Y S -------------------------------
 
 static inline void timerADC(){
+	// main task for ADC is read analog "key line". Resistor ladder transform key press to input voltage
+	// will call message_push() then
 	if ((adcNr < ADC_NR_INPUTS) && ((ADCSRA & (1 << ADSC)) == 0)){
 		// last conversion is valid input and conversion complete or not yet started
 		// De-Noise
@@ -484,7 +486,7 @@ static inline void timerADC(){
 }
 
 void softKey_WantLong(uint8_t wantLong){
-	// 0 for wants repeat, != 0 for wantLong
+	// 0 for wants repeat, 1= 0 for want longpress
 	for (uint8_t i = 0; i < MESSAGE_KEY_COUNT; i++){
 		// i = 0 is not used (dummy only) array starts with MESSAGE_KEY_MIN
 		if ((i+MESSAGE_KEY_MIN == MESSAGE_KEY_1) || (i+MESSAGE_KEY_MIN == MESSAGE_KEY_2) || (i+MESSAGE_KEY_MIN == MESSAGE_KEY_3) || (i+MESSAGE_KEY_MIN == MESSAGE_KEY_4)) {
@@ -497,14 +499,17 @@ void softKey_WantLong(uint8_t wantLong){
 //************************************** P I P E *******************************************
 
 static inline void timerPipeProcess(){
+	// process changes in bits of all modules and eventually generates pipe events (key press and realease in organ manual)
+	// each pipe event may contain up to 8 modules that share the same organ key changes in the same bit
+	// splitting one "pipe event" into up to 8 real organ key events is done in midi.c - not here due to performance
 	Pipe_t *curPipe;
 	curPipe = &pipe[0];
 	// V 0.65 AssnRead -> new: & ModuleTesteD
 	uint8_t local_pipe_ModuleAssnRead = pipe_Module.AssnRead & pipe_ModuleTested; // 1= module message processeced
 	for (uint8_t shiftBitNr = 0; shiftBitNr < PIPE_SHIFTBIT_COUNT; shiftBitNr++) {
-		// check output error
 		PipeMessage_t myMessage;
 		#ifdef PIPE_CHECKERROR
+		// if we want to react on error: mosfets are active but input from line is still inactive
 		uint8_t pipeIn = curPipe->pipeIn;
 		uint8_t outPipeError = (~(curPipe->pipeOut | curPipe->pipeOutM4 | pipeIn)) & pipe_ModuleTested; // 1 if output should be high, but ist read as low
 		if (outPipeError != 0) {
@@ -540,7 +545,10 @@ static inline void timerPipeProcess(){
 		if ((statChange)!= 0) {
 			// 0->1, pipe on
 			myMessage.message8[MSG_BYTE_MODULEBITS] = statChange;
+			// one pipe message may contain state changes for up to 8 modules (statChange has one bit for each module)
+			// splitting one pipe message into up to its 8 organ key events is done in midi.c
 			myMessage.message8[MSG_BYTE_CMD_SHIFTBIT] = MESSAGE_PIPE_ON_HI | shiftBitNr;
+			// a pipe message tells which of all 32 bits of all 8 bits are concerned (MSG_BYTE_CMD_SHIFTBIT) and if it is one or off now
 			pipeMsgPush(myMessage);
 		}
 		statChange = (~newPipeStat & oldPipeStat) & local_pipe_ModuleAssnRead; // new = 0, old = 1
@@ -556,33 +564,34 @@ static inline void timerPipeProcess(){
 }
 
 static inline void timerPipeIO(){
+	// send and receice data to and from modules
 	Pipe_t *curPipe;
-	PIPECTRL_PORT |=  PIPE_CTRL_MASK; // -CLK -L2P -L2C off (1=off)
-	PIPE_LATCH2CPU_L //  in hw_defs.h: // Start with -L2C \_
+	PIPECTRL_PORT |=  PIPE_CTRL_MASK; // -CLK -L2P -L2C off (as they are low active 1=off)
+	PIPE_LATCH2CPU_L //  in hw_defs.h: // Start with -L2C \_ actives input latches from lines so that they can be read serially
 	curPipe = &pipe[PIPE_SHIFTBIT_COUNT-1]; // point to last Pipe cause topmost bit is transferred first
 	uint8_t local_pipe_ModuleAssnWrite = ~pipe_Module.AssnWrite; // 0= module may be written
 	uint8_t i = PIPE_SHIFTBIT_COUNT;
-	_delay_us(0.5);
+	_delay_us(0.5); // 0.5 us low time for latch pulse.
 	PIPE_LATCH2CPU_H // -LATCH2CPU _/ Data from Pipe are in shift register, MSB is ready to be read
 	do 	{
 		curPipe->pipeInM16 = curPipe->pipeInM12; // Shift History Input Data from Pipe
 		curPipe->pipeInM12 = curPipe->pipeInM8;
 		PIPE_CLOCK_H // clock keeps H in first loop or _/ in other loops
-		PIPEOUT_PORT = curPipe->pipeOut | local_pipe_ModuleAssnWrite; // Write Data to Pipe
+		PIPEOUT_PORT = curPipe->pipeOut | local_pipe_ModuleAssnWrite; // Set Data to Pipe
 		curPipe->pipeInM8 = curPipe->pipeInM4; // just here for symetric clk pulse
 		curPipe->pipeInM4 = curPipe->pipeIn;
 		curPipe->pipeIn = PIPEIN_PIN; // Read Data from Pipe
-		PIPE_CLOCK_L // clock \_
+		PIPE_CLOCK_L // clock \_ -> write Data to pipe, shift next read Data bit
 		curPipe--; // proceed to next pipe
 	} while (--i > 0);
 	asm("nop");
 	asm("nop");
 	PIPE_CLOCK_H
 	PIPE_LATCH2PIPE_L // last bit transferred latch2outout
-	pipeProcessing |= PIPE_IO_INOUT_DONE; // meanwhile (instead of wait): update processing status
-	PIPEOUT_PORT = 0; // not really needed, turn output off
+	pipeProcessing |= PIPE_IO_INOUT_DONE; // update processing status
+	PIPEOUT_PORT = 0; // not really needed but for debugging with scope: turn output off
 	PIPE_OE_H // turn output on
-	PIPE_LATCH2PIPE_H
+	PIPE_LATCH2PIPE_H // end transaction of data to pipe
 }
 
 //*********************************************** I S R   T I M E R ****************************************
@@ -594,13 +603,19 @@ ISR (TIMER0_COMPA_vect)
 	//  ********************************************** SW-TIMER ***********************************************
 	switch (++msecCtr & 0x03) {
 		// execution order is 3,2,1,0; any function is calles every 4ms
-		case 0: timerADC(); break; // evetnually timer has also been called (only every 100ms)
-		case 1: if (pipeProcessing != PIPE_IO_DISABLE) {
+		case 0:
+			timerADC();
+			break; // evetnually timer has also been called (only every 100ms)
+		case 1:
+			 if (pipeProcessing != PIPE_IO_DISABLE) {
 				timerPipeIO();
 			}
 			break;
-		case 2: timerTimers(); break;
-		case 3: if (pipeProcessing != PIPE_IO_DISABLE) {
+		case 2:
+			timerTimers();
+			break;
+		case 3:
+			if (pipeProcessing != PIPE_IO_DISABLE) {
 				timerPipeProcess();
 			}
 			break;

@@ -257,6 +257,7 @@ void lcd_putc(char c)
 	// V 0.76 no output if displaying message
 	if ((lcd_displayingMessage == FALSE) || (lcd_cursorPos < MENU_LCD_CURSOR_MAINMESSAGE)
 		|| (lcd_cursorPos >= MENU_LCD_CURSOR_MAINMESSAGE+MENU_LCD_LEN_MAINMESSAGE)) {
+		// cursor is not in message area or no message is beeing displayed
 		lcd_write_character(c);
 	}
 	// V 0.61: store char in lcd_buffer. convert values > 0x7F to special charactes < 0x20
@@ -323,7 +324,8 @@ uint8_t lcd_displayingMessage; // TRUE when a message is beeing displayed. Then 
 uint8_t lcd_saveCursorIsOn;
 
 void lcd_message(const char *pMessage){
-	// clear message area and display message, start timer
+	// clear message area and display message from RAM, start timer
+	// TODO check max len for message in case of missing '\0'
 	uint8_t saveCursor = lcd_cursorPos;
 	lcd_saveCursorIsOn = lcd_cursorIsOn;
 	uint8_t textLen = get_StrLen(pMessage);
@@ -346,6 +348,8 @@ void lcd_message(const char *pMessage){
 }
 
 void lcd_message_P(const char *pMessage_P){
+	// clear message area and display message from FLASH, start timer
+	// TODO check max len for message in case of missing '\0'
 	uint8_t saveCursor = lcd_cursorPos;
 	lcd_saveCursorIsOn = lcd_cursorIsOn;
 	uint8_t textLen = get_StrLenP(pMessage_P);

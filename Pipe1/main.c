@@ -76,7 +76,7 @@ int main(void)
 	lcd_puts_P(sw_version);
 	sei(); // start timer, module handling, keyboard polling
 	_delay_ms(1200); // time to show booot message
-	init_Serial3SerESP(); // activate serial from esp8266 not to early to ignore it's scrambled boot messages
+	init_Serial3SerESP(); // activate serial from esp8266 not too early to ignore it's scrambled boot messages
 	lcd_clrscr ();
 
 	// TURN ON POWER
@@ -84,7 +84,7 @@ int main(void)
 	module_StartPowerOn(); // does not turn power on, but start power on cycle
 	MESSAGE_PIPE_HANDLING_ON // from now handle events of modules (key press etc)
 
-	menuNotActive = TRUE; // showing main screen
+	menuNotActive = TRUE; // show main screen, menu not active
 	uint8_t updateStatus = TRUE;
 	messageFromESP = SER_ESP_SEND_LCD; // for first transfer
     while (1)
@@ -97,7 +97,7 @@ int main(void)
 			messageFromESP = esp_message; // save for later transfer of LCD
 			serial0SER_USBSend(esp_message); // TODO ask if USB out is enabled
 			if ((esp_message > SER_ESP_MSGOFFSET) && (esp_message <= SER_ESP_MSGOFFSET+MESSAGE_KEY_MAX)){
-				// push key message from esp to queue
+				// message from esp that simulates keystroke: push key to queue
 				message_push(esp_message-SER_ESP_MSGOFFSET);
 			} else if (esp_message == SER_ESP_MSGMIDI) {
 				// Not yet used in V 0.68
@@ -142,58 +142,59 @@ int main(void)
 			// key press has to be processed
 			DEBUG_OUT_MENU
 			if (lcd_displayingMessage == TRUE) {
-				// if message is beeing displayed: first clear message
+				// if message is beeing displayed: any key stroke clears message display area
 				lcd_message_clear();
 			}
 			uint8_t keyMessage = message_get();
 			if (keyMessage == (MESSAGE_KEY_LONGPRESSED | MESSAGE_KEY_ESC)){
-				// PANIC BUTTON
-				midiSendAllNotesOff();
-				midi_AllManualsOff();
-				midi_resetRegisters();
+				// PANIC BUTTON (longpress Escape)
+				midiSendAllNotesOff(); // to MIDI out
+				midi_AllManualsOff(); // all manual mosefets outputs off
+				midi_resetRegisters(); // all register mosfets outputs off
 				midi_CouplerReset();
 				init_log(); // clear log V 0.70
 				midiRxBuffUsage = 0; // max used lenght of Midi Rx Buffer
 				midiTxBuffUsage = 0; // max used lenght of Midi Tx Buffer
 				POWER_ON
-				pipe_PowerStatus = POWERSTATE_FORCE_ON; // V0.70 power on
+				pipe_PowerStatus = POWERSTATE_FORCE_ON; // V0.70 power on manually
 				lcd_message_P(panicString);
-			}
-			if (menuNotActive == TRUE) {
-				// --- MESSAGE
-				// not in menu; start page is displayed
-				uint8_t keyMasked = keyMessage & MESSAGE_KEY_REMOVE_TYPE_MASK;
-				if 	(keyMessage == MESSAGE_KEY_SEL) {
-					// SELECT: Start menu
-					// first call of menu after exit: init LCD
-					menu_Init(NULL, NULL); // menu initaliszed but not displayed -> new reset each time
-					menu_InitLCD(); //display menu
-					menuNotActive = FALSE; // notify that menu is displayed
-					softKey_WantLong(FALSE); // we are in menu now: Softkey should autoreturn
-				} else if ((keyMasked == MESSAGE_KEY_1) || (keyMasked == MESSAGE_KEY_2) || (keyMasked == MESSAGE_KEY_3) || (keyMasked == MESSAGE_KEY_4)){
-					// SOFTKEY pressed
-					uint8_t softKey_Nr = softKey_MessageKey_ToSoftKeyNr(keyMasked);
-					menuNotActive = softKey_Execute(softKey_Nr, keyMessage); // execute softkey; returns false if menu started
-					softKeys_toLCD();
-				}
 			} else {
-				// MENU IS ACTIVE: PROCESS MESSAGE
-				if (menu_TestModulePattern == 0){
-					// no pattern test running
-					menuNotActive = menu_ProcessMessage(keyMessage); // process message, return true on menu exit, false of menu still active
+				// --- REGULAR KEY MESSAGE ----
+				if (menuNotActive == TRUE) {
+					// not in menu; start page is displayed
+					uint8_t keyMasked = keyMessage & MESSAGE_KEY_REMOVE_TYPE_MASK;
+					if 	(keyMessage == MESSAGE_KEY_SEL) {
+						// SELECT: Start menu
+						// first call of menu after exit: init LCD
+						menu_Init(NULL, NULL); // menu initaliszed but not displayed -> new reset each time
+						menu_InitLCD(); //display menu
+						menuNotActive = FALSE; // notify that menu is displayed
+						softKey_WantLong(FALSE); // we are in menu now: Softkey should autoreturn
+					} else if ((keyMasked == MESSAGE_KEY_1) || (keyMasked == MESSAGE_KEY_2) || (keyMasked == MESSAGE_KEY_3) || (keyMasked == MESSAGE_KEY_4)){
+						// SOFTKEY pressed
+						uint8_t softKey_Nr = softKey_MessageKey_ToSoftKeyNr(keyMasked);
+						menuNotActive = softKey_Execute(softKey_Nr, keyMessage); // execute softkey; returns false if menu started
+						softKeys_toLCD();
+					} // Esc is not handled when no menu active
 				} else {
-					// there is a pattern test running: abort
-					menu_TestModuleBitCounter = MENU_TESTMODULE_ABORTFLAG;
-					menu_ModuleTestExecute(); // start abort, on next timer finish
+					// MENU IS ACTIVE: PROCESS MESSAGE
+					if (menu_TestModulePattern == 0){
+						// no pattern test running (regular case)
+						menuNotActive = menu_ProcessMessage(keyMessage); // process message, return true on menu exit, false of menu still active
+					} else {
+						// special case: there is a module pattern test running: abort test
+						menu_TestModuleBitCounter = MENU_TESTMODULE_ABORTFLAG;
+						menu_ModuleTestExecute(); // start abort, on next timer finish
+					}
 				}
 			}
 		}
 		if (menuNotActive == TRUE) {
-			// Startpage is or should be beeing displayed now
+			// Startpage is still displayed or should be displayed now because menu is terminated
 			if (updateStatus == TRUE) {
-				// menu has been exit: clear display to have more room for status
-				menu_ClearAllDisp();
-				softKeys_toLCD();
+				// menu has been terminated: clear display to have more room for status
+				menu_ClearAllDisp(); // clear menu display area
+				softKeys_toLCD(); // show softkeys
 				softKey_WantLong(TRUE);
 				prog_UpdDisplay = TRUE; // update program display
 				updateStatus = FALSE; // set when entering menu or from elsewhere if there is a update
@@ -205,21 +206,25 @@ int main(void)
 		DEBUG_OUT_MAIN
 		// ------------------------- TIMER_MESSAGE_LCDCLEAR ----------------
 		if TIMER_ELAPSED(TIMER_MESSAGE_LCDCLEAR) {
+			// if LCD is displaying a "message" and message timer is elapsed: clear message display area now
 			lcd_message_clear();
 			TIMER_DEACTIVATE(TIMER_MESSAGE_LCDCLEAR)
 		}
 
 		// ------------------------ TIMER TEST MODULE -----------------------
 		if TIMER_ELAPSED(TIMER_TESTMODULE) {
+			// used in menu function "test module": periodically update test pattern
 			if (menu_TestModulePattern != 0){
 				menu_ModuleTestExecute(); // usually Timer is restarted here, if not, menu_TestModulePattern will be set to 0
 			} else {
+				// last call of menu_ModuleTestExecute() told us to stopp timer
 				TIMER_DEACTIVATE(TIMER_TESTMODULE)
 			}
 		}
 
 		// ----------------------------- TIMER POWER ------------------------
 		if TIMER_ELAPSED(TIMER_POWER) {
+			// at startup timer is set to control power on of the mosfet outputs after testing modules
 			module_PowerControl(); //
 			menu_showPowerState();
 			if (menuNotActive == TRUE) {
@@ -243,9 +248,9 @@ int main(void)
 			if (lcd_cursorIsOn == TRUE){
 				serial3SER_ESPSend(getCursorFromLCDRAMcursor(lcd_cursorPos));
 			} else {
-				serial3SER_ESPSend(0x7F); // send invalid cursor so that no cursor is displayed
+				serial3SER_ESPSend(0x7F); // send invalid cursor position so that no cursor is displayed
 			}
-			serial3SER_ESPSend(SER_ESP_OUTMSG_LCD_SETCURSOR); // set cursor
+			serial3SER_ESPSend(SER_ESP_OUTMSG_LCD_SETCURSOR); // send cursor position
 			uint8_t* pChar = &(lcd_buffer[0]); // LCD Content already sorted to lines and converted to ascii < 0x80 and some special chars < 0x20
 			for (uint8_t i = 0; i < sizeof(lcd_buffer); i++){
 				serial3SER_ESPSend(*pChar++);
@@ -255,7 +260,7 @@ int main(void)
 		messageFromESP = SER_ESP_MESSAGE_NONE;
 
 		// ------------------------- ACTIVE SENSE ----------------------------
-		midi_CheckTxActiveSense(); // must we send active Sense if midi out was inactive for some time?
+		midi_CheckTxActiveSense(); // must we send active Sense if midi out was inactive for some time to keep midi out line "alive"?
 		midi_CheckRxActiveSense(); // check for Error of missing incoming Active Sense
 
 		// ------------------------ TOP STATUS LINE --------------------------
@@ -342,10 +347,10 @@ int main(void)
 			}
 		}
 		#endif
-		//----------------------- program display line0 left corner------------------------
+		//----------------------- program display line0 left corner and registers ------------------------
 		if ((menuNotActive == TRUE) &&((prog_UpdDisplay == TRUE) || (TIMER_ELAPSED(TIMER_REGDISPLAY)))) {
 			// 0.77: only if menu is not active!
-			prog_UpdDisplay = FALSE;
+			prog_UpdDisplay = FALSE; // can be set in midi.c by midi commands or in menu.c by menu or softkeys
 			TIMER_SET(TIMER_REGDISPLAY,TIMER_REGDISPLAY_MS)
 			lcd_goto(MENU_LCD_CURSOR_PROG);
 			prog_toLcd();
@@ -420,11 +425,11 @@ int main(void)
 			log_putError(LOG_CAT_MESSAGE, LOG_CATMESSAGE_PIPEOVFL, 0);
 		}
 		DEBUG_OUT_MIDI
-		//---------------------- MIDI IN --------------------------------
+		//---------------------- PROCESS MIDI IN DATA --------------------------------
 		if MIDI_RX_BUFFER_NONEMPTY {
 			midiIn_Process(serial1MIDIReadRx());
 		}
-		//----------------------- PIPE KEY PROCESSING -> MIDI OUT -----------------------------
+		//----------------------- PIPE KEY PROCESSING -> MIDI OUT (AND COUPLERS) -----------------------------
 		if MESSAGE_PIPE_PENDING	{
 			midiKeyPress_Process(pipeMsgGet()); // events from module read (->midi out, couplers)
 		}

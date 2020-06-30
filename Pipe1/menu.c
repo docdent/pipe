@@ -23,6 +23,11 @@
 
 const char sw_version [] PROGMEM = "V0.85";
 
+//-------------------------------------- M E N U ----------------------------------
+// each menu is an array of menu entries Menu_t. First byte shows kind of menu entry. First and last entries in array are marked with flag MENU_T_LEFTBOUND or MENU_T_RIGHTBOUND in first byte
+// a menu entry can be a sub menu, a simple function or data that can be displayed and edited
+// more in menu.h
+
 uint8_t menuOnExitMidiChannelSection(uint8_t arg);
 uint8_t menuOnExitManualSection(uint8_t arg);
 uint8_t menuOnEnterStatusMidiOut(uint8_t arg);
@@ -544,7 +549,7 @@ uint8_t softkeyCoupler(uint8_t arg, uint8_t CplNr){
 	if (arg != 0){
 		if (midi_Couplers[CplNr] == COUPLER_OFF){
 			uint8_t turnOffManual = set_Coupler(CplNr);
-			if (turnOffManual != FALSE) { // also reset inverse couple
+			if (turnOffManual != MANUAL_NONE) { // also reset inverse couple
 				midi_ManualOff(turnOffManual);
 			}
 		} else {
@@ -1624,6 +1629,7 @@ uint8_t menuOnEnterUSBsendHW(uint8_t arg){
 }
 
 //*********************************************** F U N C T I O N S ******************************
+// general menu handling
 // Public
 
 void menu_Init(const __flash Menu_t* newMenu, const __flash char* pTitle){
@@ -1693,6 +1699,7 @@ void softkeyMinus(){
 // ---------------------- Data Handling
 
 void dataToNibbles(){
+	// if there is data displayed in menu entry it is first converted in littel nibbles[0...7] that are displayed and can be edited
 
 	switch(dataType){
 	case MENU_T_VARBYTE:
@@ -1801,6 +1808,7 @@ void dataToNibbles(){
 }
 
 void nibbleToLCDstring(){
+	// output nibbles to LCD buffer
 	switch(dataType){
 	case MENU_T_VARBYTE:
 		lcdData[0] = nibbleToChr(nibble[0]);
@@ -1960,6 +1968,7 @@ void nibbleToLCDstring(){
 }
 
 void LCDStringOut(){
+	// output lcd buffer to LCD
 	lcd_goto(MENU_LCD_CURSOR_DATA);
 	uint8_t* pData = lcdData;
 	uint8_t outdata;
@@ -2161,6 +2170,7 @@ void nibbleChange(uint8_t nibbleNr , int8_t addValue){
 }
 
 void nibbleToData(){
+	// after editing nibble[0...7] is converted to data back again
 	// set dataEntry according to nibbles; checks valid range of dataEntry
 	uint8_t tempb ;
 	uint16_t temp;
@@ -2270,6 +2280,7 @@ void menuTextOut(const __flash char* pChar, char finalChar){
 }
 
 void menuParentMenuToLCD(){
+	// show menu title = name of parent menu left to current menu entry. in top menu show "Menu"
 	lcd_goto(MENU_LCD_CURSOR_PARENT);
 	if (menuStackIndex == 0) {
 		// Topmenu
@@ -2310,7 +2321,7 @@ void menuCurrMenuToLCD(){ // text out of current Menu Title to LCD and delimiter
 }
 
 void menuDisplayValue(){
-	// and set info from NibbleInfo
+	// convert data to nibbled, display them and set info from NibbleInfo
 	if ((currentMenu->menuType  & MENU_T_REMOVEBOUND_MASK) > MENU_T_MENU){
 		dataToNibbles();
 		nibbleToLCDstring();
@@ -2674,35 +2685,9 @@ uint8_t menu_ProcessMessage(uint8_t message){
 	}
 	return menuFinished;
 }
-//**************************************** MESSAGE DISPLAY ****************************************
-// uint8_t displayMenuMessage_P(const __flash char* pMessage){
-// 	// display message on Extra or Data area
-// 	uint8_t saveCursor = lcd_cursorPos;
-// 	uint8_t cursorPosMessage;
-// 	if ((currentMenu->menuType & MENU_T_REMOVEBOUND_MASK) == MENU_T_MENU){
-// 		// menu type: menu
-// 		// center message in extra and data display area
-// 		uint8_t strlen = get_StrLenP(pMessage);
-// 		lcd_goto(MENU_LCD_CURSOR_EXTRA + ((MENU_LCD_DATALEN + MENU_LCD_EXTRALEN - strlen) >> 1));
-// 		displayMessageArea = MENU_DISPLAY_AREA_EXTRA_AND_DATA;
-// 	} else {
-// 		// menu type: data
-// 		lcd_goto(MENU_LCD_CURSOR_EXTRA);
-// 		displayMessageArea = MENU_DISPLAY_AREA_EXTRA;
-// 	}
-// 	cursorPosMessage = lcd_cursorPos;
-// 	lcd_puts_P(pMessage);
-// 	lcd_goto(saveCursor);
-// 	TIMER_SET(TIMER_MENUDATA_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
-// 	return cursorPosMessage; // returns cursor pos of end of message
-// }
 
 void menudeleteMainMessage(){
 	lcd_message_clear();
-// 	uint8_t saveCursor = lcd_cursorPos;
-// 	lcd_goto(MENU_LCD_CURSOR_MAINMESSAGE);
-// 	lcd_blank(MENU_LCD_LEN_MAINMESSAGE);
-// 	lcd_goto(saveCursor);
 }
 
 void menu_deleteMessage(){
@@ -2718,18 +2703,6 @@ void menu_deleteMessage(){
 	}
 }
 
-// void menu_DisplayMainMessage_P(const __flash char* pMessage){
-// 	uint8_t saveCursor = lcd_cursorPos;
-// 	uint8_t textLen = get_StrLenP(pMessage);
-// 	lcd_goto(MENU_LCD_CURSOR_MAINMESSAGE);
-// 	lcd_blank((MENU_LCD_LEN_MAINMESSAGE - textLen) >> 1);
-// 	lcd_puts_P(pMessage);
-// 	lcd_blank(MENU_LCD_CURSOR_MAINMESSAGE + MENU_LCD_LEN_MAINMESSAGE - lcd_cursorPos);
-// 	lcd_goto(saveCursor);
-// 	TIMER_SET(TIMER_MENUDATA_LCDCLEAR,TIMER_MENUDATA_LCDCLEAR_MS);
-// 	displayMessageArea = MENU_DISPLAY_AREA_MAIN;
-// }
-
 void menu_DisplayMainMessage(const char* pMessage){
 	uint8_t saveCursor = lcd_cursorPos;
 	uint8_t textLen = get_StrLen(pMessage);
@@ -2742,10 +2715,8 @@ void menu_DisplayMainMessage(const char* pMessage){
 	displayMessageArea = MENU_DISPLAY_AREA_MAIN;
 }
 
-
-
-
 //**************************************** SOFTKEYS ****************************************
+
 uint8_t SoftKeyFunctionOK(MenuFunc_t  softKeyFunc){
 	// check if address of softkey func is contained in menu_selFunc
 	uint8_t functionCount = sizeof(menu_selFunc) / sizeof(menu_selFunc[0]);
@@ -2756,7 +2727,6 @@ uint8_t SoftKeyFunctionOK(MenuFunc_t  softKeyFunc){
 	}
 	return FALSE;
 }
-
 
 uint8_t getSoftKeyIndex(const __flash Menu_t* pSelMenuSoftKey){
 	uint8_t result = 0;
