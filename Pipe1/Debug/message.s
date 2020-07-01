@@ -14,17 +14,17 @@ __zero_reg__ = 1
 init_message:
 .LFB6:
 	.file 1 ".././message.c"
-	.loc 1 28 0
+	.loc 1 31 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 29 0
+	.loc 1 32 0
 	sts msgInIndex,__zero_reg__
-	.loc 1 30 0
+	.loc 1 33 0
 	sts msgOutIndex,__zero_reg__
-	.loc 1 31 0
+	.loc 1 34 0
 	sts msgOverflow,__zero_reg__
 	ret
 	.cfi_endproc
@@ -35,35 +35,35 @@ init_message:
 	.type	message_push, @function
 message_push:
 .LFB7:
-	.loc 1 34 0
+	.loc 1 37 0
 	.cfi_startproc
 .LVL0:
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 35 0
+	.loc 1 38 0
 	lds r25,msgInIndex
 	mov r30,r25
 	ldi r31,0
 	subi r30,lo8(-(messages))
 	sbci r31,hi8(-(messages))
 	st Z,r24
-	.loc 1 36 0
+	.loc 1 39 0
 	subi r25,lo8(-(1))
 	andi r25,lo8(31)
 .LVL1:
-	.loc 1 37 0
+	.loc 1 40 0
 	lds r24,msgOutIndex
 .LVL2:
 	cpse r25,r24
 	rjmp .L3
-	.loc 1 39 0
+	.loc 1 42 0
 	ldi r24,lo8(-1)
 	sts msgOverflow,r24
 	ret
 .L3:
-	.loc 1 41 0
+	.loc 1 44 0
 	sts msgInIndex,r25
 	ret
 	.cfi_endproc
@@ -74,14 +74,14 @@ message_push:
 	.type	message_peek, @function
 message_peek:
 .LFB8:
-	.loc 1 45 0
+	.loc 1 48 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
 .LBB18:
-	.loc 1 48 0
+	.loc 1 51 0
 	in r19,__SREG__
 .LVL3:
 .LBB19:
@@ -95,31 +95,31 @@ message_peek:
 /* #NOAPP */
 .LBE20:
 .LBE19:
-	.loc 1 48 0
+	.loc 1 51 0
 	ldi r25,lo8(1)
 	rjmp .L7
 .LVL4:
 .L8:
-	.loc 1 49 0
+	.loc 1 52 0
 	lds r30,msgOutIndex
 	lds r18,msgInIndex
-	.loc 1 50 0
+	.loc 1 53 0
 	ldi r24,lo8(-1)
 .LVL5:
-	.loc 1 48 0
+	.loc 1 51 0
 	ldi r25,0
 .LVL6:
-	.loc 1 49 0
+	.loc 1 52 0
 	cp r30,r18
 	breq .L7
-	.loc 1 52 0
+	.loc 1 55 0
 	ldi r31,0
 	subi r30,lo8(-(messages))
 	sbci r31,hi8(-(messages))
 	ld r24,Z
 .LVL7:
 .L7:
-	.loc 1 48 0 discriminator 1
+	.loc 1 51 0 discriminator 1
 	cpse r25,__zero_reg__
 	rjmp .L8
 .LVL8:
@@ -132,7 +132,7 @@ message_peek:
 .LBE22:
 .LBE21:
 .LBE18:
-	.loc 1 56 0
+	.loc 1 59 0
 	ret
 	.cfi_endproc
 .LFE8:
@@ -142,14 +142,14 @@ message_peek:
 	.type	message_get, @function
 message_get:
 .LFB9:
-	.loc 1 58 0
+	.loc 1 61 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
 .LBB23:
-	.loc 1 60 0
+	.loc 1 63 0
 	in r20,__SREG__
 .LVL10:
 .LBB24:
@@ -162,39 +162,39 @@ message_get:
 /* #NOAPP */
 .LBE25:
 .LBE24:
-	.loc 1 60 0
+	.loc 1 63 0
 	ldi r18,lo8(1)
 	rjmp .L11
 .LVL11:
 .L12:
-	.loc 1 61 0
+	.loc 1 64 0
 	lds r25,msgOutIndex
 	lds r19,msgInIndex
-	.loc 1 62 0
+	.loc 1 65 0
 	ldi r24,lo8(-1)
 .LVL12:
-	.loc 1 60 0
+	.loc 1 63 0
 	ldi r18,0
 .LVL13:
-	.loc 1 61 0
+	.loc 1 64 0
 	cp r25,r19
 	breq .L11
 .LBB26:
-	.loc 1 64 0
+	.loc 1 67 0
 	mov r30,r25
 	ldi r31,0
 	subi r30,lo8(-(messages))
 	sbci r31,hi8(-(messages))
 	ld r24,Z
 .LVL14:
-	.loc 1 65 0
+	.loc 1 68 0
 	subi r25,lo8(-(1))
 	andi r25,lo8(31)
 	sts msgOutIndex,r25
 .LVL15:
 .L11:
 .LBE26:
-	.loc 1 60 0 discriminator 1
+	.loc 1 63 0 discriminator 1
 	cpse r18,__zero_reg__
 	rjmp .L12
 .LVL16:
@@ -207,7 +207,7 @@ message_get:
 .LBE28:
 .LBE27:
 .LBE23:
-	.loc 1 70 0
+	.loc 1 73 0
 	ret
 	.cfi_endproc
 .LFE9:
@@ -217,14 +217,14 @@ message_get:
 	.type	message_status, @function
 message_status:
 .LFB10:
-	.loc 1 72 0
+	.loc 1 75 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
 .LBB29:
-	.loc 1 74 0
+	.loc 1 77 0
 	in r20,__SREG__
 .LVL18:
 .LBB30:
@@ -237,33 +237,33 @@ message_status:
 /* #NOAPP */
 .LBE31:
 .LBE30:
-	.loc 1 74 0
+	.loc 1 77 0
 	ldi r25,lo8(1)
 	rjmp .L14
 .LVL19:
 .L16:
-	.loc 1 75 0
+	.loc 1 78 0
 	lds r19,msgOutIndex
 	lds r18,msgInIndex
-	.loc 1 74 0
+	.loc 1 77 0
 	ldi r25,0
 .LVL20:
-	.loc 1 76 0
+	.loc 1 79 0
 	ldi r24,0
 .LVL21:
-	.loc 1 75 0
+	.loc 1 78 0
 	cp r19,r18
 	breq .L17
 .L14:
-	.loc 1 74 0 discriminator 1
+	.loc 1 77 0 discriminator 1
 	ldi r24,lo8(-1)
 	rjmp .L15
 .L17:
-	.loc 1 74 0 is_stmt 0
+	.loc 1 77 0 is_stmt 0
 	ldi r25,0
 .L15:
 .LVL22:
-	.loc 1 74 0 discriminator 1
+	.loc 1 77 0 discriminator 1
 	cpse r25,__zero_reg__
 	rjmp .L16
 .LVL23:
@@ -276,7 +276,7 @@ message_status:
 .LBE33:
 .LBE32:
 .LBE29:
-	.loc 1 82 0
+	.loc 1 85 0
 	ret
 	.cfi_endproc
 .LFE10:
@@ -286,19 +286,19 @@ message_status:
 	.type	pipeMsgInit, @function
 pipeMsgInit:
 .LFB11:
-	.loc 1 86 0
+	.loc 1 89 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 87 0
-	sts pipeMsgInIndex,__zero_reg__
-	.loc 1 88 0
-	sts pipeMsgOutIndex,__zero_reg__
-	.loc 1 89 0
-	sts msgPipeOverflow,__zero_reg__
 	.loc 1 90 0
+	sts pipeMsgInIndex,__zero_reg__
+	.loc 1 91 0
+	sts pipeMsgOutIndex,__zero_reg__
+	.loc 1 92 0
+	sts msgPipeOverflow,__zero_reg__
+	.loc 1 93 0
 	sts msgPipe_Handling,__zero_reg__
 	ret
 	.cfi_endproc
@@ -309,7 +309,7 @@ pipeMsgInit:
 	.type	pipeMsgPush, @function
 pipeMsgPush:
 .LFB12:
-	.loc 1 93 0
+	.loc 1 96 0
 	.cfi_startproc
 .LVL25:
 /* prologue: function */
@@ -317,11 +317,11 @@ pipeMsgPush:
 /* stack size = 0 */
 .L__stack_usage = 0
 	movw r20,r24
-	.loc 1 94 0
+	.loc 1 97 0
 	lds r25,msgPipe_Handling
 	tst r25
 	breq .L19
-	.loc 1 95 0
+	.loc 1 98 0
 	lds r25,pipeMsgInIndex
 	ldi r18,lo8(1)
 	add r18,r25
@@ -335,20 +335,20 @@ pipeMsgPush:
 .LVL26:
 	std Z+1,r21
 	st Z,r20
-	.loc 1 99 0
+	.loc 1 102 0
 	lds r24,pipeMsgOutIndex
 	cpse r18,r24
 	rjmp .L19
-	.loc 1 101 0
+	.loc 1 104 0
 	sts pipeMsgInIndex,r25
-	.loc 1 102 0
+	.loc 1 105 0
 	cpi r25,lo8(-1)
 	brne .L21
-	.loc 1 103 0
+	.loc 1 106 0
 	ldi r24,lo8(-1)
 	sts pipeMsgInIndex,r24
 .L21:
-	.loc 1 105 0
+	.loc 1 108 0
 	ldi r24,lo8(-1)
 	sts msgPipeOverflow,r24
 .L19:
@@ -361,26 +361,26 @@ pipeMsgPush:
 	.type	pipeMsgGet, @function
 pipeMsgGet:
 .LFB13:
-	.loc 1 110 0
+	.loc 1 113 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 111 0
+	.loc 1 114 0
 	lds r30,pipeMsgOutIndex
 	lds r24,pipeMsgInIndex
 	cpse r30,r24
 	rjmp .L23
 .LBB34:
-	.loc 1 114 0
+	.loc 1 117 0
 	ldi r24,lo8(-1)
 	ldi r25,lo8(-1)
 	ret
 .L23:
 .LBE34:
 .LBB35:
-	.loc 1 116 0
+	.loc 1 119 0
 	ldi r24,lo8(1)
 	add r24,r30
 	sts pipeMsgOutIndex,r24
@@ -392,7 +392,7 @@ pipeMsgGet:
 	ld r24,Z
 	ldd r25,Z+1
 .LBE35:
-	.loc 1 122 0
+	.loc 1 125 0
 	ret
 	.cfi_endproc
 .LFE13:
@@ -402,24 +402,24 @@ pipeMsgGet:
 	.type	pipeMsgStatus, @function
 pipeMsgStatus:
 .LFB14:
-	.loc 1 124 0
+	.loc 1 127 0
 	.cfi_startproc
 /* prologue: function */
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	.loc 1 125 0
+	.loc 1 128 0
 	lds r25,pipeMsgOutIndex
 	lds r24,pipeMsgInIndex
 	cpse r25,r24
 	rjmp .L27
-	.loc 1 126 0
+	.loc 1 129 0
 	ldi r24,0
 	ret
 .L27:
-	.loc 1 128 0
+	.loc 1 131 0
 	ldi r24,lo8(-1)
-	.loc 1 130 0
+	.loc 1 133 0
 	ret
 	.cfi_endproc
 .LFE14:
@@ -555,7 +555,7 @@ pipeMsgStatus:
 	.byte	0x1
 	.long	.LASF22
 	.byte	0x1
-	.byte	0x1c
+	.byte	0x1f
 	.byte	0x1
 	.long	.LFB6
 	.long	.LFE6
@@ -568,7 +568,7 @@ pipeMsgStatus:
 	.byte	0x1
 	.long	.LASF13
 	.byte	0x1
-	.byte	0x22
+	.byte	0x25
 	.byte	0x1
 	.long	.LFB7
 	.long	.LFE7
@@ -581,13 +581,13 @@ pipeMsgStatus:
 	.uleb128 0x10
 	.string	"msg"
 	.byte	0x1
-	.byte	0x22
+	.byte	0x25
 	.long	0x30
 	.long	.LLST0
 	.uleb128 0x11
 	.long	.LASF15
 	.byte	0x1
-	.byte	0x24
+	.byte	0x27
 	.long	0x30
 	.byte	0x1
 	.byte	0x69
@@ -596,7 +596,7 @@ pipeMsgStatus:
 	.byte	0x1
 	.long	.LASF14
 	.byte	0x1
-	.byte	0x2d
+	.byte	0x30
 	.long	0x30
 	.long	.LFB8
 	.long	.LFE8
@@ -609,7 +609,7 @@ pipeMsgStatus:
 	.uleb128 0x13
 	.long	.LASF16
 	.byte	0x1
-	.byte	0x2f
+	.byte	0x32
 	.long	0x30
 	.long	.LLST1
 	.uleb128 0x14
@@ -618,13 +618,13 @@ pipeMsgStatus:
 	.uleb128 0x13
 	.long	.LASF17
 	.byte	0x1
-	.byte	0x30
+	.byte	0x33
 	.long	0x30
 	.long	.LLST2
 	.uleb128 0x13
 	.long	.LASF18
 	.byte	0x1
-	.byte	0x30
+	.byte	0x33
 	.long	0x30
 	.long	.LLST3
 	.uleb128 0x15
@@ -632,13 +632,13 @@ pipeMsgStatus:
 	.long	.LBB19
 	.long	.LBE19
 	.byte	0x1
-	.byte	0x30
+	.byte	0x33
 	.uleb128 0x16
 	.long	0xc5
 	.long	.LBB21
 	.long	.LBE21
 	.byte	0x1
-	.byte	0x30
+	.byte	0x33
 	.uleb128 0x17
 	.long	0xd2
 	.long	.LLST4
@@ -649,7 +649,7 @@ pipeMsgStatus:
 	.byte	0x1
 	.long	.LASF20
 	.byte	0x1
-	.byte	0x3a
+	.byte	0x3d
 	.byte	0x1
 	.long	0x30
 	.long	.LFB9
@@ -663,7 +663,7 @@ pipeMsgStatus:
 	.uleb128 0x13
 	.long	.LASF16
 	.byte	0x1
-	.byte	0x3b
+	.byte	0x3e
 	.long	0x30
 	.long	.LLST5
 	.uleb128 0x14
@@ -672,13 +672,13 @@ pipeMsgStatus:
 	.uleb128 0x13
 	.long	.LASF17
 	.byte	0x1
-	.byte	0x3c
+	.byte	0x3f
 	.long	0x30
 	.long	.LLST6
 	.uleb128 0x13
 	.long	.LASF18
 	.byte	0x1
-	.byte	0x3c
+	.byte	0x3f
 	.long	0x30
 	.long	.LLST7
 	.uleb128 0x15
@@ -686,7 +686,7 @@ pipeMsgStatus:
 	.long	.LBB24
 	.long	.LBE24
 	.byte	0x1
-	.byte	0x3c
+	.byte	0x3f
 	.uleb128 0x19
 	.long	.LBB26
 	.long	.LBE26
@@ -694,7 +694,7 @@ pipeMsgStatus:
 	.uleb128 0x13
 	.long	.LASF19
 	.byte	0x1
-	.byte	0x40
+	.byte	0x43
 	.long	0x30
 	.long	.LLST8
 	.byte	0
@@ -703,7 +703,7 @@ pipeMsgStatus:
 	.long	.LBB27
 	.long	.LBE27
 	.byte	0x1
-	.byte	0x3c
+	.byte	0x3f
 	.uleb128 0x17
 	.long	0xd2
 	.long	.LLST9
@@ -714,7 +714,7 @@ pipeMsgStatus:
 	.byte	0x1
 	.long	.LASF21
 	.byte	0x1
-	.byte	0x48
+	.byte	0x4b
 	.byte	0x1
 	.long	0x30
 	.long	.LFB10
@@ -728,7 +728,7 @@ pipeMsgStatus:
 	.uleb128 0x13
 	.long	.LASF16
 	.byte	0x1
-	.byte	0x49
+	.byte	0x4c
 	.long	0x30
 	.long	.LLST10
 	.uleb128 0x14
@@ -737,13 +737,13 @@ pipeMsgStatus:
 	.uleb128 0x13
 	.long	.LASF17
 	.byte	0x1
-	.byte	0x4a
+	.byte	0x4d
 	.long	0x30
 	.long	.LLST11
 	.uleb128 0x13
 	.long	.LASF18
 	.byte	0x1
-	.byte	0x4a
+	.byte	0x4d
 	.long	0x30
 	.long	.LLST12
 	.uleb128 0x15
@@ -751,13 +751,13 @@ pipeMsgStatus:
 	.long	.LBB30
 	.long	.LBE30
 	.byte	0x1
-	.byte	0x4a
+	.byte	0x4d
 	.uleb128 0x16
 	.long	0xc5
 	.long	.LBB32
 	.long	.LBE32
 	.byte	0x1
-	.byte	0x4a
+	.byte	0x4d
 	.uleb128 0x17
 	.long	0xd2
 	.long	.LLST13
@@ -768,7 +768,7 @@ pipeMsgStatus:
 	.byte	0x1
 	.long	.LASF23
 	.byte	0x1
-	.byte	0x56
+	.byte	0x59
 	.byte	0x1
 	.long	.LFB11
 	.long	.LFE11
@@ -781,7 +781,7 @@ pipeMsgStatus:
 	.byte	0x1
 	.long	.LASF24
 	.byte	0x1
-	.byte	0x5d
+	.byte	0x60
 	.byte	0x1
 	.long	.LFB12
 	.long	.LFE12
@@ -794,7 +794,7 @@ pipeMsgStatus:
 	.uleb128 0x1a
 	.long	.LASF25
 	.byte	0x1
-	.byte	0x5d
+	.byte	0x60
 	.long	0xad
 	.long	.LLST14
 	.byte	0
@@ -802,7 +802,7 @@ pipeMsgStatus:
 	.byte	0x1
 	.long	.LASF26
 	.byte	0x1
-	.byte	0x6e
+	.byte	0x71
 	.byte	0x1
 	.long	0xad
 	.long	.LFB13
@@ -820,7 +820,7 @@ pipeMsgStatus:
 	.uleb128 0x1b
 	.long	.LASF16
 	.byte	0x1
-	.byte	0x70
+	.byte	0x73
 	.long	0xad
 	.byte	0
 	.uleb128 0x14
@@ -829,7 +829,7 @@ pipeMsgStatus:
 	.uleb128 0x1b
 	.long	.LASF19
 	.byte	0x1
-	.byte	0x74
+	.byte	0x77
 	.long	0xad
 	.byte	0
 	.byte	0
@@ -837,7 +837,7 @@ pipeMsgStatus:
 	.byte	0x1
 	.long	.LASF41
 	.byte	0x1
-	.byte	0x7c
+	.byte	0x7f
 	.byte	0x1
 	.long	0x30
 	.long	.LFB14
@@ -850,7 +850,7 @@ pipeMsgStatus:
 	.uleb128 0x1d
 	.long	.LASF27
 	.byte	0x1
-	.byte	0x19
+	.byte	0x1c
 	.long	0x385
 	.byte	0x1
 	.byte	0x5
@@ -861,7 +861,7 @@ pipeMsgStatus:
 	.uleb128 0x1d
 	.long	.LASF28
 	.byte	0x1
-	.byte	0x1a
+	.byte	0x1d
 	.long	0x385
 	.byte	0x1
 	.byte	0x5
@@ -870,7 +870,7 @@ pipeMsgStatus:
 	.uleb128 0x1d
 	.long	.LASF29
 	.byte	0x1
-	.byte	0x12
+	.byte	0x15
 	.long	0x30
 	.byte	0x1
 	.byte	0x5
@@ -886,7 +886,7 @@ pipeMsgStatus:
 	.uleb128 0x1d
 	.long	.LASF30
 	.byte	0x1
-	.byte	0xf
+	.byte	0x12
 	.long	0x3ae
 	.byte	0x1
 	.byte	0x5
@@ -895,7 +895,7 @@ pipeMsgStatus:
 	.uleb128 0x1d
 	.long	.LASF31
 	.byte	0x1
-	.byte	0x10
+	.byte	0x13
 	.long	0x30
 	.byte	0x1
 	.byte	0x5
@@ -904,7 +904,7 @@ pipeMsgStatus:
 	.uleb128 0x1d
 	.long	.LASF32
 	.byte	0x1
-	.byte	0x11
+	.byte	0x14
 	.long	0x30
 	.byte	0x1
 	.byte	0x5
@@ -920,7 +920,7 @@ pipeMsgStatus:
 	.uleb128 0x1d
 	.long	.LASF33
 	.byte	0x1
-	.byte	0x15
+	.byte	0x18
 	.long	0x3f4
 	.byte	0x1
 	.byte	0x5
@@ -929,7 +929,7 @@ pipeMsgStatus:
 	.uleb128 0x1d
 	.long	.LASF34
 	.byte	0x1
-	.byte	0x16
+	.byte	0x19
 	.long	0x30
 	.byte	0x1
 	.byte	0x5
@@ -938,7 +938,7 @@ pipeMsgStatus:
 	.uleb128 0x1d
 	.long	.LASF35
 	.byte	0x1
-	.byte	0x17
+	.byte	0x1a
 	.long	0x30
 	.byte	0x1
 	.byte	0x5

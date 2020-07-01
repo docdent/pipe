@@ -499,6 +499,9 @@ extern uint8_t msgPipe_Handling;
 # 13 ".././message.c" 2
 
 
+
+
+
 uint8_t messages [32];
 uint8_t msgInIndex;
 uint8_t msgOutIndex;
@@ -533,9 +536,9 @@ uint8_t message_peek(){
 
  uint8_t result;
  
-# 48 ".././message.c" 3
+# 51 ".././message.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 )
-# 48 ".././message.c"
+# 51 ".././message.c"
                                  {
   if (msgOutIndex == msgInIndex) {
    result = 0xFF;
@@ -549,9 +552,9 @@ for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile u
 uint8_t message_get (void){
  uint8_t result;
  
-# 60 ".././message.c" 3
+# 63 ".././message.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 )
-# 60 ".././message.c"
+# 63 ".././message.c"
                                  {
   if (msgOutIndex == msgInIndex) {
    result = 0xFF;
@@ -567,9 +570,9 @@ for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile u
 uint8_t message_status (void) {
  uint8_t result;
  
-# 74 ".././message.c" 3
+# 77 ".././message.c" 3
 for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 )
-# 74 ".././message.c"
+# 77 ".././message.c"
                                  {
   if (msgOutIndex == msgInIndex) {
    result = 0x00;

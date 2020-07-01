@@ -1852,6 +1852,7 @@ extern uint8_t log_unreadErrors;
 
 uint8_t midi_Couplers[12];
 const __flash CplInfo_t cplInfo[12] = {
+
  {1, 0},
  {2, 0},
  {2, 1},
@@ -1916,7 +1917,7 @@ uint8_t set_Coupler(uint8_t cplNr){
    return cplInfo[cplNr].dest;
   }
  }
- return 0x00;
+ return 0xFF;
 }
 
 Word_t getAllCouplers(){
@@ -1961,6 +1962,8 @@ uint8_t midiLastProgram = 0xFF;
 
 
 void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff);
+
+
 
 void midiAllReset(){
  pipeProcessing = 0x80;
@@ -2009,7 +2012,6 @@ void midi_ManualOff(uint8_t manual){
   serial1MIDISendCmd(0xB0,midiChanel);
   serial1MIDISendData(0x7B);
   serial1MIDISendData(0);
-
  }
 }
 
@@ -2017,10 +2019,9 @@ void midi_AllManualsOff(){
  for (uint8_t manual = 0; manual < 4; manual++){
   midi_ManualOff(manual);
  }
-
-
-
 }
+
+
 
 void midi_CheckRxActiveSense(){
  if (midiRxActivceSensing != 0){
@@ -2039,9 +2040,9 @@ void midi_CheckTxActiveSense(){
  if (!(((swTimer[8].counter != 0x00) && (swTimer[8].counter != 0xFF)))){
 
   
-# 217 ".././Midi.c" 3
+# 218 ".././Midi.c" 3
  for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 217 ".././Midi.c"
+# 218 ".././Midi.c"
  {swTimer[8].counter = 200 / 20; swTimer[8].prescaler = (200 % 20) / 4;};
   if (midi_Setting.TxActivceSense) {
    midi_SendActiveSense();
@@ -2072,6 +2073,8 @@ void midiInSysEx(){
 }
 
 void midiIn_Process(uint8_t midiByte){
+
+
  if (midiByte > 0x7f) {
 
 
@@ -2080,9 +2083,9 @@ void midiIn_Process(uint8_t midiByte){
    if (midiByte == 0xFE) {
     midiRxActivceSensing = 1;
     
-# 254 ".././Midi.c" 3
+# 257 ".././Midi.c" 3
    for ( uint8_t sreg_save __attribute__((__cleanup__(__iRestore))) = (*(volatile uint8_t *)((0x3F) + 0x20)), __ToDo = __iCliRetVal(); __ToDo ; __ToDo = 0 ) 
-# 254 ".././Midi.c"
+# 257 ".././Midi.c"
    {swTimer[3].counter = 500 / 20; swTimer[3].prescaler = (500 % 20) / 4;};
    } else if (midiByte == 0xFF){
     midiAllReset();
@@ -2388,9 +2391,9 @@ uint8_t read_allRegister(uint8_t* resultPtr){
   if ((regNr & 0x07) == 0x07) {
 
    if (resultPtr != 
-# 558 ".././Midi.c" 3 4
+# 561 ".././Midi.c" 3 4
                    ((void *)0)
-# 558 ".././Midi.c"
+# 561 ".././Midi.c"
                        ) {
     *resultPtr++ = mask;
    }
@@ -2580,6 +2583,7 @@ void midiSendRegOff(uint8_t regNr){
 
 
 
+
 uint8_t prog_Display;
 uint8_t prog_UpdDisplay;
 
@@ -2603,8 +2607,8 @@ void prog_toLcd(){
 }
 
 RegOut_t reg_Out[8] = {{0x40 +1,'1',10,14},{0x40 +6,' ',15,18},
-{0x40 +10,'2',20,24},{0x40 +15,' ',25,29},{(0+20)+1,'P',0,4},{(0+20)+6,' ',5,9},
-{0,' ',0xFF,0xFF},{0,' ',0xFF,0xFF}};
+ {0x40 +10,'2',20,24},{0x40 +15,' ',25,29},{(0+20)+1,'P',0,4},{(0+20)+6,' ',5,9},
+ {0,' ',0xFF,0xFF},{0,' ',0xFF,0xFF}};
 
 void init_RegOut(){
  if (eeprom_ReadRegOut() == 0xFF) {
@@ -2653,6 +2657,7 @@ void reg_toLCD(uint8_t readHWonly){
 }
 
 void reg_ClearOnLCD(){
+
  for (uint8_t i = 0; i < 8; i++){
   lcd_goto(reg_Out[i].cursor);
   char myChar = reg_Out[i].manualChar;
@@ -2712,6 +2717,7 @@ void init_Manual2Midi(){
   midiOutMap[i].hw_channel = 0xFF;
   midiOutMap[i].sw_channel = 0xFF;
  }
+
  if (eeprom_ReadMidiOutMap() == 0xFF){
   midiEEPromLoadError = 0xFF;
 
@@ -2727,6 +2733,8 @@ void init_Manual2Midi(){
 }
 
 void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff){
+
+
  channel = channel & 0x0F;
  uint8_t found = 0;
  for (uint8_t i = 0; i < 4; i++){
@@ -2767,6 +2775,7 @@ void midiNote_to_Manual(uint8_t channel, uint8_t note, uint8_t onOff){
 }
 
 ChannelNote_t Manual_to_MidiNote(uint8_t manual, uint8_t note){
+
  ChannelNote_t result = {0xFF,0xFF};
  if (manual < 4) {
   if (midiOutMap[manual].hw_channel != 0xFF) {
@@ -2793,10 +2802,13 @@ void Midi_updateManualRange(){
      rangeEnd = manualMap[i][range].endNote;
     }
    }
+
    if ((rangeEnd == 0) || (rangeStart == 0xFF)){
+
     ManualNoteRange[i].startNote = 0xFF;
     ManualNoteRange[i].endNote = 0xFF;
    } else {
+
     ManualNoteRange[i].startNote = rangeStart;
     ManualNoteRange[i].endNote = rangeEnd;
    }
@@ -2899,6 +2911,7 @@ ManualNote_t moduleBit_to_manualNote(uint8_t moduleBit){
 }
 
 void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
+
  ModulBitError_t moduleInfo;
  moduleInfo = manualNote_to_moduleBit(manual, note);
 
@@ -2939,14 +2952,18 @@ void manual_NoteOnOff(uint8_t manual, uint8_t note, uint8_t onOff){
 
 
 void midiKeyPress_Process(PipeMessage_t pipeMessage){
+
+
+
+
  serial0USB_logPipeIn(pipeMessage);
-  uint8_t command = pipeMessage.message8[1] & 0xE0;
-  uint8_t shiftBit = pipeMessage.message8[1] & 0x1F;
-  uint8_t moduleBits = pipeMessage.message8[0];
-  uint8_t messageProcessed = 0x00;
-  ManualNote_t manualNote;
-  ChannelNote_t chanNote;
-  if ((command == 0x20) || (command == 0x00)){
+ uint8_t command = pipeMessage.message8[1] & 0xE0;
+ uint8_t shiftBit = pipeMessage.message8[1] & 0x1F;
+ uint8_t moduleBits = pipeMessage.message8[0];
+ uint8_t messageProcessed = 0x00;
+ ManualNote_t manualNote;
+ ChannelNote_t chanNote;
+ if ((command == 0x20) || (command == 0x00)){
 
   for (uint8_t i = 0; i < 8; i++){
 
@@ -3057,7 +3074,7 @@ void midiSendAllNotesOff(){
   serial1MIDISendData(0x7B);
   serial1MIDISendData(0);
  }
-# 1232 ".././Midi.c"
+# 1249 ".././Midi.c"
 }
 
 void midi_SendActiveSense(){

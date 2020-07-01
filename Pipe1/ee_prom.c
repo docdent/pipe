@@ -78,6 +78,8 @@ uint16_t crc16_eeprom_startVal(const uint8_t* pEeprom, uint16_t count, uint16_t 
 	return (result);
 }
 
+// not used:
+/*
 uint8_t eePromReadLabeledBlock(uint8_t label, uint8_t version, uint16_t blockSize, uint8_t* pMemory){
 	// find block in EEPROM
 	uint8_t* pEeBlock = (uint8_t*) &ee;
@@ -158,6 +160,7 @@ uint8_t eeProm_WriteBlock(uint8_t labelNr){
 	}
 	return EE_LOAD_ERROR_EE_ENDREACHED;
 }
+*/
 
 uint8_t eeprom_ReadManualMap(){
 	if ((eeprom_read_word(&(ee.eeData.ee.manualMap_crc)) == crc16_eeprom((uint8_t*) &(ee.eeData.ee.manualMap), sizeof (ee.eeData.ee.manualMap))
@@ -293,7 +296,6 @@ uint8_t eeprom_ReadCCreg(){
 	}
 }
 
-
 void eepromWriteSignature(){
 	eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charStart),EE_CHAR_START);
 	eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charEnd),EE_CHAR_END);
@@ -414,7 +416,6 @@ void eeprom_UpdateCCreg(){
 	lcd_waitSymbolOff();
 }
 
-
 void eeprom_UpdateALL(){
 	eeprom_UpdateManualMap();
 	eeprom_UpdateMidiInMap();
@@ -428,7 +429,6 @@ void eeprom_UpdateALL(){
 	eeprom_UpdateRegOut();
 	eeprom_UpdateCCreg();
 }
-
 
 void eepromCopy(uint8_t* pSource, uint8_t* pDest, uint16_t count){
 	while (count-- > 0){

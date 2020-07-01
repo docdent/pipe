@@ -1115,7 +1115,6 @@ const char cr_lf []
                            = "\r\n";
 char string_Buf[64];
 
-
 Longint_t editLong;
 uint8_t editByte;
 
@@ -1127,6 +1126,164 @@ uint8_t nibbleToChr(uint8_t myNibble){
  }
 }
 
+
+
+
+void lcd_decout(uint8_t decNumber){
+ uint8_t nibble = 0;
+ while (decNumber >= 100) {
+  nibble++;
+  decNumber -= 100;
+ }
+ lcd_putc('0'+nibble);
+ nibble = 0;
+ while (decNumber >= 10) {
+  nibble++;
+  decNumber -= 10;
+ }
+ lcd_putc('0'+nibble);
+ nibble = decNumber;
+ lcd_putc('0'+nibble);
+}
+
+void lcd_wordout(uint16_t hexNumber){
+ uint8_t byteVal = hexNumber >> 8;
+ lcd_hexout(byteVal);
+ byteVal = hexNumber &0xFF;
+ lcd_hexout(byteVal);
+}
+
+uint8_t lcd_noteOut(uint8_t noteNr){
+
+ uint8_t octave = 0;
+ char char1 = ' ';
+ char char2 = '#';
+ char char3;
+ if (noteNr > 127){
+
+  char1 = '-';
+  char2 = '-';
+  char3 = '-';
+  } else {
+  while (noteNr >= 12) {
+   octave++;
+   noteNr -= 12;
+  }
+  switch (noteNr){
+   case 0:
+   char2 = 0xA5;
+   case 1:
+   char1 = 'C';
+   break;
+   case 2:
+   char2 = 0xA5;
+   case 3:
+   char1 = 'D';
+   break;
+   case 4:
+   char1 = 'E';
+   char2 = 0xA5;
+   break;
+   case 5:
+   char2 = 0xA5;
+   case 6:
+   char1 = 'F';
+   break;
+   case 7:
+   char2 = 0xA5;
+   case 8:
+   char1 = 'G';
+   break;
+   case 9:
+   char2 = 0xA5;
+   case 10:
+   char1 = 'A';
+   break;
+   case 11:
+   char1 = 'H';
+   char2 = 0xA5;
+   break;
+  }
+  if (octave == 0) {
+   char3 = '-';
+   } else {
+   char3 = '0'+octave-1;
+  }
+ }
+ lcd_putc(char1);
+ lcd_putc(char2);
+ lcd_putc(char3);
+ return(3);
+}
+
+void lcd_ModBitOut(uint8_t modBit){
+ lcd_putc('M');
+ lcd_putc('0'+(modBit >> 5));
+ lcd_putc('B');
+ modBit = (modBit & 0x1f);
+ uint8_t nibble = '0';
+ while (modBit > 10){
+  nibble++;
+  modBit -= 10;
+ }
+ lcd_putc(nibble);
+ lcd_putc('0'+modBit);
+}
+
+void lcd_ManualOut(uint8_t manual){
+
+ if (manual > 3) {
+  lcd_putc('-');
+  } else {
+  if (manual == 3){
+   lcd_putc('P');
+   } else {
+   lcd_putc('I');
+   if (manual < 2) {
+    lcd_putc('I');
+    if (manual < 1) {
+     lcd_putc('I');
+    }
+   }
+  }
+ }
+}
+
+void lcd_ChannelOut(uint8_t channel){
+ channel &= 0x0F;
+ channel++;
+ if (channel > 9) {
+  lcd_putc('1');
+  channel = channel-10;
+ }
+ lcd_putc('0'+channel);
+}
+
+void lcd_ManualOutDec(uint8_t manual){
+
+ if (manual > 3) {
+  lcd_putc('-');
+  } else if (manual == 3){
+  lcd_putc('P');
+  } else {
+  lcd_putc('3'-manual);
+ }
+}
+
+void lcd_blank(uint8_t count){
+ while (count-- != 0){
+  lcd_putc(' ');
+ }
+}
+
+void lcd_clrEol(){
+ uint8_t i = 0;
+
+ while ((lcd_cursorPos != 20) && (lcd_cursorPos != (0x40+20))
+ && (lcd_cursorPos != (20+20)) && (lcd_cursorPos != (0x40+20+20)) && (i++ < 20)){
+  lcd_putc(' ');
+ }
+}
 
 
 void lcd_hexout(uint8_t hexNumber){
@@ -1162,6 +1319,9 @@ void lcd_dec2out(uint8_t val){
   lcd_putc('0'+val);
  }
 }
+
+
+
 
 char* putChar_Dec2(uint8_t val, char* pOutput) {
  if (val > 99) {
@@ -1336,161 +1496,7 @@ char* putString_Prog(char* pOutput, uint8_t progNr){
  return pOutput;
 }
 
-void lcd_decout(uint8_t decNumber){
- uint8_t nibble = 0;
- while (decNumber >= 100) {
-  nibble++;
-  decNumber -= 100;
- }
- lcd_putc('0'+nibble);
- nibble = 0;
- while (decNumber >= 10) {
-  nibble++;
-  decNumber -= 10;
- }
- lcd_putc('0'+nibble);
- nibble = decNumber;
- lcd_putc('0'+nibble);
-}
 
-void lcd_wordout(uint16_t hexNumber){
- uint8_t byteVal = hexNumber >> 8;
- lcd_hexout(byteVal);
- byteVal = hexNumber &0xFF;
- lcd_hexout(byteVal);
-}
-
-uint8_t lcd_noteOut(uint8_t noteNr){
-
- uint8_t octave = 0;
- char char1 = ' ';
- char char2 = '#';
- char char3;
- if (noteNr > 127){
-
-  char1 = '-';
-  char2 = '-';
-  char3 = '-';
- } else {
-  while (noteNr >= 12) {
-   octave++;
-   noteNr -= 12;
-  }
-  switch (noteNr){
-   case 0:
-    char2 = 0xA5;
-   case 1:
-    char1 = 'C';
-   break;
-   case 2:
-    char2 = 0xA5;
-   case 3:
-    char1 = 'D';
-   break;
-   case 4:
-    char1 = 'E';
-    char2 = 0xA5;
-   break;
-   case 5:
-    char2 = 0xA5;
-   case 6:
-    char1 = 'F';
-   break;
-   case 7:
-    char2 = 0xA5;
-   case 8:
-    char1 = 'G';
-   break;
-   case 9:
-    char2 = 0xA5;
-   case 10:
-    char1 = 'A';
-   break;
-   case 11:
-    char1 = 'H';
-    char2 = 0xA5;
-   break;
-  }
-  if (octave == 0) {
-   char3 = '-';
-  } else {
-   char3 = '0'+octave-1;
-  }
- }
- lcd_putc(char1);
- lcd_putc(char2);
- lcd_putc(char3);
- return(3);
-}
-
-void lcd_ModBitOut(uint8_t modBit){
- lcd_putc('M');
- lcd_putc('0'+(modBit >> 5));
- lcd_putc('B');
- modBit = (modBit & 0x1f);
- uint8_t nibble = '0';
- while (modBit > 10){
-  nibble++;
-  modBit -= 10;
- }
- lcd_putc(nibble);
- lcd_putc('0'+modBit);
-}
-
-void lcd_ManualOut(uint8_t manual){
-
- if (manual > 3) {
-  lcd_putc('-');
- } else {
-  if (manual == 3){
-   lcd_putc('P');
-  } else {
-   lcd_putc('I');
-   if (manual < 2) {
-    lcd_putc('I');
-    if (manual < 1) {
-     lcd_putc('I');
-    }
-   }
-  }
- }
-}
-
-void lcd_ChannelOut(uint8_t channel){
- channel &= 0x0F;
- channel++;
- if (channel > 9) {
-  lcd_putc('1');
-  channel = channel-10;
- }
- lcd_putc('0'+channel);
-}
-
-void lcd_ManualOutDec(uint8_t manual){
-
- if (manual > 3) {
-  lcd_putc('-');
- } else if (manual == 3){
-  lcd_putc('P');
- } else {
-  lcd_putc('3'-manual);
- }
-}
-
-void lcd_blank(uint8_t count){
- while (count-- != 0){
-  lcd_putc(' ');
- }
-}
-
-void lcd_clrEol(){
- uint8_t i = 0;
-
- while ((lcd_cursorPos != 20) && (lcd_cursorPos != (0x40+20))
-  && (lcd_cursorPos != (20+20)) && (lcd_cursorPos != (0x40+20+20)) && (i++ < 20)){
-  lcd_putc(' ');
- }
-}
 
 void lcd_waitSymbolOn(){
  uint8_t saveCursor = lcd_cursorPos;
@@ -1514,6 +1520,7 @@ uint8_t chekcDecNibbles(uint8_t myNibbles[3]){
   return(0);
  }
 }
+
 
 
 

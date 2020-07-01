@@ -1374,88 +1374,7 @@ uint16_t crc16_eeprom_startVal(const uint8_t* pEeprom, uint16_t count, uint16_t 
  }
  return (result);
 }
-
-uint8_t eePromReadLabeledBlock(uint8_t label, uint8_t version, uint16_t blockSize, uint8_t* pMemory){
-
- uint8_t* pEeBlock = (uint8_t*) &ee;
-
- if (eeprom_read_byte(pEeBlock) != 2){
-  return 0xFE;
- }
- pEeBlock++;
- while (pEeBlock < (uint8_t*) 4096){
-
-  if (eeprom_read_byte(pEeBlock) == label){
-
-   pEeBlock++;
-   if (eeprom_read_byte(pEeBlock) != version){
-    return 0xFD;
-   }
-   pEeBlock++;
-   uint16_t dataSize = eeprom_read_word((uint16_t*) pEeBlock);
-   if (dataSize != blockSize){
-    return 0xFC;
-   }
-
-   pEeBlock = pEeBlock+2;
-   uint16_t crc = crc16_eeprom(pEeBlock, blockSize);
-   if (eeprom_read_word((uint16_t*) pEeBlock) != crc) {
-    return 0xFB;
-   }
-   pEeBlock = pEeBlock+2;
-   eeprom_read_block(pMemory,pEeBlock,blockSize);
-   return 0x00;
-  } else if (eeprom_read_byte(pEeBlock) == 'e'){
-   return 0xFA;
-  }
-
-
-  pEeBlock += eeprom_read_word((uint16_t*) pEeBlock+2)+6;
- }
- return 0xF9;
-}
-
-void eeProm_FormatBlock(){
- uint8_t* pEEProm = (uint8_t*) &ee;
- eeprom_update_byte(pEEProm++,2);
- for (uint8_t i = 0; i <= 8; i++){
-  eeprom_update_byte(pEEProm,ee_VarList[i].label);
-  pEEProm += 2;
-  eeprom_update_byte(pEEProm,ee_VarList[i].size);
-  pEEProm += 2+ee_VarList[i].size;
- }
- eeprom_update_byte(pEEProm++,'e');
-}
-
-uint8_t eeProm_WriteBlock(uint8_t labelNr){
- uint8_t* pEeBlock = (uint8_t*) &ee;
- if (labelNr > 8){
-  return 0xF8;
- }
- if (eeprom_read_byte(pEeBlock) != 2){
-  return 0xFE;
- }
- pEeBlock++;
- while (pEeBlock < (uint8_t*) 4096){
-
-  if (eeprom_read_byte(pEeBlock) == ee_VarList[labelNr].label){
-
-   pEeBlock += 2;
-   uint16_t dataSize = eeprom_read_word((uint16_t*) pEeBlock);
-   if (dataSize != ee_VarList[labelNr].size){
-    return 0xFC;
-   }
-
-   eeprom_update_byte(pEeBlock-1,ee_VarList[labelNr].version);
-   eeprom_update_word((uint16_t*) pEeBlock+2,crc16_ram(ee_VarList[labelNr].pMemory,ee_VarList[labelNr].size));
-   eeprom_update_block(ee_VarList[labelNr].pMemory,pEeBlock+4,ee_VarList[labelNr].size);
-  } else if (eeprom_read_byte(pEeBlock) == 'e'){
-   return 0xFA;
-  }
- }
- return 0xF9;
-}
-
+# 165 ".././ee_prom.c"
 uint8_t eeprom_ReadManualMap(){
  if ((eeprom_read_word(&(ee.eeData.ee.manualMap_crc)) == crc16_eeprom((uint8_t*) &(ee.eeData.ee.manualMap), sizeof (ee.eeData.ee.manualMap))
   && eeprom_read_byte(&(ee.eeData.ee.charManMap)) == 'M')) {
@@ -1589,7 +1508,6 @@ uint8_t eeprom_ReadCCreg(){
   return (0xFF);
  }
 }
-
 
 void eepromWriteSignature(){
  eeprom_update_byte((uint8_t *) &(ee.eeData.ee.charStart),0);
